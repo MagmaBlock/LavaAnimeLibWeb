@@ -1,9 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router'
+import router from './router' // src/router/index.js
+import './index.css' // tailwind directives
 
 const app = createApp(App)
-
-app.use(router)
-
-app.mount('#app')
+  .use(router)
+  .mount('#app')

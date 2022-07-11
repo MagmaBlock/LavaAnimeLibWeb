@@ -1,9 +1,5 @@
 <template>
   <Container>
-    Home Here
+    Help
   </Container>
 </template>
-
-
-<style>
-</style>
