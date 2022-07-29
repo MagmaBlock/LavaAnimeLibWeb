@@ -18,13 +18,18 @@ export default {
 </script>
 
 <template>
-  <div class="ease-in duration-200 shadow hover:shadow-lg w-full bg-white opacity-90 rounded-md">
+  <div class="ease-in duration-200
+      shadow hover:shadow-lg
+      w-full rounded-md
+      bg-white opacity-90">
     <!-- 面包屑导航 但是不能点 -->
     <div class="px-4 py-2 text-sm text-gray-500 border-b-[1px]">
-      {{ this.la.year }}
-      <i class="bi bi-chevron-right text-xs align-middle"></i>
-      {{ this.la.type }}
-      <i class="bi bi-chevron-right text-xs align-middle"></i>
+      <RouterLink :to="`/index/${this.la.year}-${this.la.type}`">
+        {{ this.la.year }}
+        <i class="bi bi-chevron-right text-xs"></i>
+        {{ this.la.type }}
+        <i class="bi bi-chevron-right text-xs"></i>
+      </RouterLink>
       {{ this.la.name }}
     </div>
     <!-- 主信息卡 -->

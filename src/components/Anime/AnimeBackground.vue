@@ -32,6 +32,6 @@ export default {
 </script>
 
 <template>
-  <div class="fixed top-0 left-0 right-0 -z-50 w-full bg-cover bg-center bg-no-repeat ease duration-500"
+  <div class="fixed top-0 left-0 right-0 -z-50 w-full bg-cover bg-center bg-no-repeat ease duration-500 blur-lg"
     :style="{ backgroundImage: 'url(' + backgroundImg + ')' }" :class="backgroundAnimation"> </div>
 </template>

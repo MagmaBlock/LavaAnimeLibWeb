@@ -3,11 +3,12 @@ import axios from 'axios'
 import config from '../../assets/config'
 import AnimeBackground from '../../components/Anime/AnimeBackground.vue'
 import AnimeDataCardFake from '../../components/Anime/AnimeDataCardFake.vue';
+import AnimeVideoList from '../../components/Anime/AnimeVideoList.vue';
 
 export default {
   data() {
     return {
-      laID: this.$route.params.la,
+      laID: parseInt(this.$route.params.la),
       laData: {},
       bgmData: undefined,
       loading: true,
@@ -34,15 +35,16 @@ export default {
       this.bgmData = result;
     },
   },
-  components: { AnimeDataCardFake }
 }
 </script>
 
 <template>
   <container>
     <div class="lg:flex lg:flex-row w-full">
-      <AnimeDataCard v-if="!loading" :la="laData" :bgm="bgmData" class="lg:basis-1/3" />
       <AnimeDataCardFake v-if="loading" class="lg:basis-1/3" />
+
+      <AnimeDataCard v-if="!loading" :la="laData" :bgm="bgmData" class="mb-2 lg:basis-1/3 lg:mr-10" />
+      <AnimeVideoList :laid="this.laID" class="lg:basis-2/3"></AnimeVideoList>
     </div>
     <AnimeBackground v-if="!loading" :la="laData"></AnimeBackground>
   </container>

@@ -17,7 +17,7 @@ export default {
       <i class="bi bi-chevron-right text-xs align-middle"></i>
       <span class="bg-gray-300 text-gray-300 animate-pulse">1月冬</span>
       <i class="bi bi-chevron-right text-xs align-middle"></i>
-      <span class="bg-gray-300 text-gray-300 ">番剧名番剧名番剧名番剧名番剧名</span>
+      <span class="bg-gray-300 text-gray-300 animate-pulse">番剧名番剧名番剧名番剧名番剧名</span>
     </div>
     <!-- 主信息卡 -->
     <div class="py-3 px-4">
