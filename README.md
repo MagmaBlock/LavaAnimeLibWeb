@@ -10,10 +10,13 @@ Tailwind CSS + Naive UI
 
 ## 本地开发
 
+### 安装依赖
+
 ```sh
 npm install
 ```
 
+### 启动开发服务器
 
 ```sh
 npm run dev
