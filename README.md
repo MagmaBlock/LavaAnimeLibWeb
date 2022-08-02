@@ -19,7 +19,7 @@ npm install
 npm run dev
 ```
 
-### Compile and Minify for Production
+### 构建
 
 ```sh
 npm run build
