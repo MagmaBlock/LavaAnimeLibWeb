@@ -1,5 +1,7 @@
 <template>
-  <div class="container mx-auto my-0 p-6 lg:flex lg:flex-row lg:my-4">
+  <div class="container mx-auto p-6 md:p-8">
     <slot></slot>
   </div>
+  <!-- 兜底 -->
+  <div class="w-full h-32"></div>
 </template>

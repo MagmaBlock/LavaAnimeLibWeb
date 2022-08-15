@@ -1,6 +1,6 @@
 <script>
 import axios from 'axios'
-import config from '../../assets/config'
+import config from '../../common/config'
 import AnimeBackground from '../../components/Anime/AnimeBackground.vue'
 import AnimeDataCardFake from '../../components/Anime/AnimeDataCardFake.vue';
 import AnimeVideoList from '../../components/Anime/AnimeVideoList.vue';

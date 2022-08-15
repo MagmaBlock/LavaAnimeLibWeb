@@ -15,7 +15,7 @@ const router = createRouter({
     },
     {
       name: 'Index',
-      path: '/index/:selection?',
+      path: '/index',
       component: () => import('../views/IndexView.vue')
     },
     {

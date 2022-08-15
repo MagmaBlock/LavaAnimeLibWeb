@@ -18,25 +18,16 @@ export default {
       type: Number,
       default: 0
     },
+    nsfw: [Boolean],
+    bdrip: [Boolean],
     fake: {
       type: Boolean,
       default: false
-    }
+    },
   },
-  methods: {
-    titleTagsParser(title) {
-      let bdrip = title.match(/\[BDRip\]|BDRip/i)
-      this.bd = bdrip ? true : false
-      let nsfw = title.match(/\[NSFW\]|NSFW/i)
-      this.nsfw = nsfw ? true : false
-      return title.replace(/\[BDRip\]|BDRip|\[NSFW\]|NSFW/gi, '')
-    }
-  },
+  methods: {},
   data() {
-    return {
-      bd: false,
-      nsfw: false
-    }
+    return {}
   }
 }
 </script>
@@ -50,9 +41,9 @@ export default {
       <!-- 标题 -->
       <div class="text-[13px] leading-[18px] h-9 my-1 break-words">
         <n-ellipsis :line-clamp="2" expand-trigger="hover">
-          {{ this.titleTagsParser(title) }}
+          {{ title }}
           <!-- Special Tags -->
-          <div v-if="bd" class="inline-block bg-blue-100 text-xs text-blue-600 font-medium rounded-sm px-1.5 ml-0.5">
+          <div v-if="bdrip" class="inline-block bg-blue-100 text-xs text-blue-600 font-medium rounded-sm px-1.5 ml-0.5">
             BDRip
           </div>
           <div v-if="nsfw"

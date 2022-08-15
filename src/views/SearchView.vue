@@ -1,6 +1,6 @@
 <script>
-import axios from 'axios';
-import config from '../assets/config';
+import { LavaAnimeAPI } from '../common/api';
+import config from '../common/config';
 
 export default {
   props: ['memory'],
@@ -9,7 +9,10 @@ export default {
       searchTimes: 0,
       searchResults: [],
       searchHistory: [],
+      lastSearch: '',
       searchRecommendation: ['异世界舅舅', 'OVERLORD', 'Lycoris Recoil', 'Engage Kiss', '来自深渊', '实力至上主义教室', '间谍过家家'],
+      preSearchValues: [],
+      preSearchLock: false, // 防抖
       loading: {
         search: false
       }
@@ -17,18 +20,28 @@ export default {
   },
   methods: {
     async search(value) { // 执行搜索
-      if (!value.trim()) return;
+      if (!value.trim() || this.lastSearch == value) return;
       this.memory.searchValue = value
       this.loading.search = true // 启动加载动画
       this.searchTimes++ // 增加本界面搜索计数
       this.searchResults = [] // 清空已有列表
       this.addSearchHistory(this.memory.searchValue) // 把搜索词加入记录
       this.changeUrlParams(this.memory.searchValue)
-      let type = parseInt(this.memory.searchValue) && this.memory.searchValue.length >= 3 ? 'bgm' : 'name' // 判断搜索类型
-      let results = (await (axios(config.api.lavaAnime + `/v1/search/${type}/${this.memory.searchValue}`))).data.data
+      // let type = parseInt(this.memory.searchValue) && this.memory.searchValue.length >= 3 ? 'bgm' : 'name' // 判断搜索类型
+      let results = (await LavaAnimeAPI.get('/v2/search', { params: { value: this.memory.searchValue } })).data.data
       await new Promise(resolve => { setTimeout(() => { resolve() }, 100); }) // 慢一点切换以便展示动画
+      this.lastSearch = value
       this.loading.search = false // 关闭加载动画
       this.searchResults = results // 展示结果
+    },
+    async preSearch(value) {
+      if (!value.trim() || this.preSearchLock) return;
+      value = value.trim()
+      this.preSearchLock = true
+      let results = (await LavaAnimeAPI.get('/v2/search/quick', { params: { value: value } })).data
+      console.log(results);
+      setTimeout(() => { this.preSearchLock = false; console.log('unlocked', this.preSearchLock); }, 500) // 0.5 秒可触发一次防止网络请求阻塞
+      if (results.code == 200) this.preSearchValues = results.data
     },
     clickHistoryTag(value) {
       this.memory.searchValue = value
@@ -72,62 +85,81 @@ export default {
 
 <template>
   <Container>
-    <!-- 搜索框部分，在高宽度屏幕上将左右 Flex -->
-    <div class="px-1 lg:basis-1/4 lg:mr-4 select-none">
-      <div class="text-lg mb-4 mx-0.5 font-medium">搜索</div>
-      <n-input-group>
-        <n-input v-model:value="memory.searchValue" type="text" placeholder="使用番剧名或 Bangumi ID 进行搜索"
-          @keyup.enter="search(this.memory.searchValue)" />
-        <n-button type="primary" @click="search(this.memory.searchValue)" ghost>搜索</n-button>
-      </n-input-group>
-      <!-- 历史记录 -->
-      <div class="my-4 w-full">
-        <!-- 历史 -->
-        <n-button v-for="value in searchHistory" size="small" class="bg-gray-100 mr-2 mb-2"
-          @click="clickHistoryTag(value)" secondary>{{ value }}</n-button>
-        <!-- 清除按钮 -->
-        <n-button type="primary" @click="clearSearchHistroy()" size="small" class="text-xs"
-          v-if="this.searchHistory.length > 0" secondary>
-          <i class="bi bi-x-lg"></i>
-        </n-button>
+    <div class="lg:flex lg:flex-row">
+      <!-- 搜索框部分，在高宽度屏幕上将左右 Flex -->
+      <div class="px-1 lg:basis-1/4 select-none">
+        <!-- 将粘连屏幕 -->
+        <div class="sticky top-5">
+          <div class="text-lg mb-4 mx-0.5 font-medium">搜索</div>
+          <n-input-group>
+            <n-auto-complete placeholder="按 Tab 搜索键入值, Enter 和 ↑ ↓ 使用候选"
+              :input-props="{ type: 'text', name: 'search', autocomplete: 'off' }" v-model:value="memory.searchValue"
+              :options="preSearchValues" @input="preSearch(memory.searchValue)"
+              @keydown.enter="search(this.memory.searchValue)" blur-after-select
+              @blur="search(this.memory.searchValue)" />
+            <n-button type="primary" @click="search(this.memory.searchValue)" ghost>搜索</n-button>
+          </n-input-group>
+          <!-- 历史记录 -->
+          <div class="my-4 w-full flex flex-wrap">
+            <!-- 标签 -->
+            <span v-for="value in searchHistory" @click="search(value)"
+              class="bg-gray-100 hover:bg-gray-200 ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 rounded-sm flex-initial max-w-xs overflow-hidden">
+              <div class="leading-loose truncate">
+                {{ value }}
+              </div>
+            </span>
+            <!-- 清除按钮 -->
+            <span
+              class="bg-blue-50 hover:bg-blue-200 ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 rounded-sm flex-initial max-w-xs overflow-hidden"
+              @click="clearSearchHistroy()" v-if="this.searchHistory.length > 0">
+              <div class="leading-loose truncate text-blue-500">
+                <i class="bi bi-x-lg"></i>
+              </div>
+            </span>
+          </div>
+          <!-- 搜索推荐 -->
+          <div class="text-lg mb-4 mx-0.5 font-medium">大家在搜</div>
+          <div class="my-4 w-full flex flex-wrap">
+            <span v-for="value in searchRecommendation" @click="clickHistoryTag(value)"
+              class="bg-gray-100 hover:bg-gray-200 ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 rounded-sm flex-initial max-w-xs overflow-hidden">
+              <div class="leading-loose truncate">
+                {{ value }}
+              </div>
+            </span>
+          </div>
+        </div>
       </div>
-      <!-- 搜索推荐 -->
-      <div class="text-lg mb-4 mx-0.5 font-medium">大家在搜</div>
-      <div class="my-4 w-full">
-        <n-button v-for="value in searchRecommendation" size="small" class="bg-gray-100 mr-2 mb-2"
-          @click="clickHistoryTag(value)" secondary>{{ value }}</n-button>
-      </div>
-    </div>
 
-    <!-- 内容部分 -->
-    <div class="lg:basis-3/4 lg:ml-4 select-none">
-      <div class="px-1 lg:basis-3/4 lg:ml-4">
-        <n-spin :show="loading.search">
-          <div class="grid 
-        grid-cols-3 gap-x-2
-        sm:grid-cols-4 sm:gap-x-4
-        md:grid-cols-5 md:gap-x-6
-        lg:grid-cols-5
-        xl:grid-cols-6
-        2xl:grid-cols-7">
-            <!-- 番剧卡片骨架屏 -->
-            <div v-for="a in 6" v-if="loading.search" class="mb-1">
-              <AnimeCard fake></AnimeCard>
+      <!-- 内容部分 -->
+      <div class="lg:basis-3/4 select-none">
+        <div class="px-1 lg:basis-3/4 lg:ml-4">
+          <n-spin :show="loading.search">
+            <div class="grid 
+                grid-cols-3 gap-x-2
+                sm:grid-cols-4 sm:gap-x-4
+                md:grid-cols-5 md:gap-x-6
+                lg:grid-cols-5
+                xl:grid-cols-5
+                2xl:grid-cols-6 2xl:px-10">
+              <!-- 番剧卡片骨架屏 -->
+              <div v-for="a in 6" v-if="loading.search" class="mb-1">
+                <AnimeCard fake></AnimeCard>
+              </div>
+              <!-- 番剧卡片 -->
+              <div v-for="anime in searchResults" class="mb-1">
+                <AnimeCard :id="anime.id" :poster="anime.images.poster" :title="anime.title" :bgmid="anime.bgmId"
+                  :views="anime.views" :bdrip="anime.tags.bdrip" :nsfw="anime.tags.nsfw" />
+              </div>
             </div>
-            <!-- 番剧卡片 -->
-            <div v-for="anime in searchResults" class="mb-1">
-              <AnimeCard :id="anime.id" :poster="anime.poster" :title="anime.title" :bgmid="anime.bgmid"
-                :views="anime.views" />
+            <div v-if="searchResults.length == 0 && searchTimes != 0 && loading.search == false" class="my-14">
+              <n-empty description="什么也没找到">
+                <template #icon>
+                  <img src="../assets/huaji.jpg" />
+                </template>
+              </n-empty>
             </div>
-          </div>
-          <div v-if="searchResults.length == 0 && searchTimes != 0 && loading.search == false" class="my-14">
-            <n-empty description="什么也没找到">
-              <template #icon>
-                <img src="../assets/huaji.jpg" />
-              </template>
-            </n-empty>
-          </div>
-        </n-spin>
+          </n-spin>
+        </div>
       </div>
     </div>
   </Container>

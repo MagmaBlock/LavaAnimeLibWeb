@@ -1,6 +1,6 @@
 <script>
 import axios from 'axios';
-import config from '../../assets/config';
+import config from '../../common/config';
 
 export default {
   props: ['laid'],

@@ -21,7 +21,7 @@ export default {
   <div class="fixed bottom-0 w-full h-16 z-50
   p-2
   flex flex-row flex-nowrap
-  bg-white/70 backdrop-blur backdrop-brightness-75
+  bg-white/80 backdrop-blur-lg backdrop-brightness-90
   shadow-lg
   select-none">
     <NavBarIcon iconClass="bi bi-house" lightIconClass="bi bi-house-fill" route="/" title="主页"
