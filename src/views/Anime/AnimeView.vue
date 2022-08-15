@@ -43,7 +43,7 @@ export default {
     splitVideoList(videoList) {
       for (let i in videoList) {
         if (videoList[i].episode) {
-          this.epVideoList[videoList[i].episode] = new Array();
+          if (!this.epVideoList[videoList[i].episode]) this.epVideoList[videoList[i].episode] = new Array()
           this.epVideoList[videoList[i].episode].push(videoList[i]);
         }
       }
