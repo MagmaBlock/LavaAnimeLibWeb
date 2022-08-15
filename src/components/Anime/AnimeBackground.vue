@@ -8,16 +8,16 @@ export default {
   data() {
     return {
       backgroundImg: '',
-      backgroundAnimation: 'h-2/3 opacity-0',
-      backgroundAnimation2: 'h-full opacity-100',
+      backgroundAnimation: 'opacity-0 scale-105 ',
+      backgroundAnimation2: 'opacity-100 scale-110',
     };
   },
   methods: {
     updateBackgroundImg(la) {
       if (parseInt(la.bgmid) == 0) {
-        this.backgroundImg = 'https://anime-img.5t5.top/assets/no-bgm-bg.jpg/bg'
+        this.backgroundImg = 'https://anime-img.5t5.top/assets/no-bgm-bg.jpg'
       } else {
-        this.backgroundImg = la.poster.replace('/poster', '') + '/bg'
+        this.backgroundImg = la.images.poster
       }
     },
     applyBackgroundAnimation() {
@@ -32,6 +32,6 @@ export default {
 </script>
 
 <template>
-  <div class="fixed top-0 left-0 right-0 -z-50 w-full bg-cover bg-center bg-no-repeat ease duration-500 blur-lg"
-    :style="{ backgroundImage: 'url(' + backgroundImg + ')' }" :class="backgroundAnimation"> </div>
+  <div class="fixed top-0 left-0 right-0 -z-50 w-full h-full bg-cover bg-center bg-no-repeat ease duration-700 blur-md"
+    :style="{ backgroundImage: 'url(' + backgroundImg + ')' }" :class="backgroundAnimation"></div>
 </template>

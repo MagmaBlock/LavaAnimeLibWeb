@@ -22,7 +22,6 @@ export default {
   p-2
   flex flex-row flex-nowrap
   bg-white/80 backdrop-blur-lg backdrop-brightness-90
-  shadow-lg
   select-none">
     <NavBarIcon iconClass="bi bi-house" lightIconClass="bi bi-house-fill" route="/" title="主页"
       :light="this.route['Home']">

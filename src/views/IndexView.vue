@@ -122,7 +122,7 @@ export default {
             <!-- 番剧卡片 -->
             <div v-for="anime in animes" class="mb-1" :class="animeCardsClass">
               <AnimeCard :id="anime.id" :poster="anime.images.poster" :title="anime.title" :bgmid="anime.bgmId"
-                :views="anime.views" :bdrip="anime.tags.bdrip" :nsfw="anime.tags.nsfw" />
+                :views="anime.views" :bdrip="anime.type.bdrip" :nsfw="anime.type.nsfw" />
             </div>
           </div>
         </n-spin>

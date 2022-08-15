@@ -3,9 +3,6 @@ export default {
   props: {
     la: {
       type: Object
-    },
-    bgm: {
-      type: Object
     }
   },
   data() {
@@ -19,55 +16,58 @@ export default {
 
 <template>
   <div class="ease-in duration-200
-      shadow hover:shadow-lg
-      w-full rounded-md
+      border
+      w-full h-fit rounded-md
       bg-white opacity-90">
     <!-- 面包屑导航 但是不能点 -->
-    <div class="px-4 py-2 text-sm text-gray-500 border-b-[1px]">
-      <RouterLink :to="`/index/${this.la.year}-${this.la.type}`">
-        {{ this.la.year }}
+    <div class="px-4 py-2 text-sm text-gray-500 border-b">
+      <RouterLink :to="`/index/${this.la.index.year}-${this.la.index.type}`">
+        {{ this.la.index.year }}
         <i class="bi bi-chevron-right text-xs"></i>
-        {{ this.la.type }}
+        {{ this.la.index.type }}
         <i class="bi bi-chevron-right text-xs"></i>
       </RouterLink>
-      {{ this.la.name }}
+      {{ this.la.index.name }}
     </div>
     <!-- 主信息卡 -->
     <div class="py-3 px-4">
       <!-- 标题块 -->
-      <div class="text-2xl pb-0.5">
-        {{ this.la.title }}
-        <span class="text-sm" v-if="this.bgm">{{ this.bgm.platform }}</span>
-        <div class="text-sm leading-5 text-gray-500" v-if="this.bgm">{{ this.bgm.name }}</div>
+      <div class="text-xl">
+        {{ this.la.title }} <span class="text-base">({{ this.la.index.year.replace('年', '') }})</span>
+        <div class="text-sm leading-5 text-gray-500" v-if="this.la.bgmId">
+          {{ this.la.name }} · {{ this.la.platform }}
+        </div>
       </div>
       <!-- 主要信息 -->
-      <div class="px-0.5 font-light text-base leading-5 text-gray-600">
+      <div class="px-0.5 text-sm leading-5 text-gray-500">
         <!-- 第一行 -->
         <div>
           <span class="mr-2"><i class="bi bi-play-btn"></i> 播放 {{ this.la.views }} 次</span>
-          <div class="mr-2 my-1" v-if="!this.bgm">本作是 Bangumi 未收录番剧，或者可能根本不是一个影视作品</div>
-          <span class="mr-2" v-if="this.bgm"><i class="bi bi-star"></i> {{ this.bgm.rating.score }} 分
-            <n-tag size="small" :bordered="false" v-if="this.bgm.rating.rank" class="align-text-top font-normal">
-              Rank.#{{ this.bgm.rating.rank }}
-            </n-tag>
+          <div class="mr-2 my-1" v-if="!this.la.bgmId">本作是 Bangumi 未收录番剧，或者可能根本不是一个影视作品</div>
+          <span class="mr-2" v-if="this.la.bgmId"><i class="bi bi-star"></i> {{ this.la.rating.score }} 分
+            <span v-if="this.la.rating.rank" class="bg-gray-100 text-black rounded-sm px-1.5 text-xs align-text-top">
+              Rank.#{{ this.la.rating.rank }}
+            </span>
           </span>
         </div>
         <!-- 第二行 -->
-        <div v-if="this.bgm">
-          <span class="mr-2"><i class="bi bi-calendar-event"></i> {{ this.bgm.date || '未来' }} 开始放送</span>
-          <span class="mr-2"><i class="bi bi-collection"></i> {{ this.bgm.eps }} 话</span>
+        <div v-if="this.la.bgmId">
+          <span class="mr-2"><i class="bi bi-calendar-event"></i> {{ this.la.date || '未来' }} 开始放送</span>
+          <span class="mr-2"><i class="bi bi-collection"></i> {{ this.la.eps }} 话</span>
         </div>
       </div>
       <!-- 标签 -->
-      <div class="my-1 overflow-clip" v-if="this.bgm">
-        <span v-for="(tag, index) in this.bgm.tags">
+      <div class="my-1 flex flex-wrap" v-if="this.la.bgmId">
+        <span v-for="(tag, index) in this.la.tags">
           <!-- 前 20 个标签 -->
-          <n-tag size="small" class="mr-1 mb-1" :bordered="false" v-if="index <= this.bgm.tags.length / 3">
+          <n-tag size="small" class="mr-1 mb-1 flex-initial max-w-xs overflow-hidden" :bordered="false"
+            v-if="index <= this.la.tags.length / 3">
             {{ tag.name }} {{ tag.count }}
           </n-tag>
           <!-- 隐藏的标签 -->
           <span class="ease-in duration-300" :class="showMore ? '' : 'absolute opacity-0 w-0 overflow-hidden'">
-            <n-tag size="small" class="mr-1 mb-1" :bordered="false" v-if="index > this.bgm.tags.length / 3">
+            <n-tag size="small" class="mr-1 mb-1 flex-initial max-w-xs overflow-hidden" :bordered="false"
+              v-if="index > this.la.tags.length / 3">
               {{ tag.name }} {{ tag.count }}
             </n-tag>
           </span>
@@ -80,7 +80,7 @@ export default {
       </div>
       <!-- 连接 -->
       <div class="px-0.5 text-sm text-blue-600">
-        <a :href="'https://bgm.tv/subject/' + this.la.bgmid" target="_blank">
+        <a :href="'https://bgm.tv/subject/' + this.la.bgmId" target="_blank">
           <i class="bi bi-box-arrow-up-right"></i> 在番组计划中打开
         </a>
       </div>

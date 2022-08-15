@@ -148,7 +148,7 @@ export default {
               <!-- 番剧卡片 -->
               <div v-for="anime in searchResults" class="mb-1">
                 <AnimeCard :id="anime.id" :poster="anime.images.poster" :title="anime.title" :bgmid="anime.bgmId"
-                  :views="anime.views" :bdrip="anime.tags.bdrip" :nsfw="anime.tags.nsfw" />
+                  :views="anime.views" :bdrip="anime.type.bdrip" :nsfw="anime.type.nsfw" />
               </div>
             </div>
             <div v-if="searchResults.length == 0 && searchTimes != 0 && loading.search == false" class="my-14">

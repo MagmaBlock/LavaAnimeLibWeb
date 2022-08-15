@@ -16,11 +16,9 @@ export default {
 </script>
 
 <template>
-  <NavBar />
   <!-- 当前路由的界面 -->
-  <!-- <n-scrollbar class="h-screen"> -->
-  <RouterView class="pb-24" :memory="this.memory" />
-  <!-- </n-scrollbar> -->
+  <RouterView :memory="this.memory" />
+  <NavBar />
 </template>
 
 <style>
