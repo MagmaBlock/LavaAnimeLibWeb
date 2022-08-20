@@ -1,4 +1,5 @@
 <script>
+import BasicCard from './BasicCard.vue';
 export default {
   props: {
     la: {
@@ -8,17 +9,15 @@ export default {
   data() {
     return {
       showMore: false
-    }
-  }
+    };
+  },
+  components: { BasicCard }
 }
 
 </script>
 
 <template>
-  <div class="ease-in duration-200
-      border
-      w-full h-fit rounded-md
-      bg-white opacity-90">
+  <BasicCard>
     <!-- 面包屑导航 但是不能点 -->
     <div class="px-4 py-2 text-sm text-gray-500 border-b">
       <RouterLink :to="`/index/${this.la.index.year}-${this.la.index.type}`">
@@ -32,26 +31,28 @@ export default {
     <!-- 主信息卡 -->
     <div class="py-3 px-4">
       <!-- 标题块 -->
-      <div class="text-xl">
-        {{ this.la.title }} <span class="text-base">({{ this.la.index.year.replace('年', '') }})</span>
-        <div class="text-sm leading-5 text-gray-500" v-if="this.la.bgmId">
+      <div class="mb-1">
+        <div class="text-xl inline-block mr-2">
+          {{ this.la.title }} <span class="text-base">({{ this.la.index.year.replace('年', '') }})</span>
+        </div>
+        <div class="text-sm leading-5 text-gray-500 inline-block" v-if="this.la.bgmId">
           {{ this.la.name }} · {{ this.la.platform }}
         </div>
       </div>
       <!-- 主要信息 -->
       <div class="px-0.5 text-sm leading-5 text-gray-500">
         <!-- 第一行 -->
-        <div>
+        <div class="inline-block">
           <span class="mr-2"><i class="bi bi-play-btn"></i> 播放 {{ this.la.views }} 次</span>
           <div class="mr-2 my-1" v-if="!this.la.bgmId">本作是 Bangumi 未收录番剧，或者可能根本不是一个影视作品</div>
           <span class="mr-2" v-if="this.la.bgmId"><i class="bi bi-star"></i> {{ this.la.rating.score }} 分
-            <span v-if="this.la.rating.rank" class="bg-gray-100 text-black rounded-sm px-1.5 text-xs align-text-top">
+            <span v-if="this.la.rating.rank" class="bg-gray-100 text-black rounded-sm px-1.5 text-xs align-baseline">
               Rank.#{{ this.la.rating.rank }}
             </span>
           </span>
         </div>
         <!-- 第二行 -->
-        <div v-if="this.la.bgmId">
+        <div v-if="this.la.bgmId" class="inline-block">
           <span class="mr-2"><i class="bi bi-calendar-event"></i> {{ this.la.date || '未来' }} 开始放送</span>
           <span class="mr-2"><i class="bi bi-collection"></i> {{ this.la.eps }} 话</span>
         </div>
@@ -85,5 +86,5 @@ export default {
         </a>
       </div>
     </div>
-  </div>
+  </BasicCard>
 </template>

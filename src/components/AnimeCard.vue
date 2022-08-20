@@ -20,6 +20,7 @@ export default {
     },
     nsfw: [Boolean],
     bdrip: [Boolean],
+    relation: String,
     fake: {
       type: Boolean,
       default: false
@@ -43,6 +44,7 @@ export default {
         <!-- 标题 -->
         <div class="text-[13px] leading-[18px] h-9 my-1 break-words">
           <n-ellipsis :line-clamp="2" expand-trigger="hover">
+            <span class="bg-gray-200 p-1 rounded" v-if="relation">{{ relation }}</span>
             {{ title }}
             <!-- Special Tags -->
             <div v-if="bdrip"

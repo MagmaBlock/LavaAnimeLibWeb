@@ -13,28 +13,39 @@ export default {
 </script>
 <template>
   <!-- 总容器 -->
-  <div v-if="!father.loading">
-    <!-- 选集 -->
-    <div class="w-full border rounded-md bg-white opacity-90 px-4 py-2 select-none">
-      <div class="text-lg">筛选集数 (Beta) <span v-if="father.selectedVideoList != 'all'" class="text-sm text-gray-600">(已选
-          {{ father.selectedVideoList }})</span></div>
-      <div class="flex flex-wrap py-2">
-        <div class="bg-gray-100 text-blue-600 hover:bg-gray-200 text-center
-        px-2.5 py-2 lg:px-2 lg:py-1.5 mr-1 mb-1 rounded
-        ease-in duration-200" @click="father.selectedVideoList = 'all'">
-          全部
-        </div>
-        <div v-for="key in epKeys" class="bg-gray-100 text-blue-600 hover:bg-gray-200 text-center
-        px-2.5 py-2 lg:px-2 lg:py-1.5 mr-1 mb-1 rounded
-        ease-in duration-200" @click="father.selectedVideoList = key">
-          {{ key }}
-        </div>
+  <BasicCard v-if="!father.loading" class="px-4 py-2 select-none">
+    <!-- 标题 -->
+    <div class="text-lg">
+      筛选集数
+      <span v-if="father.selectedVideoList != 'all'" class="text-sm text-gray-600">
+        (已选 {{ father.selectedVideoList }})
+      </span>
+    </div>
+    <!-- 集数容器 -->
+    <div class="flex flex-wrap gap-1 my-2">
+      <div class="hover:bg-gray-200 hover:text-blue-600 active:bg-gray-300 text-sm sm:text-xs cursor-pointer ease-in duration-200
+        flex items-center place-content-center h-9 w-12 sm:h-8 sm:w-11 rounded"
+        :class="father.selectedVideoList == 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-blue-600'"
+        @click="father.selectedVideoList = 'all'">
+        全部
       </div>
+      <!-- 各集数 -->
+      <div v-for="key in epKeys" class="hover:bg-gray-200 hover:text-blue-600 active:bg-gray-300 cursor-pointer ease-in duration-200
+        flex items-center place-content-center h-9 w-9 sm:h-8 sm:w-8 rounded"
+        :class="father.selectedVideoList == key ? 'bg-blue-600 text-white' : 'bg-gray-100 text-blue-600'"
+        @click="father.selectedVideoList = key">
+        {{ key }}
+      </div>
+    </div>
+    <div class="max-h-80 sm:h-[400px] overflow-auto">
       <!-- 视频列表，默认渲染所有资源，可通过上方的 father.selectedVideoList 控制渲染哪些集数 -->
       <div v-for="video in father.epVideoList[father.selectedVideoList] || father.videoList"
-        class="relative ease-in duration-200 hover:bg-zinc-200 leading rounded-md">
-        <div v-if="video.type == 'file'" class="py-1">
-          <n-tag class="absolute bottom-0 right-0" v-if="father.selectedVideoList == 'all'" size="small" type="warning">
+        class="relative hover:bg-gray-200 active:bg-gray-300 p-0.5 leading rounded ease-in duration-200"
+        :class="father.selectedVideoUrl == video.url ? 'bg-gray-200' : ''">
+        <div v-if="video.type == 'file'" class="cursor-pointer" @click="father.selectedVideoUrl = video.url">
+          <!-- 集数 -->
+          <n-tag class="absolute bottom-0 right-0 z-10 bg-white bg-opacity-50"
+            v-if="father.selectedVideoList == 'all' && video.episode" size="small" type="warning">
             {{ video.episode }}
           </n-tag>
           <!-- 发布组 -->
@@ -69,9 +80,6 @@ export default {
           </n-tag>
         </div>
       </div>
-
-
-
     </div>
-  </div>
+  </BasicCard>
 </template>

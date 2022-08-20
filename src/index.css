@@ -2,21 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
-::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(0, 0, 0, 0.45);
-}
-
 ::-webkit-scrollbar {
     width: 6px;
-    height: 5px;
+    height: 6px;
     background-color: rgba(0, 0, 0, 0);
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
     border: 0px solid transparent;
     background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 ::-webkit-scrollbar-track {
@@ -25,11 +25,4 @@
 
 html {
     scrollbar-gutter: stable;
-}
-
-.fixed-top {
-    position: fixed;
-    top: 0;
-    z-index: 1030;
-    width: 100vw;
 }

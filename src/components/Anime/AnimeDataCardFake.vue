@@ -10,7 +10,7 @@ export default {
 </script>
 
 <template>
-  <div class="ease-in duration-200 border w-full h-fit bg-white opacity-90 rounded-md">
+  <BasicCard>
     <!-- 面包屑导航 但是不能点 -->
     <div class="px-4 py-2 text-sm text-gray-500 border-b-[1px]">
       <span class="bg-gray-300 text-gray-300 animate-pulse">2022年</span>
@@ -22,29 +22,30 @@ export default {
     <!-- 主信息卡 -->
     <div class="py-3 px-4">
       <!-- 标题块 -->
-      <div class="text-xl">
-        <span class="bg-gray-300 text-gray-300 animate-pulse">啊啊啊啊啊啊啊啊啊</span> <span
-          class="text-base bg-gray-300 text-gray-300 animate-pulse">(2022)</span>
-        <div class="text-sm leading-5 text-gray-500">
+      <div class="mb-1">
+        <div class="text-xl inline-block mr-2">
+          <span class="bg-gray-300 text-gray-300 animate-pulse">啊啊啊啊啊啊啊啊啊</span>
+          <span class="text-base bg-gray-300 text-gray-300 animate-pulse">(2022)</span>
+        </div>
+        <div class="text-sm leading-5 text-gray-500 inline-block">
           <span class="bg-gray-300 text-gray-300 animate-pulse">
             啊啊啊啊啊啊啊啊啊啊 · TV
           </span>
         </div>
       </div>
       <!-- 主要信息 -->
-      <!-- 主要信息 -->
       <div class="px-0.5 text-sm leading-5 text-gray-500">
         <!-- 第一行 -->
-        <div>
+        <div class="inline-block">
           <span class="mr-2"><i class="bi bi-play-btn"></i> 播放 ... 次</span>
           <span class="mr-2"><i class="bi bi-star"></i> ... 分
-            <span class="bg-gray-100 text-black rounded-sm px-1.5 text-xs align-text-top">
+            <span class="bg-gray-100 text-black rounded-sm px-1.5 text-xs align-baseline">
               Rank.#...
             </span>
           </span>
         </div>
         <!-- 第二行 -->
-        <div>
+        <div class="inline-block">
           <span class="mr-2"><i class="bi bi-calendar-event"></i> ... 开始放送</span>
           <span class="mr-2"><i class="bi bi-collection"></i> ... 话</span>
         </div>
@@ -62,5 +63,5 @@ export default {
         <i class="bi bi-box-arrow-up-right"></i> 在番组计划中打开
       </div>
     </div>
-  </div>
+  </BasicCard>
 </template>

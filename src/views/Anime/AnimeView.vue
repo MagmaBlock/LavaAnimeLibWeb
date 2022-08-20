@@ -5,16 +5,20 @@ import config from '../../common/config'
 import AnimeDataCard from '../../components/Anime/AnimeDataCard.vue';
 import AnimeDataCardFake from '../../components/Anime/AnimeDataCardFake.vue';
 import AnimeBackground from '../../components/Anime/AnimeBackground.vue'
-import AnimePageRight from '../../components/Anime/AnimePageRight.vue';
+import AnimeFileList from '../../components/Anime/AnimeFileList.vue';
+import ContainerMobileFull from '../../components/ContainerMobileFull.vue';
+import VideoPlayer from '../../components/Anime/VideoPlayer.vue';
+import RelationAnimes from '../../components/Anime/RelationAnimes.vue';
 
 export default {
   data() {
     return {
       laID: parseInt(this.$route.params.la),
       laData: {},
-      videoList: [], // 拿回的原始数据列表
-      epVideoList: {}, // 分集的数据列表
-      selectedVideoList: '', // 当前选择的列表
+      videoList: [],
+      epVideoList: {},
+      selectedVideoList: '',
+      selectedVideoUrl: '',
       loading: true,
     };
   },
@@ -38,31 +42,43 @@ export default {
       if (result.code != 200)
         throw Error("番剧 LaID 错误");
       this.videoList = result.data;
-      this.selectedVideoList = 'all'
+      this.selectedVideoList = "all";
     },
     splitVideoList(videoList) {
       for (let i in videoList) {
         if (videoList[i].episode) {
-          if (!this.epVideoList[videoList[i].episode]) this.epVideoList[videoList[i].episode] = new Array()
+          if (!this.epVideoList[videoList[i].episode])
+            this.epVideoList[videoList[i].episode] = new Array();
           this.epVideoList[videoList[i].episode].push(videoList[i]);
         }
       }
     }
-  }
+  },
+  components: { VideoPlayer, RelationAnimes }
 }
 </script>
 
 <template>
-  <Container>
-    <div class="lg:flex lg:flex-row w-full">
-      <div class="lg:basis-1/3 lg:mr-10">
-        <AnimeDataCardFake v-if="loading" class="mb-2" />
-        <AnimeDataCard v-if="!loading" :la="laData" class="mb-2" />
-      </div>
+  <ContainerMobileFull>
+    <!-- Flex 布局，仅在 lg 以上可用 -->
+    <div class="lg:flex lg:flex-row lg:gap-8 w-full">
       <div class="lg:basis-2/3">
-        <AnimePageRight :father="this" v-if="!loading"></AnimePageRight>
+        <!-- video -->
+        <VideoPlayer class="sticky top-0 sm:relative sm:mb-4" :url="selectedVideoUrl"></VideoPlayer>
+        <!-- 番剧卡，仅在 sm 以上显示 -->
+        <AnimeDataCard v-if="!loading" :la="laData" class="hidden sm:block sm:mb-4" />
+        <AnimeDataCardFake v-if="loading" class="hidden sm:block sm:mb-4" />
+      </div>
+      <div class="lg:basis-1/3">
+        <!-- 文件和集数列表 -->
+        <AnimeFileList :father="this" v-if="!loading" class="sm:mb-2"></AnimeFileList>
+        <!-- 关联作品 -->
+        <RelationAnimes v-if="!loading" :la="laData"></RelationAnimes>
+        <!-- 番剧卡，仅在手机端显示 -->
+        <AnimeDataCard v-if="!loading" :la="laData" class="sm:hidden" />
+        <AnimeDataCardFake v-if="loading" class="sm:hidden" />
       </div>
     </div>
     <AnimeBackground v-if="!loading" :la="laData"></AnimeBackground>
-  </Container>
+  </ContainerMobileFull>
 </template>
