@@ -9,6 +9,7 @@ import AnimeFileList from '../../components/Anime/AnimeFileList.vue';
 import ContainerMobileFull from '../../components/ContainerMobileFull.vue';
 import VideoPlayer from '../../components/Anime/VideoPlayer.vue';
 import RelationAnimes from '../../components/Anime/RelationAnimes.vue';
+import UseLocalVideoPlayer from '../../components/Anime/UseLocalVideoPlayer.vue';
 
 export default {
   data() {
@@ -18,7 +19,7 @@ export default {
       videoList: [],
       epVideoList: {},
       selectedVideoList: '',
-      selectedVideoUrl: '',
+      selectedVideo: {},
       loading: true,
     };
   },
@@ -54,7 +55,7 @@ export default {
       }
     }
   },
-  components: { VideoPlayer, RelationAnimes }
+  components: { VideoPlayer, RelationAnimes, UseLocalVideoPlayer }
 }
 </script>
 
@@ -64,14 +65,16 @@ export default {
     <div class="lg:flex lg:flex-row lg:gap-8 w-full">
       <div class="lg:basis-2/3">
         <!-- video -->
-        <VideoPlayer class="sticky top-0 sm:relative sm:mb-4" :url="selectedVideoUrl"></VideoPlayer>
+        <VideoPlayer class="sm:relative sm:mb-4" :url="selectedVideo.url || ''" ref="VideoPlayer"></VideoPlayer>
+        <UseLocalVideoPlayer class="sm:mb-4" :video="selectedVideo" :player="this.$refs.VideoPlayer">
+        </UseLocalVideoPlayer>
         <!-- 番剧卡，仅在 sm 以上显示 -->
         <AnimeDataCard v-if="!loading" :la="laData" class="hidden sm:block sm:mb-4" />
         <AnimeDataCardFake v-if="loading" class="hidden sm:block sm:mb-4" />
       </div>
       <div class="lg:basis-1/3">
         <!-- 文件和集数列表 -->
-        <AnimeFileList :father="this" v-if="!loading" class="sm:mb-2"></AnimeFileList>
+        <AnimeFileList :father="this" v-if="!loading" class="sm:mb-4"></AnimeFileList>
         <!-- 关联作品 -->
         <RelationAnimes v-if="!loading" :la="laData"></RelationAnimes>
         <!-- 番剧卡，仅在手机端显示 -->

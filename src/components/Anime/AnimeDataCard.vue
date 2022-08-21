@@ -20,7 +20,7 @@ export default {
   <BasicCard>
     <!-- 面包屑导航 但是不能点 -->
     <div class="px-4 py-2 text-sm text-gray-500 border-b">
-      <RouterLink :to="`/index/${this.la.index.year}-${this.la.index.type}`">
+      <RouterLink :to="`/index/`">
         {{ this.la.index.year }}
         <i class="bi bi-chevron-right text-xs"></i>
         {{ this.la.index.type }}

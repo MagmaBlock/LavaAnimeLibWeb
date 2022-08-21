@@ -41,8 +41,8 @@ export default {
       <!-- 视频列表，默认渲染所有资源，可通过上方的 father.selectedVideoList 控制渲染哪些集数 -->
       <div v-for="video in father.epVideoList[father.selectedVideoList] || father.videoList"
         class="relative hover:bg-gray-200 active:bg-gray-300 p-0.5 leading rounded ease-in duration-200"
-        :class="father.selectedVideoUrl == video.url ? 'bg-gray-200' : ''">
-        <div v-if="video.type == 'file'" class="cursor-pointer" @click="father.selectedVideoUrl = video.url">
+        :class="father.selectedVideo.name == video.name ? 'bg-gray-200' : ''">
+        <div v-if="video.type == 'file'" class="cursor-pointer" @click="father.selectedVideo = video">
           <!-- 集数 -->
           <n-tag class="absolute bottom-0 right-0 z-10 bg-white bg-opacity-50"
             v-if="father.selectedVideoList == 'all' && video.episode" size="small" type="warning">
