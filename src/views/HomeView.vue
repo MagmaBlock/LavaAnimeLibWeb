@@ -1,10 +1,5 @@
 <template>
   <Container>
-    <n-result status="418" title="我只是个杯具，又知道什么呢" description="一切尽在不言中">
-      <template #footer>
-        <n-button>接受真相就是这么简单</n-button>
-      </template>
-    </n-result>
     <n-gradient-text type="info" :size="24">
       这里应该有一个主页
     </n-gradient-text><br>
@@ -14,13 +9,16 @@
     <n-gradient-text type="success" :size="18">
       先定个小目标, 收录他
       <n-number-animation :from="0" :to="100000000" /> 部番
-    </n-gradient-text>
+    </n-gradient-text><br>
+    <n-gradient-text type="info" :size="24">
+      可以点击下方的 搜索和索引 看看已经完成的界面~
+    </n-gradient-text><br>
     <n-collapse>
       <n-collapse-item title="可以折叠哦" name="1">
         <div>可以哦</div>
       </n-collapse-item>
     </n-collapse>
-    <n-carousel show-arrow draggable class="max-w-lg my-2">
+    <n-carousel show-arrow draggable class="max-w-sm my-2">
       <img class="w-full h-60 object-cover"
         src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg">
       <img class="w-full h-60 object-cover"
