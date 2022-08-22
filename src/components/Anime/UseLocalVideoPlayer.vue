@@ -54,7 +54,7 @@ export default {
       let urls = {
         ddplayWindows: `ddplay:${encodeURIComponent(this.video.url + "|filePath=" + this.video.name)}`,
         ddplayAndroid: `intent:${this.video.url}#Intent;package=com.xyoye.dandanplay;end`,
-        potplayer: `potplayer://${this.video.url}`,
+        potplayer: `potplayer://${encodeURIComponent(this.video.url)}`,
         vlc: `vlc://${this.video.url}`,
         iina: `iina://weblink?url=${this.video.url}`
       }
