@@ -1,10 +1,11 @@
 <template>
-  <div class="bg-black w-full min-h-[200px] aspect-video sm:rounded-md select-none">
+  <div class="w-full h-fit sm:rounded-md select-none relative">
+    <div class="w-full h-0 pb-[56.25%] bg-black sm:rounded-md"></div>
     <!-- 链接为空时 -->
-    <div class="w-full h-full grid grid-cols-1 content-center" v-if="!url">
-      <div class="text-white text-center">请在右侧选择集数播放</div>
+    <div class="absolute top-0 w-full h-full text-white grid place-items-center" :class="url ? 'hidden' : ''">
+      请选择集数后播放
     </div>
-    <div ref="artRef" class="la-art-player w-full h-full" :class="url ? '' : 'hidden'"></div>
+    <div ref="artRef" class="absolute top-0 w-full h-full la-art-player" :class="url ? '' : 'hidden'"></div>
   </div>
 </template>
 
@@ -23,6 +24,7 @@
     border-radius: 0.375rem
   }
 }
+
 /* 在全屏时不使用圆角 */
 .la-art-player:fullscreen>div>video {
   border-radius: 0px
@@ -35,6 +37,7 @@
 .la-art-player:fullscreen>div {
   border-radius: 0px
 }
+
 /* 为播放器控制器增加 margin, 兼容异性屏设备 */
 .la-art-player>div>.art-bottom {
   margin-bottom: 12px;
