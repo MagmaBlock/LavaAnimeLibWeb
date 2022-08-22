@@ -29,6 +29,11 @@ export default {
     this.splitVideoList(this.videoList);
     this.loading = false;
   },
+  watch: {
+    selectedVideo(newVideo, oldVideo) {
+      console.log(newVideo, oldVideo);
+    }
+  },
   methods: {
     async getLavaAnimeApi(laID) {
       let result = (await LavaAnimeAPI.get("/v2/anime/get", { params: { id: laID, full: true } })).data;
@@ -53,6 +58,14 @@ export default {
           this.epVideoList[videoList[i].episode].push(videoList[i]);
         }
       }
+    },
+    async reportNewView(id, ep, file) {
+      let result = (await LavaAnimeAPI.post('/v2/anime/view/add', {
+        id, ep, file
+      }).data)
+      if (result.code == 200) {
+        console.log('上报播放量成功: ', result);
+      }
     }
   },
   components: { VideoPlayer, RelationAnimes, UseLocalVideoPlayer }
@@ -62,7 +75,7 @@ export default {
 <template>
   <ContainerMobileFull>
     <!-- Flex 布局，仅在 lg 以上可用 -->
-    <div class="lg:flex lg:flex-row lg:gap-8 w-full">
+    <div class="lg:flex lg:flex-row lg:gap-4 lg:px-12 w-full">
       <div class="lg:basis-2/3">
         <!-- video -->
         <VideoPlayer class="sm:relative sm:mb-4" :url="selectedVideo.url || ''" ref="VideoPlayer"></VideoPlayer>

@@ -23,16 +23,16 @@ export default {
     </div>
     <!-- 集数容器 -->
     <div class="flex flex-wrap gap-1 my-2">
-      <div class="hover:bg-gray-200 hover:text-blue-600 active:bg-gray-300 text-sm sm:text-xs cursor-pointer ease-in duration-200
+      <div class="active:bg-blue-600 active:text-white text-sm sm:text-xs cursor-pointer ease-in duration-100
         flex items-center place-content-center h-9 w-12 sm:h-8 sm:w-11 rounded"
-        :class="father.selectedVideoList == 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-blue-600'"
+        :class="father.selectedVideoList == 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-blue-600 hover:bg-gray-200 hover:text-blue-600'"
         @click="father.selectedVideoList = 'all'">
         全部
       </div>
       <!-- 各集数 -->
-      <div v-for="key in epKeys" class="hover:bg-gray-200 hover:text-blue-600 active:bg-gray-300 cursor-pointer ease-in duration-200
+      <div v-for="key in epKeys" class="active:bg-blue-600 active:text-white cursor-pointer ease-in duration-100
         flex items-center place-content-center h-9 w-9 sm:h-8 sm:w-8 rounded"
-        :class="father.selectedVideoList == key ? 'bg-blue-600 text-white' : 'bg-gray-100 text-blue-600'"
+        :class="father.selectedVideoList == key ? 'bg-blue-600 text-white' : 'bg-gray-100 text-blue-600 hover:bg-gray-200 hover:text-blue-600'"
         @click="father.selectedVideoList = key">
         {{ key }}
       </div>
@@ -40,7 +40,7 @@ export default {
     <div class="max-h-80 sm:h-[400px] overflow-auto">
       <!-- 视频列表，默认渲染所有资源，可通过上方的 father.selectedVideoList 控制渲染哪些集数 -->
       <div v-for="video in father.epVideoList[father.selectedVideoList] || father.videoList"
-        class="relative hover:bg-gray-200 active:bg-gray-300 p-0.5 leading rounded ease-in duration-200"
+        class="relative hover:bg-gray-200 active:bg-gray-300 p-0.5 leading rounded ease-in duration-100"
         :class="father.selectedVideo.name == video.name ? 'bg-gray-200' : ''">
         <div v-if="video.type == 'file'" class="cursor-pointer" @click="father.selectedVideo = video">
           <!-- 集数 -->

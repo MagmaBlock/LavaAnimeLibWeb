@@ -7,7 +7,7 @@
     <div class="flex flex-wrap gap-1 md:gap-2 px-3 py-2">
       <!-- 弹弹Play -->
       <div
-        class="h-8 flex place-items-center bg-gray-100 text-blue-600 hover:bg-gray-200 active:bg-gray-300 ease-in duration-200 rounded p-1 px-2 text-xs">
+        class="h-8 flex place-items-center bg-gray-100 text-blue-600 hover:bg-gray-200 active:bg-gray-300 ease-in duration-100 rounded p-1 px-2 text-xs">
         <img src="../../assets/PlayersIcon/dandanplay.webp" alt="ddplayWindows" class="w-6 h-6">
         <div class="text-black text-sm mx-2">弹弹Play</div>
         <a :href="getUrl().ddplayWindows" @click="this.pausePlayer()" class="mx-1">Windows 端</a>
@@ -15,23 +15,23 @@
       </div>
       <!-- 其他 -->
       <a :href="getUrl().potplayer" @click="this.pausePlayer()"
-        class="h-8 flex place-items-center bg-gray-100 text-blue-600 hover:bg-gray-200 active:bg-gray-300 ease-in duration-200 rounded py-1 px-2 text-xs">
+        class="h-8 flex place-items-center bg-gray-100 text-blue-600 hover:bg-gray-200 active:bg-gray-300 ease-in duration-100 rounded py-1 px-2 text-xs">
         <img src="../../assets/PlayersIcon/PotPlayer.svg" alt="potplayer" class="w-6 h-6">
         <div class="text-black mx-2">PotPlayer</div>
       </a>
       <a :href="getUrl().vlc" @click="this.pausePlayer()"
-        class="h-8 flex place-items-center bg-gray-100 text-blue-600 hover:bg-gray-200 active:bg-gray-300 ease-in duration-200 rounded py-1 px-2 text-xs">
+        class="h-8 flex place-items-center bg-gray-100 text-blue-600 hover:bg-gray-200 active:bg-gray-300 ease-in duration-100 rounded py-1 px-2 text-xs">
         <img src="../../assets/PlayersIcon/vlc.svg" alt="vlc" class="w-6 h-6">
         <div class="elf-center text-black mx-2">VLC</div>
       </a>
       <a :href="getUrl().iina" @click="this.pausePlayer()"
-        class="h-8 flex place-items-center bg-gray-100 text-blue-600 hover:bg-gray-200 active:bg-gray-300 ease-in duration-200 rounded py-1 px-2 text-xs">
+        class="h-8 flex place-items-center bg-gray-100 text-blue-600 hover:bg-gray-200 active:bg-gray-300 ease-in duration-100 rounded py-1 px-2 text-xs">
         <img src="../../assets/PlayersIcon/iina.svg" alt="iina" class="w-6 h-6">
         <div class="text-black mx-2">IINA</div>
       </a>
       <!-- 非播放器 -->
       <div @click="this.pausePlayer()" :data-clipboard-text="this.video.url" ref="copyBtn"
-        class="h-8 flex place-items-center bg-gray-100 text-blue-600 hover:bg-gray-200 active:bg-gray-300 ease-in duration-200 rounded py-1 px-2 text-xs">
+        class="h-8 flex place-items-center bg-gray-100 text-blue-600 hover:bg-gray-200 active:bg-gray-300 ease-in duration-100 rounded py-1 px-2 text-xs">
         <img src="../../assets/PlayersIcon/link.svg" alt="copy link" class="w-6 h-6">
         <div class="text-black mx-2">复制链接</div>
       </div>
