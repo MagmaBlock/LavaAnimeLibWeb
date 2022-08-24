@@ -5,15 +5,22 @@
   <meta charset="UTF-8" />
   <link rel="icon" href="/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>熔岩番剧库</title>
+  <title>熔岩番剧库 2.0 Beta</title>
   <link rel="stylesheet" href="https://cdn.5t5.top/ajax/libs/bootstrap-icons/1.8.2/font/bootstrap-icons.min.css"
     crossorigin="anonymous" />
-</head>
-
-<body>
-  <div id="app"></div>
-  <script type="module" src="/src/main.js"></script>
-
+  <!-- Umami -->
+  <script async defer data-website-id="5aad3d7c-6372-42aa-957e-ed4c945c0d08"
+    src="https://umami.magma.ink/umami.js"></script>
+  <!-- Baidu -->
+  <script>
+    var _hmt = _hmt || []; (function () {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c3b6ee9c2eff1642f7465f8e97766227";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <!-- Browser Update -->
   <script>
     var $buoop = { required: { e: 86, f: -6, o: -6, s: -1, c: 94 }, insecure: true, unsupported: true, api: 2022.08 };
     function $buo_f() {
@@ -24,6 +31,12 @@
     try { document.addEventListener("DOMContentLoaded", $buo_f, false) }
     catch (e) { window.attachEvent("onload", $buo_f) }
   </script>
+
+</head>
+
+<body>
+  <div id="app"></div>
+  <script type="module" src="/src/main.js"></script>
 </body>
 
 </html>

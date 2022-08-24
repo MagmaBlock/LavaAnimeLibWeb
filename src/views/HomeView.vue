@@ -1,5 +1,5 @@
 <template>
-  <Container>
+  <Container class="w-full">
     <n-gradient-text type="info" :size="24">
       这里应该有一个主页
     </n-gradient-text><br>
@@ -7,12 +7,10 @@
       还没写呢
     </n-gradient-text><br>
     <n-gradient-text type="success" :size="18">
-      先定个小目标, 收录他
+      先定个小目标, <br>收录他
       <n-number-animation :from="0" :to="100000000" /> 部番
     </n-gradient-text><br>
-    <n-gradient-text type="info" :size="24">
-      可以点击下方的 搜索和索引 看看已经完成的界面~
-    </n-gradient-text><br>
+    可以点击下方的 搜索和索引<br>看看已经完成的界面~<br>
     <n-collapse>
       <n-collapse-item title="可以折叠哦" name="1">
         <div>可以哦</div>
