@@ -26,7 +26,7 @@
       </a>
       <a :href="getUrl().iina" @click="this.pausePlayer()"
         class="h-8 flex place-items-center bg-gray-100 text-blue-600 hover:bg-gray-200 active:bg-gray-300 ease-in duration-100 rounded py-1 px-2 text-xs">
-        <img src="../../assets/PlayersIcon/IINA.svg" alt="iina" class="w-6 h-6">
+        <img src="../../assets/PlayersIcon/iina.svg" alt="iina" class="w-6 h-6">
         <div class="text-gray-800 mx-2">IINA</div>
       </a>
       <!-- 非播放器 -->
