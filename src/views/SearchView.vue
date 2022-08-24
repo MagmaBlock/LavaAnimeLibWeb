@@ -1,85 +1,90 @@
 <script>
 import { LavaAnimeAPI } from '../common/api';
 import config from '../common/config';
+import FullScreenAnimeCardContainer from '../components/Container/FullScreenAnimeCardContainer.vue';
 
 export default {
-  props: ['memory'],
+  props: ["memory"],
   data() {
     return {
       searchTimes: 0,
       searchResults: [],
       searchHistory: [],
-      lastSearch: '',
-      searchRecommendation: ['异世界舅舅', 'OVERLORD', 'Lycoris Recoil', 'Engage Kiss', '来自深渊', '实力至上主义教室', '间谍过家家'],
+      lastSearch: "",
+      searchRecommendation: ["Lycoris Recoil", "异世界舅舅", "OVERLORD", "Engage Kiss", "来自深渊", "夏日重现", "实力至上主义教室", "间谍过家家"],
       preSearchValues: [],
-      preSearchLock: false, // 防抖
+      preSearchLock: false,
       loading: {
         search: false
       }
-    }
+    };
   },
   methods: {
-    async search(value) { // 执行搜索
-      if (!value.trim() || this.lastSearch == value) return;
-      this.memory.searchValue = value
-      this.loading.search = true // 启动加载动画
-      this.searchTimes++ // 增加本界面搜索计数
-      this.searchResults = [] // 清空已有列表
-      this.addSearchHistory(this.memory.searchValue) // 把搜索词加入记录
-      this.changeUrlParams(this.memory.searchValue)
+    async search(value) {
+      if (!value.trim() || this.lastSearch == value)
+        return;
+      this.memory.searchValue = value;
+      this.loading.search = true; // 启动加载动画
+      this.searchTimes++; // 增加本界面搜索计数
+      this.searchResults = []; // 清空已有列表
+      this.addSearchHistory(this.memory.searchValue); // 把搜索词加入记录
+      this.changeUrlParams(this.memory.searchValue);
       // let type = parseInt(this.memory.searchValue) && this.memory.searchValue.length >= 3 ? 'bgm' : 'name' // 判断搜索类型
-      let results = (await LavaAnimeAPI.get('/v2/search', { params: { value: this.memory.searchValue } })).data.data
-      await new Promise(resolve => { setTimeout(() => { resolve() }, 100); }) // 慢一点切换以便展示动画
-      this.lastSearch = value
-      this.loading.search = false // 关闭加载动画
-      this.searchResults = results // 展示结果
+      let results = (await LavaAnimeAPI.get("/v2/search", { params: { value: this.memory.searchValue } })).data.data;
+      await new Promise(resolve => { setTimeout(() => { resolve(); }, 100); }); // 慢一点切换以便展示动画
+      this.lastSearch = value;
+      this.loading.search = false; // 关闭加载动画
+      this.searchResults = results; // 展示结果
     },
     async preSearch(value) {
-      if (!value.trim() || this.preSearchLock) return;
-      value = value.trim()
-      this.preSearchLock = true
-      let results = (await LavaAnimeAPI.get('/v2/search/quick', { params: { value: value } })).data
+      if (!value.trim() || this.preSearchLock)
+        return;
+      value = value.trim();
+      this.preSearchLock = true;
+      let results = (await LavaAnimeAPI.get("/v2/search/quick", { params: { value: value } })).data;
       console.log(results);
-      setTimeout(() => { this.preSearchLock = false; console.log('unlocked', this.preSearchLock); }, 500) // 0.5 秒可触发一次防止网络请求阻塞
-      if (results.code == 200) this.preSearchValues = results.data
+      setTimeout(() => { this.preSearchLock = false; console.log("unlocked", this.preSearchLock); }, 500); // 0.5 秒可触发一次防止网络请求阻塞
+      if (results.code == 200)
+        this.preSearchValues = results.data;
     },
     clickHistoryTag(value) {
-      this.memory.searchValue = value
-      this.search(value)
+      this.memory.searchValue = value;
+      this.search(value);
     },
-    loadSearchHistory() { // 从 localHistory 读取历史
-      let localStorageHistory = JSON.parse(localStorage.getItem('searchHistory'))
-      if (typeof localStorageHistory == 'object' && localStorageHistory) {
-        console.log('searchHistory from localStorage: ', localStorageHistory);
-        this.searchHistory = localStorageHistory
+    loadSearchHistory() {
+      let localStorageHistory = JSON.parse(localStorage.getItem("searchHistory"));
+      if (typeof localStorageHistory == "object" && localStorageHistory) {
+        console.log("searchHistory from localStorage: ", localStorageHistory);
+        this.searchHistory = localStorageHistory;
       }
     },
-    addSearchHistory(value) { // 增加一个 History Tag 同时删除历史中所有同名记录 
-      let newList = [value]
+    addSearchHistory(value) {
+      let newList = [value];
       for (let i in this.searchHistory) {
         if (this.searchHistory[i] != value && i <= 10) {
-          newList.push(this.searchHistory[i])
+          newList.push(this.searchHistory[i]);
         }
       }
-      this.searchHistory = newList
-      localStorage.setItem('searchHistory', JSON.stringify(this.searchHistory)) // JSON 存储至 localHistory
+      this.searchHistory = newList;
+      localStorage.setItem("searchHistory", JSON.stringify(this.searchHistory)); // JSON 存储至 localHistory
     },
     clearSearchHistroy() {
-      this.searchHistory = []
-      localStorage.setItem('searchHistory', JSON.stringify(this.searchHistory)) // JSON 存储至 localHistory
+      this.searchHistory = [];
+      localStorage.setItem("searchHistory", JSON.stringify(this.searchHistory)); // JSON 存储至 localHistory
     },
-    useUrlParams() { // 从 URL 或全局内存中读取搜索词
-      let searchValue = this.$route.params.value ? this.$route.params.value : this.memory.searchValue
-      this.search(searchValue)
+    useUrlParams() {
+      let searchValue = this.$route.params.value ? this.$route.params.value : this.memory.searchValue;
+      this.search(searchValue);
     },
     changeUrlParams(value) {
-      this.$router.replace({ name: 'Search', params: { value: value } })
+      this.$router.replace({ name: "Search", params: { value: value } });
     }
   },
   mounted() {
     this.loadSearchHistory();
     this.useUrlParams();
-  }
+  },
+  components: { FullScreenAnimeCardContainer }
 }
 </script>
 
@@ -131,36 +136,8 @@ export default {
       </div>
 
       <!-- 内容部分 -->
-      <div class="lg:basis-3/4 select-none">
-        <div class="px-1 lg:basis-3/4 lg:ml-4">
-          <n-spin :show="loading.search">
-            <div class="grid 
-                grid-cols-3 gap-x-2
-                sm:grid-cols-4 sm:gap-x-4
-                md:grid-cols-5 md:gap-x-6
-                lg:grid-cols-5
-                xl:grid-cols-5
-                2xl:grid-cols-6 2xl:px-10">
-              <!-- 番剧卡片骨架屏 -->
-              <div v-for="a in 6" v-if="loading.search" class="mb-1">
-                <AnimeCard fake></AnimeCard>
-              </div>
-              <!-- 番剧卡片 -->
-              <div v-for="anime in searchResults" class="mb-1">
-                <AnimeCard :id="anime.id" :poster="anime.images.poster" :title="anime.title" :bgmid="anime.bgmId"
-                  :views="anime.views" :bdrip="anime.type.bdrip" :nsfw="anime.type.nsfw" />
-              </div>
-            </div>
-            <div v-if="searchResults.length == 0 && searchTimes != 0 && loading.search == false" class="my-14">
-              <n-empty description="什么也没找到">
-                <template #icon>
-                  <img src="../assets/huaji.jpg" />
-                </template>
-              </n-empty>
-            </div>
-          </n-spin>
-        </div>
-      </div>
+      <FullScreenAnimeCardContainer :animes="searchResults" class="lg:basis-3/4 lg:ml-4" v-if="searchTimes">
+      </FullScreenAnimeCardContainer>
     </div>
   </Container>
 </template>

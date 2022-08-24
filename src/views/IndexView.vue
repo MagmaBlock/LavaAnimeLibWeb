@@ -5,63 +5,67 @@ import { LavaAnimeAPI } from '../common/api'
 
 import AnimeCard from '../components/AnimeCard.vue';
 import Container from '../components/Container.vue';
+import FullScreenAnimeCardContainer from '../components/Container/FullScreenAnimeCardContainer.vue';
 
 export default {
-  props: ['memory'],
+  props: ["memory"],
   data() {
     return {
       tabs: { year: [], type: [] },
-      animes: [],
-      animeCardsClass: '',
+      animes: null,
       loading: {
         year: true,
         type: true,
-        anime: true
       },
       justOpen: true
-    }
+    };
   },
   methods: {
     async getIndex() {
-      let index = (await LavaAnimeAPI('/v2/index/info')).data
-      if (index.code == 200) index = index.data
-      else throw new Error('索引获取失败')
-      this.tabs = index
-      this.loading.year = false // 动画
-      this.loading.type = false
+      let index = (await LavaAnimeAPI("/v2/index/info")).data;
+      if (index.code == 200)
+        index = index.data;
+      else
+        throw new Error("索引获取失败");
+      this.tabs = index;
+      this.loading.year = false; // 动画
+      this.loading.type = false;
     },
     async onTagClick(tagName, type) {
       if (this.memory.selectedTab[type] == tagName) { // 点击的标签已经被选择
-        if (this.isMemoryJustToBeEmpty()) return // 当筛选条件已剩最后一个，禁止继续取消
-        else this.memory.selectedTab[type] = '' // 取消当前筛选条件
-      } else { // 点击的标签未被选择
-        this.memory.selectedTab[type] = tagName // 将其选择
+        if (this.isMemoryJustToBeEmpty())
+          return; // 当筛选条件已剩最后一个，禁止继续取消
+        else
+          this.memory.selectedTab[type] = ""; // 取消当前筛选条件
       }
-      await this.queryIndex()
+      else { // 点击的标签未被选择
+        this.memory.selectedTab[type] = tagName; // 将其选择
+      }
+      await this.queryIndex();
     },
-    async queryIndex() { // 用 this.memory.selectedTab 的值来查询索引
-      this.loading.anime = true
-      this.animeCardsClass = 'hidden'
-      let animeList = (await LavaAnimeAPI.post('/v2/index/query', this.memory.selectedTab)).data.data
-      this.animes = animeList // 更新列表
-      await new Promise(resolve => { setTimeout(() => { resolve() }, 200); }) // 慢一点切换以便展示动画
-      this.animeCardsClass = ''
-      this.loading.anime = false
+    async queryIndex() {
+      this.animes = null; // 移除数据，进入空状态
+      let animeList = (await LavaAnimeAPI.post("/v2/index/query", this.memory.selectedTab)).data.data;
+      await new Promise(resolve => { setTimeout(() => { resolve(); }, 200); }); // 慢一点切换以便展示动画
+      this.animes = animeList; // 更新列表，同时解除空状态
     },
     isMemoryJustToBeEmpty() {
-      let selectedTab = this.memory.selectedTab // 当前所有被选中的条件
-      let trueKeys = 0 // 仍然激活的条件类型
+      let selectedTab = this.memory.selectedTab; // 当前所有被选中的条件
+      let trueKeys = 0; // 仍然激活的条件类型
       for (let i in selectedTab) {
-        if (selectedTab[i]) trueKeys++ // 发现一个被激活的条件类型
+        if (selectedTab[i])
+          trueKeys++; // 发现一个被激活的条件类型
       }
-      if (trueKeys >= 2) return false // 如果两个及以上被选中，允许取消
-      else return true // 如果只剩一个被选中，禁止取消
+      if (trueKeys >= 2)
+        return false; // 如果两个及以上被选中，允许取消
+      else
+        return true; // 如果只剩一个被选中，禁止取消
     }
   },
   async mounted() {
-    this.getIndex()
-    this.queryIndex()
-  }
+    this.getIndex();
+    this.queryIndex();
+  },
 }
 </script>
 
@@ -106,27 +110,7 @@ export default {
 
 
       <!-- 番剧栅格部分 -->
-      <div class="px-1 lg:basis-3/4 lg:ml-4 select-none">
-        <n-spin :show="loading.anime">
-          <div class="grid 
-        grid-cols-3 gap-x-2
-        sm:grid-cols-4 sm:gap-x-4
-        md:grid-cols-5 md:gap-x-6
-        lg:grid-cols-5
-        xl:grid-cols-5
-        2xl:grid-cols-6 2xl:px-10">
-            <!-- 番剧卡片骨架屏 -->
-            <div v-for="a in 16" v-if="loading.anime" class="mb-1">
-              <AnimeCard fake></AnimeCard>
-            </div>
-            <!-- 番剧卡片 -->
-            <div v-for="anime in animes" class="mb-1" :class="animeCardsClass">
-              <AnimeCard :id="anime.id" :poster="anime.images.poster" :title="anime.title" :bgmid="anime.bgmId"
-                :views="anime.views" :bdrip="anime.type.bdrip" :nsfw="anime.type.nsfw" />
-            </div>
-          </div>
-        </n-spin>
-      </div>
+      <FullScreenAnimeCardContainer :animes="this.animes" class="lg:basis-3/4 lg:ml-4"></FullScreenAnimeCardContainer>
     </div>
   </Container>
 </template>
