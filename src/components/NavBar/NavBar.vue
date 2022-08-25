@@ -5,21 +5,22 @@ export default {
   data() {
     return {
       route: {}
-    }
+    };
   },
   watch: {
-    $route(to, from) { // 监听路由事件
-      console.log('Vue Route to: ', to)
-      this.route = {} // 清空
-      this.route[this.$route.name] = true
+    // 监听全局路由事件
+    $route(to, from) {
+      console.log("Vue Route to: ", to);
+      this.route = {}; // 清空
+      this.route[this.$route.name] = true;
     }
-  }
+  },
+  components: { NavBarIcon }
 }
 </script>
 
 <template>
-  <div class="fixed bottom-0 w-full h-16 z-50
-  p-2
+  <div class="sticky bottom-0 w-full h-16 z-50 p-2
   flex flex-row flex-nowrap
   bg-white/80 backdrop-blur-lg backdrop-brightness-90
   select-none">
