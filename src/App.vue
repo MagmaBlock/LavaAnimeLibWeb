@@ -4,14 +4,16 @@ import NavBar from './components/NavBar/NavBar.vue';
 export default {
   data() {
     return {
-      memory: { // 全局内存，保存每个界面的选项，使切换界面更加接近 App 体验
-        searchValue: '',
+      memory: {
+        searchValue: "",
         selectedTab: {
-          year: '2022年', type: '7月夏'
+          year: "2022年",
+          type: "7月夏"
         }
       }
-    }
-  }
+    };
+  },
+  components: { RouterView, NavBar }
 }
 </script>
 

@@ -97,7 +97,7 @@ export default {
               :options="preSearchValues" @input="preSearch(memory.searchValue)"
               @keydown.enter="search(this.memory.searchValue)" blur-after-select
               @blur="search(this.memory.searchValue)" />
-            <n-button type="primary" @click="search(this.memory.searchValue)" ghost>搜索</n-button>
+            <n-button type="info" @click="search(this.memory.searchValue)" ghost>搜索</n-button>
           </n-input-group>
           <!-- 历史记录 -->
           <div class="my-4 w-full flex flex-wrap">
