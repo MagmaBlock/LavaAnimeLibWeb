@@ -20,18 +20,34 @@ export default {
 </script>
 
 <template>
-  <div class="sticky bottom-0 w-full h-16 z-50 p-2
-  flex flex-row flex-nowrap
-  bg-white/80 backdrop-blur-lg backdrop-brightness-90
-  select-none">
-    <NavBarIcon iconClass="bi bi-house" lightIconClass="bi bi-house-fill" route="/" title="主页"
-      :light="this.route['Home']">
-    </NavBarIcon>
-    <NavBarIcon iconClass="bi bi-search" route="/search" title="搜索" :light="this.route['Search']"></NavBarIcon>
-    <NavBarIcon iconClass="bi bi-collection" lightIconClass="bi bi-collection-fill" route="/index" title="索引"
-      :light="this.route['Index']">
-    </NavBarIcon>
-    <NavBarIcon iconClass="bi bi-lightbulb" lightIconClass="bi bi-lightbulb-fill" route="/help" title="帮助"
-      :light="this.route['Help']"></NavBarIcon>
+  <div>
+    <!-- 手机 -->
+    <div class="lg:hidden">
+      <div class="fixed bottom-0 w-full z-50 py-2 px-4
+      grid grid-cols-4
+      bg-white/80 backdrop-blur-lg backdrop-brightness-90
+      select-none">
+        <NavBarIcon iconClass="bi bi-house" lightIconClass="bi bi-house-fill" route="/" title="主页"
+          :light="this.route['Home']" />
+        <NavBarIcon iconClass="bi bi-search" route="/search" title="搜索" :light="this.route['Search']" />
+        <NavBarIcon iconClass="bi bi-collection" lightIconClass="bi bi-collection-fill" route="/index" title="索引"
+          :light="this.route['Index']" />
+        <NavBarIcon iconClass="bi bi-lightbulb" lightIconClass="bi bi-lightbulb-fill" route="/help" title="帮助"
+          :light="this.route['Help']" />
+      </div>
+    </div>
+    <!-- 宽屏 -->
+    <div class="hidden lg:block h-full ease-in duration-200 bg-slate-50 hover:shadow-xl">
+      <div class="w-24 z-50 py-8
+        grid grid-cols-1 gap-6">
+        <NavBarIcon iconClass="bi bi-house" lightIconClass="bi bi-house-fill" route="/" title="主页"
+          :light="this.route['Home']" />
+        <NavBarIcon iconClass="bi bi-search" route="/search" title="搜索" :light="this.route['Search']" />
+        <NavBarIcon iconClass="bi bi-collection" lightIconClass="bi bi-collection-fill" route="/index" title="索引"
+          :light="this.route['Index']" />
+        <NavBarIcon iconClass="bi bi-lightbulb" lightIconClass="bi bi-lightbulb-fill" route="/help" title="帮助"
+          :light="this.route['Help']" />
+      </div>
+    </div>
   </div>
 </template>

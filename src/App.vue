@@ -18,10 +18,12 @@ export default {
 </script>
 
 <template>
-  <!-- 当前路由的界面 -->
-  <RouterView :memory="this.memory" :key="$route.path" class="min-h-screen" />
-  <!-- 导航栏 -->
-  <NavBar />
+  <div class="lg:flex lg:flex-row lg:flex-nowrap h-screen">
+    <!-- 导航栏 -->
+    <NavBar />
+    <!-- 当前路由的界面 -->
+    <RouterView :memory="this.memory" :key="$route.path" class="overflow-scroll w-full"/>
+  </div>
 </template>
 <!-- 从 /page/1 => /page/2, 由于这两个路由的 $route.path 并不一样, 所以组件被强制不复用。 -->
 <!-- 从 /page?id=1 => /page?id=2, 由于这两个路由的 $route.path 一样, 所以和没设置key属性一样, 会复用组件。 -->
