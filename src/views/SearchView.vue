@@ -1,6 +1,5 @@
 <script>
 import { LavaAnimeAPI } from '../common/api';
-import config from '../common/config';
 import FullScreenAnimeCardContainer from '../components/Container/FullScreenAnimeCardContainer.vue';
 
 export default {
@@ -13,10 +12,7 @@ export default {
       lastSearch: "",
       searchRecommendation: ["Lycoris Recoil", "异世界舅舅", "OVERLORD", "Engage Kiss", "来自深渊", "夏日重现", "实力至上主义教室", "间谍过家家"],
       preSearchValues: [],
-      preSearchLock: false,
-      loading: {
-        search: false
-      }
+      preSearchLock: false
     };
   },
   methods: {
@@ -24,16 +20,13 @@ export default {
       if (!value.trim() || this.lastSearch == value)
         return;
       this.memory.searchValue = value;
-      this.loading.search = true; // 启动加载动画
       this.searchTimes++; // 增加本界面搜索计数
-      this.searchResults = []; // 清空已有列表
+      this.searchResults = null // 进入加载状态
       this.addSearchHistory(this.memory.searchValue); // 把搜索词加入记录
       this.changeUrlParams(this.memory.searchValue);
-      // let type = parseInt(this.memory.searchValue) && this.memory.searchValue.length >= 3 ? 'bgm' : 'name' // 判断搜索类型
       let results = (await LavaAnimeAPI.get("/v2/search", { params: { value: this.memory.searchValue } })).data.data;
       await new Promise(resolve => { setTimeout(() => { resolve(); }, 100); }); // 慢一点切换以便展示动画
       this.lastSearch = value;
-      this.loading.search = false; // 关闭加载动画
       this.searchResults = results; // 展示结果
     },
     async preSearch(value) {
