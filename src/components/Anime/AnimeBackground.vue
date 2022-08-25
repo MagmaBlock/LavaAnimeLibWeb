@@ -8,13 +8,13 @@ export default {
   data() {
     return {
       backgroundImg: '',
-      backgroundAnimation: 'opacity-0 scale-105 ',
+      backgroundAnimation: 'opacity-0 scale-105',
       backgroundAnimation2: 'opacity-100 scale-110',
     };
   },
   methods: {
     updateBackgroundImg(la) {
-      if (parseInt(la.bgmId) == 0) {
+      if (!parseInt(la.bgmId)) {
         this.backgroundImg = 'https://anime-img.5t5.top/assets/no-bgm-bg.jpg'
       } else {
         this.backgroundImg = la.images.poster

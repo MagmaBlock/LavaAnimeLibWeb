@@ -19,7 +19,9 @@ export default {
       selectedVideoList: "",
       selectedVideo: {},
       viewTimes: 0,
-      loading: true,
+      error: false,
+      errorCode: Number,
+      loading: true
     };
   },
   async mounted() {
@@ -39,10 +41,17 @@ export default {
   },
   methods: {
     async getLavaAnimeApi(laID) {
-      let result = (await LavaAnimeAPI.get("/v2/anime/get", { params: { id: laID, full: true } })).data;
-      console.log(`Got LavaAnimeApi data of la${this.laID}:`, result);
-      if (result.code != 200) return;
-      this.laData = result.data;
+      try {
+        let result = await LavaAnimeAPI.get("/v2/anime/get", { params: { id: laID, full: true } });
+        console.log(`Got LavaAnimeApi data of la${this.laID}:`, result.data);
+        this.laData = result.data.data;
+      } catch (error) {
+        console.log('获取信息时发生', error, '错误');
+        this.error = true
+        this.errorCode = error.response.status
+        this.loading = false
+        return
+      }
     },
     async getVideoList(laID) {
       let result = (await LavaAnimeAPI.get("/v2/anime/file", { params: { id: laID } })).data;
@@ -81,8 +90,8 @@ export default {
 
 <template>
   <ContainerMobileFull>
-    <!-- Flex 布局，仅在 lg 以上可用 -->
-    <div class="lg:flex lg:flex-row lg:gap-4 lg:px-12 w-full">
+    <!-- 主视图，Flex 布局，仅在 lg 以上可用 -->
+    <div class="lg:flex lg:flex-row lg:gap-4 lg:px-12 w-full" v-if="!error">
       <div class="lg:basis-2/3">
         <!-- video -->
         <VideoPlayer class="sm:relative sm:mb-4" ref="VideoPlayer" :url="selectedVideo.url || ''"
@@ -102,6 +111,10 @@ export default {
         <AnimeDataCard v-if="!loading" :la="laData" class="sm:hidden" />
         <AnimeDataCardFake v-if="loading" class="sm:hidden" />
       </div>
+    </div>
+    <!-- 错误处理视图 -->
+    <div v-if="error && errorCode == 404" class="w-full grid place-content-center mt-16">
+      <n-result status="404" title="404 资源不存在" description="生活总归带点荒谬" class="bg-white/70 w-fit p-10 rounded" />
     </div>
     <AnimeBackground v-if="!loading" :la="laData" />
   </ContainerMobileFull>
