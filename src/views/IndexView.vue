@@ -71,13 +71,13 @@ export default {
 
 <template>
   <Container>
-    <div class="lg:flex lg:flex-row">
+    <div class="lg:flex">
 
-      <!-- 选项部分，在高宽度屏幕上将左右 Flex -->
-      <div class="lg:basis-1/4 select-none">
-
-        <div class="sticky top-5">
-
+      <!-- 选项容器部分，在高宽度屏幕上将左右 Flex -->
+      <div class="lg:basis-1/4 flex-none">
+        <!-- 选项本体部分，将粘连屏幕 -->
+        <div class="sticky top-5 select-none">
+          <!-- 标题 -->
           <div class="text-lg mb-4 mx-0.5 font-medium">番剧索引</div>
           <!-- 年份部分 -->
           <n-spin :show="loading.year" class="mb-2">
@@ -120,7 +120,8 @@ export default {
 
 
       <!-- 番剧栅格部分 -->
-      <FullScreenAnimeCardContainer :animes="this.animes" class="lg:basis-3/4 lg:ml-4"></FullScreenAnimeCardContainer>
+      <FullScreenAnimeCardContainer :animes="this.animes" class="lg:basis-3/4 flex-none">
+      </FullScreenAnimeCardContainer>
     </div>
   </Container>
 </template>

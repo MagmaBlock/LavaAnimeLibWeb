@@ -83,12 +83,13 @@ export default {
 
 <template>
   <Container>
-    <div class="lg:flex lg:flex-row">
-      <!-- 搜索框部分，在高宽度屏幕上将左右 Flex -->
-      <div class="px-1 lg:basis-1/4 select-none">
-        <!-- 将粘连屏幕 -->
-        <div class="sticky top-5">
+    <div class="lg:flex">
+      <!-- 搜索框容器部分，在高宽度屏幕上将左右 Flex -->
+      <div class="lg:basis-1/4 flex-none">
+        <!-- 搜索本体部分，将粘连屏幕 -->
+        <div class="sticky top-5 select-none">
           <div class="text-lg mb-4 mx-0.5 font-medium">搜索</div>
+          <!-- 搜索框 -->
           <n-input-group>
             <n-auto-complete placeholder="按 Tab 搜索键入值, Enter 和 ↑ ↓ 使用候选"
               :input-props="{ type: 'text', name: 'search', autocomplete: 'off' }" v-model:value="memory.searchValue"
@@ -101,14 +102,14 @@ export default {
           <div class="my-4 w-full flex flex-wrap">
             <!-- 标签 -->
             <span v-for="value in searchHistory" @click="search(value)"
-              class="bg-gray-100 hover:bg-gray-200 ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 rounded-sm flex-initial max-w-xs overflow-hidden">
+              class="bg-gray-100 hover:bg-gray-200 active:bg-gray-300 ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 rounded max-w-xs overflow-hidden">
               <div class="leading-loose truncate">
                 {{ value }}
               </div>
             </span>
             <!-- 清除按钮 -->
             <span
-              class="bg-blue-50 hover:bg-blue-200 ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 rounded-sm flex-initial max-w-xs overflow-hidden"
+              class="bg-blue-50 hover:bg-blue-200 ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 rounded max-w-xs overflow-hidden"
               @click="clearSearchHistroy()" v-if="this.searchHistory.length > 0">
               <div class="leading-loose truncate text-blue-500">
                 <i class="bi bi-x-lg"></i>
@@ -119,7 +120,7 @@ export default {
           <div class="text-lg mb-4 mx-0.5 font-medium">大家在搜</div>
           <div class="my-4 w-full flex flex-wrap">
             <span v-for="value in searchRecommendation" @click="clickHistoryTag(value)"
-              class="bg-gray-100 hover:bg-gray-200 ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 rounded-sm flex-initial max-w-xs overflow-hidden">
+              class="bg-gray-100 hover:bg-gray-200 active:bg-gray-300 ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 rounded max-w-xs overflow-hidden">
               <div class="leading-loose truncate">
                 {{ value }}
               </div>
@@ -129,7 +130,7 @@ export default {
       </div>
 
       <!-- 内容部分 -->
-      <FullScreenAnimeCardContainer :animes="searchResults" class="lg:basis-3/4 lg:ml-4" v-if="searchTimes">
+      <FullScreenAnimeCardContainer :animes="searchResults" class="lg:basis-3/4 flex-none" v-if="searchTimes">
       </FullScreenAnimeCardContainer>
     </div>
   </Container>
