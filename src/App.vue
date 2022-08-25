@@ -19,7 +19,8 @@ export default {
 
 <template>
   <!-- 当前路由的界面 -->
-  <RouterView :memory="this.memory" :key="$route.path" />
+  <RouterView :memory="this.memory" :key="$route.path" class="min-h-screen" />
+  <!-- 导航栏 -->
   <NavBar />
 </template>
 <!-- 从 /page/1 => /page/2, 由于这两个路由的 $route.path 并不一样, 所以组件被强制不复用。 -->
