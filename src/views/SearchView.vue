@@ -1,5 +1,6 @@
 <script>
 import { LavaAnimeAPI } from '../common/api';
+import Container from '../components/Container.vue';
 import FullScreenAnimeCardContainer from '../components/Container/FullScreenAnimeCardContainer.vue';
 
 export default {
@@ -21,7 +22,7 @@ export default {
         return;
       this.memory.searchValue = value;
       this.searchTimes++; // 增加本界面搜索计数
-      this.searchResults = null // 进入加载状态
+      this.searchResults = null; // 进入加载状态
       this.addSearchHistory(this.memory.searchValue); // 把搜索词加入记录
       this.changeUrlParams(this.memory.searchValue);
       let results = (await LavaAnimeAPI.get("/v2/search", { params: { value: this.memory.searchValue } })).data.data;
@@ -77,7 +78,7 @@ export default {
     this.loadSearchHistory();
     this.useUrlParams();
   },
-  components: { FullScreenAnimeCardContainer }
+  components: { Container, FullScreenAnimeCardContainer }
 }
 </script>
 

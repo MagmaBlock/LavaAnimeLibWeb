@@ -1,9 +1,5 @@
 <script>
-import axios from 'axios'
-import config from '../common/config';
 import { LavaAnimeAPI } from '../common/api'
-
-import AnimeCard from '../components/AnimeCard.vue';
 import Container from '../components/Container.vue';
 import FullScreenAnimeCardContainer from '../components/Container/FullScreenAnimeCardContainer.vue';
 
@@ -66,6 +62,7 @@ export default {
     this.getIndex();
     this.queryIndex();
   },
+  components: { Container, FullScreenAnimeCardContainer }
 }
 </script>
 
@@ -120,8 +117,7 @@ export default {
 
 
       <!-- 番剧栅格部分 -->
-      <FullScreenAnimeCardContainer :animes="this.animes" class="lg:basis-3/4 flex-none">
-      </FullScreenAnimeCardContainer>
+      <FullScreenAnimeCardContainer :animes="this.animes" class="lg:basis-3/4 flex-none" />
     </div>
   </Container>
 </template>

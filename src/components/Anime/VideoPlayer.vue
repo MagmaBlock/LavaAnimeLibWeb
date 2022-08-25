@@ -52,7 +52,6 @@ export default {
   data() {
     return {
       art: null,
-      display: '',
       option: {
         url: this.url,
         setting: true,
@@ -71,20 +70,38 @@ export default {
         lock: true,
         autoOrientation: true,
         airplay: true,
-      },
+      }
     };
   },
   props: {
-    url: String
+    url: String,
+    reporter: Function
   },
   methods: {
     changeUrl(newUrl) {
       this.art.pause()
       this.art.notice.show = '正在切换...'
       this.art.url = newUrl
-      setTimeout(() => {
-        this.art.play()
-      }, 500);
+      setTimeout(() => this.art.play(), 500);
+      setTimeout(() => this.prepareToReportNewView(), 1000)
+    },
+    prepareToReportNewView() { // 若某 URL 被持续播放或加载 5 秒钟，则上报播放量
+      let sec = 0
+      let timer = setInterval(() => {
+        if (sec >= 5) { // 成功
+          clearInterval(timer)
+          this.reporter({ type: 'WebPlayer' })
+          return
+        }
+        sec = sec + 1
+        let isPlaying = this.art.playing || this.art.loading.show
+        if (!isPlaying) {
+          clearInterval(timer)
+          console.log('用户打断了当前播放.');
+          return
+        }
+        console.log(sec, 'Successed:', isPlaying, 'Playing:', this.art.playing, 'Loading:', this.art.loading.show);
+      }, 1000)
     }
   },
   mounted() {
