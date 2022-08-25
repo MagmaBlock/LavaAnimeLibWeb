@@ -28,6 +28,11 @@ export default {
     await this.getVideoList(this.laID);
     this.splitVideoList(this.videoList);
     this.loading = false;
+    window.scrollTo({
+      top: 0, // 滚动终点y的位置
+      left: 0, // 滚动终点x的位置
+      behavior: 'smooth' //平滑滚动
+    })
   },
   watch: {
     selectedVideo(newVideo, oldVideo) {
