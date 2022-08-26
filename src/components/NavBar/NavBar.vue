@@ -38,7 +38,7 @@ export default {
     </div>
     <!-- 宽屏 -->
     <div class="hidden lg:block h-full ease-in duration-200 bg-slate-50 hover:shadow-xl">
-      <div class="w-24 z-50 py-8
+      <div class="w-[88px] z-50 py-8
         grid grid-cols-1 gap-6">
         <NavBarIcon iconClass="bi bi-house" lightIconClass="bi bi-house-fill" route="/" title="主页"
           :light="this.route['Home']" />
