@@ -79,11 +79,11 @@ export default {
   },
   methods: {
     changeUrl(newUrl) {
-      this.art.pause()
+      // this.art.pause()
       this.art.notice.show = '正在切换...'
       this.art.url = newUrl
-      setTimeout(() => this.art.play(), 500);
-      setTimeout(() => this.prepareToReportNewView(), 1000)
+      setTimeout(() => this.art.play(), 200);
+      setTimeout(() => this.prepareToReportNewView(), 2000)
     },
     prepareToReportNewView() { // 若某 URL 被持续播放或加载 5 秒钟，则上报播放量
       let sec = 0
@@ -98,6 +98,7 @@ export default {
         if (!isPlaying) {
           clearInterval(timer)
           console.log('用户打断了当前播放.');
+          console.log(sec, 'Successed:', isPlaying, 'Playing:', this.art.playing, 'Loading:', this.art.loading.show);
           return
         }
         console.log(sec, 'Successed:', isPlaying, 'Playing:', this.art.playing, 'Loading:', this.art.loading.show);
