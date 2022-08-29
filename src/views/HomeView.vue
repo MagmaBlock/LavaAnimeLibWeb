@@ -1,5 +1,6 @@
 <template>
   <Container class="w-full">
+    <HeaderPictures></HeaderPictures>
     <n-gradient-text type="info" :size="24">
       这里应该有一个主页
     </n-gradient-text><br>
@@ -16,16 +17,7 @@
         <div>可以哦</div>
       </n-collapse-item>
     </n-collapse>
-    <n-carousel show-arrow draggable class="max-w-sm my-2">
-      <img class="w-full h-60 object-cover"
-        src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg">
-      <img class="w-full h-60 object-cover"
-        src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel2.jpeg">
-      <img class="w-full h-60 object-cover"
-        src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel3.jpeg">
-      <img class="w-full h-60 object-cover"
-        src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel4.jpeg">
-    </n-carousel>
+    
     <n-switch size="medium" v-model:value="this.switch">
       <template #icon>
         🤔
@@ -35,12 +27,14 @@
 </template>
 
 <script>
+import HeaderPictures from "../components/Home/HeaderPictures.vue";
 export default {
-  data() {
-    return {
-      switch: true
-    }
-  }
+    data() {
+        return {
+            switch: true
+        };
+    },
+    components: { HeaderPictures }
 }
 </script>
 
