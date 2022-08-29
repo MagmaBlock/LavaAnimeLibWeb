@@ -14,6 +14,8 @@
           class="mx-1.5">Windows</a>
         <a :href="getUrl().ddplayAndroid" @click="this.pausePlayer(); reporter({ type: 'DanDanPlayAndroid' })"
           class="mx-1.5">Android</a>
+        <a :href="getUrl().ddplayAndroid407" @click="this.pausePlayer(); reporter({ type: 'DanDanPlayAndroid' })"
+          class="mx-1.5">Android 兼容链</a>
       </div>
       <!-- 其他 -->
       <a :href="getUrl().potplayer" @click="this.pausePlayer(); reporter({ type: 'PotPlayer' })"
@@ -58,6 +60,7 @@ export default {
       let urls = {
         ddplayWindows: `ddplay:${encodeURIComponent(this.video.url + "|filePath=" + this.video.name)}`,
         ddplayAndroid: `intent:${this.video.url}#Intent;package=com.xyoye.dandanplay;end`,
+        ddplayAndroid407: `intent:${this.video.tempUrl}#Intent;package=com.xyoye.dandanplay;end`,
         potplayer: `potplayer://${encodeURIComponent(this.video.url)}`,
         vlc: `vlc://${this.video.url}`,
         iina: `iina://weblink?url=${this.video.url}`
