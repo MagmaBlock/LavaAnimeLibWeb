@@ -20,9 +20,9 @@
 </template>
 
 <script>
-import collections from '../../../assets/Home/homepage-collections'
-import BasicCard from '../../BasicCard.vue'
+import collections from '../../../assets/homepage-collections.js'
 import AnimeCollectionCards from '../Collection/AnimeCollectionCards.vue';
+import BasicCard from '../../BasicCard.vue'
 export default {
   data() {
     return {

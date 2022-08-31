@@ -1,6 +1,6 @@
 export default [
   {
-    pic: '/src/assets/Home/headerPic/lycoris-recoil-6285e38ee2c7c.jpg',
+    pic: '/Home/headerPic/lycoris-recoil-6285e38ee2c7c.jpg',
     url: '/anime/444',
     title: 'Lycoris Recoil',
     subtitle: '平稳的日子 其实暗藏着秘密...'
@@ -18,13 +18,13 @@ export default [
     subtitle: '弹幕追番体验更佳'
   },
   {
-    pic: '/src/assets/Home/headerPic/Summer Time Rendering.jpg',
+    pic: '/Home/headerPic/Summer Time Rendering.jpg',
     url: '/anime/371',
     title: '夏日重现 サマータイムレンダ',
     subtitle: '异眼丁真，鉴定为：潮'
   },
   {
-    pic: '/src/assets/Home/headerPic/Spy x Family.jpg',
+    pic: '/Home/headerPic/Spy x Family.jpg',
     url: '/anime/332',
     title: '间谍过家家 Spy x Family',
     subtitle: '四月人气新番完结!'
@@ -36,7 +36,7 @@ export default [
     subtitle: '点击查看'
   },
   {
-    pic: '/src/assets/Home/headerPic/LavaAnime.jpg',
+    pic: '/Home/headerPic/LavaAnime.jpg',
     url: '',
     title: '熔岩番剧库 LavaAnimeLib',
     subtitle: ''

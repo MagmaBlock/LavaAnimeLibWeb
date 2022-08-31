@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import headerPic from '../../assets/Home/headerPic.js'
+import headerPic from '../../assets/headerPic.js'
 export default {
   data() {
     return {
