@@ -1,6 +1,7 @@
 <template>
-  <Container class="w-full">
-    <HeaderPictures></HeaderPictures>
+  <ContainerMobileFull class="w-full">
+    <HeaderPictures class="max-w-md sm:rounded-md" />
+    <AnimeCollection class="max-w-md" />
     <n-gradient-text type="info" :size="24">
       这里应该有一个主页
     </n-gradient-text><br>
@@ -23,11 +24,13 @@
         🤔
       </template>
     </n-switch> 哇是{{ this.switch ? '开' : '关' }}关耶
-  </Container>
+  </ContainerMobileFull>
 </template>
 
 <script>
 import HeaderPictures from "../components/Home/HeaderPictures.vue";
+import ContainerMobileFull from "../components/ContainerMobileFull.vue";
+import AnimeCollection from "../components/AnimeCollection.vue";
 export default {
   data() {
     return {
@@ -37,7 +40,7 @@ export default {
   mounted() {
     document.title = '主页 | 熔岩番剧库 LavaAnimeLib'
   },
-  components: { HeaderPictures }
+  components: { HeaderPictures, ContainerMobileFull, AnimeCollection }
 }
 </script>
 
