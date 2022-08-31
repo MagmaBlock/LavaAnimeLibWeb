@@ -17,7 +17,7 @@
         <div>可以哦</div>
       </n-collapse-item>
     </n-collapse>
-    
+
     <n-switch size="medium" v-model:value="this.switch">
       <template #icon>
         🤔
@@ -29,12 +29,15 @@
 <script>
 import HeaderPictures from "../components/Home/HeaderPictures.vue";
 export default {
-    data() {
-        return {
-            switch: true
-        };
-    },
-    components: { HeaderPictures }
+  data() {
+    return {
+      switch: true
+    };
+  },
+  mounted() {
+    document.title = '主页 | 熔岩番剧库 LavaAnimeLib'
+  },
+  components: { HeaderPictures }
 }
 </script>
 

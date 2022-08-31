@@ -72,9 +72,11 @@ export default {
     },
     changeUrlParams(value) {
       this.$router.replace({ name: "Search", params: { value: value } });
+      document.title = `搜索 - ${value} | 熔岩番剧库 LavaAnimeLib`
     }
   },
   mounted() {
+    document.title = '搜索 | 熔岩番剧库 LavaAnimeLib'
     this.loadSearchHistory();
     this.useUrlParams();
   },

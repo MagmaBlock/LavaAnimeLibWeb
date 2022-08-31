@@ -25,10 +25,12 @@ export default {
     };
   },
   async mounted() {
+    document.title = '播放 | 熔岩番剧库 LavaAnimeLib'
     await this.getLavaAnimeApi(this.laID);
     await this.getVideoList(this.laID);
     this.splitVideoList(this.videoList);
     this.loading = false;
+    if (!this.error) document.title = `播放 - ${this.laData.title} | 熔岩番剧库 LavaAnimeLib`
     window.scrollTo({
       top: 0, left: 0,
       behavior: "smooth" //平滑滚动

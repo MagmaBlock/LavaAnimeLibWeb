@@ -59,6 +59,7 @@ export default {
     }
   },
   async mounted() {
+    document.title = '索引 | 熔岩番剧库 LavaAnimeLib'
     this.getIndex();
     this.queryIndex();
   },
