@@ -24,7 +24,7 @@ export default {
     fake: {
       type: Boolean,
       default: false
-    },
+    }
   },
   methods: {},
   data() {
@@ -35,7 +35,6 @@ export default {
 
 <template>
   <div>
-
     <!-- 正常 -->
     <div class="p-1" v-if="!this.fake">
       <RouterLink :to="'/anime/' + this.id">
