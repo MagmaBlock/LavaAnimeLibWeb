@@ -1,20 +1,21 @@
 <!-- 传入一串 IDs，自动调用 AnimeCard 并打印。 内部不包含任何容器，纯 AnimeCard 直接返回给上层 -->
 <!-- 最好在上层使用 Grid 之类的容器包裹住 -->
 <template>
-  <div v-if="!loading" class="flex flex-wrap">
-    <div class="basis-1/2" v-for="anime in data">
+  <div v-if="!loading" class="my-4 grid gap-x-4 gap-y-2 grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+    <template v-for="anime in data">
       <!-- 卡片 -->
-      <div
-        class="flex static bg-slate-100 hover:bg-slate-200 focus:bg-slate-300 ease-in transition rounded w-full h-16">
-        <!-- <img :src="anime.images.poster" alt="Poster" class="absolute"> -->
-        <div class="p-3">
-          <div class="text-sm ">{{ anime.title }}</div>
-          <div class=""><i class="bi bi-play-btn"></i> {{ anime.views }} 次播放</div>
+      <RouterLink :to="'/anime/' + anime.id">
+        <div class="relative w-full ease-in transition hover:shadow-lg rounded-md">
+          <div class="-z-10 h-16 overflow-clip grid place-content-center rounded-t-md">
+            <img :src="anime.images.poster" alt="Poster" class="w-full">
+          </div>
+          <div class="p-2 bg-gray-100 rounded-b-md">
+            <div class="whitespace-nowrap truncate"> {{ anime.title }} </div>
+            <div class="text-xs text-gray-600"><i class="bi bi-play-btn"></i> {{ anime.views }} 次播放</div>
+          </div>
         </div>
-      </div>
-    </div>
-    <!-- <AnimeCard :id="anime.id" :poster="anime.images.poster" :title="anime.title" :bgmid="anime.bgmId"
-      :views="anime.views" :nsfw="anime.type.nsfw" :bdrip="anime.type.bdrip"  /> -->
+      </RouterLink>
+    </template>
   </div>
 </template>
 
@@ -34,7 +35,7 @@ export default {
   },
   async mounted() {
     let result = await this.getAnimesData(this.ids);
-    this.data = result.data;
+    this.data = result.data.sort(function (a, b) { return b.views - a.views });
     this.loading = false
   },
   methods: {

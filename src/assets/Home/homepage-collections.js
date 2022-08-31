@@ -7,7 +7,7 @@ export default [
     "content": [
       {
         "index": 0,
-        "title": "备受关注 热门新番",
+        "title": "7月热播新番",
         "anime": [494, 401, 402, 444, 497, 501, 425]
       },
       {

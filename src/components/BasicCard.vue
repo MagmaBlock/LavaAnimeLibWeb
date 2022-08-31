@@ -1,5 +1,6 @@
 <template>
-  <div class="transition ease-in duration-200 border-b sm:border sm:rounded-md w-full h-fit bg-white">
+  <div class="transition ease-in duration-200 border-zinc-500 border-b sm:border sm:rounded-md w-full h-fit bg-white">
     <slot></slot>
+    123
   </div>
 </template>

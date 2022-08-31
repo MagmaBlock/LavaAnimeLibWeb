@@ -7,7 +7,10 @@
       </div>
       <div class="">
         <div v-for="content in collection.content">
-          <div class="text-base"> {{ content.title }} </div>
+          <div class="flex flex-nowrap flex-row-reverse text-gray-600">
+            <div class="w-fit"> {{ content.title }} </div>
+            <i class="bi bi-arrow-down-circle-fill mr-1"></i>
+          </div>
           <AnimeCollectionCards :ids="content.anime" class="flex flex-shrink-0"></AnimeCollectionCards>
         </div>
       </div>
