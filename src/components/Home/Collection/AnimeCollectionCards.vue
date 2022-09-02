@@ -6,10 +6,10 @@
       <!-- 卡片 -->
       <RouterLink :to="'/anime/' + anime.id">
         <div class="relative w-full ease-in transition hover:shadow-lg rounded-md">
-          <div class="-z-10 h-16 overflow-clip grid place-content-center rounded-t-md">
+          <div class="-z-10 h-16 overflow-hidden grid place-content-center rounded-t-md">
             <img :src="anime.images.poster" alt="Poster" class="w-full">
           </div>
-          <div class="p-2 bg-gray-100 rounded-b-md">
+          <div class="px-4 py-2 bg-gray-100 rounded-b-md">
             <div class="whitespace-nowrap truncate"> {{ anime.title }} </div>
             <div class="text-xs text-gray-600"><i class="bi bi-play-btn"></i> {{ anime.views }} 次播放</div>
           </div>
