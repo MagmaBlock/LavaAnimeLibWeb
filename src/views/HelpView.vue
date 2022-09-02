@@ -5,17 +5,20 @@
         <n-button @click="hh = true">{{ hh ? '欸嘿?' : '接受真相就是这么简单, 这还没写好, 去看看别的吧' }}</n-button>
       </template>
     </n-result>
+    <MarkdownRender content="## helloworld \n 123"></MarkdownRender>
   </Container>
 </template>
 <script>
+import MarkdownRender from '../components/Help/MarkdownRender.vue';
 export default {
   data() {
     return {
       hh: false
-    }
+    };
   },
   mounted() {
-    document.title = '帮助 | 熔岩番剧库 LavaAnimeLib'
-  }
+    document.title = "帮助 | 熔岩番剧库 LavaAnimeLib";
+  },
+  components: { MarkdownRender }
 }
 </script>
