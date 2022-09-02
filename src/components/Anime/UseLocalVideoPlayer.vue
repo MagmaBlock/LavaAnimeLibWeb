@@ -14,8 +14,6 @@
           class="mx-1.5">Windows</a>
         <a :href="getUrl().ddplayAndroid" @click="this.pausePlayer(); reporter({ type: 'DanDanPlayAndroid' })"
           class="mx-1.5">Android</a>
-        <a :href="getUrl().ddplayAndroid407" @click="this.pausePlayer(); reporter({ type: 'DanDanPlayAndroid' })"
-          class="mx-1.5">Android 兼容链</a>
       </div>
       <!-- 其他 -->
       <a :href="getUrl().potplayer" @click="this.pausePlayer(); reporter({ type: 'PotPlayer' })"
@@ -34,7 +32,7 @@
         <div class="text-gray-800 mx-2">IINA</div>
       </a>
       <!-- 非播放器 -->
-      <div @click="this.pausePlayer(); reporter({ type: 'Copy Link' })" :data-clipboard-text="this.video.url"
+      <div @click="this.pausePlayer(); reporter({ type: 'Copy Link' })" :data-clipboard-text="this.video.tempUrl"
         ref="copyBtn"
         class="h-8 flex place-items-center bg-gray-100 text-blue-600 hover:bg-gray-200 active:bg-gray-300 ease-in duration-100 rounded py-1 px-2 text-xs">
         <img src="../../assets/PlayersIcon/Link.svg" alt="copy link" class="w-6 h-6">
@@ -60,7 +58,6 @@ export default {
       let urls = {
         ddplayWindows: `ddplay:${encodeURIComponent(this.video.url + "|filePath=" + this.video.name)}`,
         ddplayAndroid: `intent:${this.video.url}#Intent;package=com.xyoye.dandanplay;end`,
-        ddplayAndroid407: `intent:${this.video.tempUrl}#Intent;package=com.xyoye.dandanplay;end`,
         potplayer: `potplayer://${encodeURIComponent(this.video.url)}`,
         vlc: `vlc://${this.video.url}`,
         iina: `iina://weblink?url=${this.video.url}`
