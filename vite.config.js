@@ -9,6 +9,7 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
 export default defineConfig({
   // https://cn.vitejs.dev/config/shared-options.html
+  base:"https://s-sh-2164-bangumi.oss.dogecdn.com/",
   plugins: [
     vue(),
     Components({
