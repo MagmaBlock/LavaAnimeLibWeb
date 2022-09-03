@@ -10,7 +10,7 @@
             <img :src="anime.images.poster" alt="Poster" class="w-full">
           </div>
           <div class="px-4 py-2 bg-gray-100 rounded-b-md">
-            <div class="whitespace-nowrap truncate"> {{ anime.title }} </div>
+            <div class="text-[13px] leading-[18px] whitespace-nowrap truncate"> {{ anime.title }} </div>
             <div class="text-xs text-gray-600"><i class="bi bi-play-btn"></i> {{ anime.views }} </div>
           </div>
         </div>
