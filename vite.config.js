@@ -27,6 +27,11 @@ export default defineConfig({
     open: true,
   },
   build: {
-    target: 'chrome58'
+    target: 'chrome58',
+    rollupOptions: {
+      external: [
+        "marked"
+      ]
+    }
   }
 })
