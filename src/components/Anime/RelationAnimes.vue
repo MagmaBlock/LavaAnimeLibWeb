@@ -1,5 +1,5 @@
 <template>
-  <BasicCard class="px-4 py-2 select-none" v-if="la.relations && la.relations[0]">
+  <AnimeBasicCard class="px-4 py-2 select-none" v-if="la.relations && la.relations[0]">
     <div class="text-lg">
       相关作品
     </div>
@@ -22,7 +22,7 @@
         </div>
       </RouterLink>
     </div>
-  </BasicCard>
+  </AnimeBasicCard>
 </template>
 
 <script>

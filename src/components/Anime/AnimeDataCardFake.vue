@@ -10,7 +10,7 @@ export default {
 </script>
 
 <template>
-  <BasicCard>
+  <AnimeBasicCard>
     <!-- 面包屑导航 但是不能点 -->
     <div class="px-4 py-2 text-sm text-gray-500 border-b-[1px]">
       <span class="bg-gray-300 text-gray-300 animate-pulse">2022年</span>
@@ -63,5 +63,5 @@ export default {
         <i class="bi bi-box-arrow-up-right"></i> 在番组计划中打开
       </div>
     </div>
-  </BasicCard>
+  </AnimeBasicCard>
 </template>

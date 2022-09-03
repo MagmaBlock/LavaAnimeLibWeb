@@ -1,5 +1,5 @@
 <template>
-  <BasicCard class="select-none relative">
+  <AnimeBasicCard class="select-none relative">
     <!-- 未选择集数的遮罩 -->
     <div class="absolute w-full h-full bg-white bg-opacity-90 rounded-md grid place-items-center" v-if="!video.url">
       请先选择集数
@@ -39,7 +39,7 @@
         <div class="text-gray-800 mx-2">复制链接</div>
       </div>
     </div>
-  </BasicCard>
+  </AnimeBasicCard>
 </template>
 
 <script>

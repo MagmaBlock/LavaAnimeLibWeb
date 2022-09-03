@@ -13,7 +13,7 @@ export default {
 </script>
 <template>
   <!-- 总容器 -->
-  <BasicCard v-if="!father.loading" class="px-4 py-2 select-none">
+  <AnimeBasicCard v-if="!father.loading" class="px-4 py-2 select-none">
     <!-- 标题 -->
     <div class="text-lg">
       筛选集数
@@ -81,5 +81,5 @@ export default {
         </div>
       </div>
     </div>
-  </BasicCard>
+  </AnimeBasicCard>
 </template>

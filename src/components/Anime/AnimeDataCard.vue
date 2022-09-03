@@ -1,5 +1,5 @@
 <script>
-import BasicCard from './BasicCard.vue';
+import AnimeBasicCard from './AnimeBasicCard.vue';
 export default {
   props: {
     la: {
@@ -11,13 +11,13 @@ export default {
       showMore: false
     };
   },
-  components: { BasicCard }
+  components: { AnimeBasicCard }
 }
 
 </script>
 
 <template>
-  <BasicCard>
+  <AnimeBasicCard>
     <!-- 面包屑导航 但是不能点 -->
     <div class="px-4 py-2 text-sm text-gray-500 border-b">
       <RouterLink :to="`/index/`">
@@ -86,5 +86,5 @@ export default {
         </a>
       </div>
     </div>
-  </BasicCard>
+  </AnimeBasicCard>
 </template>
