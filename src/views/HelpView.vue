@@ -1,24 +1,25 @@
 <template>
-  <Container class="grid place-items-center h-screen">
-    <n-result status="418" :title="`我只是个${hh ? '吟游诗人' : '杯具'}，又知道什么呢`" :description="hh ? '欸嘿?' : '一切尽在不言中'">
-      <template #footer>
-        <n-button @click="hh = true">{{ hh ? '欸嘿?' : '接受真相就是这么简单, 这还没写好, 去看看别的吧' }}</n-button>
-      </template>
-    </n-result>
-    <MarkdownRender content="## helloworld \n 123"></MarkdownRender>
+  <Container>
+    <div class="lg:flex">
+      <List :article="article" @change-article="a => article = a" class="lg:basis-1/4 lg:mr-16" />
+      <MarkdownRender :content="article.content || ''" class="lg:basis-3/4" />
+    </div>
   </Container>
 </template>
 <script>
+import Container from '../components/Container.vue'
 import MarkdownRender from '../components/Help/MarkdownRender.vue';
+import List from '../components/Help/List.vue';
 export default {
   data() {
     return {
-      hh: false
+      article: {}
     };
   },
   mounted() {
     document.title = "帮助 | 熔岩番剧库 LavaAnimeLib";
   },
-  components: { MarkdownRender }
+  watch: {},
+  components: { Container, MarkdownRender, List }
 }
 </script>
