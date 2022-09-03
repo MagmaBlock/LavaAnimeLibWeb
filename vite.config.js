@@ -7,8 +7,8 @@ import vue from '@vitejs/plugin-vue'
 import Components from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
-// https://vitejs.dev/config/
 export default defineConfig({
+  // https://cn.vitejs.dev/config/shared-options.html
   plugins: [
     vue(),
     Components({
@@ -21,8 +21,12 @@ export default defineConfig({
     }
   },
   server: {
-    open: true,
+    // https://cn.vitejs.dev/config/server-options.html
+    host: '0.0.0.0',
     port: 3000,
-    host: '0.0.0.0'
+    open: true,
   },
+  build: {
+    target: 'chrome58'
+  }
 })
