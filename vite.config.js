@@ -26,12 +26,5 @@ export default defineConfig({
     port: 3000,
     open: true,
   },
-  build: {
-    target: 'chrome58',
-    rollupOptions: {
-      external: [
-        "marked"
-      ]
-    }
-  }
+  build: {}
 })
