@@ -1,7 +1,7 @@
 <!-- 传入一串 IDs，自动调用 AnimeCard 并打印。 内部不包含任何容器，纯 AnimeCard 直接返回给上层 -->
 <!-- 最好在上层使用 Grid 之类的容器包裹住 -->
 <template>
-  <div v-if="!loading" class="my-4 grid gap-x-4 gap-y-2 grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+  <div v-if="!loading" class="my-2 grid gap-x-2 md:gap-x-4 gap-y-2 grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
     <template v-for="anime in data">
       <!-- 卡片 -->
       <RouterLink :to="'/anime/' + anime.id">
@@ -11,7 +11,7 @@
           </div>
           <div class="px-4 py-2 bg-gray-100 rounded-b-md">
             <div class="whitespace-nowrap truncate"> {{ anime.title }} </div>
-            <div class="text-xs text-gray-600"><i class="bi bi-play-btn"></i> {{ anime.views }} 次播放</div>
+            <div class="text-xs text-gray-600"><i class="bi bi-play-btn"></i> {{ anime.views }} </div>
           </div>
         </div>
       </RouterLink>
