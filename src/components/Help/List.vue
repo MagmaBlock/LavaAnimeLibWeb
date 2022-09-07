@@ -15,12 +15,14 @@
 <script>
 import about from '../../assets/Help/about.md?raw';
 import why3rdplayer from '../../assets/Help/why3rdplayer.md?raw'
+import list3rdplayer from '../../assets/Help/list3rdplayer.md?raw'
 export default {
   data() {
     return {
       articles: [
         { content: about },
-        { content: why3rdplayer }
+        { content: why3rdplayer },
+        { content: list3rdplayer }
       ]
     }
   },
