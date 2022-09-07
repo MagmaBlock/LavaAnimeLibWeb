@@ -45,9 +45,9 @@ export default {
     };
   },
   mounted() {
-    let model = { name: '', support: '', link: '', message: '', showModal: ref(false) } // 兜底模板防 undefined
+    let model = { name: '', support: '', link: '', message: '' } // 兜底模板防 undefined
     this.sponsorsRaw.forEach(sponsor => {
-      this.sponsors.push({ ...model, ...sponsor })
+      this.sponsors.push({ ...model, ...sponsor, showModal: ref(false) })
     })
   },
   components: { SponsorCard }
