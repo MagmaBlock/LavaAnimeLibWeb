@@ -2,10 +2,10 @@
   <div class="max-h-96">
     <div class="text-lg font-medium">帮助列表</div>
     <div class="text-xs my-2 text-gray-600">在这里你可以获取到一些帮助</div>
-    <div class="mt-4 px-4 bg-gray-100 rounded-md overflow-y-scroll">
-      <div class="text-sm py-2 font-medium rounded-md ease-in duration-100" v-for="thisArt in articles"
+    <div class="mt-4 bg-gray-100 rounded-md overflow-y-scroll">
+      <div class="text-sm py-2 px-4 font-medium rounded-md ease-in duration-100 hover:bg-gray-200 active:bg-gray-300" v-for="thisArt in articles"
         @click="$emit('change-article', thisArt)"
-        :class="{ 'text-blue-700 font-semibold': thisArt.content == article.content }">
+        :class="{ 'text-blue-700 font-semibold bg-gray-200': thisArt.content == article.content }">
         {{ thisArt.title || thisArt.content.match(/.*/)[0].replaceAll('#', '') }}
       </div>
     </div>

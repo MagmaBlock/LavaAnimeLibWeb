@@ -1,7 +1,7 @@
 <template>
   <Container>
     <div class="lg:flex">
-      <div class="lg:basis-1/4">
+      <div class="lg:basis-1/4 select-none">
         <List :article="article" @change-article="a => article = a" />
         <Sponsors class="mt-8 hidden lg:block" />
       </div>
