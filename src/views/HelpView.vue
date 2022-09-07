@@ -1,15 +1,22 @@
 <template>
   <Container>
     <div class="lg:flex">
-      <List :article="article" @change-article="a => article = a" class="lg:basis-1/4 lg:mr-16" />
-      <MarkdownRender :content="article.content || ''" class="lg:basis-3/4" />
+      <div class="lg:basis-1/4">
+        <List :article="article" @change-article="a => article = a" />
+        <Sponsors class="mt-8 hidden lg:block" />
+      </div>
+      <div class="lg:basis-3/4">
+        <MarkdownRender :content="article.content || ''" />
+      </div>
     </div>
+    <Sponsors class="mt-16 block lg:hidden" />
   </Container>
 </template>
 <script>
 import Container from '../components/Container.vue'
 import MarkdownRender from '../components/Help/MarkdownRender.vue';
 import List from '../components/Help/List.vue';
+import Sponsors from '../components/Help/Sponsors.vue';
 export default {
   data() {
     return {
@@ -20,6 +27,6 @@ export default {
     document.title = "帮助 | 熔岩番剧库 LavaAnimeLib";
   },
   watch: {},
-  components: { Container, MarkdownRender, List }
+  components: { Container, MarkdownRender, List, Sponsors }
 }
 </script>
