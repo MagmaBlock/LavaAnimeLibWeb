@@ -1,5 +1,5 @@
 <template>
-  <n-carousel show-arrow draggable>
+  <n-carousel show-arrow draggable class="shadow-lg">
     <template v-for="pic in headerPic">
       <div class="static w-full h-52 sm:h-60">
         <!-- 真图片 -->

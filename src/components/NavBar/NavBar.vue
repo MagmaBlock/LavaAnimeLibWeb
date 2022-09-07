@@ -37,7 +37,7 @@ export default {
       </div>
     </div>
     <!-- 宽屏 -->
-    <div class="hidden lg:block h-full ease-in duration-200 bg-slate-50 hover:shadow-xl">
+    <div class="hidden lg:block h-full ease-in duration-200 bg-slate-50 hover:bg-slate-100 shadow-xl hover:shadow-2xl">
       <div class="w-[88px] z-50 py-8
         grid grid-cols-1 gap-6">
         <NavBarIcon iconClass="bi bi-house" lightIconClass="bi bi-house-fill" route="/" title="主页"
