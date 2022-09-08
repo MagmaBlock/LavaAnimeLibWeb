@@ -1,16 +1,19 @@
 <!-- 传入一串 IDs，自动调用 AnimeCard 并打印。 内部不包含任何容器，纯 AnimeCard 直接返回给上层 -->
 <!-- 最好在上层使用 Grid 之类的容器包裹住 -->
 <template>
-  <div v-if="!loading" class="my-2 grid gap-x-2 md:gap-x-4 gap-y-2 grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
+  <div v-if="!loading"
+    class="my-2 grid gap-2 md:gap-4 grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-9">
     <template v-for="anime in data">
       <!-- 卡片 -->
       <RouterLink :to="'/anime/' + anime.id">
-        <div class="relative w-full ease-in transition hover:shadow-lg rounded-md">
-          <div class="-z-10 h-16 overflow-hidden grid place-content-center rounded-t-md">
+        <div class="relative w-full ease-in transition hover:shadow-lg rounded-md border border-gray-300">
+          <div class="-z-10 overflow-hidden grid place-content-center rounded-t-md">
             <img :src="anime.images.poster" alt="Poster" class="w-full">
           </div>
-          <div class="px-4 py-2 bg-gray-100 rounded-b-md">
-            <div class="text-[13px] leading-[18px] whitespace-nowrap truncate"> {{ anime.title }} </div>
+          <div class="px-3 md:px-4 py-2 bg-gray-100 rounded-b-md">
+            <n-ellipsis :line-clamp="2" expand-trigger="hover">
+              <div class="text-[13px] leading-[18px] h-9"> {{ anime.title }} </div>
+            </n-ellipsis>
             <div class="text-xs text-gray-600"><i class="bi bi-play-btn"></i> {{ anime.views }} </div>
           </div>
         </div>
