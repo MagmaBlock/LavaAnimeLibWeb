@@ -1,4 +1,5 @@
 <script>
+import AnimeBasicCard from './AnimeBasicCard.vue';
 export default {
   props: {
     father: Object
@@ -6,14 +7,15 @@ export default {
   data() {
     return {
       epKeys: Object.keys(this.father.epVideoList).sort()
-    }
+    };
   },
-  methods: {}
+  methods: {},
+  components: { AnimeBasicCard }
 }
 </script>
 <template>
   <!-- 总容器 -->
-  <AnimeBasicCard v-if="!father.loading" class="px-4 py-2 select-none">
+  <AnimeBasicCard v-if="!father.loading && father.videoList.length" class="px-4 py-2 select-none">
     <!-- 标题 -->
     <div class="text-lg">
       筛选集数
@@ -30,12 +32,14 @@ export default {
         全部
       </div>
       <!-- 各集数 -->
-      <div v-for="key in epKeys" class="active:bg-blue-600 active:text-white cursor-pointer ease-in duration-100
+      <template v-for="key in epKeys">
+        <div class="active:bg-blue-600 active:text-white cursor-pointer ease-in duration-100
         flex items-center place-content-center h-9 w-9 sm:h-8 sm:w-8 rounded"
-        :class="father.selectedVideoList == key ? 'bg-blue-600 text-white' : 'bg-gray-100 text-blue-600 hover:bg-gray-200 hover:text-blue-600'"
-        @click="father.selectedVideoList = key">
-        {{ key }}
-      </div>
+          :class="father.selectedVideoList == key ? 'bg-blue-600 text-white' : 'bg-gray-100 text-blue-600 hover:bg-gray-200 hover:text-blue-600'"
+          @click="father.selectedVideoList = key">
+          {{ key }}
+        </div>
+      </template>
     </div>
     <div class="max-h-80 sm:h-[400px] overflow-auto">
       <!-- 视频列表，默认渲染所有资源，可通过上方的 father.selectedVideoList 控制渲染哪些集数 -->
@@ -81,5 +85,9 @@ export default {
         </div>
       </div>
     </div>
+  </AnimeBasicCard>
+  <AnimeBasicCard v-else class="py-6 select-none">
+    <n-result status="418" title="暂无资源 敬请期待" :description="`来自 Bangumi 的放送时间 ${father.laData.date || '未知 / 暂未定档'}`" size="small">
+    </n-result>
   </AnimeBasicCard>
 </template>
