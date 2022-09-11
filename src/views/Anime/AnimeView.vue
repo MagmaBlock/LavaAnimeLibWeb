@@ -8,6 +8,7 @@ import AnimeDataCardFake from '../../components/Anime/AnimeDataCardFake.vue';
 import AnimeFileList from '../../components/Anime/AnimeFileList.vue';
 import RelationAnimes from '../../components/Anime/RelationAnimes.vue';
 import AnimeBackground from '../../components/Anime/AnimeBackground.vue';
+import AnimeBasicCard from '../../components/Anime/AnimeBasicCard.vue';
 
 export default {
   data() {
@@ -86,12 +87,25 @@ export default {
       }
     }
   },
-  components: { ContainerMobileFull, VideoPlayer, UseLocalVideoPlayer, AnimeDataCard, AnimeDataCardFake, AnimeFileList, RelationAnimes, AnimeBackground }
+  components: { ContainerMobileFull, VideoPlayer, UseLocalVideoPlayer, AnimeDataCard, AnimeDataCardFake, AnimeFileList, RelationAnimes, AnimeBackground, AnimeBasicCard }
 }
 </script>
 
 <template>
   <ContainerMobileFull>
+    <div class="lg:px-12" v-if="this.$route.query.dev">
+      <AnimeBasicCard class="p-4 mb-4 flex">
+        <div class="font-bold">开发模式</div>
+        <div class="mx-4 grid place-items-center"> 当前 LavaAnimeID : {{laID}} </div>
+        <RouterLink class="border border-blue-600 text-blue-600 rounded-md px-2 mx-2" :to="`/anime/${laID - 1}?dev=1`">
+          前一个
+        </RouterLink>
+        <RouterLink class="border border-blue-600 text-blue-600 rounded-md px-2 mx-2" :to="`/anime/${laID + 1}?dev=1`">
+          后一个
+        </RouterLink>
+        <div class="mx-4 grid place-items-center">Loading: {{loading}} | viewTimes: {{viewTimes}}</div>
+      </AnimeBasicCard>
+    </div>
     <!-- 主视图，Flex 布局，仅在 lg 以上可用 -->
     <div class="lg:flex lg:flex-row lg:gap-4 lg:px-12 w-full" v-if="!error">
       <div class="lg:basis-2/3">
