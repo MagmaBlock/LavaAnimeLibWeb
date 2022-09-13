@@ -1,5 +1,10 @@
 <template>
   <Container>
+    <div class="grid">
+      <div v-if="notSupport" class="bg-gray-200 rounded-md p-4 w-fit place-self-center">
+        当前浏览器不支持 CSS selector: :where() 语法, 下方帮助排版可能显示不正常!
+      </div>
+    </div>
     <div class="lg:flex">
       <div class="lg:basis-1/4 select-none">
         <List :article="article" :articles="articles" @change-article="a => changeArticle(a)" ref="List" />
@@ -13,6 +18,8 @@
   </Container>
 </template>
 <script>
+import uaParser from 'ua-parser-js';
+
 import Container from '../components/Container.vue'
 import List from '../components/Help/List.vue';
 import MarkdownRender from '../components/Help/MarkdownRender.vue';
@@ -40,6 +47,11 @@ export default {
         this.changeArticle(a)
       }
     })
+    let ua = uaParser()
+    console.log(ua.engine);
+    if (ua.engine.name == 'Blink' && parseInt(ua.engine.version) < 88) {
+      this.notSupport = true
+    }
   },
   methods: {
     changeArticle(a) {
