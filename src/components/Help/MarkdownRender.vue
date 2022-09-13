@@ -8,7 +8,7 @@
 
 <script>
 import { marked } from 'marked';
-import 'github-markdown-css/github-markdown.css';
+import 'github-markdown-css/github-markdown-light.css';
 import './markdown.css';
 
 
