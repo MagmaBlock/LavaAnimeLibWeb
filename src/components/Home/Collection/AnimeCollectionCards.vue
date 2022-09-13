@@ -6,7 +6,7 @@
     <template v-for="anime in data">
       <!-- 卡片 -->
       <RouterLink :to="'/anime/' + anime.id">
-        <div class="relative w-full ease-in transition hover:shadow-lg rounded-md border border-gray-300">
+        <div class="relative w-full ease-in transition hover:shadow-lg rounded-md border-gray-300">
           <div class="-z-10 overflow-hidden grid place-content-center rounded-t-md">
             <img :src="anime.images.poster" alt="Poster" class="w-full">
           </div>
