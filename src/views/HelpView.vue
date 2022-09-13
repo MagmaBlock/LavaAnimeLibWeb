@@ -8,7 +8,7 @@
       <div class="lg:basis-3/4">
         <div class="grid">
           <div v-if="notSupport" class="bg-gray-200 px-4 py-2 w-fit rounded-md text-xs place-self-center">
-            当前浏览器不支持 CSS selector: :where() 语法, 下方帮助排版可能显示不正常!
+            当前浏览器版本过旧, 下方帮助排版可能显示不正常!
           </div>
         </div>
         <MarkdownRender :content="article.content || ''" />
@@ -49,7 +49,7 @@ export default {
     })
     let ua = uaParser()
     console.log(ua.engine);
-    if (ua.engine.name == 'Blink' && parseInt(ua.engine.version) < 88) {
+    if (ua.engine.name == 'Blink' && parseInt(ua.engine.version) < 80) {
       this.notSupport = true
     }
   },
