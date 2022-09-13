@@ -4,7 +4,7 @@
       <div class="text-xl"> {{ collection.title }} </div>
       <div class="text-sm text-gray-500"> {{ collection.subtitle }} </div>
     </div>
-    <div class="">
+    <div class="px-2 lg:px-0">
       <div v-for="content in collection.content">
         <div class="flex flex-nowrap flex-row-reverse text-gray-600">
           <div class="w-fit"> {{ content.title }} </div>

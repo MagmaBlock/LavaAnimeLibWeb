@@ -2,7 +2,7 @@
 <!-- 最好在上层使用 Grid 之类的容器包裹住 -->
 <template>
   <div v-if="!loading"
-    class="my-2 grid gap-2 md:gap-4 grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-9">
+    class="my-2 grid gap-4 grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-9">
     <template v-for="anime in data">
       <!-- 卡片 -->
       <RouterLink :to="'/anime/' + anime.id">
