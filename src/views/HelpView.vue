@@ -1,16 +1,16 @@
 <template>
   <Container>
-    <div class="grid">
-      <div v-if="notSupport" class="bg-gray-200 rounded-md p-4 w-fit place-self-center">
-        当前浏览器不支持 CSS selector: :where() 语法, 下方帮助排版可能显示不正常!
-      </div>
-    </div>
     <div class="lg:flex">
       <div class="lg:basis-1/4 select-none">
         <List :article="article" :articles="articles" @change-article="a => changeArticle(a)" ref="List" />
         <Sponsors class="mt-8 hidden lg:block" />
       </div>
       <div class="lg:basis-3/4">
+        <div class="grid">
+          <div v-if="notSupport" class="bg-gray-200 px-4 py-2 w-fit rounded-md text-xs place-self-center">
+            当前浏览器不支持 CSS selector: :where() 语法, 下方帮助排版可能显示不正常!
+          </div>
+        </div>
         <MarkdownRender :content="article.content || ''" />
       </div>
     </div>
