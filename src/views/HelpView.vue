@@ -6,8 +6,8 @@
         <Sponsors class="mt-8 hidden lg:block" />
       </div>
       <div class="lg:basis-3/4">
-        <div class="grid">
-          <div v-if="notSupport" class="bg-gray-200 px-4 py-2 w-fit rounded-md text-xs place-self-center">
+        <div v-if="notSupport" class="grid mt-4">
+          <div class="bg-gray-200 px-4 py-2 w-fit rounded-md text-xs place-self-center">
             当前浏览器版本过旧, 下方帮助排版可能显示不正常!
           </div>
         </div>
@@ -49,7 +49,7 @@ export default {
     })
     let ua = uaParser()
     console.log(ua.engine);
-    if (ua.engine.name == 'Blink' && parseInt(ua.engine.version) < 80) {
+    if (ua.engine.name == 'Blink' && parseInt(ua.engine.version) < 82) {
       this.notSupport = true
     }
   },
