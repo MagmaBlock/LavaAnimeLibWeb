@@ -22,10 +22,10 @@ export default {
 <template>
   <div>
     <!-- 手机 -->
-    <div class="lg:hidden">
-      <div class="fixed bottom-0 w-full z-50 py-2 px-4
+    <div class="lg:hidden fixed bottom-4 z-50 w-full grid">
+      <div class="w-11/12 py-2 px-4 place-self-center
       grid grid-cols-4
-      bg-white/80 backdrop-blur-lg backdrop-brightness-90
+      bg-white/80 backdrop-blur-lg backdrop-brightness-90 border shadow-lg rounded-xl
       select-none">
         <NavBarIcon iconClass="bi bi-house" lightIconClass="bi bi-house-fill" route="/" title="主页"
           :light="this.route['Home']" />
