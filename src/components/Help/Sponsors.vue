@@ -36,10 +36,11 @@ export default {
       sponsorsRaw: [
         { name: "Longtianmu", support: "￥240", link: "https://ltm.ink/" },
         { name: "czy0729", support: "￥99.99", link: "https://github.com/czy0729" },
-        { name: "Arthals", support: "￥100.00" },
+        { name: "Arthals", support: "￥100.00", link: "https://arthals.ink/" },
         { name: "小林", support: "￥50.00" },
+        { name: "若葉", support: "其他", message: "提供新域名等支持", link: "https://loliloli.moe/" },
         { name: "XJH_Jorhai", support: "￥35.00", message: "麦老师是我的神明呜呜呜" },
-        { name: "Arthals", support: "其他", message: "提供了数月的下载节点支持" },
+        { name: "Arthals", support: "其他", message: "提供了数月的下载节点支持", link: "https://arthals.ink/" },
         { name: "Loliy", support: "￥13.00", message: "喝快乐水" }
       ]
     };
