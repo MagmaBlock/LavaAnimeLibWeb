@@ -6,7 +6,7 @@
       <div class="text-sm py-2 px-4 font-medium rounded-md ease-in duration-100 hover:bg-gray-200 active:bg-gray-300"
         v-for="thisArt in articles" @click="$emit('change-article', thisArt)"
         :class="{ 'text-blue-700 font-semibold bg-gray-200': thisArt.content == article.content }">
-        {{ thisArt.title || thisArt.content.match(/.*/)[0].replaceAll('#', '') }}
+        {{ thisArt.title || thisArt.content.match(/.*/)[0].replace(/#/g, '') }}
       </div>
     </div>
   </div>

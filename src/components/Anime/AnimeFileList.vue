@@ -24,9 +24,9 @@ export default {
       </span>
     </div>
     <!-- 集数容器 -->
-    <div class="flex flex-wrap gap-1 my-2">
+    <div class="flex flex-wrap my-2">
       <div class="active:bg-blue-600 active:text-white text-sm sm:text-xs cursor-pointer ease-in duration-100
-        flex items-center place-content-center h-9 w-12 sm:h-8 sm:w-11 rounded"
+        flex items-center place-content-center mr-1 mb-1 h-9 w-12 sm:h-8 sm:w-11 rounded"
         :class="father.selectedVideoList == 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-blue-600 hover:bg-gray-200 hover:text-blue-600'"
         @click="father.selectedVideoList = 'all'">
         全部
@@ -34,7 +34,7 @@ export default {
       <!-- 各集数 -->
       <template v-for="key in epKeys">
         <div class="active:bg-blue-600 active:text-white cursor-pointer ease-in duration-100
-        flex items-center place-content-center h-9 w-9 sm:h-8 sm:w-8 rounded"
+        flex items-center place-content-center mr-1 mb-1 h-9 w-9 sm:h-8 sm:w-8 rounded"
           :class="father.selectedVideoList == key ? 'bg-blue-600 text-white' : 'bg-gray-100 text-blue-600 hover:bg-gray-200 hover:text-blue-600'"
           @click="father.selectedVideoList = key">
           {{ key }}
