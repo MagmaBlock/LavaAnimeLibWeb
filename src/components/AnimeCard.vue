@@ -39,7 +39,9 @@ export default {
     <div class="p-1" v-if="!this.fake">
       <RouterLink :to="'/anime/' + this.id">
         <!-- 海报 -->
-        <img :src="poster" class="inline-block border border-gray-100 rounded-md w-full aspect-[2/3]" alt="封面图片">
+        <div class="aspect-w-2 aspect-h-3">
+          <img :src="poster" class="border border-gray-100 rounded-md object-cover" alt="封面图片">
+        </div>
         <!-- 标题 -->
         <div class="text-[13px] leading-[18px] h-9 my-1 break-words">
           <n-ellipsis :line-clamp="2" expand-trigger="hover">
@@ -66,8 +68,7 @@ export default {
 
     <!-- 骨架部分 -->
     <div class="p-1" v-if="this.fake">
-      <div class="rounded-md w-full mb-0 bg-gray-300 animate-pulse aspect-[46/65]"></div>
-
+      <div class="rounded-md w-full mb-0 bg-gray-300 animate-pulse aspect-w-2 aspect-h-3"></div>
       <div class="text-[13px] leading-[18px] h-9 my-1 break-words">
         <div class="w-full h-[14px] mt-1 bg-gray-300 animate-pulse"></div>
       </div>
