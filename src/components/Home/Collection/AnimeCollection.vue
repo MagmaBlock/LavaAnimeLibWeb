@@ -1,7 +1,7 @@
 <template>
   <div v-for="collection in collections" class="px-6 sm:px-0 py-1 sm:py-2">
     <!-- 大标题块 -->
-    <div class="flex place-items-end mb-1">
+    <div class="flex items-end mb-1">
       <div class="text-xl mr-2"> {{ collection.title }} </div>
       <div class="text-sm text-gray-500 mr-4"> {{ collection.subtitle }} </div>
       <!-- 横线  -->
