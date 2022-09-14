@@ -5,18 +5,19 @@
     <!-- 真卡片链接 -->
     <RouterLink :to="'/anime/' + anime.id" v-for="anime in data">
       <!-- 卡片容器 -->
-      <div class="relative w-full ease-in transition hover:shadow-lg rounded-md border-gray-300">
+      <div
+        class="relative w-full ease-in transition-all hover:shadow-lg hover:bg-blue-100 rounded-md border-gray-300 hover:border-blue-600 hover:border-2 rounder-md hover:scale-105">
         <!-- 卡片图片 -->
-        <div class="overflow-hidden rounded-t-md aspect-w-2 aspect-h-3">
+        <div class="overflow-hidden rounded-t-md aspect-w-2 aspect-h-3 rounded-md">
           <!-- 真 -->
           <img :src="anime.images.poster" alt="Poster" class="object-cover ease-in transition"
             :class="loading.img ? 'h-0 opacity-0':''">
           <!-- 骨架 -->
           <div class="w-full bg-gray-300 animate-pulse" v-if="loading.img"></div>
         </div>
-        <div class="px-3 md:px-4 py-2 bg-gray-100 rounded-b-md">
-          <n-ellipsis :line-clamp="2" expand-trigger="hover">
-            <div class="text-[13px] leading-[18px] h-9">{{ anime.title }}
+        <div class="px-3 md:px-4 py-2 rounded-b-md">
+          <n-ellipsis :line-clamp="1" expand-trigger="hover">
+            <div class="text-[14px] font-semibold leading-[18px] h-5 overflow-ellipsis break-all">{{ anime.title }}
             </div>
           </n-ellipsis>
           <div class="text-xs text-gray-600">

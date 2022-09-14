@@ -1,8 +1,15 @@
 <template>
   <div v-for="collection in collections" class="px-6 sm:px-0 py-1 sm:py-2">
-    <div class="mb-2">
-      <div class="text-xl"> {{ collection.title }} </div>
-      <div class="text-sm text-gray-500"> {{ collection.subtitle }} </div>
+    <div class="flex items-center">
+      <div>
+        <div class="text-2xl font-semibold"> {{ collection.title }} </div>
+        <div class="h-2 w-12 bg-blue-500 rounded-full"></div>
+        <!-- <div class="text-sm text-gray-500"> {{ collection.subtitle }} </div> -->
+      </div>
+      <!--
+        后面横线，感觉观感不咋样 
+        <div class="border-4 border-gray-100 flex-grow ml-3 h-0 rounded-full">
+      </div> -->
     </div>
     <div class="px-2 lg:px-0">
       <div v-for="content in collection.content">
