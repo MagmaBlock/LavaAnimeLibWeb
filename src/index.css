@@ -2,28 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-    background-color: rgba(0, 0, 0, 0);
-}
+/* 在宽屏端生效的设置 (通常为桌面) */
+@media screen and (min-width: 1024px) {
 
-::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    border: 0px solid transparent;
-    background-clip: content-box;
-}
+    /* 滚动条背景样式 */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+        background-color: rgba(0, 0, 0, 0);
+    }
 
-::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(0, 0, 0, 0.4);
-}
+    /* 滚动条样式 */
+    ::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        background-clip: content-box;
+    }
 
-::-webkit-scrollbar-track {
-    background-color: transparent;
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+
 }
 
 html {
-    /* scrollbar-gutter: stable; */
     scroll-behavior: smooth;
 }
