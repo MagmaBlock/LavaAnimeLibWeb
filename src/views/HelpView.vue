@@ -41,12 +41,13 @@ export default {
   },
   mounted() {
     document.title = "帮助 | 熔岩番剧库 LavaAnimeLib";
-    let defaultArticle = this.$route.query.article || 'LavaAnimeLib'
+    let defaultArticle = this.$route.query.article || 'LavaAnimeLib' // 默认选中文章
     this.articles.forEach(a => {
-      if (a.id == defaultArticle) {
+      if (a.id == defaultArticle) { // 生效上方选中的文章
         this.changeArticle(a)
       }
     })
+    // 对低版本浏览器发出警告
     let ua = uaParser()
     console.log(ua.engine);
     if (ua.engine.name == 'Blink' && parseInt(ua.engine.version) < 82) {
