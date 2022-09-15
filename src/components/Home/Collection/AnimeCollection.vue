@@ -1,18 +1,18 @@
 <template>
   <div v-for="collection in collections" class="px-6 sm:px-0 py-1 sm:py-2">
     <!-- 大标题块 -->
-    <div class="flex items-end mb-1">
+    <div class="flex items-end mb-2">
       <div class="text-xl mr-2"> {{ collection.title }} </div>
       <div class="text-sm text-gray-500 mr-4"> {{ collection.subtitle }} </div>
       <!-- 横线  -->
       <div class="hidden md:inline-block flex-grow h-1 bg-gray-100 rounded"></div>
     </div>
     <!-- 内容总块 -->
-    <div class="px-2 lg:px-0">
+    <div class="px-2 lg:px-0 lg:grid lg:grid-cols-2 lg:gap-8">
       <!-- 单内容行块 -->
       <div v-for="content in collection.content" class="mb-4">
         <!-- 小标题 -->
-        <div class="flex flex-nowrap text-gray-600">
+        <div class="flex flex-nowrap text-gray-600 md:text-base">
           <i class="bi bi-arrow-down-circle-fill mr-1"></i>
           <div class="w-fit"> {{ content.title }} </div>
         </div>
