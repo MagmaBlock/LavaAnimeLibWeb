@@ -37,11 +37,6 @@ export default {
       behavior: "smooth" //平滑滚动
     });
   },
-  watch: {
-    selectedVideo(newVideo, oldVideo) {
-      console.log(newVideo, oldVideo);
-    }
-  },
   methods: {
     async getLavaAnimeApi(laID) {
       try {
@@ -93,6 +88,7 @@ export default {
 
 <template>
   <ContainerMobileFull>
+    <!-- 开发模式视图 -->
     <div class="lg:px-12" v-if="this.$route.query.dev">
       <AnimeBasicCard class="p-4 mb-4 flex">
         <div class="font-bold">开发模式</div>
@@ -108,16 +104,18 @@ export default {
     </div>
     <!-- 主视图，Flex 布局，仅在 lg 以上可用 -->
     <div class="lg:flex lg:flex-row lg:gap-4 lg:px-12 w-full" v-if="!error">
+      <!-- 左 Flex -->
       <div class="lg:basis-2/3">
-        <!-- video -->
-        <VideoPlayer class="sm:relative sm:mb-4" ref="VideoPlayer" :url="selectedVideo.url || ''"
-          :reporter="reportNewView" />
+        <!-- 视频框 -->
+        <VideoPlayer class="sm:relative sm:mb-4" ref="VideoPlayer" :video="selectedVideo" :reporter="reportNewView" />
+        <!-- 本地播放器调用 -->
         <UseLocalVideoPlayer class="sm:mb-4" :video="selectedVideo" :player="this.$refs.VideoPlayer"
           :reporter="reportNewView" />
         <!-- 番剧卡，仅在 sm 以上显示 -->
         <AnimeDataCard v-if="!loading" :la="laData" class="hidden sm:block sm:mb-4" />
         <AnimeDataCardFake v-if="loading" class="hidden sm:block sm:mb-4" />
       </div>
+      <!-- 右 Flex -->
       <div class="lg:basis-1/3">
         <!-- 文件和集数列表 -->
         <AnimeFileList :father="this" v-if="!loading" class="sm:mb-4" />
