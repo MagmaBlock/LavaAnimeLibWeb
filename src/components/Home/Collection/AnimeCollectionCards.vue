@@ -11,12 +11,19 @@
         <!-- 卡片图片 -->
         <div class="overflow-hidden aspect-w-2 aspect-h-3">
           <!-- 真 -->
-          <img :src="anime.images.poster" alt="Poster" class="object-cover ease-in transition"
+          <img :src="anime.images.poster" alt="Poster" class="object-cover ease-in transition rounded-md"
             :class="loading.img ? 'h-0 opacity-0':''">
           <!-- 骨架 -->
           <div class="w-full bg-gray-300 animate-pulse" v-if="loading.img"></div>
         </div>
-        <div class="px-3 md:px-4 py-2 bg-gray-100">
+        <div class="px-3 py-2 bg-gradient-to-t from-slate-800 to-transparent -translate-y-full  rounded-md h-1/3 flex flex-col-reverse">
+          <n-ellipsis>
+            <div class="text-[14px] leading-[18px] h-fit break-all text-slate-50 font-semibold shadow-lg whitespace-pre-line mb-1">
+              {{ anime.title }}
+            </div>
+          </n-ellipsis>
+        </div>
+        <!-- <div class="px-3 md:px-4 py-2 bg-gray-100">
           <n-ellipsis :line-clamp="2" expand-trigger="hover">
             <div class="text-[13px] leading-[18px] h-9 break-all">
               {{ anime.title }}
@@ -25,7 +32,7 @@
           <div class="text-xs text-gray-600">
             <i class="bi bi-play-btn"></i> {{ anime.views }}
           </div>
-        </div>
+        </div> -->
       </RouterLink>
     </div>
   </div>
