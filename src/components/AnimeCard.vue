@@ -19,7 +19,7 @@ export default {
   },
   data() {
     return {
-      blurBackground: 'https://bangumi-app-img.5t5.top/assets/no-bgm-bg.jpg'
+      blurBackground: 'https://bangumi-app-img.5t5.top/assets/no-bgm-bg.jpg/bg'
     }
   },
   mounted() {
@@ -32,14 +32,10 @@ export default {
   <div class="relative transition-all ease-out box-content m-1
       rounded-md overflow-hidden hover:border-2 hover:border-blue-600 border-2 border-white hover:scale-105
       hover:shadow-lg">
-
-    <!-- 模糊背景 -->
-    <div class="absolute w-full h-full">
-      <img v-lazy="{ src: poster || blurBackground }" class="w-full h-full blur-3xl object-cover" alt="背景">
-    </div>
+    <div class="absolute bg-gray-100 w-full h-full"></div>
 
     <!-- 上半：海报 + 标题 -->
-    <div class="relative rounded-md overflow-hidden cursor-pointer" @click="goToThisAnime(id)">
+    <div class="relative overflow-hidden cursor-pointer" @click="goToThisAnime(id)">
       <!-- 图片容器 -->
       <div class="overflow-hidden aspect-w-2 aspect-h-3">
         <img v-lazy="{ src: poster, loading:'https://bangumi-app-img.5t5.top/assets/PosterLoading.jpg', 
@@ -65,14 +61,20 @@ export default {
     </div>
 
     <!-- 信息区 -->
-    <div class="relative h-8 flex">
-      <div class="basis-2/3 grid content-center pl-3 ">
-        <div><i class="bi bi-play-btn"></i> {{ views }}</div>
-      </div>
-      <div class="basis-1/3 grid place-items-center">
-        <a v-if="parseInt(bgmid)" class="hover:bg-black/20 px-3 py-1 rounded" :href="'https://bgm.tv/subject/' + bgmid"
-          target="_blank">
-          <i class="bi bi-link-45deg"></i></a>
+    <div class="relative h-8">
+      <!-- 模糊背景 -->
+      <!-- <div class="absolute bottom-0 -z-10">
+        <img v-lazy="{ src: poster || blurBackground }" class="w-full h-full object-cover" alt="背景">
+      </div> -->
+      <div class="flex h-full">
+        <div class="basis-2/3 grid content-center pl-3">
+          <div><i class="bi bi-play-btn"></i> {{ views }}</div>
+        </div>
+        <div class="basis-1/3 grid place-items-center">
+          <a v-if="parseInt(bgmid)" class="hover:bg-black/20 px-3 py-1 rounded"
+            :href="'https://bgm.tv/subject/' + bgmid" target="_blank">
+            <i class="bi bi-link-45deg"></i></a>
+        </div>
       </div>
     </div>
   </div>
