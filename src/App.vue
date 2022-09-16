@@ -18,7 +18,7 @@ export default {
 </script>
 
 <template>
-  <div class="flex flex-row flex-nowrap h-screen max-w-[2560px] mx-auto shadow-lg">
+  <div class="flex flex-row flex-nowrap h-screen max-w-[2560px] mx-auto shadow-lg bg-[#F6F6F6]">
     <!-- 导航栏 -->
     <NavBar />
     <!-- 当前路由的界面 -->
