@@ -10,7 +10,7 @@
     <!-- 内容总块 -->
     <div class="px-2 lg:px-0 lg:grid lg:grid-cols-2 lg:gap-8">
       <!-- 单内容行块 -->
-      <div v-for="content in collection.content" class="mb-4  rounded-lg bg-white px-6 py-4 h-fit">
+      <div v-for="content in collection.content" class="mb-4">
         <!-- 小标题 -->
         <div class="flex flex-nowrap text-gray-600 md:text-base mb-1">
           <i class="bi bi-arrow-down-circle-fill mr-1"></i>
