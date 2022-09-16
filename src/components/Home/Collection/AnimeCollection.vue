@@ -1,11 +1,11 @@
 <template>
   <div v-for="collection in collections" class="px-6 sm:px-0 py-1 sm:py-2">
     <!-- 大标题块 -->
-    <div class="flex items-end mb-2">
-      <div class="text-xl mr-2"> {{ collection.title }} </div>
+    <div class="mb-3 ml-2">
+      <div class="text-xl mr-2 font-medium"> {{ collection.title }} </div>
       <div class="text-sm text-gray-500 mr-4"> {{ collection.subtitle }} </div>
       <!-- 横线  -->
-      <div class="hidden md:inline-block flex-grow h-1 bg-gray-100 rounded"></div>
+      <!-- <div class="hidden md:inline-block flex-grow h-1 bg-gray-100 rounded"></div> -->
     </div>
     <!-- 内容总块 -->
     <div class="px-2 lg:px-0 lg:grid lg:grid-cols-2 lg:gap-8">
