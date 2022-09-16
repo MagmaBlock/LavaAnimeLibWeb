@@ -12,7 +12,7 @@
       <!-- 单内容行块 -->
       <div v-for="content in collection.content" class="mb-4  rounded-lg bg-white px-6 py-4 h-fit">
         <!-- 小标题 -->
-        <div class="flex flex-nowrap text-gray-600 md:text-bas mb-1">
+        <div class="flex flex-nowrap text-gray-600 md:text-base mb-1">
           <i class="bi bi-arrow-down-circle-fill mr-1"></i>
           <div class="w-fit"> {{ content.title }} </div>
         </div>
