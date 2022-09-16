@@ -2,81 +2,77 @@
 
 export default {
   props: {
-    id: {
-      type: [String, Number]
-    },
-    poster: {
-      type: String,
-      default: 'https://anime-img.5t5.top/assets/noposter.png'
-    },
-    title: {
-      type: String,
-      default: '番剧标题'
-    },
+    id: [String, Number],
+    poster: { type: String },
+    title: { type: String, default: '' },
     bgmid: [String, Number],
-    views: {
-      type: Number,
-      default: 0
-    },
-    nsfw: [Boolean],
-    bdrip: [Boolean],
-    relation: String,
-    fake: {
-      type: Boolean,
-      default: false
+    views: { type: [String, Number], default: 0 },
+    nsfw: { type: Boolean, default: false },
+    bdrip: { type: Boolean, default: false },
+    fake: { type: Boolean, default: false }
+  },
+  methods: {
+    goToThisAnime(id) {
+      if (parseInt(id)) this.$router.push('/anime/' + id)
+      else return
     }
   },
-  methods: {},
   data() {
-    return {}
+    return {
+      blurBackground: 'https://bangumi-app-img.5t5.top/assets/no-bgm-bg.jpg'
+    }
+  },
+  mounted() {
   }
 }
 </script>
 
 <template>
-  <div>
-    <!-- 正常 -->
-    <div class="p-1" v-if="!this.fake">
-      <RouterLink :to="'/anime/' + this.id">
-        <!-- 海报 -->
-        <div class="aspect-w-2 aspect-h-3">
-          <img v-lazy="{ src: poster, error: 'https://bangumi-app-img.5t5.top/assets/noposter.png' }"
-            class="border border-gray-100 rounded-md object-cover" alt="封面图片">
-        </div>
-        <!-- 标题 -->
-        <div class="text-[13px] leading-[18px] h-9 my-1 break-words">
-          <n-ellipsis :line-clamp="2" expand-trigger="hover">
-            <span class="bg-gray-200 p-1 rounded" v-if="relation">{{ relation }}</span>
-            {{ title }}
-            <!-- Special Tags -->
-            <div v-if="bdrip"
-              class="inline-block bg-blue-100 text-xs text-blue-600 font-medium rounded-sm px-1.5 ml-0.5">
-              BDRip
-            </div>
-            <div v-if="nsfw"
-              class="inline-block bg-yellow-100 text-xs text-yellow-600 font-medium rounded-sm px-1.5 ml-0.5">NSFW</div>
-          </n-ellipsis>
-        </div>
-      </RouterLink>
+  <!-- 卡片 -->
+  <div class="relative transition-all ease-out box-content m-1
+      rounded-md overflow-hidden hover:border-2 hover:border-blue-600 border-2 border-white hover:scale-105
+      hover:shadow-lg">
 
-      <!-- 信息区 -->
-      <div class="text-xs leading-[18px] text-gray-500">
-        <div><i class="bi bi-play-btn"></i> {{ views }} 播放</div>
-        <a v-if="parseInt(bgmid)" :href="'https://bgm.tv/subject/' + bgmid" target="_blank">
-          <i class="bi bi-link-45deg"></i> 番组计划</a>
+    <!-- 模糊背景 -->
+    <div class="absolute w-full h-full">
+      <img v-lazy="{ src: poster || blurBackground }" class="w-full h-full blur-3xl object-cover" alt="背景">
+    </div>
+
+    <!-- 上半：海报 + 标题 -->
+    <div class="relative rounded-md overflow-hidden cursor-pointer" @click="goToThisAnime(id)">
+      <!-- 图片容器 -->
+      <div class="overflow-hidden aspect-w-2 aspect-h-3">
+        <img v-lazy="{ src: poster, loading:'https://bangumi-app-img.5t5.top/assets/PosterLoading.jpg', 
+        error: 'https://bangumi-app-img.5t5.top/assets/noposter.png' }" class="absolute object-cover" alt="封面图片">
+      </div>
+      <!-- 标题 -->
+      <div class="absolute inset-x-0 bottom-0 grid items-end
+            px-3 py-3 h-24
+            bg-gradient-to-b from-transparent to-black/75 text-white text-[13px] break-all">
+        <n-ellipsis :line-clamp="2" expand-trigger="hover">
+          {{ title || '...' }}
+          <!-- Special Tags -->
+          <div v-if="bdrip" class="inline-block bg-blue-400 bg-opacity-50 backdrop-blur-sm
+            text-xs font-medium px-1.5 ml-0.5 rounded-sm">
+            BD
+          </div>
+          <div v-if="nsfw" class="inline-block bg-yellow-300 bg-opacity-50 backdrop-blur-sm
+            text-xs font-medium px-1.5 ml-0.5 rounded-sm">
+            NSFW
+          </div>
+        </n-ellipsis>
       </div>
     </div>
 
-    <!-- 骨架部分 -->
-    <div class="p-1" v-if="this.fake">
-      <div class="rounded-md w-full mb-0 bg-gray-300 animate-pulse aspect-w-2 aspect-h-3"></div>
-      <div class="text-[13px] leading-[18px] h-9 my-1 break-words">
-        <div class="w-full h-[14px] mt-1 bg-gray-300 animate-pulse"></div>
+    <!-- 信息区 -->
+    <div class="relative h-8 flex">
+      <div class="basis-2/3 grid content-center pl-3 ">
+        <div><i class="bi bi-play-btn"></i> {{ views }}</div>
       </div>
-
-      <div class="text-xs leading-[18px] text-gray-500">
-        <div class="w-12 h-[14px] mt-1 bg-gray-300 animate-pulse"></div>
-        <div class="w-14 h-[14px] mt-1 bg-gray-300 animate-pulse"></div>
+      <div class="basis-1/3 grid place-items-center">
+        <a v-if="parseInt(bgmid)" class="hover:bg-black/20 px-3 py-1 rounded" :href="'https://bgm.tv/subject/' + bgmid"
+          target="_blank">
+          <i class="bi bi-link-45deg"></i></a>
       </div>
     </div>
   </div>

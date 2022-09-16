@@ -29,7 +29,7 @@ export default {
         2xl:grid-cols-6 2xl:px-10">
         <!-- 番剧卡片骨架屏 -->
         <div v-for="a in 18" v-if="!animes">
-          <AnimeCard fake></AnimeCard>
+          <AnimeCard fake class="animate-pulse"></AnimeCard>
         </div>
         <!-- 番剧卡片 -->
         <template v-for="(anime, index) in animes">
