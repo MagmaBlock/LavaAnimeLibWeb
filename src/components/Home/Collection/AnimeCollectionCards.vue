@@ -10,8 +10,8 @@
       <!-- 图片 -->
       <div class="overflow-hidden aspect-w-2 aspect-h-3">
         <!-- 真图片 -->
-        <img :src="anime.images.poster" alt="Poster" class="object-cover ease-in transition"
-          :class="loading.img ? 'h-0 opacity-0':''">
+        <img v-lazy="{ src: anime.images.poster, error: 'https://bangumi-app-img.5t5.top/assets/noposter.png'}"
+          alt="Poster" class="object-cover ease-in transition" :class="loading.img ? 'h-0 opacity-0':''">
         <!-- 图片骨架 -->
         <div class="w-full bg-gray-300 animate-pulse" v-if="loading.img"></div>
       </div>

@@ -40,7 +40,8 @@ export default {
       <RouterLink :to="'/anime/' + this.id">
         <!-- 海报 -->
         <div class="aspect-w-2 aspect-h-3">
-          <img :src="poster" class="border border-gray-100 rounded-md object-cover" alt="封面图片">
+          <img v-lazy="{ src: poster, error: 'https://bangumi-app-img.5t5.top/assets/noposter.png' }"
+            class="border border-gray-100 rounded-md object-cover" alt="封面图片">
         </div>
         <!-- 标题 -->
         <div class="text-[13px] leading-[18px] h-9 my-1 break-words">
