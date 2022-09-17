@@ -29,8 +29,8 @@ export default {
 
 <template>
   <!-- 卡片 -->
-  <div class="relative transition-all ease-out box-content m-1
-      rounded-md overflow-hidden hover:border-2 hover:border-blue-600 border-2 border-white hover:scale-105
+  <div class="relative transition-all ease-out box-content
+      rounded-md overflow-hidden hover:border-2 hover:border-blue-600 border-2 border-white/0 hover:scale-105
       hover:shadow-lg">
     <div class="absolute bg-gray-100 w-full h-full"></div>
 

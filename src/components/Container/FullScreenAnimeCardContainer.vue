@@ -18,10 +18,10 @@ export default {
 
 <template>
   <!-- 番剧栅格部分 -->
-  <div class="px-1 select-none">
+  <div class="px-2 lg:px-4 select-none">
     <n-spin :show="!animes">
       <div class="grid 
-        grid-cols-3 gap-x-2 gap-y-1
+        grid-cols-3 gap-2
         sm:grid-cols-4 sm:gap-x-4
         md:grid-cols-5 md:gap-x-6
         lg:grid-cols-5
