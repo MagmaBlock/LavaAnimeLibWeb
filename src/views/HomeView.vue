@@ -6,10 +6,10 @@
     </div>
     <div class="lg:flex mb-4">
       <HeaderPictures class="lg:basis-1/3 sm:rounded-md lg:mr-4" />
-      <BasicCard class="lg:basis-2/3 px-6 py-4">
-        <div class="text-xl"> 最近更新 </div>
-        <div class="text-sm text-gray-500 mb-2"> 这个还没做 </div>
-      </BasicCard>
+      <div class="lg:basis-2/3 px-6 py-4 bg-gray-50 rounded-md hidden lg:block">
+        <div class="text-xl">最近更新</div>
+        <div class="text-sm text-gray-500 mb-2">预留</div>
+      </div>
     </div>
     <AnimeCollection />
 

@@ -1,5 +1,4 @@
 <script>
-
 export default {
   props: {
     id: [String, Number],
@@ -18,12 +17,9 @@ export default {
     }
   },
   data() {
-    return {
-      blurBackground: 'https://bangumi-app-img.5t5.top/assets/no-bgm-bg.jpg/bg'
-    }
+    return {}
   },
-  mounted() {
-  }
+  mounted() { }
 }
 </script>
 
@@ -62,10 +58,6 @@ export default {
 
     <!-- 信息区 -->
     <div class="relative h-8">
-      <!-- 模糊背景 -->
-      <!-- <div class="absolute bottom-0 -z-10">
-        <img v-lazy="{ src: poster || blurBackground }" class="w-full h-full object-cover" alt="背景">
-      </div> -->
       <div class="flex h-full">
         <div class="basis-2/3 grid content-center pl-3">
           <div><i class="bi bi-play-btn"></i> {{ views }}</div>
