@@ -1,34 +1,34 @@
 export default [
   {
+    pic: 'https://anime-img.5t5.top/assets/header/22/09/1663496610922.jpeg',
+    url: '/anime/468',
+    title: 'PUI PUI 天竺鼠车车 第一季',
+    subtitle: '第二季 10月秋季即将开播!'
+  },
+  {
     pic: '/Home/headerPic/lycoris-recoil-6285e38ee2c7c.jpg',
     url: '/anime/444',
     title: 'Lycoris Recoil',
-    subtitle: '平稳的日子 其实暗藏着秘密...'
+    subtitle: '莉可丽丝 · 7月热门新番即将完结'
   },
   {
-    pic: '//anime-img.5t5.top/pic/cover/l/1a/75/339326_13jzN.jpg',
-    url: '/anime/494',
-    title: '异世界舅舅',
-    subtitle: '...从异世界归来的舅舅'
+    pic: 'https://anime-img.5t5.top/assets/header/22/09/1663497114034.png',
+    url: '/anime/309',
+    title: '向山进发 第三季',
+    subtitle: '10月秋 第四季再次向山进发!'
   },
   {
-    pic: '//dogefs.s3.ladydaily.com/~/source/unsplash/photo-1528164344705-47542687000d?ixlib=rb-1.2.1&dl=manuel-cosentino-n--CMLApjfI-unsplash.jpg&w=1920&q=80&fmt=jpg&crop=entropy&cs=tinysrgb',
-    url: 'https://www.dandanplay.com/',
-    title: '弹弹Play PC & Android 支持',
-    subtitle: '弹幕追番体验更佳'
+    pic: 'https://anime-img.5t5.top/assets/header/22/09/1663497403827.png',
+    url: '/anime/547',
+    title: '赛博浪客 Cyberpunk: Edgerunners',
+    subtitle: '2077 游戏衍生动画'
   },
-  {
-    pic: '/Home/headerPic/Summer Time Rendering.jpg',
-    url: '/anime/371',
-    title: '夏日重现 サマータイムレンダ',
-    subtitle: '异眼丁真，鉴定为：潮'
-  },
-  {
-    pic: '/Home/headerPic/Spy x Family.jpg',
-    url: '/anime/332',
-    title: '间谍过家家 Spy x Family',
-    subtitle: '四月人气新番完结!'
-  },
+  // {
+  //   pic: 'https://anime-img.5t5.top/assets/header/22/09/1663497190918.png',
+  //   url: 'https://www.bilibili.com/video/BV1FT411u7aH/',
+  //   title: '孤独摇滚！正式PV1',
+  //   subtitle: '10月/芳文社/CloverWorks'
+  // },
   {
     pic: '//dogefs.s3.ladydaily.com/~/source/unsplash/photo-1595509666448-b514e39ae5f9?ixlib=rb-1.2.1&dl=hiroku-yamashiro-5Gahb7KXYeo-unsplash.jpg&w=1920&q=80&fmt=jpg&crop=entropy&cs=tinysrgb',
     url: '/index',
