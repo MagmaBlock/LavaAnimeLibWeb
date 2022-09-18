@@ -6,15 +6,13 @@
         <img class="object-cover w-full min-h-full overflow-hidden" :src="pic.pic">
         <!-- 底部阴影 -->
         <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-black/75 "></div>
-        <RouterLink class="absolute inline-block inset-x-0 bottom-0 h-[88px] px-5" style="text-shadow: #000 0 0 10px;"
-          :to="pic.url">
-          <div class="text-white text-lg">
-            {{ pic.title }}
-          </div>
-          <div class="text-gray-300">
-            {{ pic.subtitle }}
-          </div>
+        <RouterLink v-if="pic.url" :to="pic.url">
+          <HeaderPictureTitle :title="pic.title" :subtitle="pic.subtitle"></HeaderPictureTitle>
         </RouterLink>
+        <a v-else-if="pic.externalUrl" :href="pic.externalUrl" target="_blank">
+          <HeaderPictureTitle :title="pic.title" :subtitle="pic.subtitle"></HeaderPictureTitle>
+        </a>
+        <HeaderPictureTitle v-else :title="pic.title" :subtitle="pic.subtitle"></HeaderPictureTitle>
       </div>
     </template>
   </n-carousel>
