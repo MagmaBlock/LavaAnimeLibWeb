@@ -32,8 +32,8 @@
         <div class="text-gray-800 mx-2">IINA</div>
       </a>
       <!-- 非播放器 -->
-      <div @click="this.pausePlayer(); reporter({ type: 'Copy Link' })" :data-clipboard-text="this.video.tempUrl"
-        ref="copyBtn"
+      <div @click="this.pausePlayer(); reporter({ type: 'Copy Link / Download' })"
+        :data-clipboard-text="this.video.tempUrl" ref="copyBtn" @click.shift="download(this.video.url)"
         class="h-8 flex place-items-center bg-gray-100 text-blue-600 hover:bg-gray-200 active:bg-gray-300 ease-in duration-100 rounded py-1 px-2 text-xs">
         <img src="../../assets/PlayersIcon/Link.svg" alt="copy link" class="w-6 h-6">
         <div class="text-gray-800 mx-2">复制链接</div>
@@ -67,6 +67,9 @@ export default {
     pausePlayer() {
       this.player.art.pause()
       console.log('暂停来自上级的播放器.');
+    },
+    download(url) {
+      window.open(url, '_blank')
     }
   },
   mounted() {
