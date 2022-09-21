@@ -1,5 +1,11 @@
 export default [
   {
+    pic: 'https://anime-img.5t5.top/assets/header/22/09/1663778158974.png',
+    url: '/anime/548',
+    title: '剧场版 咒术回战 0',
+    subtitle: '已上线 (2021)'
+  },
+  {
     pic: 'https://anime-img.5t5.top/assets/header/22/09/1663496610922.jpeg',
     url: '/anime/468',
     title: 'PUI PUI 天竺鼠车车 第一季',
