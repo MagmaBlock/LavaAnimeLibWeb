@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-4 px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-md
+  <div class="mb-4 px-2 py-1 mx-6 sm:mx-0 bg-gray-100 hover:bg-gray-200 rounded-md
   transition-all ease-in duration-100 cursor-pointer" @click="noticeModel = true">
     <i class="bi bi-volume-down-fill"></i>
     <div class="inline"> LavaAnimeLib 2022年10月秋季新番收录投票</div>
