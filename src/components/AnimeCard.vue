@@ -1,4 +1,6 @@
 <script>
+import { ref } from 'vue';
+
 export default {
   props: {
     id: [String, Number],
@@ -17,7 +19,9 @@ export default {
     }
   },
   data() {
-    return {}
+    return {
+      more: ref('')
+    }
   },
   mounted() { }
 }
@@ -26,7 +30,7 @@ export default {
 <template>
   <!-- 卡片 -->
   <div class="relative transition-all ease-out box-content
-      rounded-md overflow-hidden hover:border-2 hover:border-blue-600 border-2 border-white/0 hover:scale-105
+      rounded-md overflow-hidden hover:border-2 hover:border-blue-600 border-2 border-white/0 hover:scale-[1.03]
       hover:shadow-lg">
     <div class="absolute bg-gray-100 w-full h-full"></div>
 
@@ -59,13 +63,38 @@ export default {
     <!-- 信息区 -->
     <div class="relative h-8">
       <div class="flex h-full">
-        <div class="basis-2/3 grid content-center pl-3">
-          <div><i class="bi bi-play-btn"></i> {{ views }}</div>
+        <div class="basis-3/4 grid content-center pl-3">
+          <div class="text-[13px]"><i class="bi bi-play-btn"></i> {{ views }}</div>
+          <!-- <div><i class="bi bi-play-btn"></i> {{ views > 999 ? (views / 1000).toFixed(2)  + 'k': views}}</div> -->
         </div>
-        <div class="basis-1/3 grid place-items-center">
-          <a v-if="parseInt(bgmid)" class="hover:bg-black/20 px-3 py-1 rounded"
-            :href="'https://bgm.tv/subject/' + bgmid" target="_blank">
-            <i class="bi bi-link-45deg"></i></a>
+        <div class="basis-1/4 grid place-items-center">
+          <!-- 菜单 -->
+          <n-popover trigger="click" :show-arrow="false" raw>
+            <template #trigger>
+              <div class="hover:bg-black/20 p-1 rounded cursor-pointer">
+                <i class="bi bi-list text-gray-700"></i>
+              </div>
+            </template>
+            <div class="grid grid-cols-1 p-1 bg-white rounded">
+              <div class="hover:bg-black/20 rounded flex flex-nowrap h-7 cursor-pointer">
+                <div class="grid place-items-center w-8">
+                  <i class="bi bi-star"></i>
+                </div>
+                <div class="grid place-items-center mr-2">
+                  添加到浏览器收藏 (未完成)
+                </div>
+              </div>
+              <a v-if="parseInt(bgmid)" :href="'https://bgm.tv/subject/' + bgmid" target="_blank"
+                class="hover:bg-black/20 rounded flex flex-nowrap h-7">
+                <div class="grid place-items-center w-8">
+                  <i class="bi bi-box-arrow-up-right"></i>
+                </div>
+                <div class="grid place-items-center mr-2">
+                  去番组计划查看资料
+                </div>
+              </a>
+            </div>
+          </n-popover>
         </div>
       </div>
     </div>
