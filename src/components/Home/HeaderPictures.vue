@@ -19,15 +19,28 @@
 </template>
 
 <script>
-import headerPic from '../../assets/headerPic.js'
+import axios from 'axios';
+
 export default {
   data() {
     return {
-      headerPic: headerPic,
+      headerPic: [],
       page: 0
     }
   },
-  methods: {},
-  mounted() { }
+  methods: {
+    async getData() {
+      try {
+        let data = await axios.get('https://anime-img.5t5.top/assets/header/data.json');
+        return data.data
+      } catch (error) {
+        console.error('请求头图数据失败: ', error)
+        return []
+      }
+    }
+  },
+  async mounted() {
+    this.headerPic = await this.getData()
+  }
 }
 </script>
