@@ -36,10 +36,10 @@
 
 <style>
 
-/* 为播放器控制器增加 margin, 兼容异性屏设备 */
+/* 为播放器控制器增加 margin, 兼容异形屏设备 */
 .la-art-player>div>.art-bottom {
   margin-bottom: 12px;
-  background-image: linear-gradient(#0000, #0005, #0000);
+  background-image: linear-gradient(#0000, #0008, #0000);
 }
 </style>
 
