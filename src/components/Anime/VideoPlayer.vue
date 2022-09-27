@@ -35,33 +35,6 @@
 </template>
 
 <style>
-/* 在非手机上为视频播放器增加圆角 */
-@media (min-width: 640px) {
-  .la-art-player>div>video {
-    border-radius: 0.375rem
-  }
-
-  .la-art-player>div>div {
-    border-radius: 0.375rem
-  }
-
-  .la-art-player>div {
-    border-radius: 0.375rem
-  }
-}
-
-/* 在全屏时不使用圆角 */
-.la-art-player:fullscreen>div>video {
-  border-radius: 0px
-}
-
-.la-art-player:fullscreen>div>div {
-  border-radius: 0px
-}
-
-.la-art-player:fullscreen>div {
-  border-radius: 0px
-}
 
 /* 为播放器控制器增加 margin, 兼容异性屏设备 */
 .la-art-player>div>.art-bottom {
