@@ -12,7 +12,7 @@
         <div class="text-gray-800 mx-0.5"><i class="bi bi-three-dots"></i></div>
       </div>
       <!-- Model 模态框 -->
-      <n-modal v-model:show="moreModel" class="bg-white h-fit">
+      <n-modal v-model:show="moreModel" class="bg-white h-fit select-none">
         <n-card class="max-w-xl" title="全部播放器" :bordered="false" size="small" role="dialog" aria-modal="true">
           <template #header-extra>
             <i class="bi bi-x-lg hover:text-blue-600 cursor-pointer ml-2" @click="moreModel = false"></i>
