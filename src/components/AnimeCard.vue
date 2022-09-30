@@ -38,7 +38,7 @@ export default {
 
 <template>
   <!-- 卡片 -->
-  <div class="relative box-content overflow-hidden
+  <div class="relative box-content overflow-hidden select-none
     rounded-md border-2 border-white/0
     transition-all ease-out hover:scale-[1.03] hover:border-2 hover:border-blue-600 hover:shadow-lg">
     <div class="absolute h-full w-full bg-gray-100"></div>
@@ -88,9 +88,9 @@ export default {
                 <i class="bi bi-list text-gray-700"></i>
               </div>
             </template>
-            <div class="grid grid-cols-1 rounded bg-white p-1">
+            <div class="grid grid-cols-1 rounded bg-white p-1 select-none">
               <!-- 收藏 -->
-              <div class="flex h-7 cursor-pointer select-none flex-nowrap rounded hover:bg-black/20"
+              <div class="flex h-7 cursor-pointer flex-nowrap rounded hover:bg-black/20"
                 @click="switchToMyCollections(id)">
                 <!-- 已经收藏 -->
                 <template v-if="collected">
@@ -111,7 +111,7 @@ export default {
               </div>
               <!-- 番组计划 -->
               <a v-if="parseInt(bgmid)" :href="'https://bgm.tv/subject/' + bgmid" target="_blank"
-                class="flex h-7 select-none flex-nowrap rounded hover:bg-black/20">
+                class="flex h-7 flex-nowrap rounded hover:bg-black/20">
                 <div class="grid w-8 place-items-center">
                   <i class="bi bi-box-arrow-up-right"></i>
                 </div>
