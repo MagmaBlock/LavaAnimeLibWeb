@@ -2,7 +2,8 @@
 import { LavaAnimeAPI } from '../../common/api';
 import ContainerMobileFull from '../../components/ContainerMobileFull.vue';
 import VideoPlayer from '../../components/Anime/VideoPlayer.vue';
-import UseLocalVideoPlayer from '../../components/Anime/UseLocalVideoPlayer.vue';
+import LocalPlayers from '../../components/Anime/LocalPlayer/LocalPlayers.vue';
+import LocalPlayerIcons from '../../components/Anime/LocalPlayer/LocalPlayerIcons.vue';
 import AnimeDataCard from '../../components/Anime/AnimeDataCard.vue';
 import AnimeDataCardFake from '../../components/Anime/AnimeDataCardFake.vue';
 import AnimeFileList from '../../components/Anime/AnimeFileList.vue';
@@ -82,7 +83,7 @@ export default {
       }
     }
   },
-  components: { ContainerMobileFull, VideoPlayer, UseLocalVideoPlayer, AnimeDataCard, AnimeDataCardFake, AnimeFileList, RelationAnimes, AnimeBackground, AnimeBasicCard }
+  components: { ContainerMobileFull, VideoPlayer, LocalPlayers, AnimeDataCard, AnimeDataCardFake, AnimeFileList, RelationAnimes, AnimeBackground, AnimeBasicCard, LocalPlayerIcons }
 }
 </script>
 
@@ -109,7 +110,7 @@ export default {
         <!-- 视频框 -->
         <VideoPlayer class="sm:relative sm:mb-4" ref="VideoPlayer" :video="selectedVideo" :reporter="reportNewView" />
         <!-- 本地播放器调用 -->
-        <UseLocalVideoPlayer class="sm:mb-4" :video="selectedVideo" :player="this.$refs.VideoPlayer"
+        <LocalPlayers class="sm:mb-4" :video="selectedVideo" :player="this.$refs.VideoPlayer"
           :reporter="reportNewView" />
         <!-- 番剧卡，仅在 sm 以上显示 -->
         <AnimeDataCard v-if="!loading" :la="laData" class="hidden sm:block sm:mb-4" />
