@@ -24,7 +24,6 @@ export default {
     },
     updateCollected() {
       let collected = isCollected(this.id)
-      console.log(collected)
       this.collected = collected
       return collected
     },
@@ -40,7 +39,7 @@ export default {
   <!-- 卡片 -->
   <div class="relative box-content overflow-hidden select-none
     rounded-md border-2 border-white/0
-    transition-all ease-out hover:scale-[1.03] hover:border-2 hover:border-blue-600 hover:shadow-lg">
+    transition-all ease-out hover:lg:scale-[1.03] hover:border-2 hover:border-blue-600 hover:shadow-lg">
     <div class="absolute h-full w-full bg-gray-100"></div>
 
     <!-- 上半：海报 + 标题 -->
