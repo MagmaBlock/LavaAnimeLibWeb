@@ -1,5 +1,6 @@
 <script>
-import { ref } from 'vue';
+import { ref } from 'vue'
+import { switchToMyCollections, isCollected } from './Methods/MyCollections.js'
 
 export default {
   props: {
@@ -10,50 +11,73 @@ export default {
     views: { type: [String, Number], default: 0 },
     nsfw: { type: Boolean, default: false },
     bdrip: { type: Boolean, default: false },
-    fake: { type: Boolean, default: false }
+    fake: { type: Boolean, default: false },
+  },
+  data() {
+    return {
+      collected: null,
+    }
   },
   methods: {
     goToThisAnime(id) {
       if (parseInt(id)) this.$router.push('/anime/' + id)
       else return
-    }
+    },
+    updateCollected() {
+      let collected = isCollected(this.id)
+      console.log(collected)
+      this.collected = collected
+      return collected
+    },
+    switchToMyCollections(laID) {
+      switchToMyCollections(laID)
+      this.updateCollected()
+    },
   },
-  data() {
-    return {
-      more: ref('')
-    }
-  },
-  mounted() { }
 }
 </script>
 
 <template>
   <!-- 卡片 -->
-  <div class="relative transition-all ease-out box-content
-      rounded-md overflow-hidden hover:border-2 hover:border-blue-600 border-2 border-white/0 hover:scale-[1.03]
-      hover:shadow-lg">
-    <div class="absolute bg-gray-100 w-full h-full"></div>
+  <div
+    class="relative box-content overflow-hidden rounded-md border-2 border-white/0 transition-all ease-out hover:scale-[1.03] hover:border-2 hover:border-blue-600 hover:shadow-lg"
+  >
+    <div class="absolute h-full w-full bg-gray-100"></div>
 
     <!-- 上半：海报 + 标题 -->
-    <div class="relative overflow-hidden cursor-pointer" @click="goToThisAnime(id)">
+    <div
+      class="relative cursor-pointer overflow-hidden"
+      @click="goToThisAnime(id)"
+    >
       <!-- 图片容器 -->
-      <div class="overflow-hidden aspect-w-2 aspect-h-3">
-        <img v-lazy="{ src: poster, loading:'https://bangumi-app-img.5t5.top/assets/PosterLoading.jpg', 
-        error: 'https://bangumi-app-img.5t5.top/assets/noposter.png' }" class="absolute object-cover" alt="封面图片">
+      <div class="aspect-w-2 aspect-h-3 overflow-hidden">
+        <img
+          v-lazy="{
+            src: poster,
+            loading: 'https://bangumi-app-img.5t5.top/assets/PosterLoading.jpg',
+            error: 'https://bangumi-app-img.5t5.top/assets/noposter.png',
+          }"
+          class="absolute object-cover"
+          alt="封面图片"
+        />
       </div>
       <!-- 标题 -->
-      <div class="absolute inset-x-0 bottom-0 grid items-end
-            px-3 py-3 h-24
-            bg-gradient-to-b from-transparent to-black/75 text-white text-[13px] break-all">
+      <div
+        class="absolute inset-x-0 bottom-0 grid h-24 items-end break-all bg-gradient-to-b from-transparent to-black/75 px-3 py-3 text-[13px] text-white"
+      >
         <n-ellipsis :line-clamp="2" expand-trigger="hover">
           {{ title || '...' }}
           <!-- Special Tags -->
-          <div v-if="bdrip" class="inline-block bg-blue-400 bg-opacity-50 backdrop-blur-sm
-            text-xs font-medium px-1.5 ml-0.5 rounded-sm">
+          <div
+            v-if="bdrip"
+            class="ml-0.5 inline-block rounded-sm bg-blue-400 bg-opacity-50 px-1.5 text-xs font-medium backdrop-blur-sm"
+          >
             BD
           </div>
-          <div v-if="nsfw" class="inline-block bg-yellow-300 bg-opacity-50 backdrop-blur-sm
-            text-xs font-medium px-1.5 ml-0.5 rounded-sm">
+          <div
+            v-if="nsfw"
+            class="ml-0.5 inline-block rounded-sm bg-yellow-300 bg-opacity-50 px-1.5 text-xs font-medium backdrop-blur-sm"
+          >
             NSFW
           </div>
         </n-ellipsis>
@@ -63,33 +87,57 @@ export default {
     <!-- 信息区 -->
     <div class="relative h-8">
       <div class="flex h-full">
-        <div class="basis-3/4 grid content-center pl-3">
-          <div class="text-[13px]"><i class="bi bi-play-btn"></i> {{ views }}</div>
+        <div class="grid basis-3/4 content-center pl-3">
+          <div class="text-[13px]">
+            <i class="bi bi-play-btn"></i> {{ views }}
+          </div>
           <!-- <div><i class="bi bi-play-btn"></i> {{ views > 999 ? (views / 1000).toFixed(2)  + 'k': views}}</div> -->
         </div>
-        <div class="basis-1/4 grid place-items-center">
+        <div class="grid basis-1/4 place-items-center">
           <!-- 菜单 -->
           <n-popover trigger="click" :show-arrow="false" raw>
             <template #trigger>
-              <div class="hover:bg-black/20 p-1 rounded cursor-pointer">
+              <div
+                class="cursor-pointer rounded p-1 hover:bg-black/20"
+                @click="updateCollected()"
+              >
                 <i class="bi bi-list text-gray-700"></i>
               </div>
             </template>
-            <div class="grid grid-cols-1 p-1 bg-white rounded">
-              <div class="hover:bg-black/20 rounded flex flex-nowrap h-7 cursor-pointer">
-                <div class="grid place-items-center w-8">
-                  <i class="bi bi-star"></i>
-                </div>
-                <div class="grid place-items-center mr-2">
-                  添加到浏览器收藏 (未完成)
-                </div>
+            <div class="grid grid-cols-1 rounded bg-white p-1">
+              <!-- 收藏 -->
+              <div
+                class="flex h-7 cursor-pointer select-none flex-nowrap rounded hover:bg-black/20"
+                @click="switchToMyCollections(id)"
+              >
+                <!-- 已经收藏 -->
+                <template v-if="collected">
+                  <div class="grid w-8 place-items-center text-blue-600">
+                    <i class="bi bi-star-fill"></i>
+                  </div>
+                  <div class="mr-2 grid place-items-center text-blue-600">
+                    移除收藏
+                  </div>
+                </template>
+                <!-- 没有收藏 -->
+                <template v-else>
+                  <div class="grid w-8 place-items-center">
+                    <i class="bi bi-star"></i>
+                  </div>
+                  <div class="mr-2 grid place-items-center">添加到收藏</div>
+                </template>
               </div>
-              <a v-if="parseInt(bgmid)" :href="'https://bgm.tv/subject/' + bgmid" target="_blank"
-                class="hover:bg-black/20 rounded flex flex-nowrap h-7">
-                <div class="grid place-items-center w-8">
+              <!-- 番组计划 -->
+              <a
+                v-if="parseInt(bgmid)"
+                :href="'https://bgm.tv/subject/' + bgmid"
+                target="_blank"
+                class="flex h-7 select-none flex-nowrap rounded hover:bg-black/20"
+              >
+                <div class="grid w-8 place-items-center">
                   <i class="bi bi-box-arrow-up-right"></i>
                 </div>
-                <div class="grid place-items-center mr-2">
+                <div class="mr-2 grid place-items-center">
                   去番组计划查看资料
                 </div>
               </a>
