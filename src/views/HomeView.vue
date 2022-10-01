@@ -11,7 +11,6 @@
         <div class="text-sm text-gray-500 mb-2">预留</div>
       </div>
     </div>
-    <NoticeCard />
     <AnimeCollection />
 
   </ContainerMobileFull>
@@ -24,7 +23,7 @@ import HeaderPictures from "../components/Home/HeaderPictures.vue";
 import ContainerMobileFull from "../components/ContainerMobileFull.vue";
 import AnimeCollection from "../components/Home/Collection/AnimeCollection.vue";
 import BasicCard from "../components/BasicCard.vue";
-import NoticeCard from '../components/Home/NoticeCard.vue';
+
 export default {
   data() {
     return {
@@ -36,7 +35,7 @@ export default {
     document.title = '主页 | 熔岩番剧库 LavaAnimeLib'
     if (uaParser().engine.name = 'Blink' && parseInt(uaParser().engine.version) < 88) this.notSupport = true
   },
-  components: { HeaderPictures, ContainerMobileFull, AnimeCollection, BasicCard, NoticeCard }
+  components: { HeaderPictures, ContainerMobileFull, AnimeCollection, BasicCard }
 }
 </script>
 

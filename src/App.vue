@@ -8,7 +8,7 @@ export default {
         searchValue: "",
         selectedTab: {
           year: "2022年",
-          type: "7月夏"
+          type: "10月秋"
         }
       }
     };
