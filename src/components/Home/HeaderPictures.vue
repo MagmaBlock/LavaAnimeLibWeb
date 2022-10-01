@@ -20,6 +20,7 @@
 
 <script>
 import axios from 'axios';
+import { LavaAnimeAPI } from '../../common/api';
 
 export default {
   data() {
@@ -31,8 +32,9 @@ export default {
   methods: {
     async getData() {
       try {
-        let data = await axios.get('https://anime-img.5t5.top/assets/header/data.json');
-        return data.data
+        let fromAPI = await LavaAnimeAPI.get('/v2/home/header/get');
+        if (fromAPI.data.code == 200) return fromAPI.data.data
+        else return []
       } catch (error) {
         console.error('请求头图数据失败: ', error)
         return []
