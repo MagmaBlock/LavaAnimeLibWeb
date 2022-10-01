@@ -36,7 +36,8 @@ export default {
         { id: 'LavaAnimeLib', content: LavaAnimeLib },
         { id: 'WhyExternalPlayer', content: WhyExternalPlayer },
         { id: 'ExternalPlayerList', content: ExternalPlayerList }
-      ]
+      ],
+      notSupport: false
     };
   },
   mounted() {
