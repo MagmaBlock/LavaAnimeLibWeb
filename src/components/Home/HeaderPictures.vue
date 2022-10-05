@@ -9,7 +9,7 @@
         <RouterLink v-if="pic.url" :to="pic.url">
           <HeaderPictureTitle :title="pic.title" :subtitle="pic.subtitle"></HeaderPictureTitle>
         </RouterLink>
-        <a v-else-if="pic.externalUrl" :href="pic.externalUrl" target="_blank">
+        <a v-else-if="pic.externalUrl" :href="pic.url" target="_blank">
           <HeaderPictureTitle :title="pic.title" :subtitle="pic.subtitle"></HeaderPictureTitle>
         </a>
         <HeaderPictureTitle v-else :title="pic.title" :subtitle="pic.subtitle"></HeaderPictureTitle>
@@ -19,14 +19,21 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { LavaAnimeAPI } from '../../common/api';
 
 export default {
+  props: {
+    customdata: Array
+  },
   data() {
     return {
-      headerPic: [],
-      page: 0
+      headerPic: [{
+        "pic": "/Home/headerPic/LavaAnime.jpg",
+        "url": "",
+        "title": "熔岩番剧库 LavaAnimeLib",
+        "subtitle": ""
+      }],
+      display: true
     }
   },
   methods: {
@@ -42,7 +49,16 @@ export default {
     }
   },
   async mounted() {
-    this.headerPic = await this.getData()
+    if (this.customdata) {
+      this.headerPic = this.customdata
+    } else {
+      this.headerPic = await this.getData()
+    }
+  },
+  watch: {
+    customdata(newData, oldData) {
+      this.headerPic = newData
+    }
   }
 }
 </script>

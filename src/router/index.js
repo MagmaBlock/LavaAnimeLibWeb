@@ -28,6 +28,17 @@ const router = createRouter({
       path: '/anime/:la?',
       component: () => import('../views/Anime/AnimeView.vue')
     },
+    {
+      name: 'Admin',
+      path: '/admin',
+      component: () => import('../views/Admin/AdminView.vue'),
+      children: [
+        {
+          path: 'header',
+          component: () => import('../views/Admin/AdminHeaderView.vue')
+        }
+      ]
+    }
   ]
 })
 
