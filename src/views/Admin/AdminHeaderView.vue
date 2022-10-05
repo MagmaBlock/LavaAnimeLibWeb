@@ -4,8 +4,10 @@
       <n-input v-model:value="password" type="password" placeholder="管理密码" />
       <n-button @click="submitData">提交更新</n-button>
     </n-input-group>
-    {{result}}
-    <div class="lg:flex my-4">
+    <BasicCard class="px-4 py-2 mt-2">
+      {{result}}
+    </BasicCard>
+    <div class="lg:flex my-2">
       <HeaderPictures class="lg:basis-1/3 sm:rounded-md lg:mr-4 h-52" :customdata="headers" v-if="display" />
       <div class="lg:basis-2/3 overflow-scroll h-52">
         <pre>{{ JSON.stringify(headers, null, 2) }}</pre>
@@ -53,7 +55,7 @@ export default {
     return {
       headers: [],
       password: '',
-      result: '',
+      result: '尚未提交',
       display: true
     };
   },

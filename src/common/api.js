@@ -26,5 +26,6 @@ export async function homeHeaderUpdate(data, password) {
     } catch (error) {
         console.error('提交头图数据时发送错误');
         console.error(error);
+        return error
     }
 }
