@@ -8,7 +8,9 @@
       {{result}}
     </BasicCard>
     <div class="lg:flex my-2">
-      <HeaderPictures class="lg:basis-1/3 sm:rounded-md lg:mr-4 h-52" :customdata="headers" v-if="display" />
+      <div class="lg:basis-1/3 lg:mr-4">
+        <HeaderPictures class="sm:rounded-md h-52" :customdata="headers" v-if="display" />
+      </div>
       <div class="lg:basis-2/3 overflow-scroll h-52">
         <pre>{{ JSON.stringify(headers, null, 2) }}</pre>
       </div>
@@ -73,15 +75,20 @@ export default {
       let nextEle = this.headers[index + go]
       this.headers[index] = nextEle
       this.headers[index + go] = thisEle
+      this.regen()
     },
     remove(index) {
       this.headers.splice(index, 1)
+      this.regen()
     },
     add() {
-      this.display = false
       this.headers.push({
         title: '标题', subtitle: '副标题', pic: '/Home/headerPic/LavaAnime.jpg', url: ''
       })
+      this.regen()
+    },
+    regen() {
+      this.display = false
       setTimeout(() => {
         this.display = true
       }, 1);
