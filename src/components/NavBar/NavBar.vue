@@ -32,8 +32,8 @@ export default {
         <NavBarIcon iconClass="bi bi-search" route="/search" title="搜索" :light="this.route['Search']" />
         <NavBarIcon iconClass="bi bi-collection" lightIconClass="bi bi-collection-fill" route="/index" title="索引"
           :light="this.route['Index']" />
-        <NavBarIcon iconClass="bi bi-lightbulb" lightIconClass="bi bi-lightbulb-fill" route="/help" title="帮助"
-          :light="this.route['Help']" />
+        <NavBarIcon iconClass="bi bi-star" lightIconClass="bi bi-star-fill" route="/my" title="我的"
+          :light="this.route['My']" />
       </div>
     </div>
     <!-- 宽屏 -->
@@ -46,8 +46,8 @@ export default {
         <NavBarIcon iconClass="bi bi-search" route="/search" title="搜索" :light="this.route['Search']" />
         <NavBarIcon iconClass="bi bi-collection" lightIconClass="bi bi-collection-fill" route="/index" title="索引"
           :light="this.route['Index']" />
-        <NavBarIcon iconClass="bi bi-lightbulb" lightIconClass="bi bi-lightbulb-fill" route="/help" title="帮助"
-          :light="this.route['Help']" />
+        <NavBarIcon iconClass="bi bi-star" lightIconClass="bi bi-star-fill" route="/my" title="我的"
+          :light="this.route['My']" />
       </div>
     </div>
   </div>

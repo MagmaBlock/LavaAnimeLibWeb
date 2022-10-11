@@ -1,21 +1,36 @@
 <template>
-  <Container>
-    <div class="lg:flex">
-      <div class="lg:basis-1/4 select-none">
-        <List :article="article" :articles="articles" @change-article="a => changeArticle(a)" ref="List" />
-        <Sponsors class="mt-8 hidden lg:block" />
-      </div>
-      <div class="lg:basis-3/4">
-        <div v-if="notSupport" class="grid mt-4">
-          <div class="bg-gray-200 px-4 py-2 w-fit rounded-md text-xs place-self-center">
-            当前浏览器版本过旧, 下方帮助排版可能显示不正常!
+  <div>
+    <div class="sticky top-0 flex flex-nowrap h-12 z-10 select-none
+    bg-white bg-opacity-80 backdrop-blur-lg backdrop-brightness-90 border-b shadow-sm">
+      <div class="flex flex-nowarp">
+        <div class="grid place-items-center w-12 h-full text-lg hover:bg-gray-200 rounded-md" @click="$router.back(-1)">
+          <i class="bi bi-chevron-left"></i>
+        </div>
+        <div class="grid place-items-center h-full px-2 text-base">
+          <div>
+            帮助
           </div>
         </div>
-        <MarkdownRender :content="article.content || ''" />
       </div>
     </div>
-    <Sponsors class="mt-16 block lg:hidden" />
-  </Container>
+    <Container>
+      <div class="lg:flex">
+        <div class="lg:basis-1/4 select-none">
+          <List :article="article" :articles="articles" @change-article="a => changeArticle(a)" ref="List" />
+          <Sponsors class="mt-8 hidden lg:block" />
+        </div>
+        <div class="lg:basis-3/4">
+          <div v-if="notSupport" class="grid mt-4">
+            <div class="bg-gray-200 px-4 py-2 w-fit rounded-md text-xs place-self-center">
+              当前浏览器版本过旧, 下方帮助排版可能显示不正常!
+            </div>
+          </div>
+          <MarkdownRender :content="article.content || ''" />
+        </div>
+      </div>
+      <Sponsors class="mt-16 block lg:hidden" />
+    </Container>
+  </div>
 </template>
 <script>
 import uaParser from 'ua-parser-js';

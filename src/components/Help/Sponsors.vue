@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="text-lg font-medium">赞助致谢</div>
-    <div class="grid place-content-center">
+    <div class="grid place-content-center z-0">
       <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-2 gap-4">
         <template v-for="sponsor in sponsors">
           <SponsorCard :sponsor="sponsor" @click="sponsor.showModal = true" />

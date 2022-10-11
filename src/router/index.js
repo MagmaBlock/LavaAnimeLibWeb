@@ -24,6 +24,11 @@ const router = createRouter({
       component: () => import('../views/HelpView.vue')
     },
     {
+      name: 'My',
+      path: '/my',
+      component: () => import('../views/MyView.vue')
+    },
+    {
       name: 'Anime',
       path: '/anime/:la?',
       component: () => import('../views/Anime/AnimeView.vue')
