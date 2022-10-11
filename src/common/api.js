@@ -5,7 +5,18 @@ export const LavaAnimeAPI = axios.create({
     baseURL: config.api.lavaAnime
 })
 
+// 传入 ID Array，获取番剧信息
+export async function getAnimesData(array) {
+    try {
+        let data = (await LavaAnimeAPI.post("/v2/anime/get", { ids: array })).data;
+        return data;
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
 
+// 获取头图数据
 export async function homeHeaderGet() {
     try {
         let fromAPI = await LavaAnimeAPI.get('/v2/home/header/get');
@@ -17,6 +28,8 @@ export async function homeHeaderGet() {
     }
 }
 
+
+// 更新头图数据
 export async function homeHeaderUpdate(data, password) {
     try {
         if (!data) return '无数据'

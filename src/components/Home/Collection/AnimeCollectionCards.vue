@@ -12,7 +12,7 @@
 
 <script>
 
-import { LavaAnimeAPI } from '../../../common/api';
+import { getAnimesData } from '../../../common/api';
 import AnimeCard from '../../AnimeCard.vue';
 export default {
   props: {
@@ -27,22 +27,12 @@ export default {
     };
   },
   async mounted() {
-    let result = await this.getAnimesData(this.ids);
+    let result = await getAnimesData(this.ids);
     // 根据播放量进行排序
     this.data = result.data.sort(function (a, b) { return b.views - a.views; });
     setTimeout(() => { this.loading.img = false; }, 200);
   },
-  methods: {
-    async getAnimesData(array) {
-      try {
-        let data = (await LavaAnimeAPI.post("/v2/anime/get", { ids: array })).data;
-        return data;
-      }
-      catch (error) {
-        console.error(error);
-      }
-    }
-  },
+  methods: {},
   components: { AnimeCard }
 }
 
