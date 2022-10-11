@@ -18,15 +18,15 @@ export default {
 
 <template>
   <!-- 番剧栅格部分 -->
-  <div class="select-none">
+  <div class="px-2 lg:px-4 select-none">
     <n-spin :show="!animes">
       <div class="grid 
         grid-cols-3 gap-2
         sm:grid-cols-4 sm:gap-x-4
         md:grid-cols-5 md:gap-x-6
-        lg:grid-cols-7
-        xl:grid-cols-8
-        2xl:grid-cols-10">
+        lg:grid-cols-5
+        xl:grid-cols-5
+        2xl:grid-cols-6 2xl:px-10">
         <!-- 番剧卡片骨架屏 -->
         <div v-for="a in 18" v-if="!animes">
           <AnimeCard fake class="animate-pulse"></AnimeCard>
