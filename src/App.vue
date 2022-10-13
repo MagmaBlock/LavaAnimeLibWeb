@@ -18,15 +18,14 @@ export default {
 </script>
 
 <template>
-  <div class="flex flex-row flex-nowrap h-screen max-w-[2560px] mx-auto shadow-lg">
+  <div class="flex flex-row flex-nowrap h-screen max-w-[2560px] shadow-lg">
     <!-- 导航栏 -->
     <NavBar />
     <!-- 当前路由的界面 -->
     <div class="overflow-y-auto w-full">
       <RouterView v-slot="{ Component }">
         <Transition name="fade" mode="out-in">
-          <Component :is="Component" :memory="this.memory" :key="$route.path"
-            class="overflow-y-auto w-full min-h-screen"></Component>
+          <Component :is="Component" :memory="this.memory" :key="$route.path" class="w-full"></Component>
         </Transition>
       </RouterView>
     </div>

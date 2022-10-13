@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="sticky top-0 flex flex-nowrap h-12 z-10 select-none
-    bg-white bg-opacity-80 backdrop-blur-lg backdrop-brightness-90 border-b shadow-sm">
+      bg-white bg-opacity-80 backdrop-blur-lg backdrop-brightness-90 border-b shadow-sm">
       <div class="flex flex-nowarp">
-        <div class="grid place-items-center w-12 h-full text-lg hover:bg-gray-200 rounded-md" @click="$router.back(-1)">
+        <div class="grid place-items-center w-12 h-full text-lg hover:bg-gray-200 rounded-md cursor-pointer" @click="$router.back(-1)">
           <i class="bi bi-chevron-left"></i>
         </div>
         <div class="grid place-items-center h-full px-2 text-base">
