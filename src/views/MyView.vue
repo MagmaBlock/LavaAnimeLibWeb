@@ -36,6 +36,7 @@ export default {
     }
   },
   async mounted() {
+    document.title = '我的 | 熔岩番剧库 LavaAnimeLib'
     let animes = getMyCollections()
     let animesData = await getAnimesData(animes)
     this.myAnimes = animesData.data
