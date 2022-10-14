@@ -22,9 +22,9 @@ export default {
     <!-- 导航栏 -->
     <NavBar />
     <!-- 当前路由的界面 -->
-    <div class="overflow-y-auto w-full">
+    <div class="relative overflow-y-auto w-full">
       <RouterView v-slot="{ Component }">
-        <Transition name="fade" mode="out-in">
+        <Transition :name="$route.meta.transition || 'fade'" :mode="$route.meta.mode || 'out-in'">
           <Component :is="Component" :memory="this.memory" :key="$route.path" class="w-full"></Component>
         </Transition>
       </RouterView>

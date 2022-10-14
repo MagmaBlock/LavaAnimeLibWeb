@@ -21,7 +21,10 @@ const router = createRouter({
     {
       name: 'Help',
       path: '/help',
-      component: () => import('../views/HelpView.vue')
+      component: () => import('../views/HelpView.vue'),
+      meta: {
+        transition: 'flow-out'
+      }
     },
     {
       name: 'My',

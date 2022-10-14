@@ -7,3 +7,31 @@
 .fade-leave-to {
   @apply opacity-0
 }
+
+
+.flow-out-enter-active {
+  animation: go-top 0.3s;
+}
+
+.flow-out-leave-active {
+  animation: go-down 0.3s;
+}
+
+@keyframes go-top {
+  0% {
+    transform: translateY(8px);
+    opacity: 50%;
+  }
+
+  50% {
+    opacity: 75%;
+  }
+
+}
+
+@keyframes go-down {
+
+  100% {
+    @apply scale-95 opacity-75
+  }
+}
