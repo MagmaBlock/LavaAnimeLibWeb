@@ -1,9 +1,12 @@
 <template>
   <div>
     <div class="sticky top-0 flex flex-nowrap h-12 z-10 select-none
-      bg-white bg-opacity-80 backdrop-blur-lg backdrop-brightness-90 border-b shadow-sm">
+      bg-white dark:bg-zinc-800 bg-opacity-80 backdrop-blur-lg backdrop-brightness-90
+      border-b dark:border-zinc-900 shadow-sm">
       <div class="flex flex-nowarp">
-        <div class="grid place-items-center w-12 h-full text-lg hover:bg-gray-200 rounded-md cursor-pointer" @click="$router.back(-1)">
+        <div class="grid place-items-center w-12 h-full text-lg
+          hover:bg-gray-200 dark:hover:bg-zinc-700
+          rounded-md cursor-pointer" @click="$router.back(-1)">
           <i class="bi bi-chevron-left"></i>
         </div>
         <div class="grid place-items-center h-full px-2 text-base">
@@ -21,7 +24,7 @@
         </div>
         <div class="lg:basis-3/4">
           <div v-if="notSupport" class="grid mt-4">
-            <div class="bg-gray-200 px-4 py-2 w-fit rounded-md text-xs place-self-center">
+            <div class="bg-gray-200 dark:bg-zinc-700 px-4 py-2 w-fit rounded-md text-xs place-self-center">
               当前浏览器版本过旧, 下方帮助排版可能显示不正常!
             </div>
           </div>

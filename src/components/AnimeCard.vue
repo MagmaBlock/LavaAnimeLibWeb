@@ -40,7 +40,7 @@ export default {
   <div class="relative box-content overflow-hidden select-none
     rounded-md border-2 border-white/0
     transition-all ease-out hover:lg:scale-[1.03] hover:border-2 hover:border-blue-600 hover:shadow-lg">
-    <div class="absolute h-full w-full bg-gray-100"></div>
+    <div class="absolute h-full w-full bg-gray-100 dark:bg-gray-500"></div>
 
     <!-- 上半：海报 + 标题 -->
     <div class="relative cursor-pointer overflow-hidden" @click="goToThisAnime(id)">
@@ -71,7 +71,7 @@ export default {
     </div>
 
     <!-- 信息区 -->
-    <div class="relative h-8">
+    <div class="relative h-8 dark:bg-zinc-700">
       <div class="flex h-full">
         <div class="grid basis-3/4 content-center pl-3">
           <div class="text-[13px]">
@@ -84,10 +84,10 @@ export default {
           <n-popover trigger="click" :show-arrow="false" raw>
             <template #trigger>
               <div class="cursor-pointer rounded p-1 hover:bg-black/20" @click="updateCollected()">
-                <i class="bi bi-list text-gray-700"></i>
+                <i class="bi bi-list text-zinc-700 dark:text-gray-50"></i>
               </div>
             </template>
-            <div class="grid grid-cols-1 rounded bg-white p-1 select-none">
+            <div class="grid grid-cols-1 rounded bg-white dark:bg-zinc-700 dark:text-white p-1 select-none">
               <!-- 收藏 -->
               <div class="flex h-7 cursor-pointer flex-nowrap rounded hover:bg-black/20"
                 @click="switchToMyCollections(id)">

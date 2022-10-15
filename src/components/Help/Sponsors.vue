@@ -7,15 +7,17 @@
           <SponsorCard :sponsor="sponsor" @click="sponsor.showModal = true" />
 
           <n-modal v-model:show="sponsor.showModal">
-            <n-card class="w-80" :title="sponsor.name" :bordered="false" role="dialog">
+            <n-card class="w-80 dark:bg-zinc-800 dark:text-white" :title="sponsor.name" :bordered="false" role="dialog">
               <template #header-extra>
-                {{ sponsor.support }}
+                <div class="dark:text-zinc-100">
+                  {{ sponsor.support }}
+                </div>
               </template>
               <div class="text-center">
                 <div class="mb-4">
                   {{ sponsor.message || '没有留言'}}
                 </div>
-                <a v-if="sponsor.link" class="text-blue-600 font-bold" :href="sponsor.link" target="_blank">查看附加的链接</a>
+                <a v-if="sponsor.link" class="text-blue-500 font-bold" :href="sponsor.link" target="_blank">查看附加的链接</a>
               </div>
             </n-card>
           </n-modal>

@@ -78,11 +78,11 @@ export default {
         <div class="sticky top-5 select-none">
           <!-- 快速搜索框 -->
           <div class="flex transition-all">
-            <input type="text" placeholder="快速搜索..." class="bg-gray-100 hover:bg-gray-200
+            <input type="text" placeholder="快速搜索..." class="bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700
             focus:outline-none focus:ring-2 focus:ring-blue-500 ease-in duration-100
             w-full py-1 px-2 rounded" v-model="searchValue"
               @keydown.enter="this.$router.push('/search/'+ searchValue)" />
-            <div class="bg-gray-100 hover:bg-gray-200 ease-in duration-100
+            <div class="bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 ease-in duration-100
             whitespace-nowrap py-1 px-2 ml-2 rounded text-center" @click="this.$router.push('/search/'+ searchValue)">
               搜索
             </div>
@@ -94,37 +94,39 @@ export default {
             <div class="flex flex-wrap">
               <!-- 年份骨架屏 -->
               <template v-if="loading.year">
-                <div class="inline-block w-[60px] h-7 m-0.5 bg-gray-300 animate-pulse" v-for="a in 19"></div>
+                <div class="inline-block w-[60px] h-7 m-0.5 bg-gray-300 dark:bg-zinc-800 animate-pulse" v-for="a in 19">
+                </div>
               </template>
               <!-- 年份内容 -->
               <template v-if="!loading.year" v-for="yearName in tabs.year">
                 <div class="rounded cursor-pointer ease-in duration-100 px-2 py-1 m-0.5"
                   @click="onTagClick(yearName, 'year')"
-                  :class="memory.selectedTab.year == yearName ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-zinc-700'">
+                  :class="memory.selectedTab.year == yearName ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:active:bg-gray-500 dark:text-zinc-200'">
                   {{ yearName }}
                 </div>
               </template>
             </div>
           </n-spin>
-          <n-divider class="hidden lg:block" />
+          <div class="h-[0.5px] bg-gray-200 dark:bg-gray-700 my-6 hidden lg:block"></div>
           <!-- 分类部分 -->
           <n-spin :show="loading.type">
             <div class="flex flex-wrap">
               <!-- 分类骨架屏 -->
               <div class="leading-none" v-if="loading.type">
-                <div class="inline-block w-[50px] h-7 bg-gray-300 m-0.5 animate-pulse" v-for="a in 4"></div>
+                <div class="inline-block w-[50px] h-7 bg-gray-300 dark:bg-zinc-800 m-0.5 animate-pulse" v-for="a in 8">
+                </div>
               </div>
               <!-- 分类内容 -->
               <template v-if="!loading.type" v-for="typeName in tabs.type">
                 <div class="rounded cursor-pointer ease-in duration-100 px-2 py-1 m-0.5"
                   @click="onTagClick(typeName, 'type')"
-                  :class="memory.selectedTab.type == typeName ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-zinc-700'">
+                  :class="memory.selectedTab.type == typeName ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:active:bg-gray-500 dark:text-zinc-200'">
                   {{ typeName }}
                 </div>
               </template>
             </div>
           </n-spin>
-          <n-divider class="lg:hidden" />
+          <div class="h-[0.5px] bg-gray-200 dark:bg-gray-700 my-6 lg:hidden"></div>
         </div>
       </div>
 

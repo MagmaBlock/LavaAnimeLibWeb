@@ -11,7 +11,7 @@ export default {
       searchResults: [],
       searchHistory: [],
       lastSearch: "",
-      searchRecommendation: ["Lycoris Recoil", "异世界舅舅", "OVERLORD", "Engage Kiss", "来自深渊", "夏日重现", "实力至上主义教室", "间谍过家家"],
+      searchRecommendation: ["电锯人", "间谍过家家", "灵能百分百", "转生成为魔剑", "孤独摇滚", "想要成为影之实力者", "Do It Yourself", "向山进发", "入间同学"],
       preSearchValues: [],
       preSearchLock: false
     };
@@ -96,7 +96,7 @@ export default {
           <n-input-group>
             <n-auto-complete placeholder="按 Tab 搜索键入值, Enter 和 ↑ ↓ 使用候选"
               :input-props="{ type: 'text', name: 'search', autocomplete: 'off' }" v-model:value="memory.searchValue"
-              :options="preSearchValues" @input="preSearch(memory.searchValue)"
+              :options="preSearchValues" @update:value="preSearch(memory.searchValue)"
               @keydown.enter="search(this.memory.searchValue)" blur-after-select
               @blur="search(this.memory.searchValue)" />
             <n-button type="info" @click="search(this.memory.searchValue)" ghost>搜索</n-button>
@@ -104,15 +104,16 @@ export default {
           <!-- 历史记录 -->
           <div class="my-4 w-full flex flex-wrap">
             <!-- 标签 -->
-            <span v-for="value in searchHistory" @click="search(value)"
-              class="bg-gray-100 hover:bg-gray-200 active:bg-gray-300 ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 rounded max-w-xs overflow-hidden">
+            <span v-for="value in searchHistory" @click="search(value)" class="bg-gray-100 hover:bg-gray-200 active:bg-gray-300 
+            dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:active:bg-gray-500 dark:text-zinc-200
+              ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 rounded max-w-xs overflow-hidden">
               <div class="leading-loose truncate">
                 {{ value }}
               </div>
             </span>
             <!-- 清除按钮 -->
-            <span
-              class="bg-blue-50 hover:bg-blue-200 ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 rounded max-w-xs overflow-hidden"
+            <span class="bg-blue-50 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/75
+              ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 rounded max-w-xs overflow-hidden"
               @click="clearSearchHistroy()" v-if="this.searchHistory.length > 0">
               <div class="leading-loose truncate text-blue-500">
                 <i class="bi bi-x-lg"></i>
@@ -122,8 +123,9 @@ export default {
           <!-- 搜索推荐 -->
           <div class="text-lg mb-4 mx-0.5 font-medium">大家在搜</div>
           <div class="my-4 w-full flex flex-wrap">
-            <span v-for="value in searchRecommendation" @click="clickHistoryTag(value)"
-              class="bg-gray-100 hover:bg-gray-200 active:bg-gray-300 ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 rounded max-w-xs overflow-hidden">
+            <span v-for="value in searchRecommendation" @click="clickHistoryTag(value)" class="bg-gray-100 hover:bg-gray-200 active:bg-gray-300 
+            dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:active:bg-gray-500 dark:text-zinc-200
+              ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 rounded max-w-xs overflow-hidden">
               <div class="leading-loose truncate">
                 {{ value }}
               </div>

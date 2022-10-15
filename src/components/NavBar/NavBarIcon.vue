@@ -16,10 +16,10 @@ export default {
   methods: {
     ifLight() { // 如果此图标已被点亮，则改变控制组件颜色的 Class
       if (this.light) {
-        this.colorClass = ['text-center', 'text-blue-600']
+        this.colorClass = ['text-center', 'text-blue-600', 'dark:text-blue-500']
         this.realIconClass = this.lightIconClass ? this.lightIconClass : this.iconClass
       } else {
-        this.colorClass = ['text-center', 'text-gray-500', 'hover:text-black']
+        this.colorClass = ['text-center', 'text-gray-500 dark:text-gray-400', 'hover:text-black dark:hover:text-gray-200']
         this.realIconClass = this.iconClass
       }
     }

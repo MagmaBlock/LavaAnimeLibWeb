@@ -1,5 +1,5 @@
 .markdown-body {
-  @apply text-sm leading-[24px] font-sans text-gray-800
+  @apply text-sm leading-[24px] font-sans text-gray-800 dark:text-zinc-100
 }
 
 .markdown-body>p {
@@ -12,7 +12,7 @@
 .markdown-body>h4,
 .markdown-body>h5,
 .markdown-body>h6 {
-  @apply my-2 p-0 border-0 font-medium text-black
+  @apply my-2 p-0 border-0 font-medium text-black dark:text-white
 }
 
 .markdown-body>*>a {
