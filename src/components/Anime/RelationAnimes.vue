@@ -5,8 +5,9 @@
     </div>
     <div v-for="anime in la.relations" class="flex flex-wrap gap-1 my-2">
       <RouterLink :to="'/anime/' + anime.id">
-        <div class="bg-gray-100 hover:bg-gray-200 active:bg-gray-300 cursor-pointer ease-in duration-200 rounded p-2">
-          <span class="bg-blue-100 text-xs text-blue-600 font-medium rounded-sm px-1.5 mr-1">
+        <div class="bg-gray-100 hover:bg-gray-200 active:bg-gray-300 dark:bg-zinc-700 dark:hover:bg-zinc-600
+          cursor-pointer ease-in duration-200 rounded p-2">
+          <span class="bg-blue-100 text-blue-600 dark:bg-blue-600 dark:bg-opacity-60 dark:text-white text-xs font-medium rounded-sm px-1.5 mr-1">
             {{ anime.relation }}
           </span>
           <span class="">

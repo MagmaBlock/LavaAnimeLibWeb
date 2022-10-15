@@ -19,7 +19,7 @@ export default {
 <template>
   <AnimeBasicCard>
     <!-- 面包屑导航 但是不能点 -->
-    <div class="px-4 py-2 text-sm text-gray-500 border-b">
+    <div class="px-4 py-2 text-sm text-gray-500 border-b dark:border-zinc-700">
       <RouterLink :to="`/index/`">
         {{ this.la.index.year }}
         <i class="bi bi-chevron-right text-xs"></i>
@@ -46,7 +46,8 @@ export default {
           <span class="mr-2"><i class="bi bi-play-btn"></i> 播放 {{ this.la.views }} 次</span>
           <div class="mr-2 my-1" v-if="!this.la.bgmId">本作是 Bangumi 未收录番剧，或者可能根本不是一个影视作品</div>
           <span class="mr-2" v-if="this.la.bgmId"><i class="bi bi-star"></i> {{ this.la.rating.score }} 分
-            <span v-if="this.la.rating.rank" class="bg-gray-100 text-black rounded-sm px-1.5 text-xs align-baseline">
+            <span v-if="this.la.rating.rank" class="bg-gray-100 text-black dark:bg-zinc-700 dark:text-zinc-200
+               rounded-sm px-1.5 text-xs align-baseline">
               Rank.#{{ this.la.rating.rank }}
             </span>
           </span>
@@ -74,7 +75,8 @@ export default {
           </span>
         </span>
         <span>
-          <n-tag size="small" class="mr-1 mb-1 text-gray-300" :bordered="false" @click="showMore = !showMore" checkable>
+          <n-tag size="small" class="mr-1 mb-1 text-gray-300 dark:text-zinc-200" :bordered="false"
+            @click="showMore = !showMore" checkable>
             {{ showMore ? '收起' : '展开' }}
           </n-tag>
         </span>

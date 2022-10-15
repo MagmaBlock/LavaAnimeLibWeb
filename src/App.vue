@@ -20,9 +20,9 @@ export default {
 
 <template>
   <n-config-provider :theme="darkTheme">
-    <div class="dark">
+    <div class="">
       <div class="flex flex-row flex-nowrap h-screen max-w-[2560px] shadow-lg
-      bg-white dark:bg-neutral-900 text-gray-800 dark:text-white">
+      dark:bg-neutral-900 text-gray-800 dark:text-zinc-200">
         <!-- 导航栏 -->
         <NavBar />
         <!-- 当前路由的界面 -->

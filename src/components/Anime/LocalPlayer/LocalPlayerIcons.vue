@@ -3,36 +3,36 @@
   <a :href="getUrl().ddplayWindows" @click="handleButtonClick('DanDanPlayWindows')"
     v-if="ua.os.name == 'Windows' || allos" :class="buttonClass">
     <img src="../../../assets/PlayersIcon/DanDanPlay.svg" alt="ddplayWindows" class="w-6 h-6">
-    <div class="text-gray-800 mx-2">弹弹Play</div>
+    <div :class="textClass">弹弹Play</div>
   </a>
   <!-- 弹弹Play 安卓 -->
   <a :href="getUrl().ddplayAndroid" @click="handleButtonClick('DanDanPlayAndroid')"
     v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS/i) || allos" :class="buttonClass">
     <img src="../../../assets/PlayersIcon/DanDanPlay.svg" alt="ddplayWindows" class="w-6 h-6">
-    <div class="text-gray-800 mx-2">弹弹Play 概念版</div>
+    <div :class="textClass">弹弹Play 概念版</div>
   </a>
   <!-- PotPlayer -->
   <a :href="getUrl().potplayer" @click="handleButtonClick('PotPlayer')" v-if="ua.os.name == 'Windows' || allos"
     :class="buttonClass">
     <img src="../../../assets/PlayersIcon/PotPlayer.svg" alt="potplayer" class="w-6 h-6">
-    <div class="text-gray-800 mx-2">PotPlayer</div>
+    <div :class="textClass">PotPlayer</div>
   </a>
   <!-- VLC -->
   <a :href="getUrl().vlc" @click="handleButtonClick('VLC')" :class="buttonClass">
     <img src="../../../assets/PlayersIcon/vlc.svg" alt="vlc" class="w-6 h-6">
-    <div class="text-gray-800 mx-2">VLC</div>
+    <div :class="textClass">VLC</div>
   </a>
   <!-- IINA -->
   <a :href="getUrl().iina" @click="handleButtonClick('IINA')" v-if="ua.os.name == 'Mac OS' || allos"
     :class="buttonClass">
     <img src="../../../assets/PlayersIcon/iina.svg" alt="iina" class="w-6 h-6">
-    <div class="text-gray-800 mx-2">IINA</div>
+    <div :class="textClass">IINA</div>
   </a>
   <!-- 复制链接或下载 -->
   <div @click="handleButtonClick('Copy Link / Download')" :data-clipboard-text="this.video.tempUrl" ref="copyBtn"
     @click.shift="download(this.video.url)" :class="buttonClass">
     <img src="../../../assets/PlayersIcon/Link.svg" alt="copy link" class="w-6 h-6">
-    <div class="text-gray-800 mx-2">复制链接</div>
+    <div :class="textClass">复制链接</div>
   </div>
 </template>
 
@@ -45,7 +45,14 @@ export default {
     return {
       ua: uaParser(),
       reportTimes: 0,
-      buttonClass: 'h-8 flex place-items-center bg-gray-100 text-blue-600 hover:bg-gray-200 active:bg-gray-300 ease-in duration-100 rounded py-1 px-2 text-xs'
+      buttonClass: [
+        'h-8 py-1 px-2 flex place-items-center',
+        'ease-in duration-100 rounded text-xs',
+        'bg-gray-100 hover:bg-gray-200 active:bg-gray-300 dark:bg-zinc-700 dark:hover:bg-zinc-600'
+      ],
+      textClass: [
+        'text-gray-800 dark:text-zinc-100 mx-2'
+      ]
     }
   },
   props: {

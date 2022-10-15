@@ -1,18 +1,20 @@
 <template>
   <AnimeBasicCard class="select-none relative">
     <!-- 未选择集数的遮罩 -->
-    <div class="absolute w-full h-full bg-white bg-opacity-90 rounded-md grid place-items-center" v-if="!video.url">
+    <div class="absolute w-full h-full bg-white dark:bg-zinc-800 bg-opacity-90 dark:bg-opacity-90
+      rounded-md grid place-items-center" v-if="!video.url">
       请先选择集数
     </div>
     <div class="flex flex-wrap gap-1 md:gap-2 p-2">
       <LocalPlayerIcons :video="video" :player="player" :reporter="reporter" />
       <!-- 展开全部 -->
-      <div class="h-8 flex place-items-center bg-gray-100 text-blue-600 hover:bg-gray-200 active:bg-gray-300
+      <div class="h-8 flex place-items-center
+      bg-gray-100 hover:bg-gray-200 active:bg-gray-300 dark:bg-zinc-700 dark:hover:bg-zinc-600
         ease-in duration-100 rounded py-1 px-2 text-xs" @click="pausePlayer(); moreModel = true">
-        <div class="text-gray-800 mx-0.5"><i class="bi bi-three-dots"></i></div>
+        <div class="text-gray-800 dark:text-zinc-200 mx-0.5"><i class="bi bi-three-dots"></i></div>
       </div>
       <!-- Model 模态框 -->
-      <n-modal v-model:show="moreModel" class="bg-white h-fit select-none">
+      <n-modal v-model:show="moreModel" class="h-fit select-none">
         <n-card class="max-w-xl" title="全部播放器" :bordered="false" size="small" role="dialog" aria-modal="true">
           <template #header-extra>
             <i class="bi bi-x-lg hover:text-blue-600 cursor-pointer ml-2" @click="moreModel = false"></i>
@@ -37,13 +39,14 @@
 
 <script>
 import { ref } from 'vue';
+import LocalPlayerIcons from './LocalPlayerIcons.vue';
 
 
 export default {
   data() {
     return {
       moreModel: ref(false),
-    }
+    };
   },
   props: {
     video: Object,
@@ -52,10 +55,11 @@ export default {
   },
   methods: {
     pausePlayer() {
-      this.player.art.pause()
-      console.log('暂停来自上级的播放器.');
+      this.player.art.pause();
+      console.log("暂停来自上级的播放器.");
     }
   },
-  mounted() { }
+  mounted() { },
+  components: { LocalPlayerIcons }
 }
 </script>
