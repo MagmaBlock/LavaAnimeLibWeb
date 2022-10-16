@@ -31,6 +31,7 @@
           <template #header-extra>
             <i class="bi bi-x-lg hover:text-blue-600 cursor-pointer ml-2" @click="darkModeModel = false"></i>
           </template>
+          暂未完成...
           <n-list hoverable clickable>
             <n-list-item @click="switchDarkMode">
               深色模式

@@ -21,7 +21,7 @@ export default {
 <template>
   <n-config-provider :theme="darkTheme">
     <div class="">
-      <div class="flex flex-row flex-nowrap h-screen max-w-[2560px] shadow-lg
+      <div class="flex flex-row flex-nowrap h-screen max-w-[2560px] mx-auto shadow-lg
       dark:bg-neutral-900 text-gray-800 dark:text-zinc-200">
         <!-- 导航栏 -->
         <NavBar />
