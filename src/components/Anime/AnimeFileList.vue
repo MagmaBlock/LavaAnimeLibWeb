@@ -44,7 +44,7 @@ export default {
     <div class="max-h-80 sm:h-[400px] overflow-auto">
       <!-- 视频列表，默认渲染所有资源，可通过上方的 father.selectedVideoList 控制渲染哪些集数 -->
       <div v-for="video in father.epVideoList[father.selectedVideoList] || father.videoList"
-        class="relative hover:bg-gray-200 active:bg-gray-300 p-0.5 leading rounded ease-in duration-100"
+        class="relative hover:bg-gray-200 active:bg-gray-300 dark:hover:bg-zinc-700 dark:active:bg-zinc-600 p-0.5 leading rounded ease-in duration-100"
         :class="father.selectedVideo.name == video.name ? 'border-2 border-blue-500' : ''">
         <div v-if="video.type == 'file'" class="cursor-pointer" @click="father.selectedVideo = video">
           <!-- 集数 -->

@@ -3,7 +3,7 @@ import { reactive, watch } from "vue"
 let defaultSetting = {
   darkMode: {
     on: false,
-    autoDarkMode: true,
+    autoDarkMode: false,
   }
 }
 

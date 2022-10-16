@@ -25,7 +25,7 @@ export default {
     <div class="lg:hidden fixed bottom-4 z-50 w-full grid">
       <div class="w-11/12 py-2 px-4 place-self-center
       grid grid-cols-4
-      bg-white dark:bg-black bg-opacity-80 dark:bg-opacity-75 backdrop-blur-lg backdrop-brightness-90 dark:backdrop-brightness-75
+      bg-white dark:bg-zinc-800 bg-opacity-80 dark:bg-opacity-75 backdrop-blur-lg backdrop-brightness-90 dark:backdrop-brightness-75
       border dark:border-zinc-700 shadow-lg rounded-xl
       select-none">
         <NavBarIcon iconClass="bi bi-house" lightIconClass="bi bi-house-fill" route="/" title="主页"

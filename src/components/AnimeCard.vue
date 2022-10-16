@@ -93,10 +93,10 @@ export default {
                 @click="switchToMyCollections(id)">
                 <!-- 已经收藏 -->
                 <template v-if="collected">
-                  <div class="grid w-8 place-items-center text-blue-600">
+                  <div class="grid w-8 place-items-center text-blue-600 dark:text-blue-400">
                     <i class="bi bi-star-fill"></i>
                   </div>
-                  <div class="mr-2 grid place-items-center text-blue-600">
+                  <div class="mr-2 grid place-items-center text-blue-600 dark:text-blue-400">
                     移除收藏
                   </div>
                 </template>
