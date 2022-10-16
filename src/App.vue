@@ -2,6 +2,7 @@
 import { RouterView } from 'vue-router';
 import { darkTheme } from 'naive-ui'
 import NavBar from './components/NavBar/NavBar.vue';
+import settings from './components/Methods/settings.js'
 export default {
   data() {
     return {
@@ -11,7 +12,8 @@ export default {
           year: "2022年",
           type: "10月秋"
         }
-      }
+      },
+      settings: settings
     };
   },
   components: { RouterView, NavBar }
@@ -19,23 +21,23 @@ export default {
 </script>
 
 <template>
-  <n-config-provider :theme="darkTheme">
-    <div class="">
-      <div class="flex flex-row flex-nowrap h-screen max-w-[2560px] mx-auto shadow-lg
+  <!-- <n-config-provider :theme="darkTheme"> -->
+  <div :class="settings.darkMode.on ? 'dark' : ''">
+    <div class="flex flex-row flex-nowrap h-screen max-w-[2560px] mx-auto shadow-lg
       dark:bg-neutral-900 text-gray-800 dark:text-zinc-200">
-        <!-- 导航栏 -->
-        <NavBar />
-        <!-- 当前路由的界面 -->
-        <div class="relative overflow-y-auto w-full">
-          <RouterView v-slot="{ Component }">
-            <Transition :name="$route.meta.transition || 'fade'" :mode="$route.meta.mode || 'out-in'">
-              <Component :is="Component" :memory="this.memory" :key="$route.path" class="w-full"></Component>
-            </Transition>
-          </RouterView>
-        </div>
+      <!-- 导航栏 -->
+      <NavBar />
+      <!-- 当前路由的界面 -->
+      <div class="relative overflow-y-auto w-full">
+        <RouterView v-slot="{ Component }">
+          <Transition :name="$route.meta.transition || 'fade'" :mode="$route.meta.mode || 'out-in'">
+            <Component :is="Component" :memory="this.memory" :key="$route.path" class="w-full"></Component>
+          </Transition>
+        </RouterView>
       </div>
     </div>
-  </n-config-provider>
+  </div>
+  <!-- </n-config-provider> -->
 </template>
 <!-- 从 /page/1 => /page/2, 由于这两个路由的 $route.path 并不一样, 所以组件被强制不复用。 -->
 <!-- 从 /page?id=1 => /page?id=2, 由于这两个路由的 $route.path 一样, 所以和没设置key属性一样, 会复用组件。 -->

@@ -18,10 +18,12 @@ import Container from '../components/Container.vue';
 import { getMyCollections } from '../components/Methods/MyCollections';
 import FullScreenAnimeCardContainer from '../components/Container/FullScreenAnimeCardContainer.vue';
 import FunctionsCard from '../components/My/FunctionsCard.vue';
+import settings from '../components/Methods/settings.js'
 export default {
   data() {
     return {
-      myAnimes: []
+      myAnimes: [],
+      settings: settings
     }
   },
   async mounted() {

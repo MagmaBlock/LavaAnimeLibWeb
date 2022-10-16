@@ -31,15 +31,15 @@
           <template #header-extra>
             <i class="bi bi-x-lg hover:text-blue-600 cursor-pointer ml-2" @click="darkModeModel = false"></i>
           </template>
-          暂未完成...
           <n-list hoverable clickable>
-            <n-list-item @click="switchDarkMode">
+            <n-list-item @click="settings.darkMode.on = !settings.darkMode.on">
               深色模式
-              <n-switch :value="settings.darkMode" class="float-right" />
+              <n-switch :value="settings.darkMode.on" class="float-right" />
             </n-list-item>
-            <n-list-item @click="switchAutoDarkMode">
+            <n-list-item>
+              <!-- @click="settings.darkMode.autoDarkMode = !settings.darkMode.autoDarkMode" -->
               自动启用深色模式
-              <n-switch :value="settings.autoDarkMode" class="float-right" />
+              <n-switch disabled :value="settings.darkMode.autoDarkMode" class="float-right" />
             </n-list-item>
           </n-list>
         </n-card>
@@ -50,35 +50,17 @@
 
 <script>
 import { ref } from 'vue';
+import settings from '../Methods/settings.js';
 
 export default {
   data() {
     return {
       darkModeModel: ref(false),
-      settings: {
-        darkMode: false,
-        autoDarkMode: false,
-      }
+      settings: settings
     }
   },
   methods: {
-    switchDarkMode() {
-      this.settings.darkMode = !this.settings.darkMode
-      this.saveSettings()
-    },
-    switchAutoDarkMode() {
-      this.settings.autoDarkMode = !this.settings.autoDarkMode
-      this.saveSettings()
-    },
-    saveSettings() {
-      localStorage.setItem('settings', JSON.stringify(this.settings))
-    }
-  },
-  mounted() {
-    let settings = localStorage.getItem('settings')
-    if (!settings) return
-    settings = JSON.parse(settings)
-    this.settings = settings
+
   }
 }
 </script>
