@@ -38,8 +38,14 @@ export default {
   methods: {
     // 如果开关改变, 则调整 body 的 dark class
     updateTailWindDark() {
-      settings.darkMode.on ?
-        document.body.classList.add('dark') : document.body.classList.remove('dark')
+      if (settings.darkMode.on) {
+        document.body.classList.add('dark')
+        document.body.classList.add('bg-black')
+      }
+      else {
+        document.body.classList.remove('dark')
+        document.body.classList.remove('bg-black')
+      }
     },
     // 根据当前的时间和自动开关, 调整深色模式
     updateDarkMode() {
@@ -52,7 +58,6 @@ export default {
           } else {
             // not dark mode
             settings.darkMode.on = true
-
           }
         })
         // 浅色
