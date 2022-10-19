@@ -50,6 +50,13 @@
                 根据时间
               </n-radio>
             </n-space>
+            <n-collapse-transition :show="settings.darkMode.autoMode == 'system'">
+              <div class="px-5 pb-2 text-xs text-gray-400">
+                若您正在使用部分<strong>手机</strong>国产浏览器，<strong>此功能可能无法使用</strong>。<br>
+                手机端目前确定支持: Chrome、Edge、FireFox、Via、X浏览器、Safari。<br>
+                夸克、360、QQ浏览器等已确定无法支持。
+              </div>
+            </n-collapse-transition>
             <!-- 跟随的时间设置面版 -->
             <n-collapse-transition :show="settings.darkMode.autoMode == 'time'">
               <div class="px-5 py-3">
