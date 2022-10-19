@@ -25,20 +25,74 @@ export default {
   },
   mounted() {
     this.updateTailWindDark()
+    this.updateDarkMode()
   },
   watch: {
     'settings.darkMode.on': function () {
       this.updateTailWindDark()
-      console.log(this);
+    },
+    'settings.darkMode.now': function () {
+      this.updateDarkMode()
     }
   },
   methods: {
+    // 如果开关改变, 则调整 body 的 dark class
     updateTailWindDark() {
-      if (settings.darkMode.on) {
-        document.body.classList.add('dark')
+      settings.darkMode.on ?
+        document.body.classList.add('dark') : document.body.classList.remove('dark')
+    },
+    // 根据当前的时间和自动开关, 调整深色模式
+    updateDarkMode() {
+      if (settings.darkMode.autoMode == 'system') {
+        // 增加事件监听
+        window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function (event) {
+          // is dark mode
+          if (event.matches) {
+            settings.darkMode.on = false
+          } else {
+            // not dark mode
+            settings.darkMode.on = true
+
+          }
+        })
+        // 浅色
+        if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+          settings.darkMode.on = false
+        }
+        // 深色
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          settings.darkMode.on = true
+        }
       }
-      else {
-        document.body.classList.remove('dark')
+      if (settings.darkMode.autoMode == 'time') {
+        let now = new Date().getHours()
+        let dark = settings.darkMode.darkTime
+        let light = settings.darkMode.lightTime
+
+
+        if (dark >= light) { // 如果深色开始时间晚于浅色开始时间 (夜晚深色，白天浅色，正常情况)
+          if (light < now <= dark) {
+            console.log('light < now <= dark');
+            settings.darkMode.on = false
+          }
+          if (dark <= now || now < light) {
+            console.log('dark <= now || now < light');
+            settings.darkMode.on = true
+          }
+        }
+
+        if (dark < light) { // 如果深色开始时间早于浅色开始时间 (夜晚浅色，白天深色，吸血鬼)
+          if (dark < now <= light) {
+            console.log('dark < now <= light');
+            settings.darkMode.on = true
+          }
+          if (light <= now || now < dark) {
+            console.log('light <= now || now < dark');
+            settings.darkMode.on = false
+          }
+        }
+
+
       }
     }
   }

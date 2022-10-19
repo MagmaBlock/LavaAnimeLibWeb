@@ -36,12 +36,41 @@
               深色模式
               <n-switch :value="settings.darkMode.on" class="float-right" />
             </n-list-item>
-            <n-list-item>
-              <!-- @click="settings.darkMode.autoDarkMode = !settings.darkMode.autoDarkMode" -->
+            <n-list-item @click="settings.darkMode.autoDarkMode = !settings.darkMode.autoDarkMode">
               自动启用深色模式
-              <n-switch disabled :value="settings.darkMode.autoDarkMode" class="float-right" />
+              <n-switch :value="settings.darkMode.autoDarkMode" class="float-right" />
             </n-list-item>
           </n-list>
+          <n-collapse-transition :show="settings.darkMode.autoDarkMode">
+            <n-space class="px-5 py-3">
+              <n-radio :checked="settings.darkMode.autoMode == 'system'" @click="settings.darkMode.autoMode = 'system'">
+                跟随系统设定
+              </n-radio>
+              <n-radio :checked="settings.darkMode.autoMode == 'time'" @click="settings.darkMode.autoMode = 'time'">
+                根据时间
+              </n-radio>
+            </n-space>
+            <!-- 跟随的时间设置面版 -->
+            <n-collapse-transition :show="settings.darkMode.autoMode == 'time'">
+              <div class="px-5 py-3">
+                <n-space vertical>
+                  <!-- <n-slider v-model:value="settings.darkMode.now" :step="1" :min="0" :max="23" /> -->
+                  <div>
+                    深色开始时间 / 晚上 (24小时制)
+                    <n-slider v-model:value="settings.darkMode.darkTime" :step="1" :min="0" :max="23" />
+                  </div>
+                  <div>
+                    浅色开始时间 / 早晨 (24小时制)
+                    <n-slider v-model:value="settings.darkMode.lightTime" :step="1" :min="0" :max="23" />
+                  </div>
+                  <n-space>
+                    <n-input-number v-model:value="settings.darkMode.darkTime" size="small" />
+                    <n-input-number v-model:value="settings.darkMode.lightTime" size="small" />
+                  </n-space>
+                </n-space>
+              </div>
+            </n-collapse-transition>
+          </n-collapse-transition>
         </n-card>
       </n-modal>
     </div>

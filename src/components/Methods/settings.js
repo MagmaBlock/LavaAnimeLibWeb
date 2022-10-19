@@ -3,7 +3,9 @@ import { reactive, watch } from "vue"
 let defaultSetting = {
   darkMode: {
     on: false,
-    autoDarkMode: false,
+    autoDarkMode: true,
+    autoMode: 'system',
+    darkTime: 20, lightTime: 7
   }
 }
 
@@ -18,7 +20,7 @@ function saveSettings() {
 }
 
 watch(settings, (a, b) => {
-  console.log(a, b);
+  // console.log(a, b);
   saveSettings()
 })
 
