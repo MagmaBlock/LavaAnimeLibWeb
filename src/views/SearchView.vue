@@ -2,6 +2,7 @@
 import { LavaAnimeAPI } from '../common/api';
 import Container from '../components/Container.vue';
 import HalfScreenAnimeCardContainer from '../components/Container/HalfScreenAnimeCardContainer.vue';
+import SearchBar from '../components/Search/SearchBar.vue';
 
 export default {
   props: ["memory"],
@@ -80,7 +81,7 @@ export default {
     this.loadSearchHistory();
     this.useUrlParams();
   },
-  components: { Container, HalfScreenAnimeCardContainer }
+  components: { Container, HalfScreenAnimeCardContainer, SearchBar }
 }
 </script>
 
@@ -92,22 +93,16 @@ export default {
         <!-- 搜索本体部分，将粘连屏幕 -->
         <div class="sticky top-5 select-none">
           <div class="text-lg mb-4 mx-0.5 font-medium">搜索</div>
+          <SearchBar :search="memory.searchValue" />
           <!-- 搜索框 -->
-          <n-input-group>
-            <n-auto-complete placeholder="按 Tab 搜索键入值, Enter 和 ↑ ↓ 使用候选"
-              :input-props="{ type: 'text', name: 'search', autocomplete: 'off' }" v-model:value="memory.searchValue"
-              :options="preSearchValues" @update:value="preSearch(memory.searchValue)"
-              @keydown.enter="search(this.memory.searchValue)" blur-after-select
-              @blur="search(this.memory.searchValue)" />
-            <n-button type="primary" @click="search(this.memory.searchValue)" ghost>搜索</n-button>
-          </n-input-group>
+
           <!-- 历史记录 -->
           <div class="my-4 w-full flex flex-wrap">
             <!-- 标签 -->
             <span v-for="value in searchHistory" @click="search(value)" class="bg-gray-100 hover:bg-gray-200 active:bg-gray-300 
             dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:active:bg-gray-500 dark:text-zinc-200
               ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 rounded max-w-xs overflow-hidden">
-              <div class="leading-loose truncate">
+              <div class="leading-loose text-ellipsis overflow-hidden">
                 {{ value }}
               </div>
             </span>
@@ -126,7 +121,7 @@ export default {
             <span v-for="value in searchRecommendation" @click="clickHistoryTag(value)" class="bg-gray-100 hover:bg-gray-200 active:bg-gray-300 
             dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:active:bg-gray-500 dark:text-zinc-200
               ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 rounded max-w-xs overflow-hidden">
-              <div class="leading-loose truncate">
+              <div class="leading-loose text-ellipsis overflow-hidden">
                 {{ value }}
               </div>
             </span>
@@ -135,8 +130,7 @@ export default {
       </div>
 
       <!-- 内容部分 -->
-      <HalfScreenAnimeCardContainer :animes="searchResults" class="lg:basis-3/4 flex-none" v-if="searchTimes">
-      </HalfScreenAnimeCardContainer>
+      <HalfScreenAnimeCardContainer :animes="searchResults" class="lg:basis-3/4 flex-none" v-if="searchTimes" />
     </div>
   </Container>
 </template>

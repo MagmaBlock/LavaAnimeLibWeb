@@ -2,6 +2,7 @@
 import { LavaAnimeAPI } from '../common/api'
 import Container from '../components/Container.vue';
 import HalfScreenAnimeCardContainer from '../components/Container/HalfScreenAnimeCardContainer.vue';
+import SearchBar from '../components/Search/SearchBar.vue';
 
 export default {
   props: ["memory"],
@@ -64,7 +65,7 @@ export default {
     this.getIndex();
     this.queryIndex();
   },
-  components: { Container, HalfScreenAnimeCardContainer }
+  components: { Container, HalfScreenAnimeCardContainer, SearchBar }
 }
 </script>
 
@@ -77,16 +78,7 @@ export default {
         <!-- 选项本体部分，将粘连屏幕 -->
         <div class="sticky top-5 select-none">
           <!-- 快速搜索框 -->
-          <div class="flex transition-all">
-            <input type="text" placeholder="快速搜索..." class="bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700
-            focus:outline-none focus:ring-2 focus:ring-blue-500 ease-in duration-100
-            w-full py-1 px-2 rounded" v-model="searchValue"
-              @keydown.enter="this.$router.push('/search/'+ searchValue)" />
-            <div class="bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 ease-in duration-100
-            whitespace-nowrap py-1 px-2 ml-2 rounded text-center" @click="this.$router.push('/search/'+ searchValue)">
-              搜索
-            </div>
-          </div>
+          <SearchBar></SearchBar>
           <!-- 标题 -->
           <div class="text-lg my-4 mx-0.5 font-medium">番剧索引</div>
           <!-- 年份部分 -->
