@@ -34,12 +34,7 @@ export default {
   </div>
   <!-- 展示更多 -->
   <div v-if="Array.isArray(animes) && animes.length > page" @click="page = page + 30">
-    <div class="grid place-items-center mt-8">
-      <div
-        class="text-gray-500 bg-gray-100 hover:bg-gray-200 active:bg-gray-300 ease-in duration-200 rounded-md px-12 py-1">
-        显示更多
-      </div>
-    </div>
+    <ShowMoreButton />
   </div>
   <!-- 空状态 -->
   <n-empty size="large" description="太可惜了，什么也没找到" class="py-16" v-if="Array.isArray(animes) && animes.length == 0">
