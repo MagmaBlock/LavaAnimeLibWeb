@@ -31,7 +31,7 @@ export default {
     'settings.darkMode.on': function () {
       this.updateTailWindDark()
     },
-    'settings.darkMode.now': function () {
+    'settings.darkMode.now': function () { // Debug
       this.updateDarkMode()
     }
   },
@@ -49,9 +49,11 @@ export default {
     },
     // 根据当前的时间和自动开关, 调整深色模式
     updateDarkMode() {
+      if (settings.darkMode.autoDarkMode == false) return // 如果没有开启自动深色，什么也不做
       if (settings.darkMode.autoMode == 'system') {
         // 增加事件监听
         window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function (event) {
+          if (settings.darkMode.autoDarkMode == false) return // 如果没有开启自动深色，什么也不做
           // is dark mode
           if (event.matches) {
             settings.darkMode.on = false
