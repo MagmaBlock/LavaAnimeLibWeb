@@ -6,10 +6,11 @@ import LocalPlayers from '../../components/Anime/LocalPlayer/LocalPlayers.vue';
 import LocalPlayerIcons from '../../components/Anime/LocalPlayer/LocalPlayerIcons.vue';
 import AnimeDataCard from '../../components/Anime/AnimeDataCard.vue';
 import AnimeDataCardFake from '../../components/Anime/AnimeDataCardFake.vue';
-import AnimeFileList from '../../components/Anime/AnimeFileList.vue';
 import RelationAnimes from '../../components/Anime/RelationAnimes.vue';
 import AnimeBackground from '../../components/Anime/AnimeBackground.vue';
 import AnimeBasicCard from '../../components/Anime/AnimeBasicCard.vue';
+import FileListMain from '../../components/Anime/FileList/FileListMain.vue';
+import FileListLoading from '../../components/Anime/FileList/FileListLoading.vue';
 
 export default {
   data() {
@@ -17,7 +18,6 @@ export default {
       laID: parseInt(this.$route.params.la),
       laData: {},
       videoList: [],
-      epVideoList: {},
       selectedVideoList: "",
       selectedVideo: {},
       viewTimes: 0,
@@ -30,7 +30,6 @@ export default {
     document.title = '播放 | 熔岩番剧库 LavaAnimeLib'
     await this.getLavaAnimeApi(this.laID);
     await this.getVideoList(this.laID);
-    this.splitVideoList(this.videoList);
     this.loading = false;
     if (!this.error) document.title = `播放 - ${this.laData.title} | 熔岩番剧库 LavaAnimeLib`
     window.scrollTo({
@@ -57,16 +56,6 @@ export default {
       console.log(`Got VideoList of la${this.laID}:`, result);
       if (result.code != 200) throw Error("番剧 LaID 错误");
       this.videoList = result.data;
-      this.selectedVideoList = "all";
-    },
-    splitVideoList(videoList) {
-      for (let i in videoList) {
-        if (videoList[i].episode) {
-          if (!this.epVideoList[videoList[i].episode])
-            this.epVideoList[videoList[i].episode] = new Array();
-          this.epVideoList[videoList[i].episode].push(videoList[i]);
-        }
-      }
     },
     async reportNewView(options) {
       if (this.viewTimes > 1) return; // 一次会话最大上报两回
@@ -83,7 +72,7 @@ export default {
       }
     }
   },
-  components: { ContainerMobileFull, VideoPlayer, LocalPlayers, AnimeDataCard, AnimeDataCardFake, AnimeFileList, RelationAnimes, AnimeBackground, AnimeBasicCard, LocalPlayerIcons }
+  components: { ContainerMobileFull, VideoPlayer, LocalPlayers, AnimeDataCard, AnimeDataCardFake, RelationAnimes, AnimeBackground, AnimeBasicCard, LocalPlayerIcons, FileListMain, FileListLoading }
 }
 </script>
 
@@ -93,18 +82,18 @@ export default {
     <div class="lg:px-12" v-if="this.$route.query.dev">
       <AnimeBasicCard class="p-4 mb-4 flex">
         <div class="font-bold">开发模式</div>
-        <div class="mx-4 grid place-items-center"> 当前 LavaAnimeID : {{laID}} </div>
+        <div class="mx-4 grid place-items-center"> 当前 LavaAnimeID : {{ laID }} </div>
         <RouterLink class="border border-blue-600 text-blue-600 rounded-md px-2 mx-2" :to="`/anime/${laID - 1}?dev=1`">
           前一个
         </RouterLink>
         <RouterLink class="border border-blue-600 text-blue-600 rounded-md px-2 mx-2" :to="`/anime/${laID + 1}?dev=1`">
           后一个
         </RouterLink>
-        <div class="mx-4 grid place-items-center">Loading: {{loading}} | viewTimes: {{viewTimes}}</div>
+        <div class="mx-4 grid place-items-center">Loading: {{ loading }} | viewTimes: {{ viewTimes }}</div>
       </AnimeBasicCard>
     </div>
     <!-- 主视图，Flex 布局，仅在 lg 以上可用 -->
-    <div class="lg:flex lg:flex-row lg:gap-4 lg:px-12 w-full" v-if="!error">
+    <div class="lg:flex lg:flex-row lg:gap-6 lg:px-12 w-full" v-if="!error">
       <!-- 左 Flex -->
       <div class="lg:basis-2/3">
         <!-- 视频框 -->
@@ -119,7 +108,9 @@ export default {
       <!-- 右 Flex -->
       <div class="lg:basis-1/3">
         <!-- 文件和集数列表 -->
-        <AnimeFileList :father="this" v-if="!loading" class="sm:mb-4" />
+        <FileListLoading v-if="loading"></FileListLoading>
+        <FileListMain :la-data="laData" :video-list="videoList" :selected-video="selectedVideo"
+          @video-change="video => selectedVideo = video" v-if="!loading" class="sm:mb-4" />
         <!-- 关联作品 -->
         <RelationAnimes v-if="!loading" :la="laData" />
         <!-- 番剧卡，仅在手机端显示 -->
