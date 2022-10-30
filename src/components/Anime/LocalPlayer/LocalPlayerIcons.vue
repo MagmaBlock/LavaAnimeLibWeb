@@ -3,13 +3,13 @@
   <a :href="getUrl().ddplayWindows" @click="handleButtonClick('DanDanPlayWindows')"
     v-if="ua.os.name == 'Windows' || allos" :class="buttonClass">
     <img src="../../../assets/PlayersIcon/DanDanPlay.svg" alt="ddplayWindows" class="w-6 h-6">
-    <div :class="textClass">弹弹Play</div>
+    <div :class="textClass">弹弹Play <span v-if="allos">Windows 端</span></div>
   </a>
   <!-- 弹弹Play 安卓 -->
   <a :href="getUrl().ddplayAndroid" @click="handleButtonClick('DanDanPlayAndroid')"
     v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS/i) || allos" :class="buttonClass">
     <img src="../../../assets/PlayersIcon/DanDanPlay.svg" alt="ddplayWindows" class="w-6 h-6">
-    <div :class="textClass">弹弹Play 概念版</div>
+    <div :class="textClass">弹弹Play <span v-if="allos">Android / HarmonyOS</span></div>
   </a>
   <!-- PotPlayer -->
   <a :href="getUrl().potplayer" @click="handleButtonClick('PotPlayer')" v-if="ua.os.name == 'Windows' || allos"
@@ -30,10 +30,14 @@
   </a>
   <!-- 复制链接或下载 -->
   <div @click="handleButtonClick('Copy Link / Download')" :data-clipboard-text="this.video.tempUrl" ref="copyBtn"
-    @click.shift="download(this.video.url)" :class="buttonClass">
+    :class="buttonClass" class="cursor-pointer">
     <img src="../../../assets/PlayersIcon/Link.svg" alt="copy link" class="w-6 h-6">
     <div :class="textClass">复制链接</div>
   </div>
+  <!-- 缓存 -->
+  <a :href="this.video.tempUrl" target="_blank" @click="handleButtonClick('Download')" :class="buttonClass">
+    <div :class="textClass">缓存</div>
+  </a>
 </template>
 
 <script>
@@ -78,9 +82,6 @@ export default {
       this.player.art.pause()
       console.log('暂停来自上级的播放器.');
       this.reporter({ type: type })
-    },
-    download(url) {
-      window.open(url, '_blank')
     },
     getUrl() {
       let urls = {
