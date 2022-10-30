@@ -15,7 +15,7 @@
               </template>
               <div class="text-center">
                 <div class="mb-4">
-                  {{ sponsor.message || '没有留言'}}
+                  {{ sponsor.message || '没有留言' }}
                 </div>
                 <a v-if="sponsor.link" class="text-blue-500 font-bold" :href="sponsor.link" target="_blank">查看附加的链接</a>
               </div>
@@ -36,8 +36,8 @@ export default {
     return {
       sponsors: [],
       sponsorsRaw: [
+        { name: "Arthals", support: "￥1100.00", message: "祝番剧库越办越好~感谢块老师多年教导（逃", link: "https://arthals.ink/" },
         { name: "Longtianmu", support: "￥240", link: "https://ltm.ink/" },
-        { name: "Arthals", support: "￥100.00", link: "https://arthals.ink/" },
         { name: "czy0729", support: "￥99.99", link: "https://github.com/czy0729" },
         { name: "小林", support: "￥100.00" },
         { name: "若葉", support: "其他", message: "提供新域名等支持", link: "https://loliloli.moe/" },
