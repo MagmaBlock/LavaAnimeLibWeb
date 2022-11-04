@@ -20,7 +20,8 @@ export default {
 
 <template>
   <ThemeProvier>
-    <div class="bg-zinc-700 text-white text-center py-4 px-8" v-if="!hideNotice">
+    <div class="bg-zinc-700 text-white rounded-md shadow-lg max-w-xs text-center py-4 px-8 absolute right-4 top-4 z-50"
+      v-if="!hideNotice">
       <div class="text-lg">【番剧库维护相关公告】</div>
       <p class="mb-1">
         受微软中国大陆云计算运营代理 (世纪互联) 最新的策略调整影响, 目前已不能在中国大陆为各位提供视频播放服务<br>
