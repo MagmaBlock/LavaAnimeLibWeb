@@ -52,10 +52,13 @@ export default {
       }
     },
     async getVideoList(laID) {
-      let result = (await LavaAnimeAPI.get("/v2/anime/file", { params: { id: laID } })).data;
-      console.log(`Got VideoList of la${this.laID}:`, result);
-      if (result.code != 200) throw Error("番剧 LaID 错误");
-      this.videoList = result.data;
+      try {
+        let result = (await LavaAnimeAPI.get("/v2/anime/file", { params: { id: laID } })).data;
+        console.log(`Got VideoList of la${this.laID}:`, result);
+        this.videoList = result.data;
+      } catch (error) {
+        console.error('获取视频文件列表时发生错误: ', error)
+      }
     },
     async reportNewView(options) {
       if (this.viewTimes > 1) return; // 一次会话最大上报两回

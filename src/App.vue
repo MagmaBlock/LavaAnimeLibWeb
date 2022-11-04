@@ -20,15 +20,13 @@ export default {
 
 <template>
   <ThemeProvier>
-    <div class="bg-gray-600 text-white text-center py-4 px-8" v-if="!hideNotice">
-      <div class="text-lg">【番剧库暂停播放相关服务公告】</div>
-      <p class="mb-2">
-        受微软中国区云运营代理（世纪互联）最新的策略调整影响，我们目前已不能继续在中国大陆为各位提供视频播放服务。<br>
-        番剧库在建站初期已经预料到这一情况的发生，在接下来的数日内，番剧库将暂停播放相关服务，直至新的文件分发方式被找到。<br>
-        番剧库的番剧资源（约2.5TB）仍有完整的备份，部署需要一定的时间（大约数日），<br>
-        另外，可能会有一些资源管理相关的代码需要重写，刚好加上最近比较忙，请耐心等待。
+    <div class="bg-zinc-700 text-white text-center py-4 px-8" v-if="!hideNotice">
+      <div class="text-lg">【番剧库维护相关公告】</div>
+      <p class="mb-1">
+        受微软中国大陆云计算运营代理 (世纪互联) 最新的策略调整影响, 目前已不能在中国大陆为各位提供视频播放服务<br>
+        番剧库正重新部署视频播放服务至海外, 资源部署需要一定的时间 (约2.5TB, 约一周), 将按年代从2022年10月逐渐恢复<br>
       </p>
-      <n-button @click="hideNotice = true">关闭</n-button>
+      <n-button @click="hideNotice = true" class="text-white" size="small">知道了</n-button>
     </div>
     <div class="flex flex-row flex-nowrap h-screen max-w-[2560px] mx-auto shadow-lg
     dark:bg-neutral-900 text-gray-800 dark:text-zinc-200">
