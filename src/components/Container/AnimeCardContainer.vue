@@ -1,5 +1,5 @@
 <script>
-import ShowMoreButton from './ShowMoreButton.vue';
+import ShowMoreButton from './ShowMoreButton.vue'
 
 export default {
   data() {
@@ -8,12 +8,42 @@ export default {
     };
   },
   props: {
-    animes: Array
+    animes: Array, // 请传入一个包含动画信息的数组，数组中的每个对象均有 AnimeCard 所需的参数
+    size: String // 决定屏幕宽度  目前有 full large 
   },
   watch: {
     animes(newList, oldList) {
       this.page = 29; // 30 个
     }
+  },
+  mounted() {
+    this.page = 29;
+  },
+  computed: {
+    autoGroupClass() {
+      switch (this.size) {
+        case "full": return this.fullClass;
+        case "large": return this.largeClass;
+        default: return "";
+      }
+    },
+    fullClass() {
+      return `grid grid-cols-3 gap-2
+        sm:grid-cols-4 sm:gap-x-4
+        md:grid-cols-5 md:gap-x-6
+        lg:grid-cols-7
+        xl:grid-cols-8
+        2xl:grid-cols-10`;
+    },
+    largeClass() {
+      return `grid grid-cols-3 gap-2
+        sm:grid-cols-4 sm:gap-x-4
+        md:grid-cols-5 md:gap-x-6
+        lg:grid-cols-5
+        xl:grid-cols-5
+        2xl:grid-cols-6 2xl:px-10`;
+    },
+    halfClass() { }
   },
   components: { ShowMoreButton }
 }
@@ -21,15 +51,9 @@ export default {
 
 <template>
   <!-- 番剧栅格部分 -->
-  <div class="px-2 lg:px-4 select-none">
+  <div class="select-none">
     <n-spin :show="!animes">
-      <div class="grid 
-        grid-cols-3 gap-2
-        sm:grid-cols-4 sm:gap-x-4
-        md:grid-cols-5 md:gap-x-6
-        lg:grid-cols-5
-        xl:grid-cols-5
-        2xl:grid-cols-6 2xl:px-10">
+      <div :class="autoGroupClass">
         <!-- 番剧卡片骨架屏 -->
         <div v-for="a in 18" v-if="!animes">
           <AnimeCard fake class="animate-pulse"></AnimeCard>

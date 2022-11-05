@@ -1,7 +1,7 @@
 <script>
 import { LavaAnimeAPI } from '../common/api'
 import Container from '../components/Container.vue';
-import HalfScreenAnimeCardContainer from '../components/Container/HalfScreenAnimeCardContainer.vue';
+import AnimeCardContainer from '../components/Container/AnimeCardContainer.vue';
 import SearchBar from '../components/Search/SearchBar.vue';
 
 export default {
@@ -65,7 +65,7 @@ export default {
     this.getIndex();
     this.queryIndex();
   },
-  components: { Container, HalfScreenAnimeCardContainer, SearchBar }
+  components: { Container, SearchBar, AnimeCardContainer }
 }
 </script>
 
@@ -124,7 +124,7 @@ export default {
 
 
       <!-- 番剧栅格部分 -->
-      <HalfScreenAnimeCardContainer :animes="this.animes" class="lg:basis-3/4 flex-none" />
+      <AnimeCardContainer :animes="this.animes" size="large" class="lg:basis-3/4 flex-none px-2 lg:px-4" />
     </div>
   </Container>
 </template>
