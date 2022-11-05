@@ -8,7 +8,6 @@ export default {
   props: ["memory"],
   data() {
     return {
-      searchValue: '',
       tabs: { year: [], type: [] },
       animes: null,
       loading: {
@@ -78,7 +77,7 @@ export default {
         <!-- 选项本体部分，将粘连屏幕 -->
         <div class="sticky top-5 select-none">
           <!-- 快速搜索框 -->
-          <SearchBar></SearchBar>
+          <SearchBar @search="value => $router.push('/search/' + value)" />
           <!-- 标题 -->
           <div class="text-lg my-4 mx-0.5 font-medium">番剧索引</div>
           <!-- 年份部分 -->
