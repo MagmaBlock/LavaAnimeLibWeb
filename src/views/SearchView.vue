@@ -1,7 +1,7 @@
 <script>
 import { LavaAnimeAPI } from '../common/api';
 import Container from '../components/Container.vue';
-import HalfScreenAnimeCardContainer from '../components/Container/HalfScreenAnimeCardContainer.vue';
+import AnimeCardContainer from '../components/Container/AnimeCardContainer.vue';
 import SearchBar from '../components/Search/SearchBar.vue';
 
 export default {
@@ -13,39 +13,31 @@ export default {
       searchHistory: [],
       lastSearch: "",
       searchRecommendation: ["电锯人", "间谍过家家", "灵能百分百", "转生成为魔剑", "孤独摇滚", "想要成为影之实力者", "Do It Yourself", "向山进发", "入间同学"],
-      preSearchValues: [],
-      preSearchLock: false
     };
   },
   methods: {
     async search(value) {
-      if (!value.trim() || this.lastSearch == value)
-        return;
-      this.memory.searchValue = value;
-      this.searchTimes++; // 增加本界面搜索计数
-      this.searchResults = null; // 进入加载状态
-      this.addSearchHistory(this.memory.searchValue); // 把搜索词加入记录
-      this.changeUrlParams(this.memory.searchValue);
-      let results = (await LavaAnimeAPI.get("/v2/search", { params: { value: this.memory.searchValue } })).data.data;
-      await new Promise(resolve => { setTimeout(() => { resolve(); }, 100); }); // 慢一点切换以便展示动画
-      this.lastSearch = value;
-      this.searchResults = results; // 展示结果
-    },
-    async preSearch(value) {
-      if (!value.trim() || this.preSearchLock)
-        return;
+      // 校验
       value = value.trim();
-      this.preSearchLock = true;
-      let results = (await LavaAnimeAPI.get("/v2/search/quick", { params: { value: value } })).data;
-      console.log(results);
-      setTimeout(() => { this.preSearchLock = false; console.log("unlocked", this.preSearchLock); }, 500); // 0.5 秒可触发一次防止网络请求阻塞
-      if (results.code == 200)
-        this.preSearchValues = results.data;
+      if (!value || this.lastSearch == value) return;
+
+      try {
+        this.memory.searchValue = value;
+        this.searchResults = null; // 进入加载状态
+        this.addSearchHistory(value); // 把搜索词加入记录
+        this.changeUrlParams(value); // 修改 url 参数
+        let results = (await LavaAnimeAPI.get("/v2/search", { params: { value: this.memory.searchValue } })).data;
+        if (results.code !== 200) return;
+        setTimeout(() => { // 慢一点切换以便展示动画
+          this.searchResults = results.data; // 展示结果
+          this.searchTimes++
+          this.lastSearch = value;
+        }, 100);
+      } catch (error) {
+        console.error('搜索发生错误: ', error);
+      }
     },
-    clickHistoryTag(value) {
-      this.memory.searchValue = value;
-      this.search(value);
-    },
+
     loadSearchHistory() {
       let localStorageHistory = JSON.parse(localStorage.getItem("searchHistory"));
       if (typeof localStorageHistory == "object" && localStorageHistory) {
@@ -61,12 +53,11 @@ export default {
         }
       }
       this.searchHistory = newList;
-      localStorage.setItem("searchHistory", JSON.stringify(this.searchHistory)); // JSON 存储至 localHistory
     },
     clearSearchHistroy() {
       this.searchHistory = [];
-      localStorage.setItem("searchHistory", JSON.stringify(this.searchHistory)); // JSON 存储至 localHistory
     },
+
     useUrlParams() {
       let searchValue = this.$route.params.value ? this.$route.params.value : this.memory.searchValue;
       this.search(searchValue);
@@ -76,12 +67,25 @@ export default {
       document.title = `搜索 - ${value} | 熔岩番剧库 LavaAnimeLib`
     }
   },
+  computed: {
+    normalTagClass() {
+      return ['bg-gray-100', 'hover:bg-gray-200', 'active:bg-gray-300',
+        'dark:bg-zinc-800', 'dark:hover:bg-zinc-700', 'dark:active:bg-gray-500',
+        'ease-in', 'duration-200', 'cursor-pointer',
+        'mr-2', 'mb-2', 'px-2', 'rounded', 'max-w-xs', 'overflow-hidden']
+    }
+  },
   mounted() {
     document.title = '搜索 | 熔岩番剧库 LavaAnimeLib'
     this.loadSearchHistory();
     this.useUrlParams();
   },
-  components: { Container, HalfScreenAnimeCardContainer, SearchBar }
+  watch: {
+    searchHistory() {
+      localStorage.setItem("searchHistory", JSON.stringify(this.searchHistory)); // JSON 存储至 localHistory
+    }
+  },
+  components: { Container, SearchBar, AnimeCardContainer }
 }
 </script>
 
@@ -93,15 +97,12 @@ export default {
         <!-- 搜索本体部分，将粘连屏幕 -->
         <div class="sticky top-5 select-none">
           <div class="text-lg mb-4 mx-0.5 font-medium">搜索</div>
-          <SearchBar :search="memory.searchValue" />
           <!-- 搜索框 -->
-
+          <SearchBar :search="memory.searchValue" />
           <!-- 历史记录 -->
           <div class="my-4 w-full flex flex-wrap">
             <!-- 标签 -->
-            <span v-for="value in searchHistory" @click="search(value)" class="bg-gray-100 hover:bg-gray-200 active:bg-gray-300 
-            dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:active:bg-gray-500 dark:text-zinc-200
-              ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 rounded max-w-xs overflow-hidden">
+            <span v-for="value in searchHistory" @click="search(value)" :class="normalTagClass">
               <div class="leading-loose text-ellipsis overflow-hidden">
                 {{ value }}
               </div>
@@ -118,9 +119,7 @@ export default {
           <!-- 搜索推荐 -->
           <div class="text-lg mb-4 mx-0.5 font-medium">大家在搜</div>
           <div class="my-4 w-full flex flex-wrap">
-            <span v-for="value in searchRecommendation" @click="clickHistoryTag(value)" class="bg-gray-100 hover:bg-gray-200 active:bg-gray-300 
-            dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:active:bg-gray-500 dark:text-zinc-200
-              ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 rounded max-w-xs overflow-hidden">
+            <span v-for="value in searchRecommendation" @click="search(value)" :class="normalTagClass">
               <div class="leading-loose text-ellipsis overflow-hidden">
                 {{ value }}
               </div>
@@ -130,7 +129,8 @@ export default {
       </div>
 
       <!-- 内容部分 -->
-      <HalfScreenAnimeCardContainer :animes="searchResults" class="lg:basis-3/4 flex-none" v-if="searchTimes" />
+      <AnimeCardContainer :animes="searchResults" size="large" class="lg:basis-3/4 flex-none px-2 lg:px-4 "
+        v-if="searchTimes" />
     </div>
   </Container>
 </template>

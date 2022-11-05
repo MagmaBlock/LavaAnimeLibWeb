@@ -13,7 +13,7 @@
           class="grid grid-cols-1 bg-white dark:bg-zinc-800 rounded overflow-hidden ring-2 ring-blue-500 select-none">
           <!-- 子候选项 -->
           <span v-for="value, index in preSearchValues" class="py-1 px-2 whitespace-nowrap cursor-pointer"
-            @pointerenter="activeValue = index" @pointerleave="activeValue = -1" @click="pushSearch(value)"
+            @pointerenter="activeValue = index" @pointerleave="activeValue = -1" @click="$emit('search', value)"
             :class="activeValue == index ? 'bg-gray-200 dark:bg-zinc-700' : ''">
             <div class="text-ellipsis overflow-hidden">
               {{ value }}
@@ -23,7 +23,7 @@
       </n-popover>
       <!-- 搜索按钮 -->
       <div class="bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 ease-in duration-100
-        whitespace-nowrap py-1 px-2 ml-2 rounded text-center cursor-pointer" @click="pushSearch(search)">
+        whitespace-nowrap py-1 px-2 ml-2 rounded text-center cursor-pointer" @click="$emit('search', search)">
         搜索
       </div>
     </div>
@@ -39,14 +39,15 @@ export default {
     return {
       showPre: false,
       preSearchValues: [],
-      activeValue: -1,
       preSearchLock: false,
+      activeValue: -1,
       haveFocused: false
     }
   },
   props: {
     search: { type: String, default: '' }
   },
+  emits: ['search'],
   watch: {
     search(newV, oldV) {
       // 监听搜索词改变
@@ -60,9 +61,6 @@ export default {
     },
   },
   methods: {
-    pushSearch(value) {
-      this.$router.push('/search/' + value)
-    },
     inputKeyHandler(key) {
       if (key.key == 'ArrowDown') {
         key.preventDefault()
@@ -90,10 +88,10 @@ export default {
       }
       if (key.key == 'Enter') {
         if (this.activeValue == -1) {
-          this.pushSearch(this.search)
+          this.$emit('search', this.search)
         }
         else {
-          this.pushSearch(this.preSearchValues[this.activeValue])
+          this.$emit('search', this.preSearchValues[this.activeValue])
         }
       }
     },
@@ -104,22 +102,27 @@ export default {
       }
     },
     async preSearch(value) {
+      value = value.trim();
       if (!value || this.preSearchLock) return; // 如果搜索值为空或正在节流则不继续请求
       this.preSearchLock = true; // Lock
-      let results = (await LavaAnimeAPI.get("/v2/search/quick", { params: { value: value } })).data;
-      // 如果有结果则显示结果
-      if (results.code == 200 && results.data.length > 0) {
-        this.preSearchValues = results.data;
-        if (this.haveFocused) this.showPre = true
-        console.log(`Received ${results.data.length} preSearchValues from server.`);
-      } else {
-        this.showPre = false
-        console.log('No preSearchValues, hide');
+      try {
+        let results = (await LavaAnimeAPI.get("/v2/search/quick", { params: { value: value } })).data;
+        // 如果有结果则显示结果
+        if (results.code == 200 && results.data.length > 0) {
+          this.preSearchValues = results.data;
+          if (this.haveFocused) this.showPre = true
+          console.log(`Received ${results.data.length} preSearchValues from server.`);
+        } else {
+          this.showPre = false
+          console.log('No preSearchValues, hide');
+        }
+      } catch (error) {
+        console.error('预搜索发生错误: ', error);
       }
       setTimeout(() => {
         this.preSearchLock = false;
         console.log("unlocked");
-      }, 500); // 0.3 秒可触发一次防止网络请求阻塞
+      }, 500); // 0.5 秒可触发一次防止网络请求阻塞
     },
   }
 }
