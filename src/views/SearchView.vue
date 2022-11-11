@@ -98,7 +98,7 @@ export default {
         <div class="sticky top-5 select-none">
           <div class="text-lg mb-4 mx-0.5 font-medium">搜索</div>
           <!-- 搜索框 -->
-          <SearchBar :search="memory.searchValue" />
+          <SearchBar :search="memory.searchValue" @search="value => search(value)" />
           <!-- 历史记录 -->
           <div class="my-4 w-full flex flex-wrap">
             <!-- 标签 -->
