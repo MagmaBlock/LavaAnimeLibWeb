@@ -45,6 +45,7 @@ import Clipboard from 'clipboard'
 import uaParser from 'ua-parser-js'
 
 export default {
+  inject: ['reportNewView'],
   data() {
     return {
       ua: uaParser(),
@@ -62,7 +63,6 @@ export default {
   props: {
     video: Object,
     player: Object,
-    reporter: Function,
     allos: Boolean
   },
   mounted() {
@@ -80,8 +80,8 @@ export default {
       if (this.reportTimes >= 2) return // 最多通过此方式上报两次
       this.reportTimes++
       this.player.art.pause()
-      console.log('暂停来自上级的播放器.');
-      this.reporter({ type: type })
+      this.reportNewView({ type: type })
+      console.log(`按钮 ${type} 触发了一次上报播放量，剩余 ${this.reportTimes} 次.`);
     },
     getUrl() {
       let urls = {

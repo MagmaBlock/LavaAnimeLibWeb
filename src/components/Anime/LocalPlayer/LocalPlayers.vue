@@ -6,7 +6,7 @@
       请先选择集数
     </div>
     <div class="flex flex-wrap gap-1 md:gap-2 p-2">
-      <LocalPlayerIcons :video="video" :player="player" :reporter="reporter" />
+      <LocalPlayerIcons :video="video" :player="player" />
       <!-- 展开全部 -->
       <div class="h-8 flex place-items-center
       bg-gray-100 hover:bg-gray-200 active:bg-gray-300 dark:bg-zinc-700 dark:hover:bg-zinc-600
@@ -20,7 +20,7 @@
             <i class="bi bi-x-lg hover:text-blue-600 cursor-pointer ml-2" @click="moreModel = false"></i>
           </template>
           <div class="flex flex-wrap gap-1 md:gap-2 mb-4">
-            <LocalPlayerIcons :video="video" :player="player" :reporter="reporter" :allos="true" />
+            <LocalPlayerIcons :video="video" :player="player" :allos="true" />
           </div>
           <div class="text-gray-600 dark:text-gray-400 text-xs">
             番剧库会根据您使用的设备，判断支持的外部播放器。<br>而这里是所有设备可用的播放器，它们可能不支持您的设备。
@@ -50,8 +50,7 @@ export default {
   },
   props: {
     video: Object,
-    player: Object,
-    reporter: Function
+    player: Object
   },
   methods: {
     pausePlayer() {

@@ -9,32 +9,34 @@ import AnimeDataCardFake from '../../components/Anime/AnimeDataCardFake.vue';
 import RelationAnimes from '../../components/Anime/RelationAnimes.vue';
 import AnimeBackground from '../../components/Anime/AnimeBackground.vue';
 import AnimeBasicCard from '../../components/Anime/AnimeBasicCard.vue';
-import FileListMain from '../../components/Anime/FileList/FileListMain.vue';
-import FileListLoading from '../../components/Anime/FileList/FileListLoading.vue';
+import AnimeFileView from './AnimeFileView.vue';
 
 export default {
   data() {
     return {
       laID: parseInt(this.$route.params.la),
-      laData: {},
-      videoList: [],
-      selectedVideoList: "",
-      selectedVideo: {},
-      viewTimes: 0,
-      error: false,
-      errorCode: Number,
+      laData: {}, // 界面完整资料数据
+      selectedFile: {}, // 当前文件信息
+      saveTime: false,
+      viewTimes: 0, // 上报的播放次数
+      error: false, // 发生错误后，会变为 true
+      errorCode: Number, // 错误码
       loading: true
     };
   },
+  provide() {
+    return {
+      reportNewView: this.reportNewView, changePlayingFile: this.changePlayingFile
+    }
+  },
   async mounted() {
-    document.title = '播放 | 熔岩番剧库 LavaAnimeLib'
+    document.title = '播放 | 熔岩番剧库 LavaAnimeLib';
+    // 获取 LavaAnimeLib 数据 API
     await this.getLavaAnimeApi(this.laID);
-    await this.getVideoList(this.laID);
-    this.loading = false;
     if (!this.error) document.title = `播放 - ${this.laData.title} | 熔岩番剧库 LavaAnimeLib`
+    this.loading = false;
     window.scrollTo({
-      top: 0, left: 0,
-      behavior: "smooth" //平滑滚动
+      top: 0, left: 0, behavior: "smooth" //平滑滚动
     });
   },
   methods: {
@@ -51,20 +53,11 @@ export default {
         return
       }
     },
-    async getVideoList(laID) {
-      try {
-        let result = (await LavaAnimeAPI.get("/v2/anime/file", { params: { id: laID } })).data;
-        console.log(`Got VideoList of la${this.laID}:`, result);
-        this.videoList = result.data;
-      } catch (error) {
-        console.error('获取视频文件列表时发生错误: ', error)
-      }
-    },
     async reportNewView(options) {
       if (this.viewTimes > 1) return; // 一次会话最大上报两回
       let _options = {
-        id: this.laID, ep: this.selectedVideo.episode,
-        file: this.selectedVideo.name, type: undefined,
+        id: this.laID, ep: this.selectedFile.episode,
+        file: this.selectedFile.name, type: undefined,
         ...options
       }
       options = _options
@@ -73,9 +66,14 @@ export default {
         this.viewTimes++;
         console.log("上报播放量成功: ", result, 2 - this.viewTimes);
       }
+    },
+    changePlayingFile(file, saveTime = false) { // 提供给有能力切换视频的下层组件的工具函数
+      console.log('视频更新: ', file, '\n保存时间轴: ', saveTime);
+      this.saveTime = saveTime
+      this.selectedFile = file
     }
   },
-  components: { ContainerMobileFull, VideoPlayer, LocalPlayers, AnimeDataCard, AnimeDataCardFake, RelationAnimes, AnimeBackground, AnimeBasicCard, LocalPlayerIcons, FileListMain, FileListLoading }
+  components: { ContainerMobileFull, VideoPlayer, LocalPlayers, AnimeDataCard, AnimeDataCardFake, RelationAnimes, AnimeBackground, AnimeBasicCard, LocalPlayerIcons, AnimeFileView }
 }
 </script>
 
@@ -100,20 +98,16 @@ export default {
       <!-- 左 Flex -->
       <div class="lg:basis-2/3">
         <!-- 视频框 -->
-        <VideoPlayer class="sm:relative sm:mb-4" ref="VideoPlayer" :video="selectedVideo" :reporter="reportNewView" />
+        <VideoPlayer class="sm:relative sm:mb-4" ref="VideoPlayer" :video="selectedFile" :save-time="saveTime" />
         <!-- 本地播放器调用 -->
-        <LocalPlayers class="sm:mb-4" :video="selectedVideo" :player="this.$refs.VideoPlayer"
-          :reporter="reportNewView" />
+        <LocalPlayers class="sm:mb-4" :video="selectedFile" :player="this.$refs.VideoPlayer" />
         <!-- 番剧卡，仅在 sm 以上显示 -->
         <AnimeDataCard v-if="!loading" :la="laData" class="hidden sm:block sm:mb-4" />
         <AnimeDataCardFake v-if="loading" class="hidden sm:block sm:mb-4" />
       </div>
       <!-- 右 Flex -->
       <div class="lg:basis-1/3">
-        <!-- 文件和集数列表 -->
-        <FileListLoading v-if="loading"></FileListLoading>
-        <FileListMain :la-data="laData" :video-list="videoList" :selected-video="selectedVideo"
-          @video-change="video => selectedVideo = video" v-if="!loading" class="sm:mb-4" />
+        <AnimeFileView :la-i-d="laID" :la-data="laData" :selected-file="selectedFile" />
         <!-- 关联作品 -->
         <RelationAnimes v-if="!loading" :la="laData" />
         <!-- 番剧卡，仅在手机端显示 -->

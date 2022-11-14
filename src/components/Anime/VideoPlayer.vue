@@ -35,7 +35,6 @@
 </template>
 
 <style>
-
 /* 为播放器控制器增加 margin, 兼容异形屏设备 */
 .la-art-player>div>.art-bottom {
   margin-bottom: 12px;
@@ -47,11 +46,12 @@
 import Artplayer from "artplayer";
 
 export default {
+  inject: ['reportNewView'],
   data() {
     return {
       art: null, // ArtPlayer
       option: {
-        url: this.video.url || '',
+        url: '',
         setting: true,
         theme: '#2563eb',
         autoMini: true,
@@ -73,24 +73,25 @@ export default {
     };
   },
   props: {
-    video: Object,
-    reporter: Function
+    video: Object, saveTime: Boolean
   },
   methods: {
-    changeVideo(newVideo) {
+    changeVideo(newVideo, saveTime = false) {
       this.art.notice.show = '正在切换...'
       this.art.pause()
       if (newVideo.type == 'file') { // 为文件
         if (newVideo.extensionName.type == 'video') { // 为视频
           if (newVideo.extensionName.result == 'MP4视频') {
             this.playType = 'canPlay'
-            this.art.url = newVideo.url // 播放视频
+            // this.art.url = newVideo.url // 播放视频
+            saveTime ? this.art.switchQuality(newVideo.url) : this.art.switchUrl(newVideo.url)
             setTimeout(() => this.art.play(), 200); // 准备播放
             setTimeout(() => this.prepareToReportNewView(), 2000) // 准备上报播放量
           }
           else if (newVideo.extensionName.result == 'MKV视频') {
             this.playType = 'notSupport'
-            this.art.url = newVideo.url // 播放视频
+            // this.art.url = newVideo.url // 播放视频
+            saveTime ? this.art.switchQuality(newVideo.url) : this.art.switchUrl(newVideo.url)
             this.art.pause()
           } else {
             this.playType = 'notSupport'
@@ -119,7 +120,7 @@ export default {
       let timer = setInterval(() => {
         if (sec >= 5) { // 成功
           clearInterval(timer)
-          this.reporter({ type: 'WebPlayer' })
+          this.reportNewView({ type: 'WebPlayer' })
           return
         }
         sec = sec + 1
@@ -158,8 +159,13 @@ export default {
   },
   watch: {
     video(newVideo, oldVideo) {
-      this.changeVideo(newVideo)
-      console.log('Change Video: ', newVideo);
+      if (JSON.stringify(newVideo) == '{}') {
+        this.playType = 'notSeleted'
+        this.art.pause()
+        return
+      }
+      this.changeVideo(newVideo, this.saveTime)
+      // console.log('ArtPlayer 触发 changeVideo 事件: ', newVideo, '\n保留播放时间选项: ', this.saveTime );
     }
   }
 };

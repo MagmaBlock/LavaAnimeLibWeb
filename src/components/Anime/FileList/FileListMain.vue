@@ -3,18 +3,18 @@ import AnimeBasicCard from '../AnimeBasicCard.vue';
 import FIleInfoBotton from './FIleInfoBotton.vue';
 
 export default {
-  emits: ['videoChange'],
+  inject: ['changePlayingFile'],
   props: {
     laData: Object,
-    videoList: Array,
-    selectedVideo: Object
+    fileList: Array,
+    selectedFile: Object,
   },
   data() {
     return {
       epKeys: [],
       selectKey: '',
       epSwitchLock: false,
-      epVideoList: {},
+      epfileList: {},
       otherFileList: {
         other: [],
         music: [],
@@ -28,15 +28,15 @@ export default {
     }
   },
   methods: {
-    splitVideoList() {
-      this.videoList.forEach(video => {
+    splitfileList() {
+      this.fileList.forEach(video => {
         if (video.type == 'dir') return
         if (video.extensionName.type == 'video') { // 视频处理
           if (video.episode) { // 当前集数已识别出集数
-            if (!this.epVideoList[video.episode]) { // 如果 epVideoList 没有相应集数的数组，创建相应数组
-              this.epVideoList[video.episode] = new Array()
+            if (!this.epfileList[video.episode]) { // 如果 epfileList 没有相应集数的数组，创建相应数组
+              this.epfileList[video.episode] = new Array()
             }
-            this.epVideoList[video.episode].push(video) // 
+            this.epfileList[video.episode].push(video) // 
           } else {
             this.otherFileList.unknowVideo.push(video)
           }
@@ -47,7 +47,7 @@ export default {
           this.otherFileList.other.push(video)
         }
       })
-      let epKeys = Object.keys(this.epVideoList).sort()
+      let epKeys = Object.keys(this.epfileList).sort()
       this.epKeys = epKeys
     },
     clickEpButton(key) {
@@ -59,10 +59,8 @@ export default {
       }
       this.selectKey = key // 修改已选 Key
       this.epSwitchLock = true
-      let thisEpVideos = this.epVideoList[key]
-      // if (thisEpVideos.length == 1) {
-      this.$emit('videoChange', thisEpVideos[0])
-      // }
+      let thisEpVideos = this.epfileList[key]
+      this.changePlayingFile(thisEpVideos[0], false) // 提交视频更改事件
       setTimeout(() => {
         this.showEpList = true // 显示列表
       }, 300);
@@ -72,11 +70,11 @@ export default {
     }
   },
   mounted() {
-    this.splitVideoList()
+    this.splitfileList()
   },
   watch: {
-    videoList() {
-      this.splitVideoList()
+    fileList() {
+      this.splitfileList()
     }
   },
   components: { AnimeBasicCard, FIleInfoBotton }
@@ -84,9 +82,7 @@ export default {
 </script>
 <template>
   <!-- 总容器 -->
-  <div v-if="videoList.length" class="">
-
-
+  <div v-if="fileList.length">
     <!-- 识别到集数的视频 -->
     <AnimeBasicCard class="px-4 py-2 sm:mb-4 select-none" v-if="epKeys.length">
       <!-- 标题 -->
@@ -101,11 +97,11 @@ export default {
             <div class="leading-none pb-0.5 text-center">
               {{ key }}
             </div>
-            <div class="text-xs text-center leading-none h-2 scale-75" v-if="epVideoList[key].length > 1">
-              {{ epVideoList[key].length }}
+            <div class="text-xs text-center leading-none h-2 scale-75" v-if="epfileList[key].length > 1">
+              {{ epfileList[key].length }}
             </div>
             <div class="absolute inset-0 border-blue-600 border-2 rounded"
-              v-if="selectedVideo.episode == key && selectKey !== key">
+              v-if="selectedFile.episode == key && selectKey !== key">
             </div>
           </div>
         </template>
@@ -114,9 +110,9 @@ export default {
         <!-- 选中的 EP 视频列表 -->
         <n-collapse-transition :show="showEpList">
           <div class="my-1">
-            <template v-for="video in epVideoList[selectKey]">
-              <FIleInfoBotton :video="video" @click="this.$emit('videoChange', video)"
-                :active="video.name == selectedVideo.name" />
+            <template v-for="video in epfileList[selectKey]">
+              <FIleInfoBotton :video="video" @click="changePlayingFile(video, true)"
+                :active="video.name == selectedFile.name" />
             </template>
           </div>
         </n-collapse-transition>
@@ -131,8 +127,8 @@ export default {
       <!-- 其他文件显示 -->
       <div>
         <template v-for="file in otherFileList.unknowVideo">
-          <FIleInfoBotton :video="file" @click="this.$emit('videoChange', file)"
-            :active="file.name == selectedVideo.name" />
+          <FIleInfoBotton :video="file" @click="changePlayingFile(file, false)"
+            :active="file.name == selectedFile.name" />
         </template>
       </div>
     </AnimeBasicCard>
@@ -145,8 +141,7 @@ export default {
       <!-- 其他文件显示 -->
       <div>
         <template v-for="file in otherFileList.music">
-          <FIleInfoBotton :video="file" @click="this.$emit('videoChange', file)"
-            :active="file.name == selectedVideo.name" />
+          <FIleInfoBotton :video="file" @click="changePlayingFile(file)" :active="file.name == selectedFile.name" />
         </template>
       </div>
     </AnimeBasicCard>
@@ -159,8 +154,7 @@ export default {
       <!-- 其他文件显示 -->
       <div>
         <template v-for="file in otherFileList.other">
-          <FIleInfoBotton :video="file" @click="this.$emit('videoChange', file)"
-            :active="file.name == selectedVideo.name" />
+          <FIleInfoBotton :video="file" @click="changePlayingFile(file)" :active="file.name == selectedFile.name" />
         </template>
       </div>
     </AnimeBasicCard>
