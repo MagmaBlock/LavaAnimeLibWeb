@@ -1,8 +1,8 @@
 <template>
   <AnimeBasicCard class="px-4 py-2 sm:mb-4 select-none" v-if="driveList.list">
     <div class="text-base px-0.5 mb-2">节点</div>
-    <div class="flex gap-1">
-      <div class="w-fit h-10 px-4 rounded grid place-items-center
+    <div class="flex gap-1 overflow-x-scroll">
+      <div class="w-fit h-10 px-4 rounded grid place-items-center whitespace-nowrap
         transition-all cursor-pointer" :class="selectedDrive == drive.id ? activeClass : normalClass"
         @click="changeDrive(drive.id)" v-for="drive in driveList.list">
         {{ drive.name }}
