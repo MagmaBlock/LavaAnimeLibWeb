@@ -4,7 +4,7 @@
       <n-popover trigger="manual" :show="showPre" placement="bottom" width="trigger" :show-arrow="false" raw>
         <template #trigger>
           <!-- 输入框 -->
-          <input type="text" placeholder="进行搜索..." class="bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500
+          <input type="text" enterkeyhint="search" placeholder="进行搜索..." class="bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500
             ease-in duration-100 w-full py-1 px-2 rounded" v-model="search" @keydown="inputKeyHandler"
             @focus="focusHandler" @blur="showPre = false; activeValue = -1" />
         </template>
