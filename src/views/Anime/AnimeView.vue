@@ -33,7 +33,7 @@ export default {
     document.title = '播放 | 熔岩番剧库 LavaAnimeLib';
     // 获取 LavaAnimeLib 数据 API
     await this.getLavaAnimeApi(this.laID);
-    if (!this.error) document.title = `播放 - ${this.laData.title} | 熔岩番剧库 LavaAnimeLib`
+    if (!this.error) document.title = `${this.laData.title} | 熔岩番剧库 LavaAnimeLib`
     this.loading = false;
     window.scrollTo({
       top: 0, left: 0, behavior: "smooth" //平滑滚动
@@ -69,6 +69,14 @@ export default {
     },
     changePlayingFile(file, saveTime = false) { // 提供给有能力切换视频的下层组件的工具函数
       console.log('视频更新: ', file, '\n保存时间轴: ', saveTime);
+      if (!this.error) {
+        if (file.episode) {
+          document.title = `${this.laData.title} 第${file.episode}话 | 熔岩番剧库 LavaAnimeLib`
+        }
+        else {
+          document.title = `${this.laData.title} | 熔岩番剧库 LavaAnimeLib`
+        }
+      }
       this.saveTime = saveTime
       this.selectedFile = file
     }
