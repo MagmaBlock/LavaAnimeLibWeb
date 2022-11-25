@@ -1,4 +1,5 @@
 <script>
+import DarkModeBotton from "./DarkModeBotton.vue";
 import NavBarIcon from "./NavBarIcon.vue";
 
 export default {
@@ -15,7 +16,7 @@ export default {
       this.route[this.$route.name] = true;
     }
   },
-  components: { NavBarIcon }
+  components: { NavBarIcon, DarkModeBotton }
 }
 </script>
 
@@ -33,22 +34,36 @@ export default {
         <NavBarIcon iconClass="bi bi-search" route="/search" title="搜索" :light="this.route['Search']" />
         <NavBarIcon iconClass="bi bi-collection" lightIconClass="bi bi-collection-fill" route="/index" title="索引"
           :light="this.route['Index']" />
-        <NavBarIcon iconClass="bi bi-star" lightIconClass="bi bi-star-fill" route="/my" title="我的"
+        <NavBarIcon iconClass="bi bi-subtract" lightIconClass="bi bi-subtract" route="/my" title="我的"
           :light="this.route['My']" />
       </div>
     </div>
     <!-- 宽屏 -->
-    <div class="hidden lg:block w-[88px] h-full z-50 py-8 border-r dark:border-zinc-700
+    <div class="hidden lg:flex lg:flex-col w-20 h-full z-50 py-10 
       ease-in duration-200 select-none
-    bg-slate-50 hover:bg-slate-100 dark:bg-zinc-800 shadow-xl hover:shadow-2xl">
-      <div class="grid grid-cols-1 gap-6">
+      bg-slate-50 hover:bg-slate-100 dark:bg-zinc-800 border-r dark:border-zinc-700
+      shadow-xl hover:shadow-2xl">
+      <!-- Logo -->
+      <div class="grid place-items-center mb-8">
+        <RouterLink to="/">
+          <img src="/icon.svg" alt="LavaAnimeLib Logo" class="w-10 h-10">
+        </RouterLink>
+      </div>
+      <!-- 按钮 -->
+      <div class="grid grid-cols-1 gap-2">
         <NavBarIcon iconClass="bi bi-house" lightIconClass="bi bi-house-fill" route="/" title="主页"
           :light="this.route['Home']" />
         <NavBarIcon iconClass="bi bi-search" route="/search" title="搜索" :light="this.route['Search']" />
         <NavBarIcon iconClass="bi bi-collection" lightIconClass="bi bi-collection-fill" route="/index" title="索引"
           :light="this.route['Index']" />
-        <NavBarIcon iconClass="bi bi-star" lightIconClass="bi bi-star-fill" route="/my" title="我的"
+        <NavBarIcon iconClass="bi bi-subtract" lightIconClass="bi bi-subtract" route="/my" title="我的"
           :light="this.route['My']" />
+      </div>
+      <!-- 占位 -->
+      <div class="flex-1"></div>
+      <!-- 底部按钮 -->
+      <div class="grid grid-cols-1 place-items-center">
+        <DarkModeBotton></DarkModeBotton>
       </div>
     </div>
   </div>

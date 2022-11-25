@@ -48,11 +48,13 @@ import { RouterLink } from 'vue-router';
 <template>
   <div class="w-full self-center">
     <RouterLink :to="route" :class="colorClass" class="ease-in duration-200">
-      <div class="text-[1.25rem] mb-[1px]">
-        <i :class="realIconClass"></i>
-      </div>
-      <div class="text-[10px]">
-        {{ title }}
+      <div class="lg:mx-2 lg:py-2 lg:hover:bg-slate-200 lg:dark:hover:bg-zinc-700 rounded-md transition">
+        <div class="text-[1.25rem] lg:text-[1.35rem] mb-[1px]">
+          <i :class="realIconClass"></i>
+        </div>
+        <div class="text-[10px]">
+          {{ title }}
+        </div>
       </div>
     </RouterLink>
   </div>
