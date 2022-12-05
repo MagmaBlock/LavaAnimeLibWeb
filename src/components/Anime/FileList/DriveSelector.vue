@@ -1,34 +1,27 @@
 <template>
-  <AnimeBasicCard class="px-4 py-2 sm:mb-4 select-none" v-if="driveList.list">
-    <div class="text-base px-0.5">
+  <AnimeFlodCard class="px-4 py-2 sm:mb-4 select-none" v-if="driveList.list">
+    <template #title>
       节点
-      <RoundedButton class="float-right px-2" @click="openTab = !openTab">
-        <i class="bi bi-chevron-up" v-show="openTab"></i>
-        <i class="bi bi-chevron-down" v-show="!openTab"></i>
-      </RoundedButton>
-    </div>
-    <n-collapse-transition :show="openTab">
-      <div class="flex flex-wrap gap-1 mt-2">
-        <div class="w-fit h-10 px-4 rounded grid place-items-center whitespace-nowrap
+    </template>
+    <div class="flex flex-wrap gap-1">
+      <div class="w-fit h-10 px-4 rounded grid place-items-center whitespace-nowrap
         transition-all cursor-pointer" :class="selectedDrive == drive.id ? activeClass : normalClass"
-          @click="changeDrive(drive.id)" v-for="drive in driveList.list">
-          {{ drive.name }}
-        </div>
+        @click="changeDrive(drive.id)" v-for="drive in driveList.list">
+        {{ drive.name }}
       </div>
-    </n-collapse-transition>
-  </AnimeBasicCard>
+    </div>
+  </AnimeFlodCard>
+
 </template>
 
 <script>
-import AnimeBasicCard from '../AnimeBasicCard.vue';
-import RoundedButton from './RoundedButton.vue';
+import AnimeFlodCard from '../Cards/AnimeFlodCard.vue';
 
 export default {
   inject: ['changePlayingFile'],
   emits: ['changeDrive'],
   data() {
     return {
-      openTab: false
     }
   },
   props: {
@@ -52,9 +45,6 @@ export default {
     }
   },
   watch: {},
-  mounted() {
-    if (document.body.clientWidth >= 1024) this.openTab = true // 在 PC 端默认展开
-  },
-  components: { AnimeBasicCard, RoundedButton }
+  components: { AnimeFlodCard }
 }
 </script> 

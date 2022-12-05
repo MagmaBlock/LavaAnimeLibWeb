@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import AnimeBasicCard from '../AnimeBasicCard.vue';
+import AnimeBasicCard from '../Cards/AnimeBasicCard.vue';
 
 export default {
   components: { AnimeBasicCard }

@@ -1,5 +1,6 @@
 <script>
-import AnimeBasicCard from '../AnimeBasicCard.vue';
+import AnimeBasicCard from '../Cards/AnimeBasicCard.vue';
+import AnimeFlodCard from '../Cards/AnimeFlodCard.vue';
 import FIleInfoBotton from './FIleInfoBotton.vue';
 
 export default {
@@ -77,7 +78,7 @@ export default {
       this.splitfileList()
     }
   },
-  components: { AnimeBasicCard, FIleInfoBotton }
+  components: { AnimeBasicCard, FIleInfoBotton, AnimeFlodCard }
 }
 </script>
 <template>
@@ -121,43 +122,53 @@ export default {
 
 
     <!-- 未识别到集数的视频 -->
-    <AnimeBasicCard class="px-4 py-2 sm:mb-4 select-none" v-if="otherFileList.unknowVideo.length">
+    <AnimeFlodCard class="px-4 py-2 sm:mb-4 select-none" v-if="otherFileList.unknowVideo.length"
+      :mobile-show="!epKeys.length">
       <!-- 标题 -->
-      <div class="text-base px-0.5 mb-2">{{ epKeys.length ? '其他视频' : '视频' }}</div>
+      <template #title>
+        {{ epKeys.length ? '其他视频' : '视频' }}
+        <span class="text-sm text-zinc-500">
+          {{ otherFileList.unknowVideo.length }}
+        </span>
+      </template>
       <!-- 其他文件显示 -->
-      <div>
-        <template v-for="file in otherFileList.unknowVideo">
-          <FIleInfoBotton :video="file" @click="changePlayingFile(file, false)"
-            :active="file.name == selectedFile.name" />
-        </template>
-      </div>
-    </AnimeBasicCard>
+      <template v-for="file in otherFileList.unknowVideo">
+        <FIleInfoBotton :video="file" @click="changePlayingFile(file, false)"
+          :active="file.name == selectedFile.name" />
+      </template>
+    </AnimeFlodCard>
 
 
     <!-- 音乐 -->
-    <AnimeBasicCard class="px-4 py-2 sm:mb-4 select-none" v-if="otherFileList.music.length">
+    <AnimeFlodCard class="px-4 py-2 sm:mb-4 select-none" v-if="otherFileList.music.length">
       <!-- 标题 -->
-      <div class="text-base px-0.5 mb-2">相关音乐</div>
+      <template #title>
+        相关音乐
+        <span class="text-sm text-zinc-500">
+          {{ otherFileList.music.length }}
+        </span>
+      </template>
       <!-- 其他文件显示 -->
-      <div>
-        <template v-for="file in otherFileList.music">
-          <FIleInfoBotton :video="file" @click="changePlayingFile(file)" :active="file.name == selectedFile.name" />
-        </template>
-      </div>
-    </AnimeBasicCard>
+      <template v-for="file in otherFileList.music">
+        <FIleInfoBotton :video="file" @click="changePlayingFile(file)" :active="file.name == selectedFile.name" />
+      </template>
+    </AnimeFlodCard>
 
 
     <!-- 附件文件，以上都没匹配到的文件就会过来 -->
-    <AnimeBasicCard class="px-4 py-2 sm:mb-4 select-none" v-if="otherFileList.other.length">
+    <AnimeFlodCard class="px-4 py-2 sm:mb-4 select-none" v-if="otherFileList.other.length">
       <!-- 标题 -->
-      <div class="text-base px-0.5 mb-2">附件</div>
+      <template #title>
+        附件
+        <span class="text-sm text-zinc-500">
+          {{ otherFileList.other.length }}
+        </span>
+      </template>
       <!-- 其他文件显示 -->
-      <div>
-        <template v-for="file in otherFileList.other">
-          <FIleInfoBotton :video="file" @click="changePlayingFile(file)" :active="file.name == selectedFile.name" />
-        </template>
-      </div>
-    </AnimeBasicCard>
+      <template v-for="file in otherFileList.other">
+        <FIleInfoBotton :video="file" @click="changePlayingFile(file)" :active="file.name == selectedFile.name" />
+      </template>
+    </AnimeFlodCard>
   </div>
 
 

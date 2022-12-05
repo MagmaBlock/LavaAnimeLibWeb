@@ -8,7 +8,7 @@ import AnimeDataCard from '../../components/Anime/AnimeDataCard.vue';
 import AnimeDataCardFake from '../../components/Anime/AnimeDataCardFake.vue';
 import RelationAnimes from '../../components/Anime/RelationAnimes.vue';
 import AnimeBackground from '../../components/Anime/AnimeBackground.vue';
-import AnimeBasicCard from '../../components/Anime/AnimeBasicCard.vue';
+import AnimeBasicCard from '../../components/Anime/Cards/AnimeBasicCard.vue';
 import AnimeFileView from './AnimeFileView.vue';
 
 export default {
