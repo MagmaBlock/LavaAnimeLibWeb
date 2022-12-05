@@ -13,7 +13,7 @@
       </div>
       <!-- 图片预览 -->
       <div v-if="playType == 'image'" class="grid place-items-center">
-        <n-image class="min-w-[200px] bg-gray-500" width="200" :src="video.thumbnail" :preview-src="video.url" show-toolbar-tooltip />
+        <n-image width="200" :src="video.thumbnail" :preview-src="video.url" show-toolbar-tooltip />
         <div class="text-gray-400 text-xs mt-2">
           这是一张图片附件，可点击上方预览或下载。 大小: {{ bytesToSize(video.size) }}
         </div>
