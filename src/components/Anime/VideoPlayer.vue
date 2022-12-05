@@ -11,10 +11,11 @@
         <span class="text-gray-400 hover:text-white cursor-pointer ml-2 text-xs" @click="forcePlay()">强制播放</span>
         <div> 类型: {{ video.extensionName.result }} </div>
       </div>
-      <div v-if="playType == 'notVideo'" class="grid place-items-center">
-        选择了不支持预览的非视频文件, 您可以下载它
-        <div class="text-gray-400 text-xs">
-          类型: {{ video.extensionName.result }} 大小: {{ bytesToSize(video.size) }}
+      <!-- 图片预览 -->
+      <div v-if="playType == 'image'" class="grid place-items-center">
+        <n-image class="min-w-[200px] bg-gray-500" width="200" :src="video.thumbnail" :preview-src="video.url" show-toolbar-tooltip />
+        <div class="text-gray-400 text-xs mt-2">
+          这是一张图片附件，可点击上方预览或下载。 大小: {{ bytesToSize(video.size) }}
         </div>
         <a class="bg-white/20 hover:bg-white/30 text-gray-400 text-[13px] rounded-md w-fit px-4 py-0.5 mt-1"
           target="_blank" :href="video.tempUrl">
@@ -30,6 +31,17 @@
           下载此文件
         </a>
       </audio>
+      <!-- 不支持预览的附件 -->
+      <div v-if="playType == 'notVideo'" class="grid place-items-center">
+        选择了不支持预览的非视频文件, 您可以下载它
+        <div class="text-gray-400 text-xs">
+          类型: {{ video.extensionName.result }} 大小: {{ bytesToSize(video.size) }}
+        </div>
+        <a class="bg-white/20 hover:bg-white/30 text-gray-400 text-[13px] rounded-md w-fit px-4 py-0.5 mt-1"
+          target="_blank" :href="video.tempUrl">
+          下载此文件
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -80,7 +92,8 @@ export default {
       this.art.notice.show = '正在切换...'
       this.art.pause()
       if (newVideo.type == 'file') { // 为文件
-        if (newVideo.extensionName.type == 'video') { // 为视频
+        // 为视频
+        if (newVideo.extensionName.type == 'video') {
           if (newVideo.extensionName.result == 'MP4视频') {
             this.playType = 'canPlay'
             // this.art.url = newVideo.url // 播放视频
@@ -98,18 +111,25 @@ export default {
             this.art.pause()
           }
         }
+        // 为暂无法预览的文件类型
         else if (newVideo.extensionName.type == 'subtitle' || newVideo.extensionName.type == 'torrent' ||
-          newVideo.extensionName.type == 'document' || newVideo.extensionName.type == 'archive' ||
-          newVideo.extensionName.type == 'image') { // 为其他文件, 未来实现图片预览
+          newVideo.extensionName.type == 'document' || newVideo.extensionName.type == 'archive') {
           this.playType = 'notVideo'
         }
-        else if (newVideo.extensionName.type == 'music') { // 音乐播放
+        // 音乐播放
+        else if (newVideo.extensionName.type == 'music') {
           this.playType = ''
           setTimeout(() => {
             this.playType = 'music'
             setTimeout(() => this.$refs.musicPlayer.play(), 500)
           }, 200); // 准备播放
-        } else {
+        }
+        // 图片预览
+        else if (newVideo.extensionName.type == 'image') {
+          this.playType = 'image'
+        }
+        // 未知文件
+        else {
           this.playType = 'notSupport'
           this.art.pause()
         }
