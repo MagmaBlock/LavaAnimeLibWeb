@@ -19,7 +19,7 @@ export default {
 
 <template>
   <ThemeProvier>
-    <div class="flex flex-row flex-nowrap h-screen max-w-[2560px] mx-auto shadow-lg transition-all
+    <div class="flex flex-row flex-nowrap h-screen max-w-[2560px] mx-auto shadow-lg
     dark:bg-neutral-900 text-gray-800 dark:text-zinc-200"
       :class="$route.name == 'Anime' ? 'dark:bg-opacity-50' : 'dark:bg-opacity-100'">
       <!-- 导航栏 -->
