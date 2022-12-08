@@ -41,7 +41,7 @@ export default {
     <!-- 宽屏 -->
     <div class="hidden lg:flex lg:flex-col w-20 h-full z-50 py-10 
       ease-in duration-200 select-none
-      bg-white bg-opacity-90 dark:bg-zinc-800 dark:bg-opacity-100
+      bg-white bg-opacity-90 dark:bg-zinc-800 dark:bg-opacity-80
       shadow-lg">
       <!-- Logo -->
       <div class="grid place-items-center mb-8">
