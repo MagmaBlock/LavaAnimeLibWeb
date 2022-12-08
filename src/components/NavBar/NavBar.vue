@@ -41,12 +41,13 @@ export default {
     <!-- 宽屏 -->
     <div class="hidden lg:flex lg:flex-col w-20 h-full z-50 py-10 
       ease-in duration-200 select-none
-      bg-slate-50 hover:bg-slate-100 dark:bg-zinc-800 border-r dark:border-zinc-700
-      shadow-xl hover:shadow-2xl">
+      bg-white bg-opacity-90 dark:bg-zinc-800 dark:bg-opacity-100
+      shadow-lg">
       <!-- Logo -->
       <div class="grid place-items-center mb-8">
         <RouterLink to="/">
-          <img src="/icon.svg" alt="LavaAnimeLib Logo" class="w-10 h-10">
+          <img src="/icon.svg" alt="LavaAnimeLib Logo"
+            class="w-10 h-10 rounded-lg shadow-lg shadow-orange-300 dark:shadow-orange-700">
         </RouterLink>
       </div>
       <!-- 按钮 -->
