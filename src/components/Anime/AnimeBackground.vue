@@ -8,8 +8,8 @@ export default {
   data() {
     return {
       backgroundImg: '',
-      backgroundAnimation: 'opacity-0 scale-105',
-      backgroundAnimation2: 'opacity-100 scale-110',
+      backgroundAnimation: 'opacity-0 scale-[1.2]',
+      backgroundAnimation2: 'opacity-100 scale-[1.1]',
     };
   },
   methods: {
@@ -32,6 +32,6 @@ export default {
 </script>
 
 <template>
-  <div class="fixed inset-0 -z-10 w-full h-full bg-cover bg-center bg-no-repeat ease duration-700 blur-md"
+  <div class="fixed inset-0 -z-10 w-full h-full bg-cover bg-center bg-no-repeat ease duration-700 blur-xl"
     :style="{ backgroundImage: 'url(' + backgroundImg + ')' }" :class="backgroundAnimation"></div>
 </template>
