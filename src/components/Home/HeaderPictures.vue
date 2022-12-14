@@ -10,10 +10,10 @@
         }">
         <!-- 底部阴影 -->
         <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-black/75 "></div>
-        <RouterLink v-if="pic.url" :to="pic.url">
+        <RouterLink v-if="pic.url && !pic.externalUrl" :to="pic.url">
           <HeaderPictureTitle :title="pic.title" :subtitle="pic.subtitle"></HeaderPictureTitle>
         </RouterLink>
-        <a v-else-if="pic.externalUrl" :href="pic.url" target="_blank">
+        <a v-else-if="pic.url && pic.externalUrl" :href="pic.url" target="_blank">
           <HeaderPictureTitle :title="pic.title" :subtitle="pic.subtitle"></HeaderPictureTitle>
         </a>
         <HeaderPictureTitle v-else :title="pic.title" :subtitle="pic.subtitle"></HeaderPictureTitle>
