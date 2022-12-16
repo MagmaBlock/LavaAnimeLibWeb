@@ -30,6 +30,7 @@ export default {
   },
   methods: {
     splitfileList() {
+      this.epfileList = {}
       this.fileList.forEach(video => {
         if (video.type == 'dir') return
         if (video.extensionName.type == 'video') { // 视频处理

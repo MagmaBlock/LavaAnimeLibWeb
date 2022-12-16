@@ -58,7 +58,6 @@ export default {
       if (this.selectedDrive == newDrive) return
       this.selectedDrive = newDrive
       this.loading = true
-      this.fileList = []
       this.changePlayingFile({})
       let fileListResult = await this.getFileList(this.laID, this.selectedDrive);
       this.fileList = fileListResult;
