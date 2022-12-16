@@ -1,15 +1,11 @@
 <template>
   <div>
     <n-input-group>
-      <n-input v-model:value="password" type="password" placeholder="管理密码" />
       <n-button @click="submitData">提交更新</n-button>
     </n-input-group>
-    <BasicCard class="px-4 py-2 mt-2">
-      {{result}}
-    </BasicCard>
     <div class="lg:flex my-2">
       <div class="lg:basis-1/3 lg:mr-4">
-        <HeaderPictures class="sm:rounded-md h-52" :customdata="headers" v-if="display" />
+        <HeaderPictures class="sm:rounded-md h-52" :customdata="headers" :key="refresh" />
       </div>
       <div class="lg:basis-2/3 overflow-scroll h-52">
         <pre>{{ JSON.stringify(headers, null, 2) }}</pre>
@@ -34,7 +30,7 @@
           <n-input v-model:value="header.url" type="text" :placeholder="header.externalUrl ? '外部链接' : '链接'" />
         </n-input-group>
         <n-space class="flex place-items-center">
-          <n-switch v-model:value="header.externalUrl" /> 外部链接
+          <n-switch v-model:value="header.externalUrl" />外部链接
           <n-button size="small" @click="move(index, -1)">上移</n-button>
           <n-button size="small" @click="move(index, 1)">下移</n-button>
           <n-button size="small" @click="remove(index)">删除</n-button>
@@ -49,22 +45,24 @@
 
 <script>
 import HeaderPictures from '../../components/Home/HeaderPictures.vue';
-import { homeHeaderGet, homeHeaderUpdate } from '../../common/api'
+import { homeHeaderGet, LavaAnimeAPI } from '../../common/api'
 import BasicCard from '../../components/BasicCard.vue';
 
 export default {
   data() {
     return {
       headers: [],
-      password: '',
-      result: '尚未提交',
-      display: true
+      refresh: 0
     };
   },
   methods: {
     async submitData() {
-      this.result = await homeHeaderUpdate(this.headers, this.password)
-      console.log(this.result);
+      try {
+        let result = await LavaAnimeAPI.post('/v2/home/header/update', { data: this.headers })
+        $message.success(result.data.message)
+      } catch (error) {
+        console.error(error);
+      }
       this.headers = await homeHeaderGet();
     },
     move(index, go) {
@@ -75,23 +73,17 @@ export default {
       let nextEle = this.headers[index + go]
       this.headers[index] = nextEle
       this.headers[index + go] = thisEle
-      this.regen()
+      this.refresh++
     },
     remove(index) {
       this.headers.splice(index, 1)
-      this.regen()
+      this.refresh++
     },
     add() {
       this.headers.push({
         title: '标题', subtitle: '副标题', pic: '/Home/headerPic/LavaAnime.jpg', url: ''
       })
-      this.regen()
-    },
-    regen() {
-      this.display = false
-      setTimeout(() => {
-        this.display = true
-      }, 1);
+      this.refresh++
     }
   },
   async mounted() {

@@ -4,16 +4,12 @@ import NavBarIcon from "./NavBarIcon.vue";
 
 export default {
   data() {
-    return {
-      route: {}
-    };
+    return {}
   },
   watch: {
     // 监听全局路由事件
-    $route(to, from) {
-      console.log("Vue Route to: ", to);
-      this.route = {}; // 清空
-      this.route[this.$route.name] = true;
+    $route(to) {
+      console.log("Vue Route to: ", to)
     }
   },
   components: { NavBarIcon, DarkModeBotton }
@@ -29,13 +25,10 @@ export default {
       bg-white dark:bg-zinc-800 bg-opacity-80 dark:bg-opacity-75 backdrop-blur-lg backdrop-brightness-90 dark:backdrop-brightness-75
       border dark:border-zinc-700 shadow-lg rounded-xl
       select-none">
-        <NavBarIcon iconClass="bi bi-house" lightIconClass="bi bi-house-fill" route="/" title="主页"
-          :light="this.route['Home']" />
-        <NavBarIcon iconClass="bi bi-search" route="/search" title="搜索" :light="this.route['Search']" />
-        <NavBarIcon iconClass="bi bi-collection" lightIconClass="bi bi-collection-fill" route="/index" title="索引"
-          :light="this.route['Index']" />
-        <NavBarIcon iconClass="bi bi-subtract" lightIconClass="bi bi-subtract" route="/my" title="我的"
-          :light="this.route['My']" />
+        <NavBarIcon iconClass="bi bi-house" lightIconClass="bi bi-house-fill" route="Home" title="主页" />
+        <NavBarIcon iconClass="bi bi-search" route="Search" title="搜索" />
+        <NavBarIcon iconClass="bi bi-collection" lightIconClass="bi bi-collection-fill" route="Index" title="索引" />
+        <NavBarIcon iconClass="bi bi-subtract" lightIconClass="bi bi-subtract" route="User" title="我的" />
       </div>
     </div>
     <!-- 宽屏 -->
@@ -52,13 +45,10 @@ export default {
       </div>
       <!-- 按钮 -->
       <div class="grid grid-cols-1 gap-2">
-        <NavBarIcon iconClass="bi bi-house" lightIconClass="bi bi-house-fill" route="/" title="主页"
-          :light="this.route['Home']" />
-        <NavBarIcon iconClass="bi bi-search" route="/search" title="搜索" :light="this.route['Search']" />
-        <NavBarIcon iconClass="bi bi-collection" lightIconClass="bi bi-collection-fill" route="/index" title="索引"
-          :light="this.route['Index']" />
-        <NavBarIcon iconClass="bi bi-subtract" lightIconClass="bi bi-subtract" route="/my" title="我的"
-          :light="this.route['My']" />
+        <NavBarIcon iconClass="bi bi-house" lightIconClass="bi bi-house-fill" route="Home" title="主页" />
+        <NavBarIcon iconClass="bi bi-search" route="Search" title="搜索" />
+        <NavBarIcon iconClass="bi bi-collection" lightIconClass="bi bi-collection-fill" route="Index" title="索引" />
+        <NavBarIcon iconClass="bi bi-subtract" lightIconClass="bi bi-subtract" route="User" title="我的" />
       </div>
       <!-- 占位 -->
       <div class="flex-1"></div>

@@ -27,9 +27,26 @@ const router = createRouter({
       }
     },
     {
-      name: 'My',
-      path: '/my',
-      component: () => import('../views/MyView.vue')
+      name: 'User',
+      path: '/user',
+      component: () => import('../views/User/UserView.vue')
+    },
+    {
+      name: 'Auth',
+      path: '/auth/',
+      component: () => import('../views/Auth/AuthView.vue'),
+      children: [
+        {
+          name: 'AuthLogin',
+          path: '/auth/login',
+          component: () => import('../views/Auth/AuthLoginView.vue'),
+        },
+        {
+          name: 'AuthReg',
+          path: '/auth/register',
+          component: () => import('../views/Auth/AuthRegView.vue')
+        }
+      ]
     },
     {
       name: 'Anime',
@@ -42,6 +59,7 @@ const router = createRouter({
       component: () => import('../views/Admin/AdminView.vue'),
       children: [
         {
+          name: 'AdminHeader',
           path: 'header',
           component: () => import('../views/Admin/AdminHeaderView.vue')
         }

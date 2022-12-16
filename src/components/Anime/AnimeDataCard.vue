@@ -17,7 +17,7 @@ export default {
 </script>
 
 <template>
-  <AnimeBasicCard>
+  <AnimeBasicCard class="select-text">
     <!-- 面包屑导航 但是不能点 -->
     <div class="px-4 py-2 text-sm text-gray-500 border-b dark:border-zinc-700">
       <RouterLink :to="`/index/`">

@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import settings from '../Methods/settings.js';
+import settings from '../../common/Methods/settings';
 export default {
   computed: {
     darkMode() {

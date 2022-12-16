@@ -5,13 +5,12 @@ import AnimeCardContainer from '../components/Container/AnimeCardContainer.vue';
 import SearchBar from '../components/Search/SearchBar.vue';
 
 export default {
-  props: ["memory"],
   data() {
     return {
+      searchValue: '',
       searchTimes: 0,
       searchResults: [],
       searchHistory: [],
-      lastSearch: "",
       searchRecommendation: ["电锯人", "间谍过家家", "灵能百分百", "转生成为魔剑", "孤独摇滚", "想要成为影之实力者", "Do It Yourself", "向山进发", "入间同学"],
     };
   },
@@ -19,25 +18,24 @@ export default {
     async search(value) {
       // 校验
       value = value.trim();
-      if (!value || this.lastSearch == value) return;
+      this.searchValue = value
+      if (!value) return;
 
       try {
-        this.memory.searchValue = value;
         this.searchResults = null; // 进入加载状态
         this.addSearchHistory(value); // 把搜索词加入记录
         this.changeUrlParams(value); // 修改 url 参数
-        let results = (await LavaAnimeAPI.get("/v2/search", { params: { value: this.memory.searchValue } })).data;
+        let results = (await LavaAnimeAPI.get("/v2/search", { params: { value: value } })).data;
         if (results.code !== 200) return;
         setTimeout(() => { // 慢一点切换以便展示动画
           this.searchResults = results.data; // 展示结果
           this.searchTimes++
-          this.lastSearch = value;
+          sessionStorage.setItem('lastSearch', value)
         }, 100);
       } catch (error) {
         console.error('搜索发生错误: ', error);
       }
     },
-
     loadSearchHistory() {
       let localStorageHistory = JSON.parse(localStorage.getItem("searchHistory"));
       if (typeof localStorageHistory == "object" && localStorageHistory) {
@@ -57,10 +55,16 @@ export default {
     clearSearchHistroy() {
       this.searchHistory = [];
     },
-
+    // 尝试使用 URL 参数或者 sessionStorage 还原搜索词
     useUrlParams() {
-      let searchValue = this.$route.params.value ? this.$route.params.value : this.memory.searchValue;
-      this.search(searchValue);
+      let lastSearch = sessionStorage.getItem('lastSearch')
+      if (this.$route.params.value) { // url  
+        this.search(this.$route.params.value)
+        console.log('使用 URL 参数进行搜索');
+      } else if (lastSearch) {
+        this.search(lastSearch)
+        console.log('使用上次的搜索词进行搜索');
+      }
     },
     changeUrlParams(value) {
       this.$router.replace({ name: "Search", params: { value: value } });
@@ -98,7 +102,7 @@ export default {
         <div class="sticky top-5 select-none">
           <div class="text-lg mb-4 mx-0.5 font-medium">搜索</div>
           <!-- 搜索框 -->
-          <SearchBar :search="memory.searchValue" @search="value => search(value)" />
+          <SearchBar :search="searchValue" @search="value => search(value)" />
           <!-- 历史记录 -->
           <div class="my-4 w-full flex flex-wrap">
             <!-- 标签 -->

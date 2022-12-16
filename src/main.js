@@ -5,7 +5,7 @@ import VueLazyLoad from 'vue3-lazyload'
 import './index.css' // tailwind directives
 import './transition.css' // 自定义的切换动画
 
-const app = createApp(App)
+export const app = createApp(App)
   .use(router)
   .use(VueLazyLoad)
   .mount('#app')

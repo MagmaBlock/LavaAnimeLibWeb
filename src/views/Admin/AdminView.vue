@@ -21,6 +21,7 @@ export default {
   components: { RouterView, Container },
   mounted() {
     document.title = '管理界面 | 熔岩番剧库 LavaAnimeLib'
+    this.$router.push({ name: 'AdminHeader' })
   }
 }
 </script>

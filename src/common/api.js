@@ -1,9 +1,44 @@
 import axios from "axios";
+import { app } from "../main.js";
 import config from "./config";
 
 export const LavaAnimeAPI = axios.create({
     baseURL: config.api.lavaAnime
 })
+LavaAnimeAPI.interceptors.request.use(function (config) {
+    config.headers.Authorization = getToken()
+    return config
+})
+LavaAnimeAPI.interceptors.response.use(
+    // 2xx
+    function (response) {
+        return response
+    },
+    // !2xx
+    function (error) {
+        if (error.response.status == 401) { // 未登录处理
+            localStorage.removeItem('token')
+            $message.warning('尚未登录...')
+            // app.$router.push({ name: 'AuthLogin' })
+        } else { // 其他错误处理
+            if (error.response) {
+                $message.error(error.response.data.message)
+            }
+        }
+        return Promise.reject(error)
+    }
+)
+
+
+// 获取当前 Token
+function getToken() {
+    let token = localStorage.getItem('token')
+    if (!token) return
+    token = JSON.parse(token)
+    if (new Date(token.expirationTime) > new Date()) { // 未过期
+        return token.value
+    }
+}
 
 // 传入 ID Array，获取番剧信息
 export async function getAnimesData(array) {
@@ -25,20 +60,5 @@ export async function homeHeaderGet() {
     } catch (error) {
         console.error('请求头图数据失败: ', error)
         return []
-    }
-}
-
-
-// 更新头图数据
-export async function homeHeaderUpdate(data, password) {
-    try {
-        if (!data) return '无数据'
-        if (typeof password != 'string') return '密码格式错误'
-        let updateAPI = await LavaAnimeAPI.post('/v2/home/header/update', { data, password })
-        if (updateAPI.data) return updateAPI.data
-    } catch (error) {
-        console.error('提交头图数据时发送错误');
-        console.error(error);
-        return error
     }
 }

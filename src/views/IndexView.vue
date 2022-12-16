@@ -5,9 +5,12 @@ import AnimeCardContainer from '../components/Container/AnimeCardContainer.vue';
 import SearchBar from '../components/Search/SearchBar.vue';
 
 export default {
-  props: ["memory"],
   data() {
     return {
+      selectedTab: {
+        year: "2022年",
+        type: "10月秋"
+      },
       tabs: { year: [], type: [] },
       animes: null,
       loading: {
@@ -29,40 +32,50 @@ export default {
       this.loading.type = false;
     },
     async onTagClick(tagName, type) {
-      if (this.memory.selectedTab[type] == tagName) { // 点击的标签已经被选择
-        if (this.isMemoryJustToBeEmpty())
+      if (this.selectedTab[type] == tagName) { // 点击的标签已经被选择
+        if (this.isGoingEmpty())
           return; // 当筛选条件已剩最后一个，禁止继续取消
         else
-          this.memory.selectedTab[type] = ""; // 取消当前筛选条件
+          this.selectedTab[type] = ""; // 取消当前筛选条件
       }
       else { // 点击的标签未被选择
-        this.memory.selectedTab[type] = tagName; // 将其选择
+        this.selectedTab[type] = tagName; // 将其选择
       }
       await this.queryIndex();
     },
     async queryIndex() {
       this.animes = null; // 移除数据，进入空状态
-      let animeList = (await LavaAnimeAPI.post("/v2/index/query", this.memory.selectedTab)).data.data;
+      let animeList = (await LavaAnimeAPI.post("/v2/index/query", this.selectedTab)).data.data;
       await new Promise(resolve => { setTimeout(() => { resolve(); }, 200); }); // 慢一点切换以便展示动画
       this.animes = animeList; // 更新列表，同时解除空状态
     },
-    isMemoryJustToBeEmpty() {
-      let selectedTab = this.memory.selectedTab; // 当前所有被选中的条件
+    // 判断是否仅剩一个选择项
+    isGoingEmpty() {
       let trueKeys = 0; // 仍然激活的条件类型
-      for (let i in selectedTab) {
-        if (selectedTab[i])
-          trueKeys++; // 发现一个被激活的条件类型
-      }
-      if (trueKeys >= 2)
-        return false; // 如果两个及以上被选中，允许取消
-      else
-        return true; // 如果只剩一个被选中，禁止取消
+      Object.keys(this.selectedTab).forEach(keyName => { // 遍历每个可选项
+        if (this.selectedTab[keyName]) trueKeys++
+      })
+      return trueKeys <= 1
+    },
+    // 从 sessionStorage 读取上次访问
+    getSessionCache() {
+      let cache = JSON.parse(sessionStorage.getItem('IndexSelectedTab'))
+      if (cache) this.selectedTab = cache
+    }
+  },
+  watch: {
+    selectedTab: {
+      handler() {
+        sessionStorage.setItem('IndexSelectedTab', JSON.stringify(this.selectedTab))
+      },
+      deep: true
     }
   },
   async mounted() {
     document.title = '索引 | 熔岩番剧库 LavaAnimeLib'
-    this.getIndex();
-    this.queryIndex();
+    this.getSessionCache()
+    this.getIndex()
+    this.queryIndex()
   },
   components: { Container, SearchBar, AnimeCardContainer }
 }
@@ -92,7 +105,7 @@ export default {
               <template v-if="!loading.year" v-for="yearName in tabs.year">
                 <div class="rounded cursor-pointer ease-in duration-100 px-2 py-1 m-0.5"
                   @click="onTagClick(yearName, 'year')"
-                  :class="memory.selectedTab.year == yearName ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:active:bg-gray-500 dark:text-zinc-200'">
+                  :class="selectedTab.year == yearName ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:active:bg-gray-500 dark:text-zinc-200'">
                   {{ yearName }}
                 </div>
               </template>
@@ -111,7 +124,7 @@ export default {
               <template v-if="!loading.type" v-for="typeName in tabs.type">
                 <div class="rounded cursor-pointer ease-in duration-100 px-2 py-1 m-0.5"
                   @click="onTagClick(typeName, 'type')"
-                  :class="memory.selectedTab.type == typeName ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:active:bg-gray-500 dark:text-zinc-200'">
+                  :class="selectedTab.type == typeName ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:active:bg-gray-500 dark:text-zinc-200'">
                   {{ typeName }}
                 </div>
               </template>

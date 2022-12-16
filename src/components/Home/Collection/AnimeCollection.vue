@@ -27,7 +27,6 @@
 <script>
 import collections from '../../../assets/homepage-collections.js'
 import AnimeCollectionCards from '../Collection/AnimeCollectionCards.vue';
-import BasicCard from '../../BasicCard.vue'
 export default {
   data() {
     return {
@@ -40,6 +39,6 @@ export default {
 
   },
   mounted() { },
-  components: { BasicCard, AnimeCollectionCards }
+  components: { AnimeCollectionCards }
 }
 </script>
