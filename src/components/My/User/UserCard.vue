@@ -10,22 +10,12 @@
       <div class="flex-1"></div>
       <div class="grid place-items-center mx-2">
         <!-- 退出登录确认框 -->
-        <n-popover trigger="click" style="padding: 0;" placement="bottom">
-          <template #trigger>
-            <div class="bg-gray-100 hover:bg-gray-200 dark:bg-zinc-700 dark:hover:bg-zinc-600
-            px-4 py-2 text-xs rounded">
-              退出
-            </div>
-          </template>
-          <div class="select-none cursor-pointer text-xs px-4 py-2 transition-colors
-            bg-gray-100 hover:bg-gray-200 dark:bg-zinc-700 dark:hover:bg-zinc-600" @click="logout">
-            在当前设备上登出
+        <n-dropdown trigger="hover" :options="logoutMenu" @select="logout">
+          <div class="bg-gray-100 hover:bg-gray-200 dark:bg-zinc-700 dark:hover:bg-zinc-600
+          px-3 py-1.5 rounded">
+            退出
           </div>
-          <div class="select-none cursor-pointer text-xs px-4 py-2 transition-colors
-            bg-gray-100 hover:bg-gray-200 dark:bg-zinc-700 dark:hover:bg-zinc-600" @click="logout(true)">
-            在所有设备上登出
-          </div>
-        </n-popover>
+        </n-dropdown>
       </div>
     </div>
     <div class="flex-1 self-center flex cursor-pointer" v-else @click="$router.push({ name: 'AuthLogin' })">
@@ -47,7 +37,11 @@ export default {
   data() {
     return {
       userInfo: {},
-      login: false
+      login: false,
+      logoutMenu: [
+        { label: '在当前设备上登出', key: false },
+        { label: '在所有设备上登出', key: true }
+      ]
     }
   },
   methods: {
@@ -59,11 +53,7 @@ export default {
           this.userInfo = userInfo.data.data
           this.login = true
         }
-      } catch (error) {
-        if (error.response.status == 401) {
-          console.log('未登录');
-        }
-      }
+      } catch (error) { }
     },
     async logout(all = false) {
       let logout = await LavaAnimeAPI.post('/v2/user/logout', {
