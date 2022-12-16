@@ -1,17 +1,14 @@
 <template>
   <MyBasicCard class="flex sm:px-6 h-32 rounded-md select-none">
-    <div class="flex-1 self-center flex">
+
+    <div class="flex-1 self-center flex" v-if="login">
       <n-avatar class="shrink-0" round :size="72" src="/Transparent_Akkarin.jpg" />
-      <div class="mx-4 my-auto flex-1" v-if="login">
+      <div class="mx-4 my-auto flex-1">
         <div class="text-base font-semibold mb-1">{{ userInfo.name }}</div>
         <div class="text-xs opacity-80">{{ userInfo.email }}</div>
       </div>
-      <div class="mx-4 my-auto cursor-pointer flex-1" v-else @click="$router.push({ name: 'AuthLogin' })">
-        <div class="text-base font-semibold mb-1">尚未登录</div>
-        <div class="text-xs opacity-80">登录发现更多精彩</div>
-      </div>
       <div class="flex-1"></div>
-      <div class="grid place-items-center mx-2" v-if="login">
+      <div class="grid place-items-center mx-2">
         <!-- 退出登录确认框 -->
         <n-popover trigger="click" style="padding: 0;" placement="bottom">
           <template #trigger>
@@ -29,6 +26,13 @@
             在所有设备上登出
           </div>
         </n-popover>
+      </div>
+    </div>
+    <div class="flex-1 self-center flex cursor-pointer" v-else @click="$router.push({ name: 'AuthLogin' })">
+      <n-avatar class="shrink-0" round :size="72" src="/Transparent_Akkarin.jpg" />
+      <div class="mx-4 my-auto flex-1">
+        <div class="text-base font-semibold mb-1">尚未登录</div>
+        <div class="text-xs opacity-80">登录发现更多精彩</div>
       </div>
     </div>
   </MyBasicCard>
