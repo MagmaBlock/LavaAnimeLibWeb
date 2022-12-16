@@ -68,7 +68,7 @@ export default {
       }, 300);
       setTimeout(() => {
         this.epSwitchLock = false
-      }, 2000);
+      }, 500);
     }
   },
   mounted() {

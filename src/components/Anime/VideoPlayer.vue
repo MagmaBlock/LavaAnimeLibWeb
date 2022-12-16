@@ -81,7 +81,8 @@ export default {
         autoOrientation: true,
         airplay: true,
       },
-      playType: 'notSeleted'
+      playType: 'notSeleted',
+      reportTimer: null
     };
   },
   props: {
@@ -135,24 +136,15 @@ export default {
         }
       }
     },
-    prepareToReportNewView() { // 若某 URL 被持续播放或加载 5 秒钟，则上报播放量
-      let sec = 0
-      let timer = setInterval(() => {
-        if (sec >= 5) { // 成功
-          clearInterval(timer)
-          this.reportNewView({ type: 'WebPlayer' })
-          return
-        }
-        sec = sec + 1
+    async prepareToReportNewView() { // 若某 URL 被持续播放或加载 2 + 5 秒钟，则上报播放量
+      clearTimeout(this.reportTimer)
+      this.reportTimer = null
+      this.reportTimer = setTimeout(() => {
         let isPlaying = this.art.playing || this.art.loading.show
-        if (!isPlaying) {
-          clearInterval(timer)
-          console.log('用户打断了当前播放.');
-          console.log(sec, 'Successed:', isPlaying, 'Playing:', this.art.playing, 'Loading:', this.art.loading.show);
-          return
+        if (isPlaying) {
+          this.reportNewView({ type: 'WebPlayer' })
         }
-        console.log(sec, 'Successed:', isPlaying, 'Playing:', this.art.playing, 'Loading:', this.art.loading.show);
-      }, 1000)
+      }, 5000);
     },
     forcePlay() { // 强制播放不支持的视频
       this.playType = 'canPlay';
