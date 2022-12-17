@@ -60,9 +60,14 @@ const router = createRouter({
       children: [
         {
           name: 'AdminHeader',
-          path: 'header',
+          path: '/admin/header',
           component: () => import('../views/Admin/AdminHeaderView.vue')
-        }
+        },
+        {
+          name: 'AdminInvite',
+          path: '/admin/invite',
+          component: () => import('../views/Admin/AdminInviteCode.vue')
+        },
       ]
     }
   ]
