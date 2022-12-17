@@ -12,7 +12,7 @@
         <!-- 退出登录确认框 -->
         <n-dropdown trigger="hover" :options="logoutMenu" @select="logout">
           <div class="bg-gray-100 hover:bg-gray-200 dark:bg-zinc-700 dark:hover:bg-zinc-600
-          px-3 py-1.5 rounded">
+          px-4 py-1.5 rounded">
             退出
           </div>
         </n-dropdown>
