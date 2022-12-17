@@ -1,11 +1,12 @@
 <template>
-  <n-config-provider :theme="settings.darkMode.on ? darkTheme : null" :theme-overrides="themeOverrides">
+  <n-config-provider :locale="zhCN" :date-locale="dateZhCN" :theme="settings.darkMode.on ? darkTheme : null"
+    :theme-overrides="themeOverrides">
     <slot></slot>
   </n-config-provider>
 </template>
 
 <script>
-import { darkTheme } from 'naive-ui'
+import { darkTheme, zhCN, dateZhCN } from 'naive-ui'
 import settings from '../common/Methods/settings'
 
 export default {
@@ -13,6 +14,8 @@ export default {
     return {
       settings: settings,
       darkTheme: darkTheme,
+      zhCN: zhCN,
+      dateZhCN: dateZhCN,
       themeOverrides: { // 覆盖默认主题配置
         "common": {
           "primaryColor": "#2080F0FF",
