@@ -1,8 +1,8 @@
 <template>
   <ContainerMobileFull>
-    <div v-if="notSupport" class="bg-gray-200 dark:bg-zinc-800 p-4 text-xs lg:rounded-md lg:mb-4">
-      您当前使用的浏览器内核 {{ ua.engine.name }} {{ ua.engine.version }} 过旧，界面样式和功能可能发生异常. <br>
-      2021 年后的浏览器内核受支持, Chrome / Edge > 84, FireFox > 100, Safari > 15.6.
+    <div v-if="notSupport" class="bg-gray-200 dark:bg-zinc-800 p-4 text-xs lg:rounded-md lg:mb-4 select-all">
+      当前浏览器内核 {{ ua.engine.name }} {{ ua.engine.version }} 过旧，界面样式和功能可能发生异常。<br>
+      2021 年后的浏览器内核受支持, Chrome / Edge > 84, FireFox > 100, Safari > 15.6。番剧库最低保证在 Blink 71 能够显示出界面。
     </div>
     <div class="lg:flex mb-4">
       <HeaderPictures class="lg:basis-1/3 sm:rounded-md lg:mr-4" />
@@ -12,7 +12,6 @@
       </div>
     </div>
     <AnimeCollection />
-
   </ContainerMobileFull>
 </template>
 

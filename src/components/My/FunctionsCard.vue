@@ -11,13 +11,13 @@
         <template #name>番剧库使用帮助</template>
       </BigButton>
       <!-- 深色模式 -->
-      <BigButton @click="darkModeModel = true">
+      <BigButton @click="$refs.darkModeModel.show = true">
         <template #icon>
           <i class="bi bi-moon-fill"></i>
         </template>
         <template #name>深色模式</template>
       </BigButton>
-      <DarkModeModel v-model:show="darkModeModel"></DarkModeModel>
+      <DarkModeModel ref="darkModeModel"></DarkModeModel>
     </div>
   </MyBasicCard>
 </template>
@@ -28,9 +28,7 @@ import BigButton from './BigButton.vue';
 
 export default {
   data() {
-    return {
-      darkModeModel: false
-    };
+    return {}
   },
   methods: {},
   components: { BigButton, MyBasicCard }

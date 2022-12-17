@@ -1,9 +1,9 @@
 <template>
   <!-- 深色模式弹窗设置 -->
-  <n-modal v-model:show="show" :on-after-leave="close" class="select-none">
+  <n-modal v-model:show="show" class="select-none">
     <n-card class="max-w-xl" title="深色模式设置" :bordered="false" size="small" role="dialog" aria-modal="true">
       <template #header-extra>
-        <i class="bi bi-x-lg hover:text-blue-600 cursor-pointer ml-2" @click="close"></i>
+        <i class="bi bi-x-lg hover:text-blue-600 cursor-pointer ml-2" @click="show = false"></i>
       </template>
       <n-list hoverable clickable>
         <n-list-item @click="settings.darkMode.on = !settings.darkMode.on">
@@ -61,21 +61,10 @@
 import settings from '../../../common/Methods/settings';
 
 export default {
-  emits: ['update:show'],
-  props: {
-    show: {
-      type: Boolean,
-      default: false
-    }
-  },
   data() {
     return {
-      settings: settings
-    }
-  },
-  methods: {
-    close() {
-      this.$emit("update:show", false)
+      settings: settings,
+      show: false
     }
   }
 }

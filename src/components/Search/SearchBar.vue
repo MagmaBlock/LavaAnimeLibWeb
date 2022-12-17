@@ -5,8 +5,9 @@
         <template #trigger>
           <!-- 输入框 -->
           <input type="text" enterkeyhint="search" placeholder="进行搜索..." class="bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500
-            ease-in duration-100 w-full py-1 px-2 rounded" v-model="search" @keydown="inputKeyHandler"
-            @focus="focusHandler" @blur="showPre = false; activeValue = -1" />
+            ease-in duration-100 w-full py-1 px-2 rounded" @keydown="inputKeyHandler" @focus="focusHandler"
+            @blur="showPre = false; activeValue = -1" :value="search"
+            @input="$emit('update:search', $event.target.value)" />
         </template>
         <!-- 弹出总容器 -->
         <div
@@ -45,9 +46,9 @@ export default {
     }
   },
   props: {
-    search: { type: String, default: '' }
+    search: String
   },
-  emits: ['search'],
+  emits: ['search', 'update:search'],
   watch: {
     search(newV, oldV) {
       // 监听搜索词改变
@@ -121,7 +122,6 @@ export default {
       }
       setTimeout(() => {
         this.preSearchLock = false;
-        console.log("unlocked");
       }, 500); // 0.5 秒可触发一次防止网络请求阻塞
     },
   }

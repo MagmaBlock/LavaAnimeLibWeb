@@ -23,11 +23,6 @@
           <Sponsors class="mt-8 hidden lg:block" />
         </div>
         <div class="lg:basis-3/4">
-          <div v-if="notSupport" class="grid mt-4">
-            <div class="bg-gray-200 dark:bg-zinc-700 px-4 py-2 w-fit rounded-md text-xs place-self-center">
-              当前浏览器版本过旧, 下方帮助排版可能显示不正常!
-            </div>
-          </div>
           <MarkdownRender :content="article.content || ''" />
         </div>
       </div>
@@ -36,8 +31,6 @@
   </div>
 </template>
 <script>
-import uaParser from 'ua-parser-js';
-
 import Container from '../components/Container.vue'
 import List from '../components/Help/List.vue';
 import MarkdownRender from '../components/Help/MarkdownRender.vue';
@@ -66,12 +59,6 @@ export default {
         this.changeArticle(a)
       }
     })
-    // 对低版本浏览器发出警告
-    let ua = uaParser()
-    console.log(ua.engine);
-    if (ua.engine.name == 'Blink' && parseInt(ua.engine.version) < 82) {
-      this.notSupport = true
-    }
   },
   methods: {
     changeArticle(a) {
