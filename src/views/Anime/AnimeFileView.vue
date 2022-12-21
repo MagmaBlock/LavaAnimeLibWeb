@@ -23,19 +23,40 @@ export default {
       fileList: []
     }
   },
-  async mounted() {
-    // 获取资源节点相关
-    let driveListResult = await this.getDriveList();
-    this.driveList = driveListResult;
-    this.selectedDrive = driveListResult.default || driveListResult.list[0].id
+  mounted() {
+    if (this.laID) {
+      console.log('mounted 触发文件刷新');
+      this.reborn()
+    }
 
-    // 获取相应资源节点下的资源相关
-    let fileListResult = await this.getFileList(this.laID, this.selectedDrive);
-    this.fileList = fileListResult;
-
-    this.loading = false
+  },
+  watch: {
+    laID() {
+      console.log('watch laID 触发文件刷新');
+      this.reborn()
+    }
   },
   methods: {
+    // 重置函数，界面第一次挂载和参数切换时均会调用
+    async reborn() {
+      // 重置参数
+      this.loading = true
+      this.driveList = {}
+      this.selectedDrive = ''
+      this.fileList = []
+
+      // 获取资源节点相关
+      let driveListResult = await this.getDriveList();
+      this.driveList = driveListResult;
+      this.selectedDrive = driveListResult.default || driveListResult.list[0].id
+
+      // 获取相应资源节点下的资源相关
+      let fileListResult = await this.getFileList(this.laID, this.selectedDrive);
+      this.fileList = fileListResult;
+
+      // 结束
+      this.loading = false
+    },
     async getDriveList() {
       try {
         let driveList = (await LavaAnimeAPI.get('/v2/drive/all')).data;

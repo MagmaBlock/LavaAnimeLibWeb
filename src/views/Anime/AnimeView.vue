@@ -14,7 +14,7 @@ import AnimeFileView from './AnimeFileView.vue';
 export default {
   data() {
     return {
-      laID: parseInt(this.$route.params.la),
+      laID: null,
       laData: {}, // 界面完整资料数据
       selectedFile: {}, // 当前文件信息
       saveTime: false,
@@ -29,17 +29,25 @@ export default {
       reportNewView: this.reportNewView, changePlayingFile: this.changePlayingFile
     }
   },
-  async mounted() {
-    document.title = '播放 | 熔岩番剧库 LavaAnimeLib';
-    // 获取 LavaAnimeLib 数据 API
-    await this.getLavaAnimeApi(this.laID);
-    if (!this.error) document.title = `${this.laData.title} | 熔岩番剧库 LavaAnimeLib`
-    this.loading = false;
-    window.scrollTo({
-      top: 0, left: 0, behavior: "smooth" //平滑滚动
-    });
-  },
   methods: {
+    // 重建界面，当第一次挂载和路由参数改变时会被调用
+    async reborn() {
+      document.title = '播放 | 熔岩番剧库 LavaAnimeLib';
+      // 重建参数
+      this.loading = true
+      this.laID = parseInt(this.$route.params.la)
+      this.laData = {}
+      this.selectedFile = {}
+      this.viewTimes = 0
+      // 重新获取数据
+      await this.getLavaAnimeApi(this.laID); // 获取 LavaAnimeLib 数据 API
+      // 应用数据
+      if (!this.error) document.title = `${this.laData.title} | 熔岩番剧库 LavaAnimeLib`
+      this.loading = false;
+      window.scrollTo({
+        top: 0, left: 0, behavior: "smooth" //平滑滚动
+      });
+    },
     async getLavaAnimeApi(laID) {
       try {
         let result = await LavaAnimeAPI.get("/v2/anime/get", { params: { id: laID, full: true } });
@@ -79,6 +87,15 @@ export default {
       }
       this.saveTime = saveTime
       this.selectedFile = file
+    }
+  },
+  mounted() { this.reborn() },
+  watch: {
+    async $route(newRoute) {
+      if (newRoute.name == 'Anime') {
+        console.log('发生路由参数改变, 重建界面...');
+        this.reborn()
+      }
     }
   },
   components: { ContainerMobileFull, VideoPlayer, LocalPlayers, AnimeDataCard, AnimeDataCardFake, RelationAnimes, AnimeBackground, AnimeBasicCard, LocalPlayerIcons, AnimeFileView }
