@@ -11,7 +11,7 @@ export default {
       searchTimes: 0,
       searchResults: [],
       searchHistory: [],
-      searchRecommendation: ["电锯人", "间谍过家家", "灵能百分百", "转生成为魔剑", "孤独摇滚", "想要成为影之实力者", "Do It Yourself", "向山进发", "入间同学"],
+      searchRecommendation: ["加载中..."],
     };
   },
   methods: {
@@ -69,6 +69,15 @@ export default {
     changeUrlParams(value) {
       this.$router.replace({ name: "Search", params: { value: value } });
       document.title = `搜索 - ${value} | 熔岩番剧库 LavaAnimeLib`
+    },
+    async getHotAnimes() {
+      try {
+        let result = await LavaAnimeAPI.get('/v2/search/hot')
+        if (result.data.code == 200) {
+          this.searchRecommendation = result.data.data
+        }
+      } catch (error) { }
+
     }
   },
   computed: {
@@ -76,13 +85,18 @@ export default {
       return ['bg-gray-100', 'hover:bg-gray-200', 'active:bg-gray-300',
         'dark:bg-zinc-800', 'dark:hover:bg-zinc-700', 'dark:active:bg-gray-500',
         'ease-in', 'duration-200', 'cursor-pointer',
-        'mr-2', 'mb-2', 'px-2', 'rounded', 'max-w-xs', 'overflow-hidden']
+        'mr-2', 'mb-2', 'px-2', 'py-[3px]', 'rounded', 'max-w-xs', 'overflow-hidden', 'grid', 'place-items-center']
+    },
+    clearTagClass() {
+      return `bg-blue-50 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/75
+      ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 grid place-items-center rounded max-w-xs text-ellipsis overflow-hidden`
     }
   },
   mounted() {
     document.title = '搜索 | 熔岩番剧库 LavaAnimeLib'
     this.loadSearchHistory();
     this.useUrlParams();
+    this.getHotAnimes()
   },
   watch: {
     searchHistory() {
@@ -107,26 +121,28 @@ export default {
           <div class="my-4 w-full flex flex-wrap">
             <!-- 标签 -->
             <span v-for="value in searchHistory" @click="search(value)" :class="normalTagClass">
-              <div class="leading-loose text-ellipsis overflow-hidden">
-                {{ value }}
-              </div>
+              {{ value }}
             </span>
             <!-- 清除按钮 -->
-            <span class="bg-blue-50 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/75
-              ease-in duration-200 cursor-pointer mr-2 mb-2 px-2 rounded max-w-xs overflow-hidden"
-              @click="clearSearchHistroy()" v-if="this.searchHistory.length > 0">
-              <div class="leading-loose truncate text-blue-500">
-                <i class="bi bi-x-lg"></i>
-              </div>
-            </span>
+            <n-tooltip trigger="hover">
+              <template #trigger>
+                <span :class="clearTagClass" @click="clearSearchHistroy()" v-if="this.searchHistory.length > 0">
+                  <div class="text-blue-500">
+                    <i class="bi bi-x-lg"></i>
+                  </div>
+                </span>
+                <span v-else></span>
+              </template>
+              删除历史记录
+            </n-tooltip>
           </div>
           <!-- 搜索推荐 -->
-          <div class="text-lg mb-4 mx-0.5 font-medium">大家在搜</div>
+          <div class="text-lg mb-4 mx-0.5 font-medium">大家在看</div>
           <div class="my-4 w-full flex flex-wrap">
-            <span v-for="value in searchRecommendation" @click="search(value)" :class="normalTagClass">
-              <div class="leading-loose text-ellipsis overflow-hidden">
-                {{ value }}
-              </div>
+            <span v-for="value in searchRecommendation" :class="normalTagClass">
+              <RouterLink :to="{ name: 'Anime', params: { la: value.id } }">
+                {{ value.title }}
+              </RouterLink>
             </span>
           </div>
         </div>
