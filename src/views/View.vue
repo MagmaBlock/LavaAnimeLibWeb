@@ -47,6 +47,8 @@ export default {
           <!-- https://www.cnblogs.com/alyssa-1997/p/12187379.html -->
         </Transition>
       </RouterView>
+      <!-- 兜底 -->
+      <div class="lg:hidden block w-full h-24"></div>
     </div>
   </div>
 </template>
