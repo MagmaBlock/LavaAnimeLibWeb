@@ -23,6 +23,7 @@
     "@tailwindcss/typography": "^0.5.8",
     "@vitejs/plugin-vue": "^4.0.0",
     "autoprefixer": "^10.4.13",
+    "gravatar": "^1.8.2",
     "naive-ui": "^2.34.2",
     "postcss": "^8.4.20",
     "postcss-import": "^15.1.0",

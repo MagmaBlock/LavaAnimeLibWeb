@@ -8,4 +8,6 @@ import './transition.css' // 自定义的切换动画
 export const app = createApp(App)
   .use(router)
   .use(VueLazyLoad)
-  .mount('#app')
+
+app.config.unwrapInjectedRef = true
+app.mount('#app')

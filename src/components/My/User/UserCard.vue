@@ -2,7 +2,8 @@
   <MyBasicCard class="flex sm:px-6 h-32 rounded-md select-none">
 
     <div class="flex-1 self-center flex" v-if="login">
-      <n-avatar class="shrink-0" round :size="72" src="/Transparent_Akkarin.jpg" />
+      <n-avatar class="shrink-0 cursor-pointer" round :size="72"
+        :src="userInfo.data?.avatar?.url || '/Transparent_Akkarin.jpg'" @click="$router.push({ name: 'UserInfo' })" />
       <div class="mx-4 my-auto flex-1">
         <div class="text-base font-semibold mb-1">{{ userInfo.name }}</div>
         <div class="text-xs opacity-80">{{ userInfo.email }}</div>
