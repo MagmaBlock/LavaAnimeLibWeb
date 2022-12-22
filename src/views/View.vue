@@ -37,7 +37,7 @@ export default {
     <!-- 导航栏 -->
     <NavBar />
     <!-- 当前路由的界面 -->
-    <div class="relative overflow-y-auto w-full">
+    <div class="relative overflow-y-auto w-full pb-36 lg:pb-0">
       <RouterView v-slot="{ Component }">
         <Transition :name="$route.meta.transition || 'fade'" :mode="$route.meta.mode || 'out-in'">
           <Component :is="Component" class="w-full"></Component>
@@ -47,8 +47,6 @@ export default {
           <!-- https://www.cnblogs.com/alyssa-1997/p/12187379.html -->
         </Transition>
       </RouterView>
-      <!-- 兜底 -->
-      <div class="lg:hidden block w-full h-24"></div>
     </div>
   </div>
 </template>
