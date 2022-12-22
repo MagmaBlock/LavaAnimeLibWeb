@@ -1,21 +1,6 @@
 <template>
   <div>
-    <div class="sticky top-0 flex flex-nowrap h-12 z-10 select-none
-      bg-white dark:bg-zinc-800 bg-opacity-80 backdrop-blur-lg backdrop-brightness-90
-      border-b dark:border-zinc-900 shadow-sm">
-      <div class="flex flex-nowarp">
-        <div class="grid place-items-center w-12 h-full text-lg
-          hover:bg-gray-200 dark:hover:bg-zinc-700
-          rounded-md cursor-pointer" @click="$router.back(-1)">
-          <i class="bi bi-chevron-left"></i>
-        </div>
-        <div class="grid place-items-center h-full px-2 text-base">
-          <div>
-            帮助
-          </div>
-        </div>
-      </div>
-    </div>
+    <TopNav title="帮助"></TopNav>
     <Container>
       <div class="lg:flex">
         <div class="lg:basis-1/4 select-none">
@@ -39,6 +24,7 @@ import Sponsors from '../components/Help/Sponsors.vue';
 import LavaAnimeLib from '../assets/Help/LavaAnimeLib.md?raw';
 import WhyExternalPlayer from '../assets/Help/WhyExternalPlayer.md?raw'
 import ExternalPlayerList from '../assets/Help/ExternalPlayerList.md?raw'
+import TopNav from '../components/NavBar/TopNav.vue';
 export default {
   data() {
     return {
@@ -67,6 +53,6 @@ export default {
     }
   },
   watch: {},
-  components: { Container, MarkdownRender, List, Sponsors }
+  components: { Container, MarkdownRender, List, Sponsors, TopNav }
 }
 </script>
