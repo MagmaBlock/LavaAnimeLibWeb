@@ -8,7 +8,7 @@
         :size="108" :src="avatarUrl" />
       <n-avatar class="ring-1 ring-gray-200 dark:ring-zinc-700" fallback-src="/Transparent_Akkarin.jpg" round :size="72"
         :src="avatarUrl" />
-      <n-button strong secondary class="bg-gray-100 dark:bg-zinc-800" @click="saveAvatar">
+      <n-button strong secondary @click="saveAvatar">
         保存
       </n-button>
     </n-space>
