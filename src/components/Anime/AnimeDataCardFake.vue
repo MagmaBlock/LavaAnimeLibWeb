@@ -13,25 +13,13 @@ export default {
   <AnimeBasicCard>
     <!-- 面包屑导航 但是不能点 -->
     <div class="px-4 py-2 text-sm text-gray-500 border-b-[1px]">
-      <span class="bg-gray-300 text-gray-300 animate-pulse">2022年</span>
-      <i class="bi bi-chevron-right text-xs align-middle"></i>
-      <span class="bg-gray-300 text-gray-300 animate-pulse">1月冬</span>
-      <i class="bi bi-chevron-right text-xs align-middle"></i>
-      <span class="bg-gray-300 text-gray-300 animate-pulse">番剧名番剧名番剧名番剧名</span>
+      <n-skeleton text></n-skeleton>
     </div>
     <!-- 主信息卡 -->
     <div class="py-3 px-4">
       <!-- 标题块 -->
       <div class="mb-1">
-        <div class="text-xl inline-block mr-2">
-          <span class="bg-gray-300 text-gray-300 animate-pulse">啊啊啊啊啊啊啊啊啊</span>
-          <span class="text-base bg-gray-300 text-gray-300 animate-pulse">(2022)</span>
-        </div>
-        <div class="text-sm leading-5 text-gray-500 inline-block">
-          <span class="bg-gray-300 text-gray-300 animate-pulse">
-            啊啊啊啊啊啊啊啊啊啊 · TV
-          </span>
-        </div>
+        <n-skeleton :height="28" :width="256"></n-skeleton>
       </div>
       <!-- 主要信息 -->
       <div class="px-0.5 text-sm leading-5 text-gray-500">
@@ -39,7 +27,8 @@ export default {
         <div class="inline-block">
           <span class="mr-2"><i class="bi bi-play-btn"></i> 播放 ... 次</span>
           <span class="mr-2"><i class="bi bi-star"></i> ... 分
-            <span class="bg-gray-100 text-black rounded-sm px-1.5 text-xs align-baseline">
+            <span
+              class="bg-gray-100 text-black dark:bg-zinc-700 dark:text-zinc-200 rounded-sm px-1.5 text-xs align-baseline">
               Rank.#...
             </span>
           </span>
@@ -52,11 +41,10 @@ export default {
       </div>
       <!-- 标签 -->
       <div class="my-1 overflow-clip">
-        <span v-for="a in 15">
-          <n-tag size="small" class="mr-1 mb-1" :bordered="false">
-            <span class="bg-gray-300 text-gray-300 animate-pulse">{{ (20 - a) * 10000 }}</span>
-          </n-tag>
-        </span>
+        <template v-for="a in 15">
+          <n-skeleton class="inline-block mr-1 mb-" :height="22" :width="40 + (50 - a) * Math.random()"
+            :sharp="false"></n-skeleton>
+        </template>
       </div>
       <!-- 连接 -->
       <div class="px-0.5 text-sm text-blue-600">
