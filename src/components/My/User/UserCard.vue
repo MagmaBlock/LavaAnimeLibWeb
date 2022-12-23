@@ -1,6 +1,5 @@
 <template>
   <MyBasicCard class="flex sm:px-6 h-32 rounded-md select-none">
-
     <div class="flex-1 self-center flex" v-if="login">
       <n-avatar class="shrink-0 cursor-pointer" round :size="72"
         :src="userInfo.data?.avatar?.url || '/Transparent_Akkarin.jpg'" @click="$router.push({ name: 'UserInfo' })" />
@@ -12,10 +11,9 @@
       <div class="grid place-items-center mx-2">
         <!-- 退出登录确认框 -->
         <n-dropdown trigger="hover" :options="logoutMenu" @select="logout">
-          <div class="bg-gray-100 hover:bg-gray-200 dark:bg-zinc-700 dark:hover:bg-zinc-600
-          px-4 py-1.5 rounded">
+          <n-button strong secondary>
             退出
-          </div>
+          </n-button>
         </n-dropdown>
       </div>
     </div>
