@@ -25,7 +25,7 @@
       <!-- 搜索按钮 -->
       <div class="bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 ease-in duration-100
         whitespace-nowrap py-1 px-2 ml-2 rounded text-center cursor-pointer" @click="$emit('search', search)">
-        搜索
+        <i class="bi bi-search"></i>
       </div>
     </div>
   </div>
