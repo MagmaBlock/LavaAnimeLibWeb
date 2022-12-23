@@ -1,10 +1,10 @@
 <template>
-  <ContainerMobileFull class="px-6">
+  <ContainerMobileFull>
     <div class="grid grid-cols-1 lg:grid-cols-2 sm:gap-4 sm:mb-4">
-      <UserCard />
-      <FunctionsCard />
+      <UserCard class="px-6" />
+      <FunctionsCard class="px-4" />
     </div>
-    <MyCollections />
+    <MyCollections class="px-6" />
   </ContainerMobileFull>
 </template>
 
