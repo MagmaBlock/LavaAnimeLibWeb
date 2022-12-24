@@ -7,18 +7,17 @@
           <SponsorCard :sponsor="sponsor" @click="sponsor.showModal = true" />
 
           <n-modal v-model:show="sponsor.showModal">
-            <n-card class="w-80 dark:bg-zinc-800 dark:text-white" :title="sponsor.name" :bordered="false" role="dialog">
+            <n-card style="max-width: 400px;" :title="sponsor.name" :bordered="false" closable
+              @close="sponsor.showModal = false" role="dialog">
               <template #header-extra>
                 <div class="dark:text-zinc-100">
                   {{ sponsor.support }}
                 </div>
               </template>
-              <div class="text-center">
-                <div class="mb-4">
-                  {{ sponsor.message || '没有留言' }}
-                </div>
-                <a v-if="sponsor.link" class="text-blue-500 font-bold" :href="sponsor.link" target="_blank">查看附加的链接</a>
-              </div>
+              {{ sponsor.message || '没有留言' }}
+              <template #action>
+                <n-a v-if="sponsor.link" :href="sponsor.link" target="_blank">查看附加的链接</n-a>
+              </template>
             </n-card>
           </n-modal>
 
@@ -40,6 +39,7 @@ export default {
         { name: "Longtianmu", support: "￥240", link: "https://ltm.ink/" },
         { name: "小林", support: "￥150.00" },
         { name: "czy0729", support: "￥99.99", link: "https://github.com/czy0729" },
+        { name: "纯之", support: "其他", message: "提供部分视频加速节点", link: "https://moe.tips/" },
         { name: "若葉", support: "其他", message: "提供新域名等支持", link: "https://loliloli.moe/" },
         { name: "XJH_Jorhai", support: "￥35.00", message: "麦老师是我的神明呜呜呜" },
         { name: "Arthals", support: "其他", message: "提供了数月的下载节点支持", link: "https://arthals.ink/" },
