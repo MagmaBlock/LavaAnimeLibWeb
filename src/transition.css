@@ -1,37 +1,33 @@
 .fade-enter-active,
 .fade-leave-active {
-  @apply transition-all ease-in duration-150;
+  transition: opacity 0.25s ease;
 }
 
 .fade-enter-from,
 .fade-leave-to {
-  @apply opacity-0
+  opacity: 0;
 }
 
 
 .flow-out-enter-active {
-  animation: go-top 0.3s;
+  animation: go-top 0.3s ease-in;
 }
 
 .flow-out-leave-active {
-  animation: go-down 0.3s;
+  animation: go-down 0.3s ease-in;
 }
 
 @keyframes go-top {
   0% {
-    transform: translateY(8px);
-    opacity: 50%;
+    transform: translateX(8px);
+    opacity: 0%;
   }
-
-  50% {
-    opacity: 75%;
-  }
-
 }
 
 @keyframes go-down {
-
   100% {
-    @apply scale-95 opacity-75
+    /* scale: 95%; */
+    transform: translateX(-8px);
+    opacity: 0%;
   }
 }
