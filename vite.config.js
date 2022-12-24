@@ -29,5 +29,10 @@ export default defineConfig({
   },
   build: {
     target: ['chrome71']
+  },
+  experimental: {
+    renderBuiltUrl(fileName) {
+      return 'https://lava-assets.5t5.top/' + fileName
+    }
   }
 })
