@@ -9,6 +9,8 @@
 <script>
 import { getAnimesData } from '../../common/api';
 import { getMyCollections } from '../../common/Methods/MyCollections';
+import AnimeCardContainer from '../Container/AnimeCardContainer.vue';
+import MyBasicCard from './MyBasicCard.vue';
 
 export default {
   data() {
@@ -17,9 +19,10 @@ export default {
     }
   },
   async mounted() {
-    let animes = getMyCollections()
-    let animesData = await getAnimesData(animes)
-    this.myAnimes = animesData.data
-  }
+    let animes = getMyCollections();
+    let animesData = await getAnimesData(animes);
+    this.myAnimes = animesData.data;
+  },
+  components: { AnimeCardContainer, MyBasicCard }
 }
 </script>
