@@ -60,20 +60,15 @@ export default {
       </div>
       <!-- 标签 -->
       <div class="my-1 flex flex-wrap" v-if="this.la.bgmId">
-        <span v-for="(tag, index) in this.la.tags">
-          <!-- 前 20 个标签 -->
-          <n-tag size="small" class="mr-1 mb-1 flex-initial max-w-xs overflow-hidden" :bordered="false"
-            v-if="index <= this.la.tags.length / 3">
-            {{ tag.name }} {{ tag.count }}
-          </n-tag>
-          <!-- 隐藏的标签 -->
-          <span class="ease-in duration-300" :class="showMore ? '' : 'absolute opacity-0 w-0 overflow-hidden'">
+        <TransitionGroup enter-active-class="animate__animated animate__zoomIn animate__faster"
+          leave-active-class="animate__animated animate__zoomOut animate__faster">
+          <template v-for="(tag, index) in this.la.tags" :key="index">
             <n-tag size="small" class="mr-1 mb-1 flex-initial max-w-xs overflow-hidden" :bordered="false"
-              v-if="index > this.la.tags.length / 3">
+              v-show="index <= this.la.tags.length / 3 || showMore">
               {{ tag.name }} {{ tag.count }}
             </n-tag>
-          </span>
-        </span>
+          </template>
+        </TransitionGroup>
         <span>
           <n-tag size="small" class="mr-1 mb-1 text-gray-300 dark:text-zinc-200" :bordered="false"
             @click="showMore = !showMore" checkable>
