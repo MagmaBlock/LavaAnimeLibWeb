@@ -20,11 +20,10 @@ export default {
   <div>
     <!-- 手机 -->
     <div class="lg:hidden fixed bottom-4 z-50 w-full grid">
-      <div class="w-11/12 py-2 px-4 place-self-center
-      grid grid-cols-4
-      bg-white dark:bg-zinc-800 bg-opacity-80 dark:bg-opacity-75 backdrop-blur-lg backdrop-brightness-90 dark:backdrop-brightness-75
-      border dark:border-zinc-700 shadow-lg rounded-xl
-      select-none">
+      <div class="w-11/12 py-2 px-4 place-self-center grid grid-cols-4
+      bg-white dark:bg-zinc-800 border dark:border-zinc-700 
+      bg-opacity-80 dark:bg-opacity-75 backdrop-blur-lg backdrop-brightness-90 dark:backdrop-brightness-75
+      shadow-lg rounded-xl select-none transition-all duration-700">
         <NavBarIcon iconClass="bi bi-house" lightIconClass="bi bi-house-fill" route="Home" title="主页" />
         <NavBarIcon iconClass="bi bi-search" route="Search" title="搜索" />
         <NavBarIcon iconClass="bi bi-collection" lightIconClass="bi bi-collection-fill" route="Index" title="索引" />
@@ -33,9 +32,8 @@ export default {
     </div>
     <!-- 宽屏 -->
     <div class="hidden lg:flex lg:flex-col w-20 h-full z-50 py-10 
-      ease-in duration-200 select-none
-      bg-white bg-opacity-90 dark:bg-zinc-800 dark:bg-opacity-80
-      shadow-lg">
+      select-none shadow-lg transition-all duration-700
+      bg-white bg-opacity-90 dark:bg-zinc-800 dark:bg-opacity-80">
       <!-- Logo -->
       <div class="grid place-items-center mb-8">
         <RouterLink to="/">

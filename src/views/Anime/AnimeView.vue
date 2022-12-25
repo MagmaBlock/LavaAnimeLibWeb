@@ -7,11 +7,11 @@ import LocalPlayerIcons from '../../components/Anime/LocalPlayer/LocalPlayerIcon
 import AnimeDataCard from '../../components/Anime/AnimeDataCard.vue';
 import AnimeDataCardFake from '../../components/Anime/AnimeDataCardFake.vue';
 import RelationAnimes from '../../components/Anime/RelationAnimes.vue';
-import AnimeBackground from '../../components/Anime/AnimeBackground.vue';
 import AnimeBasicCard from '../../components/Anime/Cards/AnimeBasicCard.vue';
 import AnimeFileView from './AnimeFileView.vue';
 
 export default {
+  inject: ['background'],
   data() {
     return {
       laID: null,
@@ -32,7 +32,9 @@ export default {
   methods: {
     // 重建界面，当第一次挂载和路由参数改变时会被调用
     async reborn() {
+      // 重置标题和背景
       document.title = '播放 | 熔岩番剧库 LavaAnimeLib';
+      this.background.on = false
       // 重建参数
       this.loading = true
       this.laID = parseInt(this.$route.params.la)
@@ -43,6 +45,10 @@ export default {
       await this.getLavaAnimeApi(this.laID); // 获取 LavaAnimeLib 数据 API
       // 应用数据
       if (!this.error) document.title = `${this.laData.title} | 熔岩番剧库 LavaAnimeLib`
+      if (!this.error && this.laData?.images?.poster) { // 启用背景
+        this.background.url = this.laData.images.poster
+        this.background.on = true
+      }
       this.loading = false;
       window.scrollTo({
         top: 0, left: 0, behavior: "smooth" //平滑滚动
@@ -90,6 +96,7 @@ export default {
     }
   },
   mounted() { this.reborn() },
+  unmounted() { this.background.on = false },
   watch: {
     async $route(newRoute) {
       if (newRoute.name == 'Anime') {
@@ -98,7 +105,7 @@ export default {
       }
     }
   },
-  components: { ContainerMobileFull, VideoPlayer, LocalPlayers, AnimeDataCard, AnimeDataCardFake, RelationAnimes, AnimeBackground, AnimeBasicCard, LocalPlayerIcons, AnimeFileView }
+  components: { ContainerMobileFull, VideoPlayer, LocalPlayers, AnimeDataCard, AnimeDataCardFake, RelationAnimes, AnimeBasicCard, LocalPlayerIcons, AnimeFileView }
 }
 </script>
 
@@ -144,6 +151,5 @@ export default {
     <div v-if="error && errorCode == 404" class="w-full grid place-content-center mt-16">
       <n-result status="404" title="404 资源不存在" description="生活总归带点荒谬" class="bg-white/70 w-fit p-10 rounded" />
     </div>
-    <AnimeBackground v-if="!loading" :la="laData" />
   </ContainerMobileFull>
 </template>
