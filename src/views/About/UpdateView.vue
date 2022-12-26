@@ -1,16 +1,18 @@
 <template>
   <div>
-    <TopNav title="最近更新"></TopNav>
+    <TopNav title="更新日志"></TopNav>
     <Container>
-      <n-h3>LavaAnimeLib 最近更新</n-h3>
+      <div class="text-lg font-medium">熔岩番剧库 最近更新日志</div>
+      <div class="opacity-75">LavaAnimeLib 相关项目 GitHub 提交记录</div>
+      <n-divider />
       <!-- 宽屏 -->
       <div class="hidden lg:grid grid-cols-2 gap-4">
         <div>
-          <n-h5>网页（前端）</n-h5>
+          <n-h5 class="text-center">网页（前端）</n-h5>
           <GitHubCommits :commits="web"></GitHubCommits>
         </div>
         <div>
-          <n-h5>服务端（后端）</n-h5>
+          <n-h5 class="text-center">服务端（后端）</n-h5>
           <GitHubCommits :commits="server"></GitHubCommits>
         </div>
       </div>
@@ -23,6 +25,13 @@
           <GitHubCommits :commits="server"></GitHubCommits>
         </n-tab-pane>
       </n-tabs>
+      <n-divider>
+        <div class="flex gap-2">
+          更多记录见 GitHub
+          <n-a target="_blank" href="https://github.com/MagmaBlock/LavaAnimeLibWeb">前端</n-a>
+          <n-a target="_blank" href="https://github.com/MagmaBlock/LavaAnimeLib">后端</n-a>
+        </div>
+      </n-divider>
     </Container>
   </div>
 </template>

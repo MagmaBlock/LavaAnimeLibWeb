@@ -1,5 +1,5 @@
 <template>
-  <n-list hoverable clickable>
+  <n-list hoverable clickable bordered>
     <n-list-item v-for="commit in commits">
       <a :href="commit.html_url" target="_blank">
         <div class="font-semibold text-base">
