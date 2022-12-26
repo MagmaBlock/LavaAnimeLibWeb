@@ -25,6 +25,12 @@
         <template #name>深色模式</template>
       </BigButton>
       <DarkModeModel ref="darkModeModel"></DarkModeModel>
+      <BigButton @click="$router.push({ name: 'Update' })">
+        <template #icon>
+          <i class="bi bi-bar-chart-steps"></i>
+        </template>
+        <template #name>更新日志</template>
+      </BigButton>
     </div>
   </MyBasicCard>
 </template>
