@@ -101,9 +101,9 @@ export default {
         ddplayAndroid: `intent:${this.video.url}#Intent;package=com.xyoye.dandanplay;end`,
         potplayer: `potplayer://${encodeURIComponent(this.video.url)}`,
         vlc: `vlc://${this.video.url}`,
-        iina: `iina://weblink?url=${this.video.url}`
-        mxplayer:`intent:${this.video.url}#Intent;package=com.mxtech.videoplayer.ad;S.title=${this.video.name};end`
-        mxplayerpro:`intent:${this.video.url}#Intent;package=com.mxtech.videoplayer.pro;S.title=${this.video.name};end
+        iina: `iina://weblink?url=${this.video.url}`,
+        mxplayer:`intent:${this.video.url}#Intent;package=com.mxtech.videoplayer.ad;S.title=${this.video.name};end`,
+        mxplayerpro:`intent:${this.video.url}#Intent;package=com.mxtech.videoplayer.pro;S.title=${this.video.name};end`
       }
       return urls
     }
