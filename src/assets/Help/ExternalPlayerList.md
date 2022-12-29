@@ -5,6 +5,8 @@
 * [弹弹 Play 概念版](https://www.dandanplay.com/) (较为推荐)
 * [VLC For Android 官网 (最新的 ARM64 即可)](https://get.videolan.org/vlc-android/)
 * [mpv](https://play.google.com/store/apps/details?id=is.xyz.mpv)
+* [MXPlayer](https://play.google.com/store/apps/details?id=com.mxtech.videoplayer.ad)
+* [MXPlayer Pro](https://play.google.com/store/apps/details?id=com.mxtech.videoplayer.pro) 
 
 ### 电脑桌面端 Windows
 * [弹弹 Play (较为推荐)](https://www.dandanplay.com/)
