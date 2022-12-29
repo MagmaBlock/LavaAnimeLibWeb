@@ -43,7 +43,7 @@ export default {
         { name: "若葉", support: "其他", message: "提供新域名等支持", link: "https://loliloli.moe/" },
         { name: "XJH_Jorhai", support: "￥35.00", message: "麦老师是我的神明呜呜呜" },
         { name: "Arthals", support: "其他", message: "提供了数月的下载节点支持", link: "https://arthals.ink/" },
-        { name: "Loliy", support: "￥13.00", message: "喝快乐水" }
+        { name: "Loliy", support: "￥23.00", message: "喝快乐水" }
       ]
     };
   },
