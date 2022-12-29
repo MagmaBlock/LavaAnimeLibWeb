@@ -37,7 +37,7 @@
   <!-- mxplayerpro -->
   <a :href="getUrl().mxplayerpro" @click="handleButtonClick('MXPlayer Pro')"
     v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS/i) || allos" :class="buttonClass">
-    <img src="../../../assets/PlayersIcon/mxplayerpro.svg" alt="mxplayer" class="w-6 h-6">
+    <img src="../../../assets/PlayersIcon/mxplayerpro.svg" alt="mxplayerpro" class="w-6 h-6">
     <div :class="textClass">MXPlayer Pro <span v-if="allos">Android / HarmonyOS</span></div>
   </a>
   <!-- 复制链接或下载 -->
