@@ -4,6 +4,7 @@
 ### 手机/Pad Android
 * [弹弹 Play 概念版](https://www.dandanplay.com/) (较为推荐)
 * [VLC For Android 官网 (最新的 ARM64 即可)](https://get.videolan.org/vlc-android/)
+* [mpv](https://play.google.com/store/apps/details?id=is.xyz.mpv)
 
 ### 电脑桌面端 Windows
 * [弹弹 Play (较为推荐)](https://www.dandanplay.com/)
@@ -14,18 +15,22 @@
   * [VLC media player 官网](https://www.videolan.org/vlc/)
   * [VLC media player 腾讯镜像](https://pc.qq.com/detail/9/detail_569.html)
   * 注: Windows 的 VLC 需要补丁后才能支持网页调用，
-  * 您也可以直接复制链接后在播放器上按 Ctrl+V
+   您也可以直接复制链接后在播放器上按 Ctrl+V
+* [mpv](https://mpv.io/installation/)
 
 ### 手机/Pad iOS
 * [VLC](https://apps.apple.com/app/apple-store/id650377962)
+* [nPlayer](https://apps.apple.com/app/apple-store/id539397400)
 * 若您还知道可以网页调用的播放器，欢迎提供！
 
 ### 电脑桌面端 MacOS
 * [IINA](https://iina.io/)
 * [VLC media player](https://www.videolan.org/vlc/)
+* [mpv](https://mpv.io/installation/installation/)
 
 ### Linux
 * [VLC media player](https://www.videolan.org/vlc/)
+* [mpv](https://mpv.io/installation/)
 * 请自行探索吧
 
 ### 使用自己的播放器
