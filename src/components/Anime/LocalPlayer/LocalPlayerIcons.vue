@@ -1,58 +1,58 @@
 <template>
   <!-- 复制链接 -->
   <div ref="copyBtn" :data-clipboard-text="this.video.tempUrl">
-    <LocalPlayerIcon icon="/src/assets/PlayersIcon/Link.svg" @click="handleButtonClick('Copy Link')"
+    <LocalPlayerIcon icon="/PlayersIcon/Link.svg" @click="handleButtonClick('Copy Link')"
       class="cursor-pointer">
       复制
     </LocalPlayerIcon>
   </div>
   <!-- 缓存 -->
-  <LocalPlayerIcon icon="/src/assets/PlayersIcon/download.svg" :href="this.video.tempUrl"
+  <LocalPlayerIcon icon="/PlayersIcon/download.svg" :href="this.video.tempUrl"
     @click="handleButtonClick('Download')">
     缓存
   </LocalPlayerIcon>
   <!-- "显示全部" 未打开前的显示位置 -->
   <slot name="showAll"></slot>
   <!-- 弹弹Play -->
-  <LocalPlayerIcon icon="/src/assets/PlayersIcon/DanDanPlay.svg" :href="getUrl().ddplayWindows"
+  <LocalPlayerIcon icon="/PlayersIcon/DanDanPlay.svg" :href="getUrl().ddplayWindows"
     @click="handleButtonClick('DanDanPlayWindows')" v-if="ua.os.name == 'Windows' || allos">
     弹弹Play <span v-if="allos">Windows</span>
   </LocalPlayerIcon>
   <!-- 弹弹Play 安卓 -->
-  <LocalPlayerIcon icon="/src/assets/PlayersIcon/DanDanPlay.svg" :href="getUrl().ddplayAndroid"
+  <LocalPlayerIcon icon="/PlayersIcon/DanDanPlay.svg" :href="getUrl().ddplayAndroid"
     @click="handleButtonClick('DanDanPlayAndroid')" v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS/i) || allos">
     弹弹Play <span v-if="allos">Android</span>
   </LocalPlayerIcon>
   <!-- PotPlayer -->
-  <LocalPlayerIcon icon="/src/assets/PlayersIcon/PotPlayer.svg" :href="getUrl().potplayer"
+  <LocalPlayerIcon icon="/PlayersIcon/PotPlayer.svg" :href="getUrl().potplayer"
     @click="handleButtonClick('PotPlayer')" v-if="ua.os.name == 'Windows' || allos">
     PotPlayer
   </LocalPlayerIcon>
   <!-- VLC -->
-  <LocalPlayerIcon icon="/src/assets/PlayersIcon/vlc.svg" :href="getUrl().vlc" @click="handleButtonClick('VLC')">
+  <LocalPlayerIcon icon="/PlayersIcon/vlc.svg" :href="getUrl().vlc" @click="handleButtonClick('VLC')">
     VLC
   </LocalPlayerIcon>
   <!-- IINA -->
-  <LocalPlayerIcon icon="/src/assets/PlayersIcon/iina.svg" :href="getUrl().iina" @click="handleButtonClick('IINA')"
+  <LocalPlayerIcon icon="/PlayersIcon/iina.svg" :href="getUrl().iina" @click="handleButtonClick('IINA')"
     v-if="ua.os.name == 'Mac OS' || allos">
     IINA
   </LocalPlayerIcon>
   <!-- nPlayer -->
-  <LocalPlayerIcon icon="/src/assets/PlayersIcon/nplayer.svg" :href="getUrl().nPlayer"
+  <LocalPlayerIcon icon="/PlayersIcon/nplayer.svg" :href="getUrl().nPlayer"
     @click="handleButtonClick('nPlayer')" v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS|iOS/i) || allos">
     nPlayer
   </LocalPlayerIcon>
   <!-- MXPlayer -->
-  <LocalPlayerIcon icon="/src/assets/PlayersIcon/mxplayer.svg" :href="getUrl().mxPlayerPro"
+  <LocalPlayerIcon icon="/PlayersIcon/mxplayer.svg" :href="getUrl().mxPlayerPro"
     @click="handleButtonClick('MXPlayer')" v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS/i) || allos">
     MXPlayer Pro
   </LocalPlayerIcon>
-  <LocalPlayerIcon icon="/src/assets/PlayersIcon/mxplayer.svg" :href="getUrl().mxPlayer"
+  <LocalPlayerIcon icon="/PlayersIcon/mxplayer.svg" :href="getUrl().mxPlayer"
     @click="handleButtonClick('MXPlayer')" v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS/i) || allos">
     MXPlayer
   </LocalPlayerIcon>
   <!-- MPV -->
-  <LocalPlayerIcon icon="/src/assets/PlayersIcon/mpv.svg" :href="getUrl().mpv" @click="handleButtonClick('mpv')"
+  <LocalPlayerIcon icon="/PlayersIcon/mpv.svg" :href="getUrl().mpv" @click="handleButtonClick('mpv')"
     v-if="allos">
     MPV (暂未实现...)
   </LocalPlayerIcon>
