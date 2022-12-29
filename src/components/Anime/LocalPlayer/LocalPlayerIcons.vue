@@ -28,6 +28,18 @@
     <img src="../../../assets/PlayersIcon/iina.svg" alt="iina" class="w-6 h-6">
     <div :class="textClass">IINA</div>
   </a>
+  <!-- mxplayerfree -->
+  <a :href="getUrl().mxplayer" @click="handleButtonClick('MXPlayer')"
+    v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS/i) || allos" :class="buttonClass">
+    <img src="../../../assets/PlayersIcon/mxplayer.svg" alt="mxplayer" class="w-6 h-6">
+    <div :class="textClass">MXPlayer <span v-if="allos">Android / HarmonyOS</span></div>
+  </a>
+  <!-- mxplayerpro -->
+  <a :href="getUrl().mxplayerpro" @click="handleButtonClick('MXPlayer Pro')"
+    v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS/i) || allos" :class="buttonClass">
+    <img src="../../../assets/PlayersIcon/mxplayerpro.svg" alt="mxplayer" class="w-6 h-6">
+    <div :class="textClass">MXPlayer Pro <span v-if="allos">Android / HarmonyOS</span></div>
+  </a>
   <!-- 复制链接或下载 -->
   <div @click="handleButtonClick('Copy Link / Download')" :data-clipboard-text="this.video.tempUrl" ref="copyBtn"
     :class="buttonClass" class="cursor-pointer">
@@ -90,6 +102,8 @@ export default {
         potplayer: `potplayer://${encodeURIComponent(this.video.url)}`,
         vlc: `vlc://${this.video.url}`,
         iina: `iina://weblink?url=${this.video.url}`
+        mxplayer:`intent:${this.video.url}#Intent;package=com.mxtech.videoplayer.ad;S.title=${this.video.name};end`
+        mxplayerpro:`intent:${this.video.url}#Intent;package=com.mxtech.videoplayer.pro;S.title=${this.video.name};end
       }
       return urls
     }
