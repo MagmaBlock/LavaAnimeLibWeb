@@ -125,10 +125,10 @@ export default {
         <div class="mx-4 grid place-items-center">Loading: {{ loading }} | viewTimes: {{ viewTimes }}</div>
       </AnimeBasicCard>
     </div>
-    <!-- 主视图，Flex 布局，仅在 lg 以上可用 -->
-    <div class="lg:flex lg:flex-row lg:gap-6 lg:px-12 w-full" v-if="!error">
-      <!-- 左 Flex -->
-      <div class="lg:basis-2/3">
+    <!-- 主视图，Grid 布局，仅在 lg 以上可用 -->
+    <div class="lg:grid lg:grid-cols-3 lg:gap-6 lg:px-12 w-full" v-if="!error">
+      <!-- 左视图 占两列 -->
+      <div class="lg:col-span-2">
         <!-- 视频框 -->
         <VideoPlayer class="sm:relative sm:mb-4" ref="VideoPlayer" :video="selectedFile" :save-time="saveTime" />
         <!-- 本地播放器调用 -->
@@ -137,8 +137,8 @@ export default {
         <AnimeDataCard v-if="!loading" :la="laData" class="hidden sm:block sm:mb-4" />
         <AnimeDataCardFake v-if="loading" class="hidden sm:block sm:mb-4" />
       </div>
-      <!-- 右 Flex -->
-      <div class="lg:basis-1/3">
+      <!-- 右视图 占一列 -->
+      <div class="lg:col-span-1">
         <AnimeFileView :la-i-d="laID" :la-data="laData" :selected-file="selectedFile" />
         <!-- 关联作品 -->
         <RelationAnimes v-if="!loading" :la="laData" />
