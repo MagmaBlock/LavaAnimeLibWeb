@@ -131,14 +131,6 @@ export default {
               </template>
             </div>
           </n-spin>
-          <div class="h-[0.5px] bg-gray-200 dark:bg-gray-700 my-6 lg:hidden"></div>
-          <div class="h-[0.5px] bg-gray-200 dark:bg-gray-700 my-6 hidden lg:block"></div>
-          <div class="hidden lg:block overflow-hidden mx-1 rounded-lg">
-            <a href="https://wj.qq.com/s2/11285562/3fe0/" target="_blank">
-              <img src="https://anime-img.5t5.top/assets/header/22/12/22%E5%B9%B41%E6%9C%88%E6%96%B0%E7%95%AA.jpg"
-                alt="1月新番投票">
-            </a>
-          </div>
         </div>
       </div>
 
