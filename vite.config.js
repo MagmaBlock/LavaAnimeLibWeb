@@ -6,6 +6,7 @@ import vue from '@vitejs/plugin-vue'
 // 依赖组件自动引入
 import Components from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
+import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   // https://cn.vitejs.dev/config/shared-options.html
@@ -14,6 +15,14 @@ export default defineConfig({
     vue(),
     Components({
       resolvers: [NaiveUiResolver()]
+    }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}']},
+      devOptions: {
+        enabled: true
+      }
     })
   ],
   resolve: {
@@ -25,7 +34,7 @@ export default defineConfig({
     // https://cn.vitejs.dev/config/server-options.html
     host: '0.0.0.0',
     port: 3000,
-    open: true,
+    open: false,
   },
   build: {
     target: ['chrome71']
