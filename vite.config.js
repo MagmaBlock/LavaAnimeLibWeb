@@ -21,7 +21,7 @@ export default defineConfig({
       includeAssets: ["favicon.ico", "icon.svg", "apple-touch-icon.png"],
       manifest: {
         name: "熔岩番剧库",
-        short_name: "lavaanimelib",
+        short_name: "熔岩番剧库",
         description: "熔岩番剧库 LavaAnimeLib",
         theme_color: "#ffffff",
         icons: [
