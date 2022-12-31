@@ -13,11 +13,15 @@ export default {
   data() {
     return {
       background: { // 全局背景 config
-        on: false, url: ''
+        on: false, url: '', class: ''
       },
     };
   },
-  computed: {},
+  computed: {
+    backgroundClass() {
+      return this.background.class ? this.background.class : 'blur-xl'
+    }
+  },
   methods: {},
   setup() {
     window.$message = useMessage()
@@ -48,8 +52,9 @@ export default {
     <div class="w-screen h-screen">
       <Transition enter-active-class="animate__animated animate__fadeIn animate__faster"
         leave-active-class="animate__animated animate__fadeOut animate__faster">
-        <img class="w-full h-full blur-xl scale-110 object-cover dark:brightness-50 
-      transition-transform duration-500 ease" :src="background.url" alt="背景图片" v-show="this.background.on">
+        <img class="w-full h-full scale-110 object-cover dark:brightness-50 
+      transition-transform duration-500 ease" :class="backgroundClass" :src="background.url" alt="背景图片"
+          v-show="this.background.on">
       </Transition>
     </div>
     <!-- 主视图容器 -->
