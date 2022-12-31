@@ -18,8 +18,8 @@ export async function getUserInfo() {
   } catch (error) {
     if (error.status == 401) {
       $message.error('未登录')
-      userInfo.value = {}
     }
+    userInfo.value = {}
     return userInfo
   }
 }
