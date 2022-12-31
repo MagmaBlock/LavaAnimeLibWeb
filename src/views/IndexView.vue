@@ -131,6 +131,8 @@ export default {
               </template>
             </div>
           </n-spin>
+          <div class="h-[0.5px] bg-gray-200 dark:bg-gray-700 my-6 lg:hidden"></div>
+          <div class="h-[0.5px] bg-gray-200 dark:bg-gray-700 my-6 hidden lg:block"></div>
         </div>
       </div>
 
