@@ -25,7 +25,7 @@
           <LocalPlayerIcons :video="video" :player="player" :allos="true" />
         </div>
         <div class="text-gray-600 dark:text-gray-400 text-xs">
-          番剧库会根据您使用的设备，判断支持的外部播放器。<br>而这里是所有设备可用的播放器，它们可能不支持您的设备。
+          番剧库会根据您使用的设备，判断支持的外部播放器。<br>而这里是所有设备可用的播放器，它们可能不支持您的设备。<br>
         </div>
         <RouterLink to="/help?article=WhyExternalPlayer" class="text-blue-500 text-xs block mt-2">
           部分视频提示 “需要外部播放器”？
@@ -33,6 +33,9 @@
         <RouterLink to="/help?article=ExternalPlayerList" class="text-blue-500 text-xs block">
           可用的外部播放器列表
         </RouterLink>
+        <div class="text-gray-600 dark:text-gray-400 text-xs mt-2">
+          图标绘制：Arthals
+        </div>
       </n-card>
     </n-modal>
   </AnimeBasicCard>
