@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-xl">
+  <div>
     <n-h2>头像预览</n-h2>
     <n-space class="mb-4">
       <n-avatar class="ring-1 ring-gray-200 dark:ring-zinc-700" fallback-src="/Transparent_Akkarin.jpg" :size="128"
@@ -33,9 +33,9 @@
 <script>
 import gravatar from 'gravatar'
 import { LavaAnimeAPI } from '../../../common/api.js'
+import { getUserInfo, userInfo } from '../../../common/API/user.js'
 
 export default {
-  inject: ['userInfo'],
   data() {
     return {
       type: 'url',
@@ -66,6 +66,10 @@ export default {
         },
       ]
     }
+  },
+  setup() {
+    getUserInfo()
+    return { userInfo }
   },
   watch: {
     qqNumber(value) {

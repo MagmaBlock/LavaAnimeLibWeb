@@ -40,6 +40,11 @@ const router = createRouter({
           name: 'UserInfoAvatar',
           path: 'avatar',
           component: () => import('../views/User/UserInfo/UserInfoAvatarView.vue')
+        },
+        {
+          name: 'UserInfoName',
+          path: 'name',
+          component: () => import('../views/User/UserInfo/UserInfoNameView.vue')
         }
       ]
     },
