@@ -17,14 +17,16 @@
         </div>
       </div>
       <!-- 移动 -->
-      <n-tabs type="line" animated class="lg:hidden" justify-content="space-evenly">
-        <n-tab-pane name="web" tab="网页前端">
-          <GitHubCommits :commits="web"></GitHubCommits>
-        </n-tab-pane>
-        <n-tab-pane name="server" tab="服务后端">
-          <GitHubCommits :commits="server"></GitHubCommits>
-        </n-tab-pane>
-      </n-tabs>
+      <div class="lg:hidden">
+        <n-tabs type="line" animated justify-content="space-evenly">
+          <n-tab-pane name="web" tab="网页前端">
+            <GitHubCommits :commits="web"></GitHubCommits>
+          </n-tab-pane>
+          <n-tab-pane name="server" tab="服务后端">
+            <GitHubCommits :commits="server"></GitHubCommits>
+          </n-tab-pane>
+        </n-tabs>
+      </div>
       <n-divider>
         <div class="flex gap-2">
           更多记录见 GitHub
