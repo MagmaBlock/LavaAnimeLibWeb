@@ -1,8 +1,8 @@
 <template>
-  <AnimeBasicCard class="select-none relative">
+  <AnimeBasicCard class="select-none overflow-hidden relative">
     <!-- 未选择集数的遮罩 -->
     <div class="absolute w-full h-full bg-white dark:bg-zinc-800 bg-opacity-90 dark:bg-opacity-90 z-10
-    rounded-md grid place-items-center" v-if="!video.url">
+    grid place-items-center" v-if="!video.url">
       请先选择集数
     </div>
     <div class="flex flex-nowrap flex-shrink-0 overflow-x-scroll lg:overflow-auto p-2 gap-1 md:gap-2">
