@@ -11,7 +11,7 @@ export default {
       searchTimes: 0,
       searchResults: [],
       searchHistory: [],
-      searchRecommendation: ["加载中..."],
+      searchRecommendation: [],
     };
   },
   methods: {
@@ -137,14 +137,18 @@ export default {
             </n-tooltip>
           </div>
           <!-- 搜索推荐 -->
-          <div class="text-lg mb-4 mx-0.5 font-medium">大家在看</div>
-          <div class="my-4 w-full flex flex-wrap">
-            <span v-for="value in searchRecommendation" :class="normalTagClass">
-              <RouterLink :to="{ name: 'Anime', params: { la: value.id } }">
-                {{ value.title }}
-              </RouterLink>
-            </span>
-          </div>
+          <Transition name="fade">
+            <div v-if="searchRecommendation.length">
+              <div class="text-lg mb-4 mx-0.5 font-medium">大家在看</div>
+              <div class="my-4 w-full flex flex-wrap">
+                <span v-for="value in searchRecommendation" :class="normalTagClass">
+                  <RouterLink :to="{ name: 'Anime', params: { la: value.id } }">
+                    {{ value.title }}
+                  </RouterLink>
+                </span>
+              </div>
+            </div>
+          </Transition>
         </div>
       </div>
 
