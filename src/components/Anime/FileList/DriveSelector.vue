@@ -5,11 +5,14 @@
     </template>
     <div class="flex flex-wrap gap-1">
       <div class="w-fit h-10 px-4 rounded grid place-items-center whitespace-nowrap
-        transition-all cursor-pointer" :class="selectedDrive == drive.id ? activeClass : normalClass"
+        transition-all cursor-pointer" :class="myDrive.selectedDrive == drive.id ? activeClass : normalClass"
         @click="changeDrive(drive.id)" v-for="drive in driveList.list">
         {{ drive.name }}
       </div>
     </div>
+    <n-checkbox v-model:checked="myDrive.rememberMyChoice" class="mt-2">
+      记住我的选择
+    </n-checkbox>
   </AnimeFlodCard>
 
 </template>
@@ -21,12 +24,11 @@ export default {
   inject: ['changePlayingFile'],
   emits: ['changeDrive'],
   data() {
-    return {
-    }
+    return {}
   },
   props: {
     driveList: Object,
-    selectedDrive: String,
+    myDrive: Object
   },
   computed: {
     activeClass() {
@@ -35,7 +37,6 @@ export default {
     normalClass() {
       return 'bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 active:bg-blue-600 active:text-white'
     },
-
   },
   methods: {
     changeDrive(drive) { // 改变 Drive

@@ -1,7 +1,7 @@
 <template>
   <div v-if="!errorCode">
     <!-- 文件和集数列表 -->
-    <DriveSelector :drive-list="driveList" :selected-drive="selectedDrive" @change-drive="changeDrive" />
+    <DriveSelector :drive-list="driveList" :my-drive="myDrive" @change-drive="changeDrive" />
     <FileListLoading v-if="loading"></FileListLoading>
     <FileListMain :la-data="laData" :file-list="fileList" :selected-file="selectedFile" v-if="!loading"
       class="sm:mb-4" />
@@ -16,6 +16,7 @@
 <script>
 import { LavaAnimeAPI } from '../../common/api';
 import AnimeBasicCard from '../../components/Anime/Cards/AnimeBasicCard.vue';
+import { useStorage } from '@vueuse/core';
 
 export default {
   inject: ["changePlayingFile"],
@@ -28,7 +29,7 @@ export default {
     return {
       loading: true,
       driveList: {},
-      selectedDrive: "",
+      myDrive: useStorage('myDrive', { rememberMyChoice: false, selectedDrive: '' }),
       fileList: [],
       errorCode: null
     };
@@ -51,14 +52,18 @@ export default {
       // 重置参数
       this.loading = true;
       this.driveList = {};
-      this.selectedDrive = "";
       this.fileList = [];
       // 获取资源节点相关
-      let driveListResult = await this.getDriveList();
-      this.driveList = driveListResult;
-      this.selectedDrive = driveListResult.default || driveListResult.list[0].id;
+      this.driveList = await this.getDriveList();
+      // drive ID list
+      let driveIDs = this.driveList.list.map(drive => { return drive.id })
+      // 如果客户端自己指定了 drive, 检查一下服务端的 driveList 里还有没有指定的 drive
+      if (this.myDrive.rememberMyChoice && driveIDs.includes(this.myDrive.selectedDrive)) { }
+      else { // 如果客户端(被迫)使用默认节点
+        this.myDrive.selectedDrive = this.driveList.default || this.driveList.list[0].id;
+      }
       // 获取相应资源节点下的资源相关
-      let fileListResult = await this.getFileList(this.laID, this.selectedDrive);
+      let fileListResult = await this.getFileList(this.laID, this.myDrive.selectedDrive);
       this.fileList = fileListResult;
       // 结束
       this.loading = false;
@@ -88,13 +93,12 @@ export default {
       }
     },
     async changeDrive(newDrive) {
-      if (this.selectedDrive == newDrive)
+      if (this.myDrive.selectedDrive == newDrive)
         return;
-      this.selectedDrive = newDrive;
+      this.myDrive.selectedDrive = newDrive;
       this.loading = true;
       this.changePlayingFile({});
-      let fileListResult = await this.getFileList(this.laID, this.selectedDrive);
-      this.fileList = fileListResult;
+      this.fileList = await this.getFileList(this.laID, this.myDrive.selectedDrive);
       this.loading = false;
     }
   },
