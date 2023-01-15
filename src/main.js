@@ -5,6 +5,8 @@ import VueLazyLoad from 'vue3-lazyload'
 import 'animate.css';
 import './index.css' // tailwind directives
 import './transition.css' // 自定义的切换动画
+import 'virtual:windi.css'
+import 'virtual:windi-devtools'
 
 // 在 Tailwind 后插入 NaiveUI 的 css
 const meta = document.createElement('meta')

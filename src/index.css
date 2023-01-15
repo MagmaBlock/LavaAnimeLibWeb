@@ -1,6 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 /* 在宽屏端生效的设置 (通常为桌面) */
 @media screen and (min-width: 1024px) {

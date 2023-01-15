@@ -2,17 +2,21 @@ import { fileURLToPath, URL } from "url";
 
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
+import WindiCSS from 'vite-plugin-windicss'
 
 // 依赖组件自动引入
 import Components from "unplugin-vue-components/vite";
 import { NaiveUiResolver } from "unplugin-vue-components/resolvers";
 import { VitePWA } from "vite-plugin-pwa";
+import viteCompression from 'vite-plugin-compression';
 
 export default defineConfig({
   // https://cn.vitejs.dev/config/shared-options.html
   // base:"https://s-sh-2164-bangumi.oss.dogecdn.com/",
   plugins: [
     vue(),
+    WindiCSS(),
+    viteCompression(),
     Components({
       resolvers: [NaiveUiResolver()],
     }),
