@@ -7,12 +7,14 @@ import vue from "@vitejs/plugin-vue";
 import Components from "unplugin-vue-components/vite";
 import { NaiveUiResolver } from "unplugin-vue-components/resolvers";
 import { VitePWA } from "vite-plugin-pwa";
+import { compression } from 'vite-plugin-compression2';
 
 export default defineConfig({
   // https://cn.vitejs.dev/config/shared-options.html
   // base:"https://s-sh-2164-bangumi.oss.dogecdn.com/",
   plugins: [
     vue(),
+    compression({ deleteOriginalAssets: true }),
     Components({
       resolvers: [NaiveUiResolver()],
     }),
