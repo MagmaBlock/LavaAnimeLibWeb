@@ -6,7 +6,7 @@
 
 Vite 2 + Vue 3 + Vue Router 4
 
-Windi CSS + Naive UI
+Tailwind CSS + Naive UI
 
 ## 本地开发
 
