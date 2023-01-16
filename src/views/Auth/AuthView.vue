@@ -1,5 +1,4 @@
 <template>
-  <!-- 整个容器 -->
   <div class="w-full h-[125vh] grid place-items-center
     transition duration-500">
     <!-- 中间的框 -->
