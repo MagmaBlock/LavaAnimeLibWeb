@@ -25,7 +25,6 @@ async function changePassword() {
     })
     if (query.data.code == 200) {
       $message.success(query.data.message)
-      newPassword.value = ''
     }
   } catch (error) {
     console.error(error);
