@@ -10,6 +10,9 @@
           <n-list-item @click="$router.replace({ name: 'UserInfoName' })">
             修改用户名
           </n-list-item>
+          <n-list-item @click="$router.replace({ name: 'UserInfoPassword' })">
+            修改密码
+          </n-list-item>
         </n-list>
       </Container>
       <Container class="basis-2/3">

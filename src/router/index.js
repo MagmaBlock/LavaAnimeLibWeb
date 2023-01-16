@@ -45,6 +45,11 @@ const router = createRouter({
           name: 'UserInfoName',
           path: 'name',
           component: () => import('../views/User/UserInfo/UserInfoNameView.vue')
+        },
+        {
+          name: 'UserInfoPassword',
+          path: 'password',
+          component: () => import('../views/User/UserInfo/UserInfoPasswordView.vue')
         }
       ]
     },
