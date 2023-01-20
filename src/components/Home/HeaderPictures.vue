@@ -1,7 +1,7 @@
 <template>
   <n-carousel show-arrow draggable autoplay class="shadow-lg">
     <template v-for="pic in headerPic">
-      <div class="static w-full h-52 sm:h-60">
+      <div class="static h-52 sm:h-64 lg:h-72">
         <!-- 真图片 -->
         <img class="object-cover w-full min-h-full overflow-hidden" v-lazy="{
           src: pic.pic,

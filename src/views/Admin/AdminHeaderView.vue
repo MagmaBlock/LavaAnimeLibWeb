@@ -3,11 +3,11 @@
     <n-input-group>
       <n-button @click="submitData">提交更新</n-button>
     </n-input-group>
-    <div class="lg:flex my-2">
-      <div class="lg:basis-1/3 lg:mr-4">
-        <HeaderPictures class="sm:rounded-md h-52" :customdata="headers" :key="refresh" />
+    <div class="my-2 lg:grid lg:grid-cols-5">
+      <div class="lg:col-span-2 lg:mr-4 h-52 sm:h-64 lg:h-72">
+        <HeaderPictures class="sm:rounded-md" :customdata="headers" :key="refresh" />
       </div>
-      <div class="lg:basis-2/3 overflow-scroll h-52">
+      <div class="lg:col-span-3 overflow-scroll h-52 sm:h-64 lg:h-72">
         <pre>{{ JSON.stringify(headers, null, 2) }}</pre>
       </div>
     </div>
