@@ -85,7 +85,6 @@ export default {
 <template>
   <Container>
     <div class="lg:flex">
-
       <!-- 选项容器部分，在高宽度屏幕上将左右 Flex -->
       <div class="lg:basis-1/4 flex-none">
         <!-- 选项本体部分，将粘连屏幕 -->
@@ -135,14 +134,8 @@ export default {
         </div>
       </div>
 
-
       <!-- 番剧栅格部分 -->
       <AnimeCardContainer :animes="this.animes" size="large" class="lg:basis-3/4 flex-none px-2 lg:px-4" />
     </div>
   </Container>
 </template>
-
-
-<style>
-
-</style>
