@@ -1,16 +1,15 @@
 <script>
-import { switchToMyCollections, isCollected } from '../common/Methods/MyCollections'
+import { switchToMyCollections, isCollected } from '../common/Methods/MyCollections.js'
 
 export default {
   props: {
-    id: [String, Number],
-    poster: { type: String },
+    id: { type: [String, Number], default: -1 },
+    poster: { type: String, default: '' },
     title: { type: String, default: '' },
-    bgmid: [String, Number],
+    bgmid: { type: [String, Number], default: -1 },
     views: { type: [String, Number], default: 0 },
     nsfw: { type: Boolean, default: false },
-    bdrip: { type: Boolean, default: false },
-    fake: { type: Boolean, default: false },
+    bdrip: { type: Boolean, default: false }
   },
   data() {
     return {
@@ -77,9 +76,8 @@ export default {
       <div class="flex h-full">
         <div class="grid basis-3/4 content-center pl-3">
           <div class="text-[13px]">
-            <i class="bi bi-play-btn"></i> {{ views }}
+            <i class="bi bi-play-btn"></i> {{ views > 9999 ? (views / 10000).toFixed(2) + '万' : views}}
           </div>
-          <!-- <div><i class="bi bi-play-btn"></i> {{ views > 999 ? (views / 1000).toFixed(2)  + 'k': views}}</div> -->
         </div>
         <div class="grid basis-1/4 place-items-center">
           <!-- 菜单 -->

@@ -1,4 +1,5 @@
 <script>
+import AnimeCard from '../AnimeCard.vue';
 import ShowMoreButton from './ShowMoreButton.vue'
 
 export default {
@@ -9,7 +10,8 @@ export default {
   },
   props: {
     animes: Array, // 请传入一个包含动画信息的数组，数组中的每个对象均有 AnimeCard 所需的参数
-    size: String // 决定屏幕宽度  目前有 full large 
+    size: String, // 决定屏幕宽度  目前有 full large half
+    fakeNumber: { type: Number, default: 18 } // 未加载情况下显示多少个骨架卡片
   },
   watch: {
     animes(newList, oldList) {
@@ -24,6 +26,7 @@ export default {
       switch (this.size) {
         case "full": return this.fullClass;
         case "large": return this.largeClass;
+        case "half": return this.halfClass;
         default: return "";
       }
     },
@@ -43,33 +46,39 @@ export default {
         xl:grid-cols-5
         2xl:grid-cols-6 2xl:px-10`;
     },
-    halfClass() { }
+    halfClass() {
+      return `grid grid-cols-3 gap-2
+        sm:grid-cols-4
+        md:grid-cols-5
+        lg:grid-cols-3 lg:gap-4
+        xl:grid-cols-4
+        2xl:grid-cols-5
+      `
+    }
   },
-  components: { ShowMoreButton }
+  components: { ShowMoreButton, AnimeCard }
 }
 </script>
 
 <template>
-  <!-- 番剧栅格部分 -->
-  <div class="select-none">
-    <n-spin :show="!animes">
-      <div :class="autoGroupClass">
-        <!-- 番剧卡片骨架屏 -->
-        <div v-for="a in 18" v-if="!animes">
-          <AnimeCard fake class="animate-pulse"></AnimeCard>
-        </div>
+  <div class="select-none w-full">
+    <n-spin :show="!animes" class="w-full">
+      <div :class="autoGroupClass" class="w-full">
+        <!-- 骨架屏 -->
+        <template v-if="!animes" v-for="a in fakeNumber">
+          <AnimeCard></AnimeCard>
+        </template>
         <!-- 番剧卡片 -->
         <template v-for="(anime, index) in animes">
-          <template v-if="index <= page">
-            <AnimeCard :id="anime.id" :poster="anime.images.poster" :title="anime.title" :bgmid="anime.bgmId"
-              :views="anime.views" :bdrip="anime.type.bdrip" :nsfw="anime.type.nsfw" />
-          </template>
+          <AnimeCard class="self-start" :id="anime.id" :poster="anime.images.poster" :title="anime.title"
+            :bgmid="anime.bgmId" :views="anime.views" :bdrip="anime.type.bdrip" :nsfw="anime.type.nsfw"
+            v-if="index <= page" />
         </template>
       </div>
-      <div v-if="Array.isArray(animes) && animes.length > page" @click="page = page + 30">
+      <div v-if="animes?.length > page" @click="page = page + 30">
         <ShowMoreButton />
       </div>
-      <n-empty size="large" description="太可惜了，什么也没找到" class="py-16" v-if="Array.isArray(animes) && animes.length == 0">
+      <n-empty size="large" description="太可惜了，什么也没找到" class="py-16" v-if="animes?.length == 0">
       </n-empty>
     </n-spin>
   </div>
