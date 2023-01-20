@@ -1,39 +1,40 @@
 <!-- 传入一串 IDs，自动渲染番剧卡片，将自动获取数据-->
 <template>
-  <!-- Grid 容器  -->
-  <div class="grid gap-2 lg:gap-4
-  grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-    <template v-for="anime in data">
-      <AnimeCard :id="anime.id" :poster="anime.images.poster" :title="anime.title" :bgmid="anime.bgmId"
-        :views="anime.views" :nsfw="anime.type.nsfw" :bdrip="anime.type.bdrip"></AnimeCard>
-    </template>
-  </div>
+  <AnimeCardContainer ref="container" :animes="data" size="full" :fake-number="ids?.length ?? 10">
+  </AnimeCardContainer>
 </template>
 
 <script>
-
 import { getAnimesData } from '../../../common/api';
-import AnimeCard from '../../AnimeCard.vue';
+import AnimeCardContainer from '../../Container/AnimeCardContainer.vue';
+
 export default {
   props: {
     ids: Array
   },
   data() {
     return {
-      data: [],
-      loading: {
-        img: true
-      }
-    };
+      data: null
+    }
   },
   async mounted() {
-    let result = await getAnimesData(this.ids);
-    // 根据播放量进行排序
-    this.data = result.data.sort(function (a, b) { return b.views - a.views; });
-    setTimeout(() => { this.loading.img = false; }, 200);
+    // 创建一个可见监视器 (浏览器 API)
+    const visObserver = new IntersectionObserver(result => {
+      if (result[0].intersectionRatio > 0) { // 如果可见度高于 0
+        this.getData()
+        visObserver.disconnect() // 关闭监视器
+      }
+    })
+    visObserver.observe(this.$refs.container.$el) // 让监视器监视子容器组件
   },
-  methods: {},
-  components: { AnimeCard }
+  methods: {
+    async getData() {
+      let result = await getAnimesData(this.ids)
+      // 根据播放量进行排序
+      this.data = result.data.sort((a, b) => { return b.views - a.views; })
+    }
+  },
+  components: { AnimeCardContainer }
 }
 
 </script>

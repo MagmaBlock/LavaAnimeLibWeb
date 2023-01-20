@@ -1,27 +1,22 @@
 <template>
-  <div v-for="collection in collections" class="px-6 sm:px-0 py-1 sm:py-2">
+  <div v-for="collection in collections" class="px-6 sm:px-0">
     <!-- 大标题块 -->
-    <div class="flex mb-4">
-      <div class="bg-blue-600 w-2 rounded mr-2 lg:mr-4 my-0.5"></div>
+    <div class="flex my-4">
       <div class="flex-wrap">
-        <div class="text-xl sm:text-[22px] mr-2 font-medium"> {{ collection.title }} </div>
-        <div class="text-sm sm:text-base text-gray-500 mr-4"> {{ collection.subtitle }} </div>
+        <span class="whitespace-nowrap text-lg mr-2 font-medium"> {{ collection.title }} </span>
+        <span class="whitespace-nowrap text-sm sm:text-base opacity-50"> {{ collection.subtitle }} </span>
       </div>
     </div>
     <!-- 内容总块 -->
-    <div class="grid lg:grid-cols-2 gap-4">
+    <div class="grid lg:grid-cols-1 gap-2">
       <!-- 单内容块 -->
-      <div v-for="content in collection.content"
-        class="bg-gray-50 dark:bg-zinc-800 rounded-md h-fit px-4 lg:px-6 py-3 lg:py-4">
+      <div v-for="content in collection.content" class="bg-gray-50 dark:bg-zinc-800 rounded-md px-4 lg:px-6 py-3">
         <!-- 小标题 -->
-        <div class="flex flex-nowrap md:text-base mb-1">
-          <div class="w-fit text-zinc-700 dark:text-zinc-400 font-medium mb-1"> {{ content.title }} </div>
-        </div>
+        <div class="opacity-60 md:text-base font-medium mb-2"> {{ content.title }} </div>
         <AnimeCollectionCards :ids="content.anime" class="flex flex-shrink-0"></AnimeCollectionCards>
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
