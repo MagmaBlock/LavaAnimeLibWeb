@@ -32,7 +32,8 @@ export default {
       articles: [
         { id: 'LavaAnimeLib', content: LavaAnimeLib },
         { id: 'WhyExternalPlayer', content: WhyExternalPlayer },
-        { id: 'ExternalPlayerList', content: ExternalPlayerList }
+        { id: 'ExternalPlayerList', content: ExternalPlayerList },
+        { id: 'Bangumi',content: Bangumi }
       ],
       notSupport: false
     };
