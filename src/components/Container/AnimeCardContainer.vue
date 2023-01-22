@@ -75,9 +75,7 @@ export default {
             v-if="index <= page" />
         </template>
       </div>
-      <div v-if="animes?.length > page" @click="page = page + 30">
-        <ShowMoreButton />
-      </div>
+      <ShowMoreButton v-if="animes?.length > page" @click="page = page + 30" />
       <n-empty size="large" description="太可惜了，什么也没找到" class="py-16" v-if="animes?.length == 0">
       </n-empty>
     </n-spin>
