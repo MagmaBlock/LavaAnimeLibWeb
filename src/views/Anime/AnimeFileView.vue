@@ -65,8 +65,7 @@ export default {
         this.myDrive.selectedDrive = this.driveList.default || this.driveList.list[0].id;
       }
       // 获取相应资源节点下的资源相关
-      let fileListResult = await this.getFileList(this.laID, this.myDrive.selectedDrive);
-      this.fileList = fileListResult;
+      this.fileList = await this.getFileList(this.laID, this.myDrive.selectedDrive);
       // 结束
       this.loading = false;
     },

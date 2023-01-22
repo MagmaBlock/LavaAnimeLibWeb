@@ -48,8 +48,7 @@ export default {
           this.otherFileList.other.push(video)
         }
       })
-      let epKeys = Object.keys(this.epfileList).sort()
-      this.epKeys = epKeys
+      this.epKeys = Object.keys(this.epfileList).sort()
     },
     clickEpButton(key) {
       if (this.epSwitchLock) return // 锁定期间不可用

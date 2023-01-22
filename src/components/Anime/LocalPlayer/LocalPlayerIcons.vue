@@ -102,7 +102,7 @@ export default {
       console.log(`按钮 ${type} 触发了一次上报播放量，剩余 ${this.reportTimes} 次.`);
     },
     getUrl() {
-      let urls = {
+      return {
         ddplayWindows: `ddplay:${encodeURIComponent(this.video.url + "|filePath=" + this.video.name)}`,
         ddplayAndroid: `intent:${this.video.url}#Intent;package=com.xyoye.dandanplay;end`,
         potplayer: `potplayer://${this.video.url}`,
@@ -113,7 +113,6 @@ export default {
         mxPlayer: `intent:${this.video.url}#Intent;package=com.mxtech.videoplayer.ad;S.title=${this.video.name};end`,
         mxPlayerPro: `intent:${this.video.url}#Intent;package=com.mxtech.videoplayer.pro;S.title=${this.video.name};end`
       };
-      return urls;
     }
   },
   components: {LocalPlayerIcon}
