@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { LavaAnimeAPI } from '../../common/api.js';
+import {LavaAnimeAPI} from '@/common/api';
 
 
 export default {

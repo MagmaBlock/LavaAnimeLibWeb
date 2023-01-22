@@ -24,7 +24,7 @@
 
 
 <script setup>
-import { useRoute, useRouter } from 'vue-router';
+import {useRoute, useRouter} from 'vue-router';
 import Container from '../../components/Container.vue';
 import TopNav from '../../components/NavBar/TopNav.vue';
 
