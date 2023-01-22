@@ -1,21 +1,21 @@
 <template>
   <div>
     <div class="flex transition-all">
-      <n-popover trigger="manual" :show="showPre" placement="bottom" width="trigger" :show-arrow="false" raw>
+      <n-popover :show="showPre" :show-arrow="false" placement="bottom" raw trigger="manual" width="trigger">
         <template #trigger>
           <!-- 输入框 -->
-          <input type="text" enterkeyhint="search" placeholder="进行搜索..." class="bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500
-            ease-in duration-100 w-full py-1 px-2 rounded" @keydown="inputKeyHandler" @focus="focusHandler"
-            @blur="showPre = false; activeValue = -1" :value="search"
-            @input="$emit('update:search', $event.target.value)" />
+          <input :value="search" class="bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500
+            ease-in duration-100 w-full py-1 px-2 rounded" enterkeyhint="search" placeholder="进行搜索..." type="text" @blur="showPre = false; activeValue = -1"
+                 @focus="focusHandler" @input="$emit('update:search', $event.target.value)"
+                 @keydown="inputKeyHandler"/>
         </template>
         <!-- 弹出总容器 -->
         <div
-          class="grid grid-cols-1 bg-white dark:bg-zinc-800 rounded overflow-hidden ring-2 ring-blue-500 select-none">
+            class="grid grid-cols-1 bg-white dark:bg-zinc-800 rounded overflow-hidden ring-2 ring-blue-500 select-none">
           <!-- 子候选项 -->
-          <span v-for="value, index in preSearchValues" class="py-1 px-2 whitespace-nowrap cursor-pointer"
-            @pointerenter="activeValue = index" @pointerleave="activeValue = -1" @click="$emit('search', value)"
-            :class="activeValue == index ? 'bg-gray-200 dark:bg-zinc-700' : ''">
+          <span v-for="value, index in preSearchValues" :class="activeValue == index ? 'bg-gray-200 dark:bg-zinc-700' : ''"
+                class="py-1 px-2 whitespace-nowrap cursor-pointer" @click="$emit('search', value)" @pointerenter="activeValue = index"
+                @pointerleave="activeValue = -1">
             <div class="text-ellipsis overflow-hidden">
               {{ value }}
             </div>
@@ -90,8 +90,7 @@ export default {
       if (key.key == 'Enter') {
         if (this.activeValue == -1) {
           this.$emit('search', this.search)
-        }
-        else {
+        } else {
           this.$emit('search', this.preSearchValues[this.activeValue])
         }
       }
@@ -107,7 +106,7 @@ export default {
       if (!value || this.preSearchLock) return; // 如果搜索值为空或正在节流则不继续请求
       this.preSearchLock = true; // Lock
       try {
-        let results = (await LavaAnimeAPI.get("/v2/search/quick", { params: { value: value } })).data;
+        let results = (await LavaAnimeAPI.get("/v2/search/quick", {params: {value: value}})).data;
         // 如果有结果则显示结果
         if (results.code == 200 && results.data.length > 0) {
           this.preSearchValues = results.data;

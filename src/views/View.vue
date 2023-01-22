@@ -43,7 +43,7 @@ export default {
       })
     }
   },
-  components: { RouterView, NavBar }
+  components: {RouterView, NavBar}
 }
 </script>
 
@@ -52,10 +52,10 @@ export default {
     <!-- 背景图片和他的特效 -->
     <div class="w-screen h-screen">
       <Transition enter-active-class="animate__animated animate__fadeIn animate__faster"
-        leave-active-class="animate__animated animate__fadeOut animate__faster">
-        <img class="w-full h-full scale-110 object-cover dark:brightness-50 
-      transition-transform duration-500 ease" :class="backgroundClass" :src="background.url" alt="背景图片"
-          v-show="this.background.on">
+                  leave-active-class="animate__animated animate__fadeOut animate__faster">
+        <img v-show="this.background.on" :class="backgroundClass" :src="background.url" alt="背景图片"
+             class="w-full h-full scale-110 object-cover dark:brightness-50
+      transition-transform duration-500 ease">
       </Transition>
     </div>
     <!-- 主视图容器 -->
@@ -63,11 +63,11 @@ export default {
     flex flex-row flex-nowrap select-none 
     shadow-lg text-gray-800 dark:text-zinc-200">
       <!-- 导航栏 -->
-      <NavBar />
+      <NavBar/>
       <!-- 当前路由的界面 -->
       <div class="relative overflow-y-auto w-full pb-36 lg:pb-0">
         <RouterView v-slot="{ Component }">
-          <Transition :name="$route.meta.transition || 'fade'" :mode="$route.meta.mode || 'out-in'">
+          <Transition :mode="$route.meta.mode || 'out-in'" :name="$route.meta.transition || 'fade'">
             <Component :is="Component" class="w-full"></Component>
             <!-- <Component :is="Component" :key="$route.path" class="w-full"></Component> -->
             <!-- 从 /page/1 => /page/2, 由于这两个路由的 $route.path 并不一样, 所以组件被强制不复用。 -->

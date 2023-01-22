@@ -18,20 +18,20 @@ export default {
     },
     colorClass() { // 现在的 Icon 颜色应该是什么？
       return this.$route.name == this.route ?
-        ['text-center', 'text-blue-600', 'dark:text-blue-500'] :
-        ['text-center', 'text-gray-500 dark:text-gray-400', 'hover:text-black dark:hover:text-gray-200']
+          ['text-center', 'text-blue-600', 'dark:text-blue-500'] :
+          ['text-center', 'text-gray-500 dark:text-gray-400', 'hover:text-black dark:hover:text-gray-200']
     }
   }
 }
 </script>
 
 <script setup>
-import { RouterLink } from 'vue-router';
+import {RouterLink} from 'vue-router';
 </script>
 
 <template>
   <div class="w-full self-center">
-    <RouterLink :to="{ name: route }" :class="colorClass" class="ease-in duration-200">
+    <RouterLink :class="colorClass" :to="{ name: route }" class="ease-in duration-200">
       <div class="lg:mx-2 lg:py-2 lg:hover:bg-slate-200 lg:dark:hover:bg-zinc-700 rounded-md transition">
         <div class="text-[1.25rem] lg:text-[1.35rem] mb-[1px]">
           <i :class="realIconClass"></i>

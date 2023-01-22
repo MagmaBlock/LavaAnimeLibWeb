@@ -12,7 +12,7 @@ export default {
       showMore: false
     };
   },
-  components: { AnimeBasicCard }
+  components: {AnimeBasicCard}
 }
 
 </script>
@@ -36,7 +36,7 @@ export default {
         <div class="text-xl inline-block mr-2">
           {{ this.la.title }} <span class="text-base">({{ this.la.index.year.replace('年', '') }})</span>
         </div>
-        <div class="text-sm leading-5 text-gray-500 inline-block" v-if="this.la.bgmId">
+        <div v-if="this.la.bgmId" class="text-sm leading-5 text-gray-500 inline-block">
           {{ this.la.name }} · {{ this.la.platform }}
         </div>
       </div>
@@ -45,8 +45,8 @@ export default {
         <!-- 第一行 -->
         <div class="inline-block">
           <span class="mr-2"><i class="bi bi-play-btn"></i> 播放 {{ this.la.views }} 次</span>
-          <div class="mr-2 my-1" v-if="!this.la.bgmId">本作是 Bangumi 未收录番剧，或者可能根本不是一个影视作品</div>
-          <span class="mr-2" v-if="this.la.bgmId"><i class="bi bi-star"></i> {{ this.la.rating.score }} 分
+          <div v-if="!this.la.bgmId" class="mr-2 my-1">本作是 Bangumi 未收录番剧，或者可能根本不是一个影视作品</div>
+          <span v-if="this.la.bgmId" class="mr-2"><i class="bi bi-star"></i> {{ this.la.rating.score }} 分
             <span v-if="this.la.rating.rank" class="bg-gray-100 text-black dark:bg-zinc-700 dark:text-zinc-200
                rounded-sm px-1.5 text-xs align-baseline">
               Rank.#{{ this.la.rating.rank }}
@@ -60,19 +60,19 @@ export default {
         </div>
       </div>
       <!-- 标签 -->
-      <div class="my-1 flex flex-wrap" v-if="this.la.bgmId">
+      <div v-if="this.la.bgmId" class="my-1 flex flex-wrap">
         <TransitionGroup enter-active-class="animate__animated animate__zoomIn animate__faster"
-          leave-active-class="animate__animated animate__zoomOut animate__faster">
+                         leave-active-class="animate__animated animate__zoomOut animate__faster">
           <template v-for="(tag, index) in this.la.tags" :key="index">
-            <n-tag size="small" class="mr-1 mb-1 flex-initial max-w-xs overflow-hidden" :bordered="false"
-              v-show="index <= this.la.tags.length / 3 || showMore">
+            <n-tag v-show="index <= this.la.tags.length / 3 || showMore" :bordered="false" class="mr-1 mb-1 flex-initial max-w-xs overflow-hidden"
+                   size="small">
               {{ tag.name }} {{ tag.count }}
             </n-tag>
           </template>
         </TransitionGroup>
         <span>
-          <n-tag size="small" class="mr-1 mb-1 text-gray-300 dark:text-zinc-200" :bordered="false"
-            @click="showMore = !showMore" checkable>
+          <n-tag :bordered="false" checkable class="mr-1 mb-1 text-gray-300 dark:text-zinc-200"
+                 size="small" @click="showMore = !showMore">
             {{ showMore ? '收起' : '展开' }}
           </n-tag>
         </span>

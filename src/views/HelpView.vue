@@ -1,17 +1,18 @@
-2<template>
+2
+<template>
   <div>
     <TopNav title="帮助"></TopNav>
     <Container>
       <div class="lg:flex">
         <div class="lg:basis-1/4 select-none">
-          <List :article="article" :articles="articles" @change-article="a => changeArticle(a)" ref="List" />
-          <Sponsors class="mt-8 hidden lg:block" />
+          <List ref="List" :article="article" :articles="articles" @change-article="a => changeArticle(a)"/>
+          <Sponsors class="mt-8 hidden lg:block"/>
         </div>
         <div class="lg:basis-3/4">
-          <MarkdownRender :content="article.content || ''" />
+          <MarkdownRender :content="article.content || ''"/>
         </div>
       </div>
-      <Sponsors class="mt-16 block lg:hidden" />
+      <Sponsors class="mt-16 block lg:hidden"/>
     </Container>
   </div>
 </template>
@@ -32,10 +33,10 @@ export default {
     return {
       article: {},
       articles: [
-        { id: 'LavaAnimeLib', content: LavaAnimeLib },
-        { id: 'WhyExternalPlayer', content: WhyExternalPlayer },
-        { id: 'ExternalPlayerList', content: ExternalPlayerList },
-        { id: 'Bangumi',content: Bangumi }
+        {id: 'LavaAnimeLib', content: LavaAnimeLib},
+        {id: 'WhyExternalPlayer', content: WhyExternalPlayer},
+        {id: 'ExternalPlayerList', content: ExternalPlayerList},
+        {id: 'Bangumi', content: Bangumi}
       ],
       notSupport: false
     };
@@ -52,10 +53,10 @@ export default {
   methods: {
     changeArticle(a) {
       this.article = a
-      this.$router.replace({ name: "Help", query: { article: a.id } });
+      this.$router.replace({name: "Help", query: {article: a.id}});
     }
   },
   watch: {},
-  components: { Container, MarkdownRender, List, Sponsors, TopNav }
+  components: {Container, MarkdownRender, List, Sponsors, TopNav}
 }
 </script>

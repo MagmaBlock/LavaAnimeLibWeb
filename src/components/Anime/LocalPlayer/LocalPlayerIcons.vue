@@ -1,59 +1,63 @@
 <template>
   <!-- 复制链接 -->
   <div ref="copyBtn" :data-clipboard-text="this.video.tempUrl">
-    <LocalPlayerIcon icon="/PlayersIcon/Link.svg" @click="handleButtonClick('Copy Link')"
-      class="cursor-pointer">
+    <LocalPlayerIcon class="cursor-pointer" icon="/PlayersIcon/Link.svg"
+                     @click="handleButtonClick('Copy Link')">
       复制
     </LocalPlayerIcon>
   </div>
   <!-- 缓存 -->
-  <LocalPlayerIcon icon="/PlayersIcon/download.svg" :href="this.video.tempUrl"
-    @click="handleButtonClick('Download')">
+  <LocalPlayerIcon :href="this.video.tempUrl" icon="/PlayersIcon/download.svg"
+                   @click="handleButtonClick('Download')">
     缓存
   </LocalPlayerIcon>
   <!-- "显示全部" 未打开前的显示位置 -->
   <slot name="showAll"></slot>
   <!-- 弹弹Play -->
-  <LocalPlayerIcon icon="/PlayersIcon/DanDanPlay.svg" :href="getUrl().ddplayWindows"
-    @click="handleButtonClick('DanDanPlayWindows')" v-if="ua.os.name == 'Windows' || allos">
+  <LocalPlayerIcon v-if="ua.os.name == 'Windows' || allos" :href="getUrl().ddplayWindows"
+                   icon="/PlayersIcon/DanDanPlay.svg" @click="handleButtonClick('DanDanPlayWindows')">
     弹弹Play <span v-if="allos">Windows</span>
   </LocalPlayerIcon>
   <!-- 弹弹Play 安卓 -->
-  <LocalPlayerIcon icon="/PlayersIcon/DanDanPlay.svg" :href="getUrl().ddplayAndroid"
-    @click="handleButtonClick('DanDanPlayAndroid')" v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS/i) || allos">
+  <LocalPlayerIcon v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS/i) || allos" :href="getUrl().ddplayAndroid"
+                   icon="/PlayersIcon/DanDanPlay.svg"
+                   @click="handleButtonClick('DanDanPlayAndroid')">
     弹弹Play <span v-if="allos">Android</span>
   </LocalPlayerIcon>
   <!-- PotPlayer -->
-  <LocalPlayerIcon icon="/PlayersIcon/PotPlayer.svg" :href="getUrl().potplayer"
-    @click="handleButtonClick('PotPlayer')" v-if="ua.os.name == 'Windows' || allos">
+  <LocalPlayerIcon v-if="ua.os.name == 'Windows' || allos" :href="getUrl().potplayer"
+                   icon="/PlayersIcon/PotPlayer.svg" @click="handleButtonClick('PotPlayer')">
     PotPlayer
   </LocalPlayerIcon>
   <!-- VLC -->
-  <LocalPlayerIcon icon="/PlayersIcon/vlc.svg" :href="getUrl().vlc" @click="handleButtonClick('VLC')">
+  <LocalPlayerIcon :href="getUrl().vlc" icon="/PlayersIcon/vlc.svg" @click="handleButtonClick('VLC')">
     VLC
   </LocalPlayerIcon>
   <!-- IINA -->
-  <LocalPlayerIcon icon="/PlayersIcon/iina.svg" :href="getUrl().iina" @click="handleButtonClick('IINA')"
-    v-if="ua.os.name == 'Mac OS' || allos">
+  <LocalPlayerIcon v-if="ua.os.name == 'Mac OS' || allos" :href="getUrl().iina" icon="/PlayersIcon/iina.svg"
+                   @click="handleButtonClick('IINA')">
     IINA
   </LocalPlayerIcon>
   <!-- nPlayer -->
-  <LocalPlayerIcon icon="/PlayersIcon/nplayer.svg" :href="getUrl().nPlayer"
-    @click="handleButtonClick('nPlayer')" v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS|iOS/i) || allos">
+  <LocalPlayerIcon v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS|iOS/i) || allos" :href="getUrl().nPlayer"
+                   icon="/PlayersIcon/nplayer.svg"
+                   @click="handleButtonClick('nPlayer')">
     nPlayer
   </LocalPlayerIcon>
   <!-- MXPlayer -->
-  <LocalPlayerIcon icon="/PlayersIcon/mxplayer.svg" :href="getUrl().mxPlayerPro"
-    @click="handleButtonClick('MXPlayer')" v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS/i) || allos">
+  <LocalPlayerIcon v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS/i) || allos" :href="getUrl().mxPlayerPro"
+                   icon="/PlayersIcon/mxplayer.svg"
+                   @click="handleButtonClick('MXPlayer')">
     MXPlayer Pro
   </LocalPlayerIcon>
-  <LocalPlayerIcon icon="/PlayersIcon/mxplayer.svg" :href="getUrl().mxPlayer"
-    @click="handleButtonClick('MXPlayer')" v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS/i) || allos">
+  <LocalPlayerIcon v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS/i) || allos" :href="getUrl().mxPlayer"
+                   icon="/PlayersIcon/mxplayer.svg"
+                   @click="handleButtonClick('MXPlayer')">
     MXPlayer
   </LocalPlayerIcon>
   <!-- MPV -->
-  <LocalPlayerIcon icon="/PlayersIcon/mpv.svg" :href="getUrl().mpv" @click="handleButtonClick('mpv')"
-    v-if="allos">
+  <LocalPlayerIcon v-if="allos" :href="getUrl().mpv" icon="/PlayersIcon/mpv.svg"
+                   @click="handleButtonClick('mpv')">
     MPV (暂未实现...)
   </LocalPlayerIcon>
 </template>
@@ -94,7 +98,7 @@ export default {
         return; // 最多通过此方式上报两次
       this.reportTimes++;
       this.player.art.pause();
-      this.reportNewView({ type: type });
+      this.reportNewView({type: type});
       console.log(`按钮 ${type} 触发了一次上报播放量，剩余 ${this.reportTimes} 次.`);
     },
     getUrl() {
@@ -112,6 +116,6 @@ export default {
       return urls;
     }
   },
-  components: { LocalPlayerIcon }
+  components: {LocalPlayerIcon}
 }
 </script>

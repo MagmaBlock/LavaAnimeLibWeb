@@ -1,33 +1,33 @@
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.25s ease;
+    transition: opacity 0.25s ease;
 }
 
 .fade-enter-from,
 .fade-leave-to {
-  opacity: 0;
+    opacity: 0;
 }
 
 
 .flow-out-enter-active {
-  animation: go-top 0.3s ease-in;
+    animation: go-top 0.3s ease-in;
 }
 
 .flow-out-leave-active {
-  animation: go-down 0.3s ease-in;
+    animation: go-down 0.3s ease-in;
 }
 
 @keyframes go-top {
-  0% {
-    transform: translateX(8px);
-    opacity: 0%;
-  }
+    0% {
+        transform: translateX(8px);
+        opacity: 0%;
+    }
 }
 
 @keyframes go-down {
-  100% {
-    /* scale: 95%; */
-    transform: translateX(-8px);
-    opacity: 0%;
-  }
+    100% {
+        /* scale: 95%; */
+        transform: translateX(-8px);
+        opacity: 0%;
+    }
 }

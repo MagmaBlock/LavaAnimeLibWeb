@@ -4,7 +4,7 @@
     <Container>
       <div class="text-lg font-medium">熔岩番剧库 最近更新日志</div>
       <div class="opacity-75">LavaAnimeLib 相关项目 GitHub 提交记录</div>
-      <n-divider />
+      <n-divider/>
       <!-- 宽屏 -->
       <div class="hidden lg:grid grid-cols-2 gap-4">
         <div>
@@ -18,7 +18,7 @@
       </div>
       <!-- 移动 -->
       <div class="lg:hidden">
-        <n-tabs type="line" animated justify-content="space-evenly">
+        <n-tabs animated justify-content="space-evenly" type="line">
           <n-tab-pane name="web" tab="网页前端">
             <GitHubCommits :commits="web"></GitHubCommits>
           </n-tab-pane>
@@ -30,8 +30,8 @@
       <n-divider>
         <div class="flex gap-2">
           更多记录见 GitHub
-          <n-a target="_blank" href="https://github.com/MagmaBlock/LavaAnimeLibWeb">前端</n-a>
-          <n-a target="_blank" href="https://github.com/MagmaBlock/LavaAnimeLib">后端</n-a>
+          <n-a href="https://github.com/MagmaBlock/LavaAnimeLibWeb" target="_blank">前端</n-a>
+          <n-a href="https://github.com/MagmaBlock/LavaAnimeLib" target="_blank">后端</n-a>
         </div>
       </n-divider>
     </Container>
@@ -59,7 +59,7 @@ export default {
     async getGitHubCommits(repos) {
       try {
         let result = await axios.get(
-          `https://api.github.com/repos/MagmaBlock/${repos}/commits`
+            `https://api.github.com/repos/MagmaBlock/${repos}/commits`
         )
         if (result.status == 200) {
           return result.data
@@ -70,6 +70,6 @@ export default {
       }
     }
   },
-  components: { TopNav, Container, GitHubCommits }
+  components: {TopNav, Container, GitHubCommits}
 }
 </script>

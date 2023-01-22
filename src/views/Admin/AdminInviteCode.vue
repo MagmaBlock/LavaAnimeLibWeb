@@ -3,18 +3,18 @@
     <div>
       <n-form>
         <n-form-item label="生成数量">
-          <n-input-number class="max-w-xs" v-model:value="amount" placeholder="生成数量" clearable />
+          <n-input-number v-model:value="amount" class="max-w-xs" clearable placeholder="生成数量"/>
         </n-form-item>
         <n-form-item label="是否启用时间限制">
-          <n-switch v-model:value="timeLimit" />
+          <n-switch v-model:value="timeLimit"/>
         </n-form-item>
       </n-form>
       <n-form :disabled="!timeLimit">
         <n-form-item label="快速设定几天后失效">
-          <n-input-number class="max-w-xs" v-model:value="lateDays" placeholder="晚几天" clearable />
+          <n-input-number v-model:value="lateDays" class="max-w-xs" clearable placeholder="晚几天"/>
         </n-form-item>
         <n-form-item label="失效时间">
-          <n-date-picker v-model:value="expirationTime" type="datetime" clearable />
+          <n-date-picker v-model:value="expirationTime" clearable type="datetime"/>
         </n-form-item>
       </n-form>
     </div>

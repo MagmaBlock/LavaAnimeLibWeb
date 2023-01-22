@@ -9,17 +9,17 @@ export const userInfo = ref({})
  * @returns {Object} userInfo
  */
 export async function getUserInfo() {
-  try {
-    let result = await LavaAnimeAPI.get('/v2/user/info')
-    if (result.data.code == 200) {
-      userInfo.value = result.data.data
-      return userInfo
+    try {
+        let result = await LavaAnimeAPI.get('/v2/user/info')
+        if (result.data.code == 200) {
+            userInfo.value = result.data.data
+            return userInfo
+        }
+    } catch (error) {
+        if (error.status == 401) {
+            $message.error('未登录')
+        }
+        userInfo.value = {}
+        return userInfo
     }
-  } catch (error) {
-    if (error.status == 401) {
-      $message.error('未登录')
-    }
-    userInfo.value = {}
-    return userInfo
-  }
 }

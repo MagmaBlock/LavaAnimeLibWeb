@@ -1,6 +1,6 @@
 <template>
-  <n-config-provider :locale="zhCN" :date-locale="dateZhCN" :theme="settings.darkMode.on ? darkTheme : null"
-    :theme-overrides="themeOverrides">
+  <n-config-provider :date-locale="dateZhCN" :locale="zhCN" :theme="settings.darkMode.on ? darkTheme : null"
+                     :theme-overrides="themeOverrides">
     <slot></slot>
   </n-config-provider>
 </template>
@@ -44,8 +44,7 @@ export default {
       if (settings.darkMode.on) {
         document.body.classList.add('dark')
         document.body.classList.add('bg-black')
-      }
-      else {
+      } else {
         document.body.classList.remove('dark')
         document.body.classList.remove('bg-black')
       }

@@ -1,12 +1,12 @@
 <template>
-  <AnimeFlodCard class="px-4 py-2 sm:mb-4 select-none" v-if="driveList.list">
+  <AnimeFlodCard v-if="driveList.list" class="px-4 py-2 sm:mb-4 select-none">
     <template #title>
       节点
     </template>
     <div class="flex flex-wrap gap-1">
-      <div class="w-fit h-10 px-4 rounded grid place-items-center whitespace-nowrap
-        transition-all cursor-pointer" :class="myDrive.selectedDrive == drive.id ? activeClass : normalClass"
-        @click="changeDrive(drive.id)" v-for="drive in driveList.list">
+      <div v-for="drive in driveList.list" :class="myDrive.selectedDrive == drive.id ? activeClass : normalClass"
+           class="w-fit h-10 px-4 rounded grid place-items-center whitespace-nowrap
+        transition-all cursor-pointer" @click="changeDrive(drive.id)">
         {{ drive.name }}
       </div>
     </div>
@@ -46,6 +46,6 @@ export default {
     }
   },
   watch: {},
-  components: { AnimeFlodCard }
+  components: {AnimeFlodCard}
 }
 </script> 

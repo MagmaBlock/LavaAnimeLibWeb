@@ -6,16 +6,16 @@
     <n-space class="w-72 sm:w-96" vertical>
       <n-form>
         <n-form-item label="邮箱">
-          <n-input v-model:value="email" type="email" placeholder="邮箱" />
+          <n-input v-model:value="email" placeholder="邮箱" type="email"/>
         </n-form-item>
         <n-form-item label="用户名">
-          <n-input v-model:value="name" type="text" placeholder="用户名" />
+          <n-input v-model:value="name" placeholder="用户名" type="text"/>
         </n-form-item>
         <n-form-item label="密码">
-          <n-input v-model:value="password" type="password" placeholder="密码" />
+          <n-input v-model:value="password" placeholder="密码" type="password"/>
         </n-form-item>
         <n-form-item label="邀请码">
-          <n-input v-model:value="inviteCode" type="text" placeholder="邀请码 (必填)" />
+          <n-input v-model:value="inviteCode" placeholder="邀请码 (必填)" type="text"/>
         </n-form-item>
       </n-form>
       <div class="mt-2">
@@ -24,7 +24,7 @@
             去登录
           </n-button>
         </RouterLink>
-        <n-button strong @click="register" class="float-right">
+        <n-button class="float-right" strong @click="register">
           注册
         </n-button>
       </div>
@@ -66,14 +66,14 @@ export default {
             $message.success(loginResult.data.message)
             let token = loginResult.data.data.token
             localStorage.setItem('token', JSON.stringify(token))
-            this.$router.push({ name: 'User' })
+            this.$router.push({name: 'User'})
           } else { // 注册成功但是登录失败？
             $message.error('注册成功但是登录失败？不管了，先把你传送到登录页')
-            this.$router.push({ name: 'AuthLogin' })
+            this.$router.push({name: 'AuthLogin'})
           }
         }
       } catch (error) { // 失败
-        
+
       }
 
     }

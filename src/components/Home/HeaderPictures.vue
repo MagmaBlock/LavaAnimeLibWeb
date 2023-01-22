@@ -1,22 +1,22 @@
 <template>
-  <n-carousel show-arrow draggable autoplay class="shadow-lg">
+  <n-carousel autoplay class="shadow-lg" draggable show-arrow>
     <template v-for="pic in headerPic">
       <div class="static h-52 sm:h-64 lg:h-72">
         <!-- 真图片 -->
-        <img class="object-cover w-full min-h-full overflow-hidden" v-lazy="{
+        <img v-lazy="{
           src: pic.pic,
           loading: '/Home/headerPic/LavaAnime.jpg',
           error: '/Home/headerPic/LavaAnime.jpg'
-        }">
+        }" class="object-cover w-full min-h-full overflow-hidden">
         <!-- 底部阴影 -->
         <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-black/75 "></div>
         <RouterLink v-if="pic.url && !pic.externalUrl" :to="pic.url">
-          <HeaderPictureTitle :title="pic.title" :subtitle="pic.subtitle"></HeaderPictureTitle>
+          <HeaderPictureTitle :subtitle="pic.subtitle" :title="pic.title"></HeaderPictureTitle>
         </RouterLink>
         <a v-else-if="pic.url && pic.externalUrl" :href="pic.url" target="_blank">
-          <HeaderPictureTitle :title="pic.title" :subtitle="pic.subtitle"></HeaderPictureTitle>
+          <HeaderPictureTitle :subtitle="pic.subtitle" :title="pic.title"></HeaderPictureTitle>
         </a>
-        <HeaderPictureTitle v-else :title="pic.title" :subtitle="pic.subtitle"></HeaderPictureTitle>
+        <HeaderPictureTitle v-else :subtitle="pic.subtitle" :title="pic.title"></HeaderPictureTitle>
       </div>
     </template>
   </n-carousel>

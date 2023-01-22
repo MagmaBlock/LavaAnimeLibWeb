@@ -1,33 +1,33 @@
 <template>
   <div class="relative w-full aspect-w-16 aspect-h-9 bg-black sm:rounded-md overflow-hidden select-none">
     <!-- ArtPlayer -->
-    <div ref="artRef" class="absolute top-0 w-full h-full la-art-player" v-show="playType == 'canPlay'"></div>
+    <div v-show="playType == 'canPlay'" ref="artRef" class="absolute top-0 w-full h-full la-art-player"></div>
     <!-- 各种非视频情况处理 -->
-    <div class="absolute w-full h-full px-8 text-white text-center grid place-items-center"
-      v-show="playType !== 'canPlay'">
-      <div v-if="playType == 'notSelected'"> 请选择集数后播放 </div>
+    <div v-show="playType !== 'canPlay'"
+         class="absolute w-full h-full px-8 text-white text-center grid place-items-center">
+      <div v-if="playType == 'notSelected'"> 请选择集数后播放</div>
       <div v-if="playType == 'notSupport'">
         当前播放的视频格式可能不受浏览器支持, 请使用下方的按钮调用您设备上的播放器进行播放
         <span class="text-gray-400 hover:text-white cursor-pointer ml-2 text-xs" @click="forcePlay()">强制播放</span>
-        <div> 类型: {{ video.extensionName.result }} </div>
+        <div> 类型: {{ video.extensionName.result }}</div>
       </div>
       <!-- 图片预览 -->
       <div v-if="playType == 'image'" class="grid place-items-center">
-        <n-image width="200" :src="video.thumbnail" :preview-src="video.url" show-toolbar-tooltip />
+        <n-image :preview-src="video.url" :src="video.thumbnail" show-toolbar-tooltip width="200"/>
         <div class="text-gray-400 text-xs mt-2">
           这是一张图片附件，可点击上方预览或下载。 大小: {{ bytesToSize(video.size) }}
         </div>
-        <a class="bg-white/20 hover:bg-white/30 text-gray-400 text-[13px] rounded-md w-fit px-4 py-0.5 mt-1"
-          target="_blank" :href="video.tempUrl">
+        <a :href="video.tempUrl"
+           class="bg-white/20 hover:bg-white/30 text-gray-400 text-[13px] rounded-md w-fit px-4 py-0.5 mt-1" target="_blank">
           下载此文件
         </a>
       </div>
       <!-- 音乐 (调用浏览器原生播放) -->
-      <audio controls v-if="playType == 'music'" class="w-full" ref="musicPlayer">
+      <audio v-if="playType == 'music'" ref="musicPlayer" class="w-full" controls>
         <source :src="video.tempUrl" type="audio/mpeg">
         您的浏览器不支持该音频格式, 请尝试下载
-        <a class="bg-white/20 hover:bg-white/30 text-gray-400 text-[13px] rounded-md w-fit px-4 py-0.5 ml-1"
-          target="_blank" :href="video.tempUrl">
+        <a :href="video.tempUrl"
+           class="bg-white/20 hover:bg-white/30 text-gray-400 text-[13px] rounded-md w-fit px-4 py-0.5 ml-1" target="_blank">
           下载此文件
         </a>
       </audio>
@@ -37,8 +37,8 @@
         <div class="text-gray-400 text-xs">
           类型: {{ video.extensionName.result }} 大小: {{ bytesToSize(video.size) }}
         </div>
-        <a class="bg-white/20 hover:bg-white/30 text-gray-400 text-[13px] rounded-md w-fit px-4 py-0.5 mt-1"
-          target="_blank" :href="video.tempUrl">
+        <a :href="video.tempUrl"
+           class="bg-white/20 hover:bg-white/30 text-gray-400 text-[13px] rounded-md w-fit px-4 py-0.5 mt-1" target="_blank">
           下载此文件
         </a>
       </div>
@@ -48,7 +48,7 @@
 
 <style>
 /* 为播放器控制器增加 margin, 兼容异形屏设备 */
-.la-art-player>div>.art-bottom {
+.la-art-player > div > .art-bottom {
   margin-bottom: 12px;
   background-image: linear-gradient(#0000, #0008, #0000);
 }
@@ -102,8 +102,7 @@ export default {
             saveTime ? this.art.switchQuality(newVideo.url) : this.art.switchUrl(newVideo.url)
             setTimeout(() => this.art.play(), 200); // 准备播放
             setTimeout(() => this.prepareToReportNewView(), 2000) // 准备上报播放量
-          }
-          else if (newVideo.extensionName.result == 'MKV视频') {
+          } else if (newVideo.extensionName.result == 'MKV视频') {
             this.playType = 'notSupport'
             // this.art.url = newVideo.url // 播放视频
             saveTime ? this.art.switchQuality(newVideo.url) : this.art.switchUrl(newVideo.url)
@@ -115,7 +114,7 @@ export default {
         }
         // 为暂无法预览的文件类型
         else if (newVideo.extensionName.type == 'subtitle' || newVideo.extensionName.type == 'torrent' ||
-          newVideo.extensionName.type == 'document' || newVideo.extensionName.type == 'archive') {
+            newVideo.extensionName.type == 'document' || newVideo.extensionName.type == 'archive') {
           this.playType = 'notVideo'
         }
         // 音乐播放
@@ -143,7 +142,7 @@ export default {
       this.reportTimer = setTimeout(() => {
         let isPlaying = this.art.playing || this.art.loading.show
         if (isPlaying) {
-          this.reportNewView({ type: 'WebPlayer' })
+          this.reportNewView({type: 'WebPlayer'})
         }
       }, 5000);
     },

@@ -12,8 +12,8 @@ meta.name = 'naive-ui-style'
 document.head.appendChild(meta)
 
 export const app = createApp(App)
-  .use(router)
-  .use(VueLazyLoad)
+    .use(router)
+    .use(VueLazyLoad)
 
 app.config.unwrapInjectedRef = true
 app.mount('#app')
