@@ -80,6 +80,7 @@ export default {
         lock: true,
         autoOrientation: true,
         airplay: true,
+        fastForward: true,
       },
       playType: 'notSelected',
       reportTimer: null
