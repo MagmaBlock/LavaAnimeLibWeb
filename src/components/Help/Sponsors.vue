@@ -28,8 +28,9 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import {ref} from 'vue';
 import SponsorCard from './SponsorCard.vue';
+
 export default {
   data() {
     return {

@@ -5,7 +5,7 @@
         :src="userInfo.data?.avatar?.url || '/Transparent_Akkarin.jpg'"
         @click="$router.push({ name: 'UserInfoAvatar' })" />
       <div class="mx-4 my-auto flex-1 cursor-pointer" @click="$router.push({ name: 'UserInfoName' })">
-        <div class="text-base font-semibold mb-1">{{ userInfo.name }}</div>
+        <div class="text-base font-semi-bold mb-1">{{ userInfo.name }}</div>
         <div class="text-xs opacity-80">{{ userInfo.email }}</div>
       </div>
       <div class="flex-1"></div>
@@ -30,9 +30,9 @@
 </template>
 
 <script>
-import { LavaAnimeAPI } from '../../../common/api'
+import {LavaAnimeAPI} from '@/common/api'
 import MyBasicCard from '../MyBasicCard.vue'
-import { userInfo, getUserInfo } from '../../../common/API/user'
+import {getUserInfo, userInfo} from '@/common/API/user'
 
 export default {
   setup() {

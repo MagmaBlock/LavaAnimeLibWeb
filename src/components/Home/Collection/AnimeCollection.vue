@@ -26,6 +26,7 @@
 import collections from '../../../assets/homepage-collections.js'
 import ShowMoreButton from '../../Container/ShowMoreButton.vue';
 import AnimeCollectionCards from '../Collection/AnimeCollectionCards.vue';
+
 export default {
   data() {
     return {

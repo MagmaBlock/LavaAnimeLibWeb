@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-2xl font-semibold">注册新账户</div>
+    <div class="text-2xl font-semi-bold">注册新账户</div>
     <!-- <div class="opacity-80"></div> -->
     <div class="h-0.5 w-full my-4 rounded-full bg-black dark:bg-white opacity-10"></div>
     <n-space class="w-72 sm:w-96" vertical>

@@ -26,6 +26,7 @@ import WhyExternalPlayer from '../assets/Help/WhyExternalPlayer.md?raw'
 import ExternalPlayerList from '../assets/Help/ExternalPlayerList.md?raw'
 import Bangumi from '../assets/Help/Bangumi.md?raw'
 import TopNav from '../components/NavBar/TopNav.vue';
+
 export default {
   data() {
     return {

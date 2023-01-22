@@ -1,5 +1,4 @@
 import axios from "axios";
-import { app } from "../main.js";
 import config from "./config";
 
 export const LavaAnimeAPI = axios.create({
