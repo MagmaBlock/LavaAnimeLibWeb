@@ -43,8 +43,10 @@ function getToken() {
 // 传入 ID Array，获取番剧信息
 export async function getAnimesData(array) {
     try {
-        return (await LavaAnimeAPI.post("/v2/anime/get", {ids: array})).data;
-    } catch (error) {
+        let data = (await LavaAnimeAPI.post("/v2/anime/get", { ids: array })).data;
+        return data;
+    }
+    catch (error) {
         console.error(error);
     }
 }
