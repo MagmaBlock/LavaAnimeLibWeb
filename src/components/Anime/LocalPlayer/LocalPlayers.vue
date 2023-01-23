@@ -46,7 +46,6 @@ import { ref } from 'vue';
 import LocalPlayerIcon from './LocalPlayerIcon.vue';
 import LocalPlayerIcons from './LocalPlayerIcons.vue';
 
-
 export default {
   data() {
     return {

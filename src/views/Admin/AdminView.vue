@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import {RouterView} from 'vue-router';
+import { RouterView } from 'vue-router';
 import Container from '../../components/Container.vue';
 
 export default {

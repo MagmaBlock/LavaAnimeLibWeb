@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { darkTheme, zhCN, dateZhCN } from 'naive-ui'
+import { darkTheme, dateZhCN, zhCN } from 'naive-ui'
 import settings from '../common/Methods/settings.js'
 
 export default {

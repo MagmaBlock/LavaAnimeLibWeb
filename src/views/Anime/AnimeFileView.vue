@@ -14,9 +14,9 @@
 </template>
 
 <script>
-import {LavaAnimeAPI} from '@/common/api';
+import { LavaAnimeAPI } from '@/common/api';
 import AnimeBasicCard from '../../components/Anime/Cards/AnimeBasicCard.vue';
-import {useStorage} from '@vueuse/core';
+import { useStorage } from '@vueuse/core';
 
 export default {
   inject: ["changePlayingFile"],

@@ -12,7 +12,6 @@ import { marked } from 'marked';
 import 'github-markdown-css/github-markdown-light.css';
 import './markdown.css';
 
-
 export default {
   data() {
     return {

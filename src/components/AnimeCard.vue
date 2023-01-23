@@ -1,5 +1,5 @@
 <script>
-import { switchToMyCollections, isCollected } from '@/common/Methods/MyCollections'
+import { isCollected, switchToMyCollections } from '@/common/Methods/MyCollections'
 
 export default {
   props: {
