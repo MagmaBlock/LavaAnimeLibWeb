@@ -1,5 +1,5 @@
 <script>
-import { LavaAnimeAPI } from '@/common/api';
+import { LavaAnimeAPI } from '../../common/api.js';
 import ContainerMobileFull from '../../components/ContainerMobileFull.vue';
 import VideoPlayer from '../../components/Anime/VideoPlayer.vue';
 import LocalPlayers from '../../components/Anime/LocalPlayer/LocalPlayers.vue';

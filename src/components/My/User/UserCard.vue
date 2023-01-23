@@ -30,9 +30,9 @@
 </template>
 
 <script>
-import { LavaAnimeAPI } from '@/common/api'
+import { LavaAnimeAPI } from '../../../common/api.js'
 import MyBasicCard from '../MyBasicCard.vue'
-import { getUserInfo, userInfo } from '@/common/API/user'
+import { getUserInfo, userInfo } from '../../../common/API/user.js'
 
 export default {
   setup() {

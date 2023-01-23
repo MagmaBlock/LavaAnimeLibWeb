@@ -45,7 +45,7 @@
 
 <script>
 import HeaderPictures from '../../components/Home/HeaderPictures.vue';
-import { homeHeaderGet, LavaAnimeAPI } from '@/common/api'
+import { homeHeaderGet, LavaAnimeAPI } from '../../common/api.js'
 import BasicCard from '../../components/BasicCard.vue';
 
 export default {

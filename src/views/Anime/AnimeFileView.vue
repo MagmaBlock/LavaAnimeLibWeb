@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { LavaAnimeAPI } from '@/common/api';
+import { LavaAnimeAPI } from '../../common/api.js';
 import AnimeBasicCard from '../../components/Anime/Cards/AnimeBasicCard.vue';
 import { useStorage } from '@vueuse/core';
 

@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { LavaAnimeAPI } from '@/common/api';
+import { LavaAnimeAPI } from '../../common/api.js';
 
 export default {
   data() {

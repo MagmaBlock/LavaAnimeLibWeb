@@ -18,8 +18,8 @@
 
 <script setup>
 import { ref } from 'vue';
-import { LavaAnimeAPI } from '@/common/api';
-import { getUserInfo, userInfo } from '@/common/API/user';
+import { LavaAnimeAPI } from '../../../common/api.js';
+import { getUserInfo, userInfo } from '../../../common/API/user.js';
 
 getUserInfo()
 const newName = ref('')
