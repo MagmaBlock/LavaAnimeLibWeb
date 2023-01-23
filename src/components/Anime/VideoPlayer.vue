@@ -1,7 +1,8 @@
 <template>
   <div class="relative w-full aspect-w-16 aspect-h-9 bg-black sm:rounded-md overflow-hidden select-none">
     <!-- ArtPlayer -->
-    <div ref="artRef" class="absolute top-0 w-full h-full la-art-player" v-show="playType == 'canPlay'"></div>
+    <div ref="artRef" class="absolute top-0 w-full h-full la-art-player select-none" v-show="playType == 'canPlay'">
+    </div>
     <!-- 各种非视频情况处理 -->
     <div class="absolute w-full h-full px-8 text-white text-center grid place-items-center"
       v-show="playType !== 'canPlay'">
@@ -169,6 +170,9 @@ export default {
       container: this.$refs.artRef,
     })
     this.art.autoHeight = true;
+    this.$refs.artRef.addEventListener('contextmenu', function (e) {
+      e.preventDefault()
+    })
   },
   watch: {
     video(newVideo, oldVideo) {
