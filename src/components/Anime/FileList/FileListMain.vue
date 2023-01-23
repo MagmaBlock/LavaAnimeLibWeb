@@ -36,7 +36,7 @@ export default {
         if (video.extensionName.type == 'video') { // 视频处理
           if (video.episode) { // 当前集数已识别出集数
             if (!this.epfileList[video.episode]) { // 如果 epfileList 没有相应集数的数组，创建相应数组
-              this.epfileList[video.episode] = new Array()
+              this.epfileList[video.episode] = []
             }
             this.epfileList[video.episode].push(video) // 
           } else {
