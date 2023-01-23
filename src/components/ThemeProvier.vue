@@ -58,12 +58,7 @@ export default {
         window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function (event) {
           if (settings.darkMode.autoDarkMode == false) return // 如果没有开启自动深色，什么也不做
           // is dark mode
-          if (event.matches) {
-            settings.darkMode.on = false
-          } else {
-            // not dark mode
-            settings.darkMode.on = true
-          }
+          settings.darkMode.on = !event.matches;
         })
         // 浅色
         if (window.matchMedia('(prefers-color-scheme: light)').matches) {
