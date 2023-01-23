@@ -45,7 +45,7 @@
 
 <script>
 import HeaderPictures from '../../components/Home/HeaderPictures.vue';
-import { homeHeaderGet, LavaAnimeAPI } from '../../common/api'
+import { homeHeaderGet, LavaAnimeAPI } from '@/common/api'
 import BasicCard from '../../components/BasicCard.vue';
 
 export default {
@@ -70,8 +70,7 @@ export default {
       if (index + go >= this.headers.length) return console.log('越界');
       if (index + go < 0) return console.log('越界');
       let thisEle = this.headers[index]
-      let nextEle = this.headers[index + go]
-      this.headers[index] = nextEle
+      this.headers[index] = this.headers[index + go]
       this.headers[index + go] = thisEle
       this.refresh++
     },

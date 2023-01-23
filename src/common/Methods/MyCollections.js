@@ -34,6 +34,5 @@ export function saveMyCollections(myCollections) {
 export function isCollected(laID) {
   let myCollections = getMyCollections()
   let isThisCollected = myCollections.indexOf(laID) // 返回此 ID 的位置，若找不到则为 -1
-  if (isThisCollected !== -1) return true
-  else return false
+  return isThisCollected !== -1;
 }

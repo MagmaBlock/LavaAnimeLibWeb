@@ -32,8 +32,8 @@
 </template>
 <script>
 import gravatar from 'gravatar'
-import { LavaAnimeAPI } from '../../../common/api.js'
-import { getUserInfo, userInfo } from '../../../common/API/user.js'
+import { LavaAnimeAPI } from '@/common/api'
+import { getUserInfo, userInfo } from '@/common/API/user'
 
 export default {
   data() {

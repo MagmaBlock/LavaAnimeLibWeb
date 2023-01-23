@@ -1,5 +1,5 @@
 <script>
-import { LavaAnimeAPI } from '../../common/api';
+import { LavaAnimeAPI } from '@/common/api';
 import ContainerMobileFull from '../../components/ContainerMobileFull.vue';
 import VideoPlayer from '../../components/Anime/VideoPlayer.vue';
 import LocalPlayers from '../../components/Anime/LocalPlayer/LocalPlayers.vue';
@@ -69,12 +69,11 @@ export default {
     },
     async reportNewView(options) {
       if (this.viewTimes > 1) return; // 一次会话最大上报两回
-      let _options = {
+      options = {
         id: this.laID, ep: this.selectedFile.episode,
         file: this.selectedFile.name, type: undefined,
         ...options
       }
-      options = _options
       let result = (await LavaAnimeAPI.post("/v2/anime/view/add", options)).data;
       if (result.code == 200) {
         this.viewTimes++;

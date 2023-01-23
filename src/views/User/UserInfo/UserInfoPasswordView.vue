@@ -14,7 +14,7 @@
 </template>
 <script setup>
 import { ref } from 'vue';
-import { LavaAnimeAPI } from '../../../common/api';
+import { LavaAnimeAPI } from '@/common/api';
 
 const newPassword = ref('')
 

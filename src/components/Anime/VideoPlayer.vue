@@ -5,7 +5,7 @@
     <!-- 各种非视频情况处理 -->
     <div class="absolute w-full h-full px-8 text-white text-center grid place-items-center"
       v-show="playType !== 'canPlay'">
-      <div v-if="playType == 'notSeleted'"> 请选择集数后播放 </div>
+      <div v-if="playType == 'notSelected'"> 请选择集数后播放 </div>
       <div v-if="playType == 'notSupport'">
         当前播放的视频格式可能不受浏览器支持, 请使用下方的按钮调用您设备上的播放器进行播放
         <span class="text-gray-400 hover:text-white cursor-pointer ml-2 text-xs" @click="forcePlay()">强制播放</span>
@@ -80,8 +80,9 @@ export default {
         lock: true,
         autoOrientation: true,
         airplay: true,
+        fastForward: true,
       },
-      playType: 'notSeleted',
+      playType: 'notSelected',
       reportTimer: null
     };
   },
@@ -172,7 +173,7 @@ export default {
   watch: {
     video(newVideo, oldVideo) {
       if (JSON.stringify(newVideo) == '{}') {
-        this.playType = 'notSeleted'
+        this.playType = 'notSelected'
         this.art.pause()
         return
       }

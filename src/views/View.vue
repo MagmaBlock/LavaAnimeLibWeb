@@ -4,6 +4,7 @@ import { RouterView } from 'vue-router';
 import { useMessage, useNotification } from 'naive-ui'
 
 import NavBar from '../components/NavBar/NavBar.vue';
+
 export default {
   provide() {
     return {

@@ -13,6 +13,7 @@ import ContainerMobileFull from '../../components/ContainerMobileFull.vue';
 import FunctionsCard from '../../components/My/FunctionsCard.vue';
 import MyCollections from '../../components/My/MyCollections.vue';
 import UserCard from '../../components/My/User/UserCard.vue';
+
 export default {
   data() {
     return {

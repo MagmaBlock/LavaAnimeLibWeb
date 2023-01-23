@@ -1,5 +1,6 @@
 <script>
 import AnimeBasicCard from './Cards/AnimeBasicCard.vue';
+
 export default {
   props: {
     la: {
