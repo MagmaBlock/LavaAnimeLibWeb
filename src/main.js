@@ -1,4 +1,4 @@
-import {createApp} from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router' // src/router/index.js
 import VueLazyLoad from 'vue3-lazyload'

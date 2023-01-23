@@ -9,7 +9,6 @@
 
 <script>
 import settings from '../../common/Methods/settings';
-
 export default {
   computed: {
     darkMode() {

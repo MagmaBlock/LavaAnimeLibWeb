@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import {getAnimesData} from '@/common/api';
+import { getAnimesData } from '../../../common/api';
 import AnimeCardContainer from '../../Container/AnimeCardContainer.vue';
 
 export default {

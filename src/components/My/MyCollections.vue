@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import {getAnimesData} from '@/common/api';
-import {getMyCollections} from '@/common/Methods/MyCollections';
+import { getAnimesData } from '../../common/api';
+import { getMyCollections } from '../../common/Methods/MyCollections';
 import AnimeCardContainer from '../Container/AnimeCardContainer.vue';
 import MyBasicCard from './MyBasicCard.vue';
 

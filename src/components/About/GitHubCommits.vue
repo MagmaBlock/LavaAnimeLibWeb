@@ -2,7 +2,7 @@
   <n-list hoverable clickable bordered>
     <n-list-item v-for="commit in commits">
       <a :href="commit.html_url" target="_blank">
-        <div class="font-semi-bold text-base">
+        <div class="font-semibold text-base">
           {{ commit.commit.message }}
         </div>
         <div class="flex items-center">

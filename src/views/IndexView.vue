@@ -1,5 +1,5 @@
 <script>
-import {LavaAnimeAPI} from '@/common/api'
+import { LavaAnimeAPI } from '../common/api'
 import Container from '../components/Container.vue';
 import AnimeCardContainer from '../components/Container/AnimeCardContainer.vue';
 import SearchBar from '../components/Search/SearchBar.vue';

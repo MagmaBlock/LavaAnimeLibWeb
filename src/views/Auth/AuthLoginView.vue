@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-2xl font-semi-bold">欢迎回来！</div>
+    <div class="text-2xl font-semibold">欢迎回来！</div>
     <div class="opacity-80">使用邮箱 / 用户名登录</div>
     <div class="h-0.5 w-full my-4 rounded-full bg-black dark:bg-white opacity-10"></div>
     <div class="w-72 sm:w-96">

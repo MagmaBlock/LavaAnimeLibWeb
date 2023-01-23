@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import {ref} from 'vue';
+import { ref } from 'vue';
 import LocalPlayerIcon from './LocalPlayerIcon.vue';
 import LocalPlayerIcons from './LocalPlayerIcons.vue';
 
