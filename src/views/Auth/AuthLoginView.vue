@@ -6,10 +6,10 @@
     <div class="w-72 sm:w-96">
       <n-form @keyup.enter="login">
         <n-form-item label="邮箱 / 用户名">
-          <n-input v-model:value="account" placeholder="邮箱 / 用户名" type="text"/>
+          <n-input v-model:value="account" type="text" placeholder="邮箱 / 用户名" />
         </n-form-item>
         <n-form-item label="密码">
-          <n-input v-model:value="password" placeholder="密码" type="password"/>
+          <n-input v-model:value="password" type="password" placeholder="密码" />
         </n-form-item>
       </n-form>
       <div class="my-4">
@@ -18,7 +18,7 @@
             去注册
           </n-button>
         </RouterLink>
-        <n-button class="float-right" strong @click="login">
+        <n-button strong @click="login" class="float-right">
           登录
         </n-button>
       </div>
@@ -50,10 +50,10 @@ export default {
           $message.success(loginResult.data.message)
           let token = loginResult.data.data.token
           localStorage.setItem('token', JSON.stringify(token))
-          this.$router.push({name: 'User'})
+          this.$router.push({ name: 'User' })
         }
       } catch (error) {
-
+        
       }
     },
   },

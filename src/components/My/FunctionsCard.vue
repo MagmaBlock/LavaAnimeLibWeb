@@ -44,6 +44,6 @@ export default {
     return {}
   },
   methods: {},
-  components: {BigButton, MyBasicCard}
+  components: { BigButton, MyBasicCard }
 }
 </script>

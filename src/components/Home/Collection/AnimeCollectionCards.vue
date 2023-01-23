@@ -1,6 +1,6 @@
 <!-- 传入一串 IDs，自动渲染番剧卡片，将自动获取数据-->
 <template>
-  <AnimeCardContainer ref="container" :animes="data" :fake-number="ids?.length ?? 10" size="full">
+  <AnimeCardContainer ref="container" :animes="data" size="full" :fake-number="ids?.length ?? 10">
   </AnimeCardContainer>
 </template>
 
@@ -31,12 +31,10 @@ export default {
     async getData() {
       let result = await getAnimesData(this.ids)
       // 根据播放量进行排序
-      this.data = result.data.sort((a, b) => {
-        return b.views - a.views;
-      })
+      this.data = result.data.sort((a, b) => { return b.views - a.views; })
     }
   },
-  components: {AnimeCardContainer}
+  components: { AnimeCardContainer }
 }
 
 </script>

@@ -9,7 +9,7 @@ import {useStorage} from '@vueuse/core'
 export default {
   setup() {
     const searchHistory = useStorage('searchHistory', [])
-    return {searchHistory}
+    return { searchHistory }
   },
   data() {
     return {
@@ -30,7 +30,7 @@ export default {
         this.searchResults = null; // 进入加载状态
         this.addSearchHistory(value); // 把搜索词加入记录
         this.changeUrlParams(value); // 修改 url 参数
-        let results = (await LavaAnimeAPI.get("/v2/search", {params: {value: value}})).data;
+        let results = (await LavaAnimeAPI.get("/v2/search", { params: { value: value } })).data;
         if (results.code !== 200) return;
         setTimeout(() => { // 慢一点切换以便展示动画
           this.searchResults = results.data; // 展示结果
@@ -57,7 +57,7 @@ export default {
       }
     },
     changeUrlParams(value) {
-      this.$router.replace({name: "Search", params: {value: value}});
+      this.$router.replace({ name: "Search", params: { value: value } });
       document.title = `搜索 - ${value} | 熔岩番剧库 LavaAnimeLib`
     },
     async getHotAnimes() {
@@ -66,8 +66,7 @@ export default {
         if (result.data.code == 200) {
           this.searchRecommendation = result.data.data
         }
-      } catch (error) {
-      }
+      } catch (error) { }
     }
   },
   computed: {
@@ -87,7 +86,7 @@ export default {
     this.useUrlParams();
     this.getHotAnimes()
   },
-  components: {Container, SearchBar, AnimeCardContainer}
+  components: { Container, SearchBar, AnimeCardContainer }
 }
 </script>
 
@@ -99,11 +98,11 @@ export default {
       <div class="lg:col-span-1 lg:sticky lg:top-8 lg:self-start mb-4 select-none">
         <div class="text-lg mb-4 mx-0.5 font-medium">搜索</div>
         <!-- 搜索框 -->
-        <SearchBar v-model:search="searchValue" @search="value => search(value)"/>
+        <SearchBar v-model:search="searchValue" @search="value => search(value)" />
         <!-- 历史记录 -->
-        <div v-if="this.searchHistory.length" class="mt-4 w-full flex flex-wrap">
+        <div class="mt-4 w-full flex flex-wrap" v-if="this.searchHistory.length">
           <!-- 标签 -->
-          <span v-for="value in searchHistory" :class="normalTagClass" @click="search(value)">
+          <span v-for="value in searchHistory" @click="search(value)" :class="normalTagClass">
             {{ value }}
           </span>
           <!-- 清除按钮 -->
@@ -132,7 +131,7 @@ export default {
       </div>
 
       <!-- 内容部分 -->
-      <AnimeCardContainer v-if="searchTimes" :animes="searchResults" class="lg:col-span-3" size="large"/>
+      <AnimeCardContainer :animes="searchResults" size="large" class="lg:col-span-3" v-if="searchTimes" />
     </div>
   </Container>
 </template>

@@ -1,15 +1,15 @@
 <template>
-  <n-list bordered clickable hoverable>
+  <n-list hoverable clickable bordered>
     <n-list-item v-for="commit in commits">
       <a :href="commit.html_url" target="_blank">
         <div class="font-semi-bold text-base">
           {{ commit.commit.message }}
         </div>
         <div class="flex items-center">
-          <img :src="commit.author.avatar_url" alt="头像" class="h-6 object-cover rounded-full mr-2">
+          <img class="h-6 object-cover rounded-full mr-2" :src="commit.author.avatar_url" alt="头像">
           <div>
             {{ commit.author.login }} 提交于
-            <n-time :time="new Date()" :to="new Date(commit.commit.committer.date)" type="relative"/>
+            <n-time :time="new Date()" :to="new Date(commit.commit.committer.date)" type="relative" />
           </div>
         </div>
       </a>

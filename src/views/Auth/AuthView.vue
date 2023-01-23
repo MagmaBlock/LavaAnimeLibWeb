@@ -15,7 +15,7 @@ export default {
   inject: ['background'],
   mounted() {
     if (this.$route.name == 'Auth') {
-      this.$router.push({name: 'AuthLogin'})
+      this.$router.push({ name: 'AuthLogin' })
     }
     this.background.url = 'https://dogefs.s3.ladydaily.com/~/source/unsplash/photo-1522383225653-ed111181a951?ixlib=rb-4.0.3&dl=aj-McsNra2VRQQ-unsplash.jpg&w=1920&q=80&fmt=jpg&crop=entropy&cs=tinysrgb'
     this.background.class = 'blur-sm'

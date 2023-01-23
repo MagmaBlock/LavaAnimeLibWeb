@@ -13,7 +13,7 @@
         <!-- 单内容块 -->
         <div v-for="content in collection.content" class="bg-gray-50 dark:bg-zinc-800 rounded-md px-4 lg:px-6 py-3">
           <!-- 小标题 -->
-          <div class="opacity-60 md:text-base font-medium mb-2"> {{ content.title }}</div>
+          <div class="opacity-60 md:text-base font-medium mb-2"> {{ content.title }} </div>
           <AnimeCollectionCards :ids="content.anime" class="flex flex-shrink-0"></AnimeCollectionCards>
         </div>
       </div>
@@ -39,8 +39,7 @@ export default {
       this.showIndex = this.showIndex + 2
     }
   },
-  mounted() {
-  },
-  components: {AnimeCollectionCards, ShowMoreButton}
+  mounted() { },
+  components: { AnimeCollectionCards, ShowMoreButton }
 }
 </script>

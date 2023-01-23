@@ -7,7 +7,7 @@
       <div class="text-gray-600 dark:text-zinc-400 text-xs">{{ sponsor.support }}</div>
     </div>
     <div class="text-gray-600 dark:text-zinc-400 text-xs px-2 overflow-hidden">{{ sponsor.message }}</div>
-    <a v-if="sponsor.link" :href="sponsor.link" class="absolute top-1 right-1" target="_blank">
+    <a target="_blank" :href="sponsor.link" v-if="sponsor.link" class="absolute top-1 right-1">
       <i class="bi bi-link-45deg"></i>
     </a>
   </div>

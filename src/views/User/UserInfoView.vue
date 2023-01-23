@@ -3,7 +3,7 @@
     <TopNav title="个人信息"></TopNav>
     <div class="lg:flex lg:flex-nowrap">
       <Container class="basis-1/3">
-        <n-list bordered class="shadow-sm" clickable hoverable>
+        <n-list hoverable clickable bordered class="shadow-sm">
           <n-list-item @click="$router.replace({ name: 'UserInfoAvatar' })">
             修改头像
           </n-list-item>
@@ -32,6 +32,6 @@ document.title = "用户信息 | 熔岩番剧库 LavaAnimeLib";
 
 // 当打开 /userinfo 时, 跳转到一个默认页
 if (useRoute().name == 'UserInfo') {
-  useRouter().replace({name: 'UserInfoAvatar'})
+  useRouter().replace({ name: 'UserInfoAvatar' })
 }
 </script>

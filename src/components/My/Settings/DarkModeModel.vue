@@ -1,18 +1,18 @@
 <template>
   <!-- 深色模式弹窗设置 -->
   <n-modal v-model:show="show" class="select-none">
-    <n-card :bordered="false" aria-modal="true" class="max-w-xl" role="dialog" size="small" title="深色模式设置">
+    <n-card class="max-w-xl" title="深色模式设置" :bordered="false" size="small" role="dialog" aria-modal="true">
       <template #header-extra>
         <i class="bi bi-x-lg hover:text-blue-600 cursor-pointer ml-2" @click="show = false"></i>
       </template>
-      <n-list clickable hoverable>
+      <n-list hoverable clickable>
         <n-list-item @click="settings.darkMode.on = !settings.darkMode.on">
           深色模式
-          <n-switch :value="settings.darkMode.on" class="float-right"/>
+          <n-switch :value="settings.darkMode.on" class="float-right" />
         </n-list-item>
         <n-list-item @click="settings.darkMode.autoDarkMode = !settings.darkMode.autoDarkMode">
           自动启用深色模式
-          <n-switch :value="settings.darkMode.autoDarkMode" class="float-right"/>
+          <n-switch :value="settings.darkMode.autoDarkMode" class="float-right" />
         </n-list-item>
       </n-list>
       <n-collapse-transition :show="settings.darkMode.autoDarkMode">
@@ -38,15 +38,15 @@
               <!-- <n-slider v-model:value="settings.darkMode.now" :step="1" :min="0" :max="23" /> -->
               <div>
                 深色开始时间 / 晚上 (24小时制)
-                <n-slider v-model:value="settings.darkMode.darkTime" :max="23" :min="0" :step="1"/>
+                <n-slider v-model:value="settings.darkMode.darkTime" :step="1" :min="0" :max="23" />
               </div>
               <div>
                 浅色开始时间 / 早晨 (24小时制)
-                <n-slider v-model:value="settings.darkMode.lightTime" :max="23" :min="0" :step="1"/>
+                <n-slider v-model:value="settings.darkMode.lightTime" :step="1" :min="0" :max="23" />
               </div>
               <n-space>
-                <n-input-number v-model:value="settings.darkMode.darkTime" size="small"/>
-                <n-input-number v-model:value="settings.darkMode.lightTime" size="small"/>
+                <n-input-number v-model:value="settings.darkMode.darkTime" size="small" />
+                <n-input-number v-model:value="settings.darkMode.lightTime" size="small" />
               </n-space>
             </n-space>
           </div>

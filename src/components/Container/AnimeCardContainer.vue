@@ -11,7 +11,7 @@ export default {
   props: {
     animes: Array, // 请传入一个包含动画信息的数组，数组中的每个对象均有 AnimeCard 所需的参数
     size: String, // 决定屏幕宽度  目前有 full large half
-    fakeNumber: {type: Number, default: 18} // 未加载情况下显示多少个骨架卡片
+    fakeNumber: { type: Number, default: 18 } // 未加载情况下显示多少个骨架卡片
   },
   watch: {
     animes(newList, oldList) {
@@ -24,14 +24,10 @@ export default {
   computed: {
     autoGroupClass() {
       switch (this.size) {
-        case "full":
-          return this.fullClass;
-        case "large":
-          return this.largeClass;
-        case "half":
-          return this.halfClass;
-        default:
-          return "";
+        case "full": return this.fullClass;
+        case "large": return this.largeClass;
+        case "half": return this.halfClass;
+        default: return "";
       }
     },
     fullClass() {
@@ -60,7 +56,7 @@ export default {
       `
     }
   },
-  components: {ShowMoreButton, AnimeCard}
+  components: { ShowMoreButton, AnimeCard }
 }
 </script>
 
@@ -69,18 +65,18 @@ export default {
     <n-spin :show="!animes" class="w-full">
       <div :class="autoGroupClass" class="w-full">
         <!-- 骨架屏 -->
-        <template v-for="a in fakeNumber" v-if="!animes">
+        <template v-if="!animes" v-for="a in fakeNumber">
           <AnimeCard></AnimeCard>
         </template>
         <!-- 番剧卡片 -->
         <template v-for="(anime, index) in animes">
-          <AnimeCard v-if="index <= page" :id="anime.id" :bdrip="anime.type.bdrip" :bgmid="anime.bgmId"
-                     :nsfw="anime.type.nsfw" :poster="anime.images.poster" :title="anime.title" :views="anime.views"
-                     class="self-start"/>
+          <AnimeCard class="self-start" :id="anime.id" :poster="anime.images.poster" :title="anime.title"
+            :bgmid="anime.bgmId" :views="anime.views" :bdrip="anime.type.bdrip" :nsfw="anime.type.nsfw"
+            v-if="index <= page" />
         </template>
       </div>
-      <ShowMoreButton v-if="animes?.length > page" @click="page = page + 30"/>
-      <n-empty v-if="animes?.length == 0" class="py-16" description="太可惜了，什么也没找到" size="large">
+      <ShowMoreButton v-if="animes?.length > page" @click="page = page + 30" />
+      <n-empty size="large" description="太可惜了，什么也没找到" class="py-16" v-if="animes?.length == 0">
       </n-empty>
     </n-spin>
   </div>

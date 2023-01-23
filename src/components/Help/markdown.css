@@ -1,44 +1,44 @@
 .markdown-body {
-    @apply text-sm leading-[24px] font-sans text-gray-800 dark:text-zinc-100
+  @apply text-sm leading-[24px] font-sans text-gray-800 dark:text-zinc-100
 }
 
-.markdown-body > p {
-    @apply my-1
+.markdown-body>p {
+  @apply my-1
 }
 
-.markdown-body > h1,
-.markdown-body > h2,
-.markdown-body > h3,
-.markdown-body > h4,
-.markdown-body > h5,
-.markdown-body > h6 {
-    @apply my-2 p-0 border-0 font-medium text-black dark:text-white
+.markdown-body>h1,
+.markdown-body>h2,
+.markdown-body>h3,
+.markdown-body>h4,
+.markdown-body>h5,
+.markdown-body>h6 {
+  @apply my-2 p-0 border-0 font-medium text-black dark:text-white
 }
 
-.markdown-body > * > a {
-    @apply text-blue-600
+.markdown-body>*>a {
+  @apply text-blue-600
 }
 
 /* 列表项最外层容器 */
-.markdown-body > ul {
-    @apply my-2 pl-6
+.markdown-body>ul {
+  @apply my-2 pl-6
 }
 
 /* 第一级列表 */
-.markdown-body > ul > li {
-    @apply list-disc leading-6
+.markdown-body>ul>li {
+  @apply list-disc leading-6
 }
 
 /* 第二级列表容器 */
-.markdown-body > ul > li > ul {
-    @apply pl-4
+.markdown-body>ul>li>ul {
+  @apply pl-4
 }
 
 /* 第二级列表 */
-.markdown-body > ul > li > ul > li {
-    @apply leading-5
+.markdown-body>ul>li>ul>li {
+  @apply leading-5
 }
 
-.markdown-body > hr {
-    @apply my-3 h-[0.5px] bg-slate-200
+.markdown-body>hr {
+  @apply my-3 h-[0.5px] bg-slate-200
 }

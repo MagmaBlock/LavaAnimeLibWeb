@@ -12,7 +12,7 @@ export default {
         year: "2023年",
         type: "1月冬"
       },
-      tabs: {year: [], type: []},
+      tabs: { year: [], type: [] },
       animes: null,
       loading: {
         year: true,
@@ -38,7 +38,8 @@ export default {
           return; // 当筛选条件已剩最后一个，禁止继续取消
         else
           this.selectedTab[type] = ""; // 取消当前筛选条件
-      } else { // 点击的标签未被选择
+      }
+      else { // 点击的标签未被选择
         this.selectedTab[type] = tagName; // 将其选择
       }
       await this.queryIndex();
@@ -46,11 +47,7 @@ export default {
     async queryIndex() {
       this.animes = null; // 移除数据，进入空状态
       let animeList = (await LavaAnimeAPI.post("/v2/index/query", this.selectedTab)).data.data;
-      await new Promise(resolve => {
-        setTimeout(() => {
-          resolve();
-        }, 200);
-      }); // 慢一点切换以便展示动画
+      await new Promise(resolve => { setTimeout(() => { resolve(); }, 200); }); // 慢一点切换以便展示动画
       this.animes = animeList; // 更新列表，同时解除空状态
     },
     // 判断是否仅剩一个选择项
@@ -81,7 +78,7 @@ export default {
     this.getIndex()
     this.queryIndex()
   },
-  components: {Container, SearchBar, AnimeCardContainer}
+  components: { Container, SearchBar, AnimeCardContainer }
 }
 </script>
 
@@ -93,7 +90,7 @@ export default {
         <!-- 选项本体部分，将粘连屏幕 -->
         <div class="sticky top-5 select-none">
           <!-- 快速搜索框 -->
-          <SearchBar v-model:search="searchValue" @search="value => $router.push('/search/' + value)"/>
+          <SearchBar v-model:search="searchValue" @search="value => $router.push('/search/' + value)" />
           <!-- 标题 -->
           <div class="text-lg my-4 mx-0.5 font-medium">番剧索引</div>
           <!-- 年份部分 -->
@@ -101,14 +98,14 @@ export default {
             <div class="flex flex-wrap">
               <!-- 年份骨架屏 -->
               <template v-if="loading.year">
-                <div v-for="a in 19" class="inline-block w-[60px] h-7 m-0.5 bg-gray-300 dark:bg-zinc-800 animate-pulse">
+                <div class="inline-block w-[60px] h-7 m-0.5 bg-gray-300 dark:bg-zinc-800 animate-pulse" v-for="a in 19">
                 </div>
               </template>
               <!-- 年份内容 -->
-              <template v-for="yearName in tabs.year" v-if="!loading.year">
-                <div :class="selectedTab.year == yearName ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:active:bg-gray-500 dark:text-zinc-200'"
-                     class="rounded cursor-pointer ease-in duration-100 px-2 py-1 m-0.5"
-                     @click="onTagClick(yearName, 'year')">
+              <template v-if="!loading.year" v-for="yearName in tabs.year">
+                <div class="rounded cursor-pointer ease-in duration-100 px-2 py-1 m-0.5"
+                  @click="onTagClick(yearName, 'year')"
+                  :class="selectedTab.year == yearName ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:active:bg-gray-500 dark:text-zinc-200'">
                   {{ yearName }}
                 </div>
               </template>
@@ -119,15 +116,15 @@ export default {
           <n-spin :show="loading.type">
             <div class="flex flex-wrap">
               <!-- 分类骨架屏 -->
-              <div v-if="loading.type" class="leading-none">
-                <div v-for="a in 8" class="inline-block w-[50px] h-7 bg-gray-300 dark:bg-zinc-800 m-0.5 animate-pulse">
+              <div class="leading-none" v-if="loading.type">
+                <div class="inline-block w-[50px] h-7 bg-gray-300 dark:bg-zinc-800 m-0.5 animate-pulse" v-for="a in 8">
                 </div>
               </div>
               <!-- 分类内容 -->
-              <template v-for="typeName in tabs.type" v-if="!loading.type">
-                <div :class="selectedTab.type == typeName ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:active:bg-gray-500 dark:text-zinc-200'"
-                     class="rounded cursor-pointer ease-in duration-100 px-2 py-1 m-0.5"
-                     @click="onTagClick(typeName, 'type')">
+              <template v-if="!loading.type" v-for="typeName in tabs.type">
+                <div class="rounded cursor-pointer ease-in duration-100 px-2 py-1 m-0.5"
+                  @click="onTagClick(typeName, 'type')"
+                  :class="selectedTab.type == typeName ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:active:bg-gray-500 dark:text-zinc-200'">
                   {{ typeName }}
                 </div>
               </template>
@@ -138,7 +135,7 @@ export default {
       </div>
 
       <!-- 番剧栅格部分 -->
-      <AnimeCardContainer :animes="this.animes" class="lg:basis-3/4 flex-none px-2 lg:px-4" size="large"/>
+      <AnimeCardContainer :animes="this.animes" size="large" class="lg:basis-3/4 flex-none px-2 lg:px-4" />
     </div>
   </Container>
 </template>

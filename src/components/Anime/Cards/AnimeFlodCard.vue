@@ -5,11 +5,11 @@
       <slot name="title"></slot>
       <!-- Switch Button -->
       <RoundedButton class="float-right px-2" @click="openTab = !openTab">
-        <i v-show="openTab" class="bi bi-chevron-up"></i>
-        <i v-show="!openTab" class="bi bi-chevron-down"></i>
+        <i class="bi bi-chevron-up" v-show="openTab"></i>
+        <i class="bi bi-chevron-down" v-show="!openTab"></i>
       </RoundedButton>
     </div>
-    <n-collapse-transition v-if="openTab !== null" :show="openTab" class="mt-2">
+    <n-collapse-transition :show="openTab" v-if="openTab !== null" class="mt-2">
       <slot></slot>
     </n-collapse-transition>
   </AnimeBasicCard>
@@ -42,6 +42,6 @@ export default {
       this.openTab = this.desktopShow
     }
   },
-  components: {AnimeBasicCard, RoundedButton}
+  components: { AnimeBasicCard, RoundedButton }
 }
 </script>

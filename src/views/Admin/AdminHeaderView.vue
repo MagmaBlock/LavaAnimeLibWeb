@@ -5,33 +5,32 @@
     </n-input-group>
     <div class="my-2 lg:grid lg:grid-cols-5">
       <div class="lg:col-span-2 lg:mr-4 h-52 sm:h-64 lg:h-72">
-        <HeaderPictures :key="refresh" :customdata="headers" class="sm:rounded-md"/>
+        <HeaderPictures class="sm:rounded-md" :customdata="headers" :key="refresh" />
       </div>
       <div class="lg:col-span-3 overflow-scroll h-52 sm:h-64 lg:h-72">
         <pre>{{ JSON.stringify(headers, null, 2) }}</pre>
       </div>
     </div>
     <div class="md:grid md:grid-cols-3 gap-2">
-      <BasicCard v-for="header, index in headers" class="flex flex-wrap gap-2 p-2">
+      <BasicCard class="flex flex-wrap gap-2 p-2" v-for="header, index in headers">
         <n-input-group>
           <n-input-group-label>标题</n-input-group-label>
-          <n-input v-model:value="header.title" placeholder="标题" type="text"/>
+          <n-input v-model:value="header.title" type="text" placeholder="标题" />
         </n-input-group>
         <n-input-group>
           <n-input-group-label>副标题</n-input-group-label>
-          <n-input v-model:value="header.subtitle" placeholder="副标题" type="text"/>
+          <n-input v-model:value="header.subtitle" type="text" placeholder="副标题" />
         </n-input-group>
         <n-input-group>
           <n-input-group-label>图片链接</n-input-group-label>
-          <n-input v-model:value="header.pic" placeholder="图片链接" type="text"/>
+          <n-input v-model:value="header.pic" type="text" placeholder="图片链接" />
         </n-input-group>
         <n-input-group>
           <n-input-group-label>{{ header.externalUrl ? '外部链接' : '链接' }}</n-input-group-label>
-          <n-input v-model:value="header.url" :placeholder="header.externalUrl ? '外部链接' : '链接'" type="text"/>
+          <n-input v-model:value="header.url" type="text" :placeholder="header.externalUrl ? '外部链接' : '链接'" />
         </n-input-group>
         <n-space class="flex place-items-center">
-          <n-switch v-model:value="header.externalUrl"/>
-          外部链接
+          <n-switch v-model:value="header.externalUrl" />外部链接
           <n-button size="small" @click="move(index, -1)">上移</n-button>
           <n-button size="small" @click="move(index, 1)">下移</n-button>
           <n-button size="small" @click="remove(index)">删除</n-button>
@@ -59,7 +58,7 @@ export default {
   methods: {
     async submitData() {
       try {
-        let result = await LavaAnimeAPI.post('/v2/home/header/update', {data: this.headers})
+        let result = await LavaAnimeAPI.post('/v2/home/header/update', { data: this.headers })
         $message.success(result.data.message)
       } catch (error) {
         console.error(error);
@@ -95,6 +94,6 @@ export default {
       localStorage.setItem('adminPassword', newValue)
     }
   },
-  components: {HeaderPictures, BasicCard}
+  components: { HeaderPictures, BasicCard }
 }
 </script>

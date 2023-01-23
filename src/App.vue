@@ -5,7 +5,7 @@ export default {
   data() {
     return {};
   },
-  components: {View}
+  components: { View }
 }
 </script>
 
@@ -13,7 +13,7 @@ export default {
   <ThemeProvier>
     <n-notification-provider>
       <n-message-provider>
-        <View/>
+        <View />
       </n-message-provider>
     </n-notification-provider>
   </ThemeProvier>
