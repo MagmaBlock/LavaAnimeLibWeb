@@ -15,7 +15,7 @@
     "github-markdown-css": "^5.1.0",
     "lodash": "^4.17.21",
     "marked": "^4.2.12",
-    "ua-parser-js": "^1.0.32",
+    "ua-parser-js": "^1.0.33",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6",
     "vue3-lazyload": "^0.3.6"
