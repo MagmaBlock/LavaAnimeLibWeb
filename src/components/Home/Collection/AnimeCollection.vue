@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     showAdd() {
-      this.showIndex = this.showIndex + 2
+      this.showIndex = this.showIndex + 1
     }
   },
   mounted() { },
