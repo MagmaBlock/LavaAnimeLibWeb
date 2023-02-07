@@ -50,7 +50,7 @@ export default {
   async mounted() {
     let animes = getMyCollections();
     let animesData = await getAnimesData(animes);
-    this.myAnimes = animesData.data;
+    this.myAnimes = animesData?.data ?? [];
   },
   components: { AnimeCardContainer, MyBasicCard }
 }
