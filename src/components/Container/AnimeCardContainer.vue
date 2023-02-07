@@ -70,8 +70,7 @@ export default {
         </template>
         <!-- 番剧卡片 -->
         <template v-for="(anime, index) in animes">
-          <AnimeCard class="self-start" :id="anime.id" :poster="anime.images.poster" :title="anime.title"
-            :bgmid="anime.bgmId" :views="anime.views" :bdrip="anime.type.bdrip" :nsfw="anime.type.nsfw"
+          <AnimeCard class="self-start" :anime="anime"
             v-if="index <= page" />
         </template>
       </div>

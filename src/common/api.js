@@ -67,6 +67,13 @@ class LavaAnimeAPIs {
     async getAnimeFollowTotalAPI() {
         return LavaAnimeAPI.get('/v2/anime/follow/total')
     }
+    /**
+     * 获取某个番剧的追番情况
+     * @param {Number} id
+     */
+    async getAnimeFollowInfoAPI(id) {
+        return LavaAnimeAPI.get('/v2/anime/follow/info', { params: { id } })
+    }
 }
 
 export const lavaAnimeAPIs = new LavaAnimeAPIs()
