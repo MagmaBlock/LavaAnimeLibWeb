@@ -39,10 +39,42 @@ function getToken() {
     }
 }
 
+
+class LavaAnimeAPIs {
+    /**
+     * 获取追番列表
+     * @param {Array<Number>} status 
+     * @param {Number} page 
+     * @param {Number} pageSize 
+     */
+    async getAnimeFollowListAPI(status, page, pageSize) {
+        return await LavaAnimeAPI.post('/v2/anime/follow/list', { status, page, pageSize })
+    }
+
+    /**
+     * 新增/更新/删除 追番
+     * @param {Number} id 
+     * @param {Number} status 
+     * @param {Boolean} remove 
+     */
+    async editAnimeFollowAPI(id, status, remove) {
+        return LavaAnimeAPI.post('/v2/anime/follow/edit', { id, status, remove })
+    }
+
+    /**
+     * 获取所有类型的追番数量
+     */
+    async getAnimeFollowTotalAPI() {
+        return LavaAnimeAPI.get('/v2/anime/follow/total')
+    }
+}
+
+export const lavaAnimeAPIs = new LavaAnimeAPIs()
+
 // 传入 ID Array，获取番剧信息
 export async function getAnimesData(array) {
     try {
-      return (await LavaAnimeAPI.post("/v2/anime/get", {ids: array})).data;
+        return (await LavaAnimeAPI.post("/v2/anime/get", { ids: array })).data;
     }
     catch (error) {
         console.error(error);
