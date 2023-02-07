@@ -4,8 +4,8 @@
       <UserCard class="px-6" />
       <FunctionsCard class="px-4" />
     </div>
-    <MyFollow class="px-6 sm:my-4" />
     <MyCollections class="px-6" />
+    <MyFollow class="px-6 sm:my-4" />
     <AdminLinks class="mx-6 sm:mx-0" />
   </ContainerMobileFull>
 </template>

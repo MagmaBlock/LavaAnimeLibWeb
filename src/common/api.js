@@ -80,6 +80,7 @@ export const lavaAnimeAPIs = new LavaAnimeAPIs()
 
 // 传入 ID Array，获取番剧信息
 export async function getAnimesData(array) {
+    if (Array.isArray(array) && array.length == 0 || !Array.isArray(array)) return
     try {
         return (await LavaAnimeAPI.post("/v2/anime/get", { ids: array })).data;
     }
