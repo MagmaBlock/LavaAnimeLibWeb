@@ -1,6 +1,6 @@
 <template>
-  <n-list hoverable class="sm:w-80">
-    <n-list-item>
+  <n-list hoverable class="sm:w-80 select-none">
+    <n-list-item class="select-text">
       <div class="text-lg">{{ anime?.title || '...' }}</div>
     </n-list-item>
     <n-list-item>
