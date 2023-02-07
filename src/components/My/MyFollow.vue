@@ -8,8 +8,8 @@
         <n-tab :name="2">看过<span class="ml-1" v-if="followTotals['2']">({{ followTotals["2"] }})</span></n-tab>
       </n-tabs>
     </div>
-    <AnimeCardContainer :animes="animeList" size="full" />
-    <n-result v-if="fetchFailed" class="my-4" status="404" title="获取失败" description="生活总归带点荒谬"></n-result>
+    <AnimeCardContainer v-if="!fetchFailed" :animes="animeList" size="full" />
+    <n-result v-else class="my-8" status="404" title="获取失败" description="未能连接到人类所在的世界..."></n-result>
   </MyBasicCard>
 </template>
 
