@@ -1,5 +1,6 @@
 <script>
 import AnimeCardMenu from './AnimeCardMenu.vue';
+import LargeMenu from './Menu/LargeMenu.vue';
 
 
 export default {
@@ -17,7 +18,7 @@ export default {
     return {};
   },
   methods: {},
-  components: { AnimeCardMenu }
+  components: { AnimeCardMenu, LargeMenu }
 }
 </script>
 

@@ -4,7 +4,7 @@
 <template>
   <div>
     <!-- 宽屏 -->
-    <n-popover v-if="isWide" trigger="click" placement="bottom">
+    <n-popover v-if="isWide" trigger="click" placement="top">
       <template #trigger>
         <slot name="trigger"></slot>
       </template>
