@@ -11,7 +11,8 @@ export default {
   props: {
     animes: Array, // 请传入一个包含动画信息的数组，数组中的每个对象均有 AnimeCard 所需的参数
     size: String, // 决定屏幕宽度  目前有 full large half
-    fakeNumber: { type: Number, default: 18 } // 未加载情况下显示多少个骨架卡片
+    fakeNumber: { type: Number, default: 18 }, // 未加载情况下显示多少个骨架卡片
+    loading: Boolean // 决定是否显示为加载状态
   },
   watch: {
     animes(newList, oldList) {
@@ -62,7 +63,7 @@ export default {
 
 <template>
   <div class="select-none w-full">
-    <n-spin :show="!animes" class="w-full">
+    <n-spin :show="!animes || loading" class="w-full">
       <div :class="autoGroupClass" class="w-full">
         <!-- 骨架屏 -->
         <template v-if="!animes" v-for="a in fakeNumber">
@@ -70,8 +71,7 @@ export default {
         </template>
         <!-- 番剧卡片 -->
         <template v-for="(anime, index) in animes">
-          <AnimeCard class="self-start" :anime="anime"
-            v-if="index <= page" />
+          <AnimeCard class="self-start" :anime="anime" v-if="index <= page" />
         </template>
       </div>
       <ShowMoreButton v-if="animes?.length > page" @click="page = page + 30" />

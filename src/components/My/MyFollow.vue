@@ -17,28 +17,45 @@
         <n-tab :name="2">看过<span class="ml-1" v-if="followTotals['2']">({{ followTotals["2"] }})</span></n-tab>
       </n-tabs>
     </div>
-    <AnimeCardContainer v-if="!fetchFailed" :animes="animeList" size="full" />
+    <AnimeCardContainer v-if="!fetchFailed" :animes="animeList" size="full" :loading="loading" />
     <n-result v-else class="my-8" status="404" title="获取失败" description="未能连接到人类所在的世界..."></n-result>
+    <n-pagination v-if="totalPages > 1" v-model:page="page" :page-count="totalPages" class="mt-4" />
   </MyBasicCard>
 </template>
 
 <script setup>
-import { nextTick, onMounted, ref, watch } from 'vue';
+import { nextTick, onMounted, ref, watch, computed } from 'vue';
 import { lavaAnimeAPIs } from '../../common/api';
 import AnimeCardContainer from '../Container/AnimeCardContainer.vue';
 
+// StatusTab、分页相关数据
 const tabsRef = ref(null)
 const seletedTab = ref(1)
-watch(seletedTab, newTab => getFollow(newTab))
 const followTotals = ref({})
+watch(seletedTab, newTab => {
+  page.value = 1
+  getFollow(newTab, page.value)
+})
 
+const page = ref(1)
+const totalPages = computed(() => {
+  return Math.ceil(followTotals.value[seletedTab.value] / 20)
+})
+watch(page, (newPage, oldPage) => {
+  if (newPage !== oldPage) getFollow(seletedTab.value, newPage)
+})
+
+const loading = ref(false)
+
+// 番剧相关数据
 const thisFollowList = ref([])
 const animeList = ref([])
 const fetchFailed = ref(false)
 
-const getFollow = async status => {
+async function getFollow(status, page = 1, pageSize = 20) {
+  loading.value = true
   try {
-    let result = await lavaAnimeAPIs.getAnimeFollowListAPI([status])
+    let result = await lavaAnimeAPIs.getAnimeFollowListAPI([status], page, pageSize)
     if (result.data.code = 200) {
       thisFollowList.value = result.data.data
     }
@@ -52,9 +69,10 @@ const getFollow = async status => {
   } catch (error) {
     fetchFailed.value = true
   }
+  loading.value = false
 }
 
-async function getFollowTatals() {
+async function getFollowTotal() {
   try {
     let result = await lavaAnimeAPIs.getAnimeFollowTotalAPI()
     if (result.data.code = 200) {
@@ -65,13 +83,13 @@ async function getFollowTatals() {
 }
 
 async function refresh() {
-  getFollowTatals()
-  getFollow(seletedTab.value)
+  getFollowTotal()
+  getFollow(seletedTab.value, page.value)
   $message.success("已刷新!")
 }
 
 onMounted(() => {
-  getFollowTatals()
-  getFollow(1)
+  getFollowTotal()
+  getFollow(seletedTab.value, page.value)
 })
 </script>
