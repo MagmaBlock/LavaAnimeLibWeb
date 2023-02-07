@@ -148,7 +148,7 @@ export default {
     </div>
     <!-- 错误处理视图 -->
     <div v-if="error && errorCode == 404" class="w-full grid place-content-center mt-16">
-      <n-result status="404" title="404 资源不存在" description="生活总归带点荒谬" class="bg-white/70 w-fit p-10 rounded" />
+      <n-result status="404" title="404 资源不存在" description="生活总归带点荒谬" class="w-fit p-10 rounded" />
     </div>
   </ContainerMobileFull>
 </template>
