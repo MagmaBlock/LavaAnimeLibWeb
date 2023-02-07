@@ -1,7 +1,16 @@
 <template>
   <MyBasicCard class="sm:px-6 py-4 rounded-md">
     <div class="mb-2">
-      <div class="text-lg mb-2">我的追番</div>
+      <n-thing>
+        <template #header>
+          我的追番
+        </template>
+        <template #header-extra>
+          <n-button circle size="small" @click="refresh">
+            <i class="bi bi-arrow-clockwise"></i>
+          </n-button>
+        </template>
+      </n-thing>
       <n-tabs type="line" v-model:value="seletedTab" :default-value="2" ref="tabsRef">
         <n-tab :name="0">想看<span class="ml-1" v-if="followTotals['0']">({{ followTotals["0"] }})</span></n-tab>
         <n-tab :name="1">在看<span class="ml-1" v-if="followTotals['1']">({{ followTotals["1"] }})</span></n-tab>
@@ -53,6 +62,12 @@ async function getFollowTatals() {
     }
     nextTick(() => tabsRef.value?.syncBarPosition()) // 更新滚动条的位置
   } catch (error) { }
+}
+
+async function refresh() {
+  getFollowTatals()
+  getFollow(seletedTab.value)
+  $message.success("已刷新!")
 }
 
 onMounted(() => {
