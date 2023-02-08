@@ -1,18 +1,11 @@
 <script>
-import AnimeCardMenu from './AnimeCardMenu.vue';
-import LargeMenu from './Menu/LargeMenu.vue';
+import AnimeCardMenu from '../AnimeCardMenu.vue';
+import LargeMenu from '../Layout/LargeMenu.vue';
 
 
 export default {
   props: {
     anime: { type: Object }
-    // id: { type: [String, Number], default: -1 },
-    // poster: { type: String, default: '' },
-    // title: { type: String, default: '' },
-    // bgmid: { type: [String, Number], default: -1 },
-    // views: { type: [String, Number], default: 0 },
-    // nsfw: { type: Boolean, default: false },
-    // bdrip: { type: Boolean, default: false }
   },
   data() {
     return {};

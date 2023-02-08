@@ -12,12 +12,11 @@
 
 <script>
 import ContainerMobileFull from '../../components/ContainerMobileFull.vue';
+import UserCard from '../../components/My/User/UserCard.vue';
 import FunctionsCard from '../../components/My/FunctionsCard.vue';
 import MyCollections from '../../components/My/MyCollections.vue';
-import AdminLinks from '../../components/Admin/AdminLinks.vue';
-import UserCard from '../../components/My/User/UserCard.vue';
 import MyFollow from '../../components/My/MyFollow.vue';
-import LargeMenu from '../../components/Menu/LargeMenu.vue';
+import AdminLinks from '../../components/Admin/AdminLinks.vue';
 
 export default {
   data() {
@@ -27,6 +26,6 @@ export default {
   mounted() {
     document.title = '我的 | 熔岩番剧库 LavaAnimeLib'
   },
-  components: { FunctionsCard, UserCard, MyCollections, ContainerMobileFull, AdminLinks, MyFollow, LargeMenu }
+  components: { FunctionsCard, UserCard, MyCollections, ContainerMobileFull, AdminLinks, MyFollow }
 }
 </script>

@@ -1,5 +1,5 @@
 <script>
-import AnimeCard from '../AnimeCard.vue';
+import AnimeCard from '../AnimeCard/AnimeCard.vue';
 import ShowMoreButton from './ShowMoreButton.vue'
 
 export default {
