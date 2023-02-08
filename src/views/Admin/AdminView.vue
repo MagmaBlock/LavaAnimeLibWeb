@@ -8,7 +8,7 @@
 
 <script>
 import { RouterView } from 'vue-router';
-import Container from '../../components/Container.vue';
+import Container from '../../components/Layout/PageContainer/Container.vue';
 import AdminLinks from '../../components/Admin/AdminLinks.vue';
 
 export default {
