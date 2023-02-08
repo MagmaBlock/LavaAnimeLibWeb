@@ -4,7 +4,7 @@
       <div class="text-lg">{{ anime?.title || '...' }}</div>
     </n-list-item>
     <n-list-item>
-      <i class="bi bi-plus-circle"></i> 追番
+      <i class="bi bi-heart"></i> 追番
       <template #suffix>
         <div>
           <n-button secondary type="primary" size="small" @click="editFollow(1)"
