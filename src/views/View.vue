@@ -28,21 +28,6 @@ export default {
     window.$message = useMessage()
     window.$notification = useNotification()
   },
-  mounted() {
-    let login = localStorage.getItem('token')
-    if (!login) {
-      $notification.warning({
-        title: "即将更改为登录可用的通知",
-        content: `由于本站为个人开发，且并非盈利性质，在 2021 年创立之初仅计划面向少量用户使用。
-近期资源盗用情况逐渐增多，考虑将在 12 月 21 日后调整至登录可用。
-
-注册需要邀请码，若您在 QQ 群内，请直接联系 Magma；
-若您是通过 Bangumi 了解到本站，请通过 Bangumi 站内私信获得邀请码；
-若您是通过其他方式了解到本站，请通过相应方式联系我。`,
-        meta: "已登录的用户不会显示本消息"
-      })
-    }
-  },
   components: { RouterView, NavBar }
 }
 </script>
