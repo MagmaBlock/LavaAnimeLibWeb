@@ -6,15 +6,15 @@
     <n-list-item>
       <i class="bi bi-heart"></i> 追番
       <template #suffix>
-        <div>
-          <n-button secondary type="primary" size="small" @click="editFollow(1)"
-            v-if="followInfo.status !== undefined && followInfo.status == -1">
-            添加到追番
-          </n-button>
-          <n-button secondary size="small" @click="editFollow(undefined, true)" v-if="followInfo.status != -1">
-            取消追番
-          </n-button>
-        </div>
+        <n-button secondary type="primary" size="small" @click="editFollow(1)"
+          v-if="followInfo.status !== undefined && followInfo.status == -1">
+          添加到追番
+        </n-button>
+        <n-button secondary size="small" @click="editFollow(undefined, true)"
+          v-else-if="followInfo.status !== undefined && followInfo.status != -1">
+          取消追番
+        </n-button>
+        <n-button secondary disabled size="small" v-else>无法操作</n-button>
       </template>
     </n-list-item>
     <n-list-item>
