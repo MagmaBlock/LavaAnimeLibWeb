@@ -16,7 +16,7 @@
 <script>
 import { getAnimesData, lavaAnimeAPIs } from '../../common/api.js';
 import { getMyCollections } from '../../common/Methods/MyCollections.js';
-import AnimeCardContainer from '../Container/AnimeCardContainer.vue';
+import AnimeCardContainer from '../Layout/CardContainer/AnimeCardContainer.vue';
 import MyBasicCard from './MyBasicCard.vue';
 
 export default {

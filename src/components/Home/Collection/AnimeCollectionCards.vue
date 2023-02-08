@@ -6,7 +6,7 @@
 
 <script>
 import { getAnimesData } from '../../../common/api.js';
-import AnimeCardContainer from '../../Container/AnimeCardContainer.vue';
+import AnimeCardContainer from '../../Layout/CardContainer/AnimeCardContainer.vue';
 
 export default {
   props: {

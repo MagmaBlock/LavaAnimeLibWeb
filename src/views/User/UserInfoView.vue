@@ -25,7 +25,7 @@
 
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
-import Container from '../../components/Container.vue';
+import Container from '../../components/Layout/PageContainer/Container.vue';
 import TopNav from '../../components/NavBar/TopNav.vue';
 
 document.title = "用户信息 | 熔岩番剧库 LavaAnimeLib";

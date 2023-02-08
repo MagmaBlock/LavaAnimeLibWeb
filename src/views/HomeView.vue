@@ -21,7 +21,7 @@
 import uaParser from 'ua-parser-js';
 
 import HeaderPictures from "../components/Home/HeaderPictures.vue";
-import ContainerMobileFull from "../components/ContainerMobileFull.vue";
+import ContainerMobileFull from "../components/Layout/PageContainer/ContainerMobileFull.vue";
 import AnimeCollection from "../components/Home/Collection/AnimeCollection.vue";
 
 export default {

@@ -26,7 +26,7 @@
 <script setup>
 import { nextTick, onMounted, ref, watch, computed } from 'vue';
 import { lavaAnimeAPIs } from '../../common/api';
-import AnimeCardContainer from '../Container/AnimeCardContainer.vue';
+import AnimeCardContainer from '../Layout/CardContainer/AnimeCardContainer.vue';
 
 // 计算每页的尺寸, 以此让分页在所有尺寸的设备上都是刚好满行
 let pageSize = 6 * 3 // 六行, 每行三个

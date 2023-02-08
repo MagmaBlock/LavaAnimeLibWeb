@@ -1,5 +1,5 @@
 <script>
-import AnimeCardMenu from '../AnimeCardMenu.vue';
+import AnimeCardMenu from './AnimeCardMenu.vue';
 import LargeMenu from '../Layout/LargeMenu.vue';
 
 

@@ -1,7 +1,7 @@
 <script>
 import { LavaAnimeAPI } from '../common/api.js';
-import Container from '../components/Container.vue';
-import AnimeCardContainer from '../components/Container/AnimeCardContainer.vue';
+import Container from '../components/Layout/PageContainer/Container.vue';
+import AnimeCardContainer from '../components/Layout/CardContainer/AnimeCardContainer.vue';
 import SearchBar from '../components/Search/SearchBar.vue';
 
 import { useStorage } from '@vueuse/core'

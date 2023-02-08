@@ -16,7 +16,7 @@
   </div>
 </template>
 <script>
-import Container from '../components/Container.vue'
+import Container from '../components/Layout/PageContainer/Container.vue'
 import List from '../components/Help/List.vue';
 import MarkdownRender from '../components/Help/MarkdownRender.vue';
 import Sponsors from '../components/Help/Sponsors.vue';

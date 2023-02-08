@@ -40,7 +40,7 @@
 <script>
 import axios from 'axios';
 import GitHubCommits from '../../components/About/GitHubCommits.vue';
-import Container from '../../components/Container.vue';
+import Container from '../../components/Layout/PageContainer/Container.vue';
 import TopNav from '../../components/NavBar/TopNav.vue';
 
 export default {

@@ -40,7 +40,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { lavaAnimeAPIs } from '../common/api';
+import { lavaAnimeAPIs } from '../../common/api';
 
 const { anime } = defineProps({
   anime: { type: Object }

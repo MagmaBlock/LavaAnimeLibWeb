@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import ContainerMobileFull from '../../components/ContainerMobileFull.vue';
+import ContainerMobileFull from '../../components/Layout/PageContainer/ContainerMobileFull.vue';
 import UserCard from '../../components/My/User/UserCard.vue';
 import FunctionsCard from '../../components/My/FunctionsCard.vue';
 import MyCollections from '../../components/My/MyCollections.vue';
