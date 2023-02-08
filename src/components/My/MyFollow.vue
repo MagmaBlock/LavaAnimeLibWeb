@@ -28,6 +28,18 @@ import { nextTick, onMounted, ref, watch, computed } from 'vue';
 import { lavaAnimeAPIs } from '../../common/api';
 import AnimeCardContainer from '../Container/AnimeCardContainer.vue';
 
+// 计算每页的尺寸, 以此让分页在所有尺寸的设备上都是刚好满行
+let pageSize = 6 * 3 // 六行, 每行三个
+function calPageSize() {
+  let width = window.innerWidth
+  if (width >= 640) pageSize = 5 * 4 // 五行, 每行四个
+  if (width >= 768) pageSize = 4 * 5 // 四行, 每行五个
+  if (width >= 1024) pageSize = 3 * 7 // 三行, 每行七个
+  if (width >= 1280) pageSize = 3 * 8 // 三行, 每行八个
+  if (width >= 1536) pageSize = 2 * 10 // 二行, 每行十个
+}
+calPageSize()
+
 // StatusTab、分页相关数据
 const tabsRef = ref(null)
 const seletedTab = ref(1)
@@ -39,7 +51,7 @@ watch(seletedTab, newTab => {
 
 const page = ref(1)
 const totalPages = computed(() => {
-  return Math.ceil(followTotals.value[seletedTab.value] / 20)
+  return Math.ceil(followTotals.value[seletedTab.value] / pageSize)
 })
 watch(page, (newPage, oldPage) => {
   if (newPage !== oldPage) getFollow(seletedTab.value, newPage)
@@ -52,7 +64,7 @@ const thisFollowList = ref([])
 const animeList = ref([])
 const fetchFailed = ref(false)
 
-async function getFollow(status, page = 1, pageSize = 20) {
+async function getFollow(status, page = 1) {
   loading.value = true
   try {
     let result = await lavaAnimeAPIs.getAnimeFollowListAPI([status], page, pageSize)
@@ -69,7 +81,9 @@ async function getFollow(status, page = 1, pageSize = 20) {
   } catch (error) {
     fetchFailed.value = true
   }
-  loading.value = false
+  setTimeout(() => {
+    loading.value = false
+  }, 300)
 }
 
 async function getFollowTotal() {
