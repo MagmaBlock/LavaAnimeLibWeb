@@ -18,7 +18,10 @@
         </n-form-item>
       </n-form>
     </div>
-    <n-button @click="send">确认生成</n-button>
+    <n-space>
+      <n-button @click="send">确认生成</n-button>
+      <n-button @click="allVaildCodes">获取所有有效邀请码</n-button>
+    </n-space>
     <div class="select-text">
       <div v-for="code in result">
         {{ code.code }} <span v-if="code.expirationTime">{{ code.expirationTime }}</span>
@@ -59,6 +62,17 @@ export default {
     },
     setTimeDays(day) {
       this.expirationTime = new Date().getTime() + 1000 * 60 * 60 * 24 * day
+    },
+    async allVaildCodes() {
+      try {
+        let result = await LavaAnimeAPI.get('/v2/admin/invite/all-valid-codes')
+        if (result.data?.code == 200) {
+          this.result = result.data.data
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
     }
   },
   mounted() {
