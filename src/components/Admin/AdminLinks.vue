@@ -1,5 +1,5 @@
 <template>
-  <n-space class="my-4" v-if="userInfo?.data?.permission?.admin || $route.name.startsWith('Admin')">
+  <n-space v-if="userInfo?.data?.permission?.admin || $route.name.startsWith('Admin')">
     <template v-for="tab in tabs">
       <RouterLink :to="{ name: tab.routeName }">
         <n-button strong secondary>
@@ -15,6 +15,6 @@ import { userInfo } from '../../common/API/user.js';
 
 const tabs = [
   { name: '主页头图', routeName: 'AdminHeader' },
-  { name: '邀请码生成', routeName: 'AdminInvite' }
+  { name: '邀请码管理', routeName: 'AdminInvite' }
 ]
 </script>
