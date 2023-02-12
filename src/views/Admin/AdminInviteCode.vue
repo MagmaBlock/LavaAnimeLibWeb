@@ -1,11 +1,11 @@
 <template>
-  <div class="flex flex-wrap gap-8">
-    <div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="col-span-1">
       <n-form>
         <n-form-item label="生成数量">
           <n-input-number class="max-w-xs" v-model:value="amount" placeholder="生成数量" clearable />
         </n-form-item>
-        <n-form-item label="是否启用时间限制">
+        <n-form-item label="开启到期时间">
           <n-switch v-model:value="timeLimit" />
         </n-form-item>
       </n-form>
@@ -17,17 +17,26 @@
           <n-date-picker v-model:value="expirationTime" type="datetime" clearable />
         </n-form-item>
       </n-form>
+      <n-button secondary @click="send">确认生成</n-button>
     </div>
-    <n-space>
-      <n-button @click="send">确认生成</n-button>
-      <n-button @click="allVaildCodes">获取所有有效邀请码</n-button>
-    </n-space>
-    <div class="select-text">
-      <div v-for="code in result">
-        {{ code.code }} <span v-if="code.expirationTime">{{ code.expirationTime }}</span>
-      </div>
+    <div class="col-span-2">
+      <n-table v-if="allCodes.length">
+        <thead>
+          <tr>
+            <th>邀请码</th>
+            <th>截至</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="code in allCodes">
+            <td class="select-text">{{ code.code }}</td>
+            <td class="select-text"><n-time v-if="code.expirationTime" :time="code.expirationTime" /></td>
+            <td><n-button size="small" type="error" secondary @click="deleteCode(code.code)">删除</n-button></td>
+          </tr>
+        </tbody>
+      </n-table>
     </div>
-
   </div>
 </template>
 
@@ -39,9 +48,9 @@ export default {
     return {
       amount: 1,
       timeLimit: false,
-      lateDays: 1,
+      lateDays: 3,
       expirationTime: null,
-      result: []
+      allCodes: [],
     };
   },
   methods: {
@@ -54,7 +63,7 @@ export default {
         })
         if (add.data.code = 200) {
           $message.success(add.data.message)
-          this.result = add.data.data
+          this.allVaildCodes()
         }
       } catch (error) {
         console.error(error);
@@ -67,16 +76,27 @@ export default {
       try {
         let result = await LavaAnimeAPI.get('/v2/admin/invite/all-valid-codes')
         if (result.data?.code == 200) {
-          this.result = result.data.data
+          this.allCodes = result.data.data
         }
       } catch (error) {
         console.error(error);
       }
 
+    },
+    async deleteCode(code) {
+      try {
+        let result = await LavaAnimeAPI.post('/v2/admin/invite/delete-codes', { codes: [code] })
+        if (result.data?.code == 200) $message.success('成功')
+      } catch (error) {
+        console.error(error);
+        $message.error("删除失败")
+      }
+      this.allVaildCodes()
     }
   },
   mounted() {
     this.setTimeDays(1)
+    this.allVaildCodes()
   },
   watch: {
     lateDays(day) {
