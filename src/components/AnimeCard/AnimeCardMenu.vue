@@ -10,15 +10,20 @@
       </template>
     </n-list-item>
 
-    <n-list-item @click="editFollow(1)" v-if="followInfo.status !== undefined && followInfo.status == -1">
+    <!-- -1 未追番 -->
+    <n-list-item @click="editFollow(1)" v-if="followInfo.status == -1">
       <i class="bi bi-heart"></i> 添加到追番
     </n-list-item>
-    <n-list-item class="text-blue-400" @click="editFollow(undefined, true)"
-      v-else-if="followInfo.status !== undefined && followInfo.status != -1">
+    <!-- 0-2 已追番 -->
+    <n-list-item class="text-blue-400" @click="editFollow(undefined, true)" v-else-if="followInfo.status >= 0">
       <i class="bi bi-heart-fill"></i> 取消追番
     </n-list-item>
+    <!-- undefined 加载中, -2 错误 -->
+    <n-list-item v-else-if="followInfo.status != -2">
+      <n-skeleton text />
+    </n-list-item>
 
-    <n-list-item>
+    <n-list-item v-if="followInfo.status != -2">
       <i class="bi bi-bookmark-plus-fill"></i> 标记为
       <template #suffix>
         <n-button-group size="tiny">
@@ -63,7 +68,9 @@ async function getFollowInfo() {
       if (info.data.data) {
         followInfo.value = info.data.data
       }
-    } catch (error) { }
+    } catch (error) {
+      followInfo.value = { status: -2 }
+    }
   }
 }
 
