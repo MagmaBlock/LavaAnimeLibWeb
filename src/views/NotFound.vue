@@ -18,12 +18,16 @@
 </template>
 
 <script setup>
-import { inject } from 'vue';
+import { inject, onUnmounted } from 'vue';
 
 const background = inject('background')
 background.value.on = true
 background.value.url = 'https://dogefs.s3.ladydaily.com/~/source/unsplash/photo-1552203274-e3c7bd771d26?ixlib=rb-4.0.3&dl=toby-yang-sRy2kBQCNts-unsplash.jpg&w=1920&q=80&fmt=jpg&crop=entropy&cs=tinysrgb'
 
 document.title = '404 | 熔岩番剧库 LavaAnimeLib'
+
+onUnmounted(() => {
+  background.value.on = false
+})
 
 </script>
