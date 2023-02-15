@@ -43,9 +43,9 @@ export default {
       return `grid grid-cols-3 gap-2
         sm:grid-cols-4 sm:gap-x-4
         md:grid-cols-5 md:gap-x-6
-        lg:grid-cols-5
+        lg:grid-cols-4
         xl:grid-cols-5
-        2xl:grid-cols-6 2xl:px-10`;
+        2xl:grid-cols-6`;
     },
     halfClass() {
       return `grid grid-cols-3 gap-2
