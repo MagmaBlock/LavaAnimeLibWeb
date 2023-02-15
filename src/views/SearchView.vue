@@ -5,6 +5,7 @@ import AnimeCardContainer from '../components/Layout/CardContainer/AnimeCardCont
 import SearchBar from '../components/Search/SearchBar.vue';
 
 import { useStorage } from '@vueuse/core'
+import LeftMenuRightContent from '../components/Layout/PageLayout/LeftMenuRightContent.vue';
 
 export default {
   setup() {
@@ -86,52 +87,54 @@ export default {
     this.useUrlParams();
     this.getHotAnimes()
   },
-  components: { Container, SearchBar, AnimeCardContainer }
+  components: { Container, SearchBar, AnimeCardContainer, LeftMenuRightContent }
 }
 </script>
 
 <template>
   <Container>
-    <div class="lg:grid lg:grid-cols-4 gap-4">
-      <!-- 搜索本体部分，将粘连屏幕 -->
-      <!-- 由于 Grid 布局默认将所有子元素拉伸至总高，因此我们在这里使用 self-start 来让元素向上对齐 -->
-      <div class="lg:col-span-1 lg:sticky lg:top-8 lg:self-start mb-4 select-none">
-        <div class="text-lg mb-4 mx-0.5 font-medium">搜索</div>
-        <!-- 搜索框 -->
-        <SearchBar v-model:search="searchValue" @search="value => search(value)" />
-        <!-- 历史记录 -->
-        <div class="mt-4 w-full flex flex-wrap" v-if="this.searchHistory.length">
-          <!-- 标签 -->
-          <span v-for="value in searchHistory" @click="search(value)" :class="normalTagClass">
-            {{ value }}
-          </span>
-          <!-- 清除按钮 -->
-          <n-tooltip trigger="hover">
-            <template #trigger>
-              <span :class="clearTagClass" @click="searchHistory = []">
-                <i class="bi bi-x-lg"></i>
-              </span>
-            </template>
-            删除历史记录
-          </n-tooltip>
-        </div>
-        <!-- 搜索推荐 -->
-        <Transition name="fade">
-          <div v-if="searchRecommendation.length">
-            <div class="text-lg mt-4 mx-0.5 font-medium">大家在看</div>
-            <div class="mt-4 w-full flex flex-wrap">
-              <span v-for="value in searchRecommendation" :class="normalTagClass">
-                <RouterLink :to="{ name: 'Anime', params: { la: value.id } }">
-                  {{ value.title }}
-                </RouterLink>
-              </span>
-            </div>
+    <LeftMenuRightContent>
+      <!-- 搜索本体部分-->
+      <template #left>
+        <div>
+          <div class="text-lg mb-4 mx-0.5 font-medium">搜索</div>
+          <!-- 搜索框 -->
+          <SearchBar v-model:search="searchValue" @search="value => search(value)" />
+          <!-- 历史记录 -->
+          <div class="mt-4 w-full flex flex-wrap" v-if="this.searchHistory.length">
+            <!-- 标签 -->
+            <span v-for="value in searchHistory" @click="search(value)" :class="normalTagClass">
+              {{ value }}
+            </span>
+            <!-- 清除按钮 -->
+            <n-tooltip trigger="hover">
+              <template #trigger>
+                <span :class="clearTagClass" @click="searchHistory = []">
+                  <i class="bi bi-x-lg"></i>
+                </span>
+              </template>
+              删除历史记录
+            </n-tooltip>
           </div>
-        </Transition>
-      </div>
-
+          <!-- 搜索推荐 -->
+          <Transition name="fade">
+            <div v-if="searchRecommendation.length">
+              <div class="text-lg mt-4 mx-0.5 font-medium">大家在看</div>
+              <div class="mt-4 w-full flex flex-wrap">
+                <span v-for="value in searchRecommendation" :class="normalTagClass">
+                  <RouterLink :to="{ name: 'Anime', params: { la: value.id } }">
+                    {{ value.title }}
+                  </RouterLink>
+                </span>
+              </div>
+            </div>
+          </Transition>
+        </div>
+      </template>
       <!-- 内容部分 -->
-      <AnimeCardContainer :animes="searchResults" size="large" class="lg:col-span-3" v-if="searchTimes" />
-    </div>
+      <template #right>
+        <AnimeCardContainer :animes="searchResults" size="large" v-if="searchTimes" />
+      </template>
+    </LeftMenuRightContent>
   </Container>
 </template>
