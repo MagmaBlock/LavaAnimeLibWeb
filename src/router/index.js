@@ -4,6 +4,11 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [ // 控制路由
     {
+      name: 'NotFound',
+      path: '/:pathMatch(.*)*',
+      component: () => import('../views/NotFound.vue')
+    },
+    {
       name: 'Home',
       path: '/',
       component: () => import('../views/HomeView.vue')
