@@ -31,6 +31,7 @@
         </n-input-group>
         <n-space class="flex place-items-center">
           <n-switch v-model:value="header.externalUrl" />外部链接
+          <n-switch v-model:value="header.video" />为视频
           <n-button size="small" @click="move(index, -1)">上移</n-button>
           <n-button size="small" @click="move(index, 1)">下移</n-button>
           <n-button size="small" @click="remove(index)">删除</n-button>

@@ -2,12 +2,14 @@
   <n-carousel show-arrow draggable autoplay class="shadow-lg">
     <template v-for="pic in headerPic">
       <div class="static h-52 sm:h-64 lg:h-72">
+        <video v-if="pic?.video" class="object-cover w-full min-h-full overflow-hidden" :src="pic.pic" autoplay muted loop
+          playsinline disablepictureinpicture></video>
         <!-- 真图片 -->
         <img class="object-cover w-full min-h-full overflow-hidden" v-lazy="{
           src: pic.pic,
           loading: '/Home/headerPic/LavaAnime.jpg',
           error: '/Home/headerPic/LavaAnime.jpg'
-        }">
+        }" v-else>
         <!-- 底部阴影 -->
         <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-black/75 "></div>
         <RouterLink v-if="pic.url && !pic.externalUrl" :to="pic.url">
