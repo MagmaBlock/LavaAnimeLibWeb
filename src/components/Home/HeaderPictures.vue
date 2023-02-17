@@ -1,5 +1,5 @@
 <template>
-  <n-carousel show-arrow draggable autoplay class="shadow-lg">
+  <n-carousel show-arrow draggable :space-between="20" class="shadow-lg" ref="carousel">
     <template v-for="pic in headerPic">
       <div class="static h-52 sm:h-64 lg:h-72">
         <video v-if="pic?.video" class="object-cover w-full min-h-full overflow-hidden" :src="pic.pic" autoplay muted loop
@@ -60,6 +60,9 @@ export default {
     } else {
       this.headerPic = await this.getData()
     }
+    setInterval(() => {
+      this.$refs.carousel.next()
+    }, 8000);
   },
   watch: {
     customdata(newData, oldData) {
