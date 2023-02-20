@@ -11,7 +11,7 @@
           </n-button>
         </template>
       </n-thing>
-      <n-tabs type="line" v-model:value="seletedTab" :default-value="2" ref="tabsRef">
+      <n-tabs type="segment" v-model:value="seletedTab" :default-value="2" ref="tabsRef" class="max-w-sm my-2">
         <n-tab :name="0">想看<span class="ml-1" v-if="followTotals['0']">({{ followTotals["0"] }})</span></n-tab>
         <n-tab :name="1">在看<span class="ml-1" v-if="followTotals['1']">({{ followTotals["1"] }})</span></n-tab>
         <n-tab :name="2">看过<span class="ml-1" v-if="followTotals['2']">({{ followTotals["2"] }})</span></n-tab>

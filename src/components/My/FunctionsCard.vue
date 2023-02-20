@@ -1,5 +1,5 @@
 <template>
-  <MyBasicCard class="flex mb-4 sm:mb-0 sm:px-4 h-fit sm:h-32 rounded-md select-none">
+  <MyBasicCard class="flex rounded-md">
     <!-- <div class="text-xl mb-2">其他功能</div> -->
     <!-- Contents -->
     <div class="flex-1 self-center grid grid-cols-4 sm:grid-cols-4 gap-2">
