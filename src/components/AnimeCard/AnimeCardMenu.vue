@@ -27,12 +27,9 @@
       <i class="bi bi-bookmark-plus-fill"></i> 标记为
       <template #suffix>
         <n-button-group size="tiny">
-          <n-button secondary :type="followInfo?.status == 0 ? 'primary' : 'default'"
-            @click="editFollow(0)">想看</n-button>
-          <n-button secondary :type="followInfo?.status == 1 ? 'primary' : 'default'"
-            @click="editFollow(1)">在看</n-button>
-          <n-button secondary :type="followInfo?.status == 2 ? 'primary' : 'default'"
-            @click="editFollow(2)">看过</n-button>
+          <n-button secondary :type="followInfo?.status == 0 ? 'primary' : 'default'" @click="editFollow(0)">想看</n-button>
+          <n-button secondary :type="followInfo?.status == 1 ? 'primary' : 'default'" @click="editFollow(1)">在看</n-button>
+          <n-button secondary :type="followInfo?.status == 2 ? 'primary' : 'default'" @click="editFollow(2)">看过</n-button>
         </n-button-group>
       </template>
     </n-list-item>

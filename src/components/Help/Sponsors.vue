@@ -36,7 +36,7 @@ export default {
     return {
       sponsors: [],
       sponsorsRaw: [
-        { name: "Arthals", support: "￥1100.00", message: "祝番剧库越办越好~感谢块老师多年教导（逃", link: "https://arthals.ink/" },
+        { name: "Arthals", support: "￥1111.00", message: "111 大哥真给看吗", link: "https://arthals.ink/" },
         { name: "Longtianmu", support: "￥240", link: "https://ltm.ink/" },
         { name: "小林", support: "￥200.00" },
         { name: "czy0729", support: "￥99.99", link: "https://github.com/czy0729" },
