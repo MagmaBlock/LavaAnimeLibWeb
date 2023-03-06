@@ -16,7 +16,7 @@
     "hammerjs": "^2.0.8",
     "lodash": "^4.17.21",
     "marked": "^4.2.12",
-    "ua-parser-js": "^1.0.33",
+    "ua-parser-js": "^1.0.34",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6",
     "vue3-lazyload": "^0.3.6"
