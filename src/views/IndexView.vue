@@ -166,7 +166,11 @@ export default {
           <div
             class="h-[0.5px] bg-gray-200 dark:bg-gray-700 my-6 hidden lg:block"
           ></div>
-          <a href="https://wj.qq.com/s2/11993240/ad50/" target="_blank">
+          <a
+            href="https://wj.qq.com/s2/11993240/ad50/"
+            target="_blank"
+            class="hidden lg:block"
+          >
             <img
               src="https://anime-img.5t5.top/assets/header/2023/03/4%E6%9C%88%E6%96%B0%E7%95%AA%E6%8A%95%E7%A5%A8%E6%A8%AA%E5%90%91%E6%B5%B7%E6%8A%A5.jpg"
               alt="4月新番投票横向海报"
