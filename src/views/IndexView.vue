@@ -163,7 +163,7 @@ export default {
               </template>
             </div>
           </n-spin>
-          <div
+          <!-- <div
             class="h-[0.5px] bg-gray-200 dark:bg-gray-700 my-6 hidden lg:block"
           ></div>
           <a
@@ -176,7 +176,7 @@ export default {
               alt="4月新番投票横向海报"
               class="rounded-md transition active:scale-95 hover:brightness-110"
             />
-          </a>
+          </a> -->
         </div>
       </template>
       <!-- 番剧栅格部分 -->
