@@ -11,7 +11,7 @@ export default {
       searchValue: "",
       selectedTab: {
         year: "2023年",
-        type: "1月冬",
+        type: "4月春",
       },
       tabs: { year: [], type: [] },
       animes: null,
