@@ -24,16 +24,17 @@
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/typography": "^0.5.9",
-    "@vitejs/plugin-vue": "^4.0.0",
-    "autoprefixer": "^10.4.13",
+    "@vicons/material": "^0.12.0",
+    "@vitejs/plugin-vue": "^4.1.0",
+    "autoprefixer": "^10.4.14",
     "gravatar": "^1.8.2",
     "naive-ui": "^2.34.3",
     "postcss": "^8.4.21",
     "postcss-import": "^15.1.0",
     "tailwindcss": "^3.2.7",
     "unplugin-vue-components": "^0.24.1",
-    "vite": "^4.2.0",
-    "vite-plugin-pwa": "^0.14.4"
+    "vite": "^4.2.2",
+    "vite-plugin-pwa": "^0.14.7"
   },
   "description": "熔岩番剧库的前端 V2，完全重写，高性能的单页面应用。",
   "main": "src/main.js",

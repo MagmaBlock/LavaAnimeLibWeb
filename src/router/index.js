@@ -20,7 +20,7 @@ const router = createRouter({
     },
     {
       name: 'Index',
-      path: '/index',
+      path: '/anime_index',
       component: () => import('../views/IndexView.vue')
     },
     {
