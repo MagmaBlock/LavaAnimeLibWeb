@@ -60,11 +60,17 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, toRefs, watch } from "vue";
 import { LavaAnimeAPI } from "../../common/api.js";
 
 const props = defineProps({
   customdata: Array,
+});
+
+// props 不是响应式，转成响应式再监听
+const { customdata } = toRefs(props);
+watch(customdata, (newData) => {
+  headerPic.value = newData;
 });
 
 let headerPic = ref([
@@ -112,14 +118,4 @@ const carousel = ref(null);
 function switchNext() {
   carousel.value?.next();
 }
-</script>
-
-<script>
-export default {
-  watch: {
-    customdata(newData, oldData) {
-      this.headerPic = newData;
-    },
-  },
-};
 </script>
