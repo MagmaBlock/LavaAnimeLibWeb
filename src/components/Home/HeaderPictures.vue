@@ -1,73 +1,125 @@
 <template>
-  <n-carousel show-arrow draggable :space-between="20" class="shadow-lg" ref="carousel">
+  <n-carousel
+    show-arrow
+    draggable
+    centered-slides
+    :space-between="20"
+    :on-update:current-index="handleSwitch"
+    dot-type="line"
+    class="shadow-lg"
+    ref="carousel"
+  >
     <template v-for="pic in headerPic">
       <div class="static h-52 sm:h-64 lg:h-72">
-        <video v-if="pic?.video" class="object-cover w-full min-h-full overflow-hidden" :src="pic.pic" autoplay muted loop
-          playsinline disablepictureinpicture></video>
-        <!-- 真图片 -->
-        <img class="object-cover w-full min-h-full overflow-hidden" v-lazy="{
-          src: pic.pic,
-          loading: '/Home/headerPic/LavaAnime.jpg',
-          error: '/Home/headerPic/LavaAnime.jpg'
-        }" v-else>
+        <!-- 如果为视频 -->
+        <video
+          v-if="pic?.video"
+          class="object-cover w-full min-h-full overflow-hidden"
+          :src="pic.pic"
+          autoplay
+          muted
+          loop
+          playsinline
+          disablepictureinpicture
+        ></video>
+        <!-- 如果为图片 -->
+        <img
+          class="object-cover w-full min-h-full overflow-hidden"
+          v-lazy="{
+            src: pic.pic,
+            loading: '/Home/headerPic/LavaAnime.jpg',
+            error: '/Home/headerPic/LavaAnime.jpg',
+          }"
+          v-else
+        />
         <!-- 底部阴影 -->
-        <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-black/75 "></div>
+        <div
+          class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-black/75"
+        ></div>
+        <!-- 有链接且站内 -->
         <RouterLink v-if="pic.url && !pic.externalUrl" :to="pic.url">
-          <HeaderPictureTitle :title="pic.title" :subtitle="pic.subtitle"></HeaderPictureTitle>
+          <HeaderPictureTitle :title="pic.title" :subtitle="pic.subtitle" />
         </RouterLink>
-        <a v-else-if="pic.url && pic.externalUrl" :href="pic.url" target="_blank">
-          <HeaderPictureTitle :title="pic.title" :subtitle="pic.subtitle"></HeaderPictureTitle>
+        <!-- 有链接且站外 -->
+        <a
+          v-else-if="pic.url && pic.externalUrl"
+          :href="pic.url"
+          target="_blank"
+        >
+          <HeaderPictureTitle :title="pic.title" :subtitle="pic.subtitle" />
         </a>
-        <HeaderPictureTitle v-else :title="pic.title" :subtitle="pic.subtitle"></HeaderPictureTitle>
+        <!-- 无链接 -->
+        <HeaderPictureTitle
+          v-else
+          :title="pic.title"
+          :subtitle="pic.subtitle"
+        />
       </div>
     </template>
   </n-carousel>
 </template>
 
-<script>
-import { LavaAnimeAPI } from '../../common/api.js';
+<script setup>
+import { onMounted, ref } from "vue";
+import { LavaAnimeAPI } from "../../common/api.js";
 
-export default {
-  props: {
-    customdata: Array
+const props = defineProps({
+  customdata: Array,
+});
+
+let headerPic = ref([
+  {
+    pic: "/Home/headerPic/LavaAnime.jpg",
+    url: "",
+    title: "熔岩番剧库 LavaAnimeLib",
+    subtitle: "",
   },
-  data() {
-    return {
-      headerPic: [{
-        "pic": "/Home/headerPic/LavaAnime.jpg",
-        "url": "",
-        "title": "熔岩番剧库 LavaAnimeLib",
-        "subtitle": ""
-      }],
-      display: true
-    }
-  },
-  methods: {
-    async getData() {
-      try {
-        let fromAPI = await LavaAnimeAPI.get('/v2/home/header/get');
-        if (fromAPI.data.code == 200) return fromAPI.data.data
-        else return []
-      } catch (error) {
-        console.error('请求头图数据失败: ', error)
-        return []
-      }
-    }
-  },
-  async mounted() {
-    if (this.customdata) {
-      this.headerPic = this.customdata
-    } else {
-      this.headerPic = await this.getData()
-    }
-    setInterval(() => {
-      this.$refs.carousel.next()
-    }, 8000);
-  },
-  watch: {
-    customdata(newData, oldData) {
-      this.headerPic = newData
-    }
+]);
+
+onMounted(async () => {
+  if (props.customdata) {
+    headerPic.value = props.customdata;
+  } else {
+    headerPic.value = await getData();
+  }
+});
+
+const autoSwitchInterval = 8000;
+let autoSwitch = setInterval(switchNext, autoSwitchInterval);
+
+/**
+ * 获取头图数据
+ * @returns {Array}
+ */
+async function getData() {
+  try {
+    let fromAPI = await LavaAnimeAPI.get("/v2/home/header/get");
+    if (fromAPI.data.code == 200) return fromAPI.data.data;
+    else return [];
+  } catch (error) {
+    console.error("请求头图数据失败: ", error);
+    return [];
   }
 }
+
+// 换页后，总是重置自动换页，以免不自然的操作体验
+function handleSwitch() {
+  clearInterval(autoSwitch);
+  autoSwitch = setInterval(switchNext, autoSwitchInterval);
+}
+
+const carousel = ref(null);
+function switchNext() {
+  carousel.value?.next();
+}
+</script>
+
+<script>
+export default {
+  watch: {
+    customdata(newData, oldData) {
+      this.headerPic = newData;
+    },
+  },
+};
 </script>
