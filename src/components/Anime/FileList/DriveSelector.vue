@@ -1,6 +1,11 @@
 <template>
   <AnimeFlodCard class="px-4 py-2 sm:mb-4 select-none" v-if="driveList.list">
-    <template #title> 节点 </template>
+    <template #title>
+      节点
+      <span v-if="driveList?.list?.length" class="mx-1 text-sm opacity-75">
+        {{ driveList?.list?.length }}个
+      </span></template
+    >
     <div class="grid grid-cols-1 gap-1 max-h-[35vh] overflow-y-scroll">
       <template v-for="drive in driveList.list">
         <DriveCard

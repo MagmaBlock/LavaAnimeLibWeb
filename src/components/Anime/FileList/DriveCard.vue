@@ -19,7 +19,7 @@ const { active, name, description } = defineProps({
   description: String,
 });
 
-const activeClass = "bg-blue-600 text-white";
+const activeClass = "bg-blue-600 text-white ";
 const normalClass =
-  "bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 active:bg-blue-600 active:text-white";
+  "bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 active:bg-blue-600 active:text-white active:dark:bg-blue-600 active:dark:text-white";
 </script>
