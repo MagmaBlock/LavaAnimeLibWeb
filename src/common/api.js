@@ -15,12 +15,12 @@ LavaAnimeAPI.interceptors.response.use(
     },
     // !2xx
     function (error) {
-        if (error.response.status == 401) { // 未登录处理
+        if (error?.response?.status == 401) { // 未登录处理
             localStorage.removeItem('token')
             $message.warning('尚未登录...')
             // app.$router.push({ name: 'AuthLogin' })
         } else { // 其他错误处理
-            if (error.response) {
+            if (error?.response?.data.message) {
                 $message.error(error.response.data.message)
             }
         }
