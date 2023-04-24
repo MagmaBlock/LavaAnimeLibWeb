@@ -20,7 +20,7 @@
     <n-result
       status="info"
       title="出现错误"
-      :description="'错误代码: ' + errorCode"
+      :description="errorCode"
     ></n-result>
   </AnimeBasicCard>
 </template>
@@ -115,7 +115,11 @@ export default {
         return result.data;
       } catch (error) {
         console.error("获取视频文件列表时发生错误: ", error);
-        this.errorCode = error.response?.status;
+        this.errorCode =
+          error?.response?.data?.message ??
+          error?.response?.status ??
+          error?.message ??
+          "未知错误";
         return [];
       }
     },
