@@ -19,6 +19,11 @@ const router = createRouter({
       component: () => import('../views/SearchView.vue')
     },
     {
+      name: 'SearchByBgm',
+      path: '/search-bgm/:value?',
+      component: () => import('../views/Functions/SearchByBgmView.vue')
+    },
+    {
       name: 'Index',
       path: '/anime_index',
       component: () => import('../views/IndexView.vue')

@@ -96,6 +96,7 @@ export default {
         "rounded",
         "max-w-xs",
         "overflow-hidden",
+        "w-fit",
         "grid",
         "place-items-center",
       ];
@@ -175,6 +176,13 @@ export default {
                 </div>
               </div>
             </Transition>
+            <!-- 其他功能 -->
+            <div>
+              <div class="text-lg my-4 mx-0.5 font-medium">其他功能</div>
+              <RouterLink :class="normalTagClass" :to="{ name: 'SearchByBgm' }">
+                使用 Bangumi ID 搜索
+              </RouterLink>
+            </div>
           </n-collapse-transition>
           <n-space justify="space-around" class="mt-4" v-if="hideFunctions">
             <n-button size="small" tertiary @click="hideFunctions = false">
