@@ -4,8 +4,8 @@
       节点
       <span v-if="driveList?.list?.length" class="mx-1 text-sm opacity-75">
         {{ driveList?.list?.length }}个
-      </span></template
-    >
+      </span>
+    </template>
     <div class="grid grid-cols-1 gap-1 max-h-[35vh] overflow-y-scroll">
       <template v-for="drive in driveList.list">
         <DriveCard
@@ -25,7 +25,6 @@
     </n-checkbox>
     <template #close>
       <DriveCard
-        :active="true"
         :name="activeDrive?.name"
         :description="activeDrive?.description"
       />
