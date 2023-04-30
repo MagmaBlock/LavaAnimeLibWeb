@@ -83,13 +83,13 @@
 <style>
 /* 播放器控制器调整更浅的背景，同时增大底边距, */
 .art-video-player > .art-bottom {
-  padding-bottom: 10px;
-  background-image: linear-gradient(#0000, #0006, #0008);
+  padding-bottom: 10px !important;
+  background-image: linear-gradient(#0000, #0006, #0008) !important;
 }
 /* 为移动端播放器增加左右间距  */
 .art-mobile > .art-bottom > .art-controls {
-  padding-right: 10px;
-  padding-left: 10px;
+  padding-right: 10px !important;
+  padding-left: 10px !important;
 }
 </style>
 
