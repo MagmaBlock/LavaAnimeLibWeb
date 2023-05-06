@@ -2,15 +2,23 @@
 import AnimeCardMenu from './AnimeCardMenu.vue';
 import LargeMenu from '../Layout/LargeMenu.vue';
 
-
 export default {
   props: {
     anime: { type: Object }
   },
   data() {
-    return {};
+    return {
+      showMenu: false
+    };
   },
-  methods: {},
+  methods: {
+    handleMenu(event) {
+      event.preventDefault()
+      if (!this.showMenu) {
+        this.showMenu = true
+      }
+    }
+  },
   components: { AnimeCardMenu, LargeMenu }
 }
 </script>
@@ -19,7 +27,8 @@ export default {
   <!-- 卡片 -->
   <div class="relative box-content overflow-hidden select-none
     rounded-md border-2 border-white/0
-    transition-all ease-out hover:lg:scale-[1.03] hover:border-2 hover:border-blue-600 hover:shadow-lg">
+    transition-all ease-out hover:lg:scale-[1.03] hover:border-2 hover:border-blue-600 hover:shadow-lg"
+    @contextmenu="handleMenu">
     <div class="absolute h-full w-full bg-gray-100 dark:bg-gray-500"></div>
 
     <!-- 上半：海报 + 标题 -->
@@ -63,7 +72,7 @@ export default {
         </div>
         <div class="grid basis-1/4 place-items-center">
           <!-- 菜单 -->
-          <LargeMenu>
+          <LargeMenu v-model:show="showMenu">
             <template #trigger>
               <div class="cursor-pointer rounded p-1 hover:bg-black/20">
                 <i class="bi bi-list text-zinc-700 dark:text-gray-50"></i>

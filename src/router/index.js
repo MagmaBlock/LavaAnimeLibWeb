@@ -4,6 +4,11 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [ // 控制路由
     {
+      name: 'NotFound',
+      path: '/:pathMatch(.*)*',
+      component: () => import('../views/NotFound.vue')
+    },
+    {
       name: 'Home',
       path: '/',
       component: () => import('../views/HomeView.vue')
@@ -14,8 +19,13 @@ const router = createRouter({
       component: () => import('../views/SearchView.vue')
     },
     {
+      name: 'SearchByBgm',
+      path: '/search-bgm/:value?',
+      component: () => import('../views/Functions/SearchByBgmView.vue')
+    },
+    {
       name: 'Index',
-      path: '/index',
+      path: '/anime_index',
       component: () => import('../views/IndexView.vue')
     },
     {

@@ -36,10 +36,10 @@ export default {
     return {
       sponsors: [],
       sponsorsRaw: [
-        { name: "Arthals", support: "￥1100.00", message: "祝番剧库越办越好~感谢块老师多年教导（逃", link: "https://arthals.ink/" },
+        { name: "Arthals", support: "￥1111.00", message: "111 大哥真给看吗", link: "https://arthals.ink/" },
         { name: "Longtianmu", support: "￥240", link: "https://ltm.ink/" },
-        { name: "小林", support: "￥150.00" },
-        { name: "czy0729", support: "￥99.99", link: "https://github.com/czy0729" },
+        { name: "小林", support: "￥200.00" },
+        { name: "czy0729", support: "￥199.98", link: "https://github.com/czy0729" },
         { name: "纯之", support: "其他", message: "提供部分视频加速节点", link: "https://moe.tips/" },
         { name: "林恩 Lynn.", support: "其他", message: "提供（CloudFlare自选）视频加速节点", link: "https://blog.lynn6.cn/" },
         { name: "若葉", support: "其他", message: "提供新域名等支持", link: "https://loliloli.moe/" },

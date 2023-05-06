@@ -1,8 +1,8 @@
 <template>
-  <ContainerMobileFull>
-    <div class="grid grid-cols-1 lg:grid-cols-2 sm:gap-4 sm:mb-4">
-      <UserCard class="px-6" />
-      <FunctionsCard class="px-4" />
+  <ContainerMobileFull class="mt-4 sm:mt-0">
+    <div class="grid grid-cols-1 lg:grid-cols-2 sm:gap-4 sm:mb-4 lg:h-32">
+      <UserCard class="px-6 py-4 h-full" />
+      <FunctionsCard class="p-2 h-full" />
     </div>
     <MyCollections class="px-6" />
     <MyFollow class="px-6 sm:my-4" />

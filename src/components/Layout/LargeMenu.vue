@@ -4,9 +4,11 @@
 <template>
   <div>
     <!-- 宽屏 -->
-    <n-popover v-if="isWide" trigger="click" placement="top">
+    <n-popover v-if="isWide" trigger="manual" :show="showMe" :on-clickoutside="clickOutside" placement="top">
       <template #trigger>
-        <slot name="trigger"></slot>
+        <div @click="showMe = !showMe" ref="trigger">
+          <slot name="trigger"></slot>
+        </div>
       </template>
       <div>
         <slot></slot>
@@ -27,8 +29,29 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
-const showMe = ref(false)
+// 受控模式需要的 props 和 emits
+const props = defineProps(['show'])
+const emits = defineEmits(['update:show'])
+
+// 非受控模式的自有 show ref
+const showLocal = ref(false)
+// Proxy
+const showMe = computed({
+  get: () => props.show ?? showLocal.value,
+  set: (value) => {
+    emits("update:show", value) // 受控模式
+    showLocal.value = value // 非受控模式
+  }
+})
 const isWide = window.innerWidth >= 640 ? true : false
+
+const trigger = ref(null)
+const clickOutside = event => {
+  // 避免在点击 trigger 时触发
+  if (trigger.value.contains(event.target)) return
+  showMe.value = false
+}
+
 </script>

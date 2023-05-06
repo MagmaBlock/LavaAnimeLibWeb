@@ -1,5 +1,5 @@
 <template>
-  <MyBasicCard class="flex sm:px-6 h-32 rounded-md select-none">
+  <MyBasicCard class="flex rounded-md">
     <div class="flex-1 self-center flex" v-if="login">
       <n-avatar class="shrink-0 cursor-pointer" round :size="72"
         :src="userInfo.data?.avatar?.url || '/Transparent_Akkarin.jpg'"

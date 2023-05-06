@@ -1,8 +1,7 @@
 <template>
   <Container>
-    <div class="text-lg font-medium">管理界面</div>
-    <AdminLinks></AdminLinks>
-    <RouterView></RouterView>
+    <AdminLinks class="mb-4" />
+    <RouterView />
   </Container>
 </template>
 

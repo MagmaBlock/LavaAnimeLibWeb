@@ -1,5 +1,5 @@
 <template>
-  <MyBasicCard class="sm:px-6 py-4 rounded-md">
+  <MyBasicCard class="sm:px-6 py-4 rounded-md" ref="myFollowRef">
     <div class="mb-2">
       <n-thing>
         <template #header>
@@ -11,7 +11,7 @@
           </n-button>
         </template>
       </n-thing>
-      <n-tabs type="line" v-model:value="seletedTab" :default-value="2" ref="tabsRef">
+      <n-tabs type="segment" v-model:value="seletedTab" :default-value="2" ref="tabsRef" class="max-w-sm my-2">
         <n-tab :name="0">想看<span class="ml-1" v-if="followTotals['0']">({{ followTotals["0"] }})</span></n-tab>
         <n-tab :name="1">在看<span class="ml-1" v-if="followTotals['1']">({{ followTotals["1"] }})</span></n-tab>
         <n-tab :name="2">看过<span class="ml-1" v-if="followTotals['2']">({{ followTotals["2"] }})</span></n-tab>
@@ -25,8 +25,12 @@
 
 <script setup>
 import { nextTick, onMounted, ref, watch, computed } from 'vue';
+import Hammer from 'hammerjs';
 import { lavaAnimeAPIs } from '../../common/api';
 import AnimeCardContainer from '../Layout/CardContainer/AnimeCardContainer.vue';
+
+// 此组件根部第一个 DOM
+const myFollowRef = ref(null)
 
 // 计算每页的尺寸, 以此让分页在所有尺寸的设备上都是刚好满行
 let pageSize = 6 * 3 // 六行, 每行三个
@@ -105,5 +109,20 @@ async function refresh() {
 onMounted(() => {
   getFollowTotal()
   getFollow(seletedTab.value, page.value)
+
+  // 手势相关处理 (左右滑动)
+  const hammer = new Hammer(myFollowRef.value?.$el)
+  hammer.on('swipe', event => {
+    if (event.pointerType != 'touch') return
+    if (event.direction == 2) { // 从右往左滑
+      if (seletedTab.value == 2) seletedTab.value = 0
+      else seletedTab.value++
+    }
+    if (event.direction == 4) { // 从左往右滑
+      if (seletedTab.value == 0) seletedTab.value = 2
+      else seletedTab.value--
+    }
+  })
 })
+
 </script>
