@@ -1,5 +1,5 @@
 <template>
-  <n-list hoverable class="sm:w-80 select-none">
+  <n-list clickable hoverable class="sm:w-80 select-none">
     <n-list-item class="select-text">
       <div class="text-lg">{{ anime?.title || "..." }}</div>
       <div class="text-xs">
@@ -11,14 +11,17 @@
           @click="$router.push({ name: 'Anime', params: { la: anime.id } })"
           class="cursor-pointer"
         >
-          <i class="bi bi-chevron-right"></i>
+          <ChevronRightOutlined class="h-6" />
         </div>
       </template>
     </n-list-item>
 
     <!-- -1 未追番 -->
     <n-list-item @click="editFollow(1)" v-if="followInfo.status == -1">
-      <i class="bi bi-heart"></i> 添加到追番
+      <div class="flex gap-x-4 items-center">
+        <PlusFilled class="h-6" />
+        添加到追番
+      </div>
     </n-list-item>
     <!-- 0-2 已追番 -->
     <n-list-item
@@ -26,7 +29,10 @@
       @click="editFollow(undefined, true)"
       v-else-if="followInfo.status >= 0"
     >
-      <i class="bi bi-heart-fill"></i> 取消追番
+      <div class="flex gap-x-4 items-center">
+        <MinusFilled class="h-6" />
+        取消追番
+      </div>
     </n-list-item>
     <!-- undefined 加载中, -2 错误 -->
     <n-list-item v-else-if="followInfo.status != -2">
@@ -34,40 +40,52 @@
     </n-list-item>
 
     <n-list-item v-if="followInfo.status != -2">
-      <i class="bi bi-bookmark-plus-fill"></i> 标记为
+      <div class="flex gap-x-4 items-center">
+        <BookmarkAddOutlined class="h-6" />
+        标记为
+      </div>
       <template #suffix>
-        <n-button-group size="tiny">
-          <n-button
-            secondary
-            :type="followInfo?.status == 0 ? 'primary' : 'default'"
+        <div class="flex flex-nowrap">
+          <n-tag
+            :checked="followInfo?.status == 0"
             @click="editFollow(0)"
-            >想看</n-button
+            checkable
           >
-          <n-button
-            secondary
-            :type="followInfo?.status == 1 ? 'primary' : 'default'"
+            想看
+          </n-tag>
+          <n-tag
+            :checked="followInfo?.status == 1"
             @click="editFollow(1)"
-            >在看</n-button
+            checkable
           >
-          <n-button
-            secondary
-            :type="followInfo?.status == 2 ? 'primary' : 'default'"
+            在看
+          </n-tag>
+          <n-tag
+            :checked="followInfo?.status == 2"
             @click="editFollow(2)"
-            >看过</n-button
+            checkable
           >
-        </n-button-group>
+            看过
+          </n-tag>
+        </div>
       </template>
     </n-list-item>
 
     <n-list-item v-if="anime?.bgmId">
       <a :href="anime?.images.large" target="_blank">
-        <i class="bi bi-image-fill"></i> 查看封面大图
+        <div class="flex gap-x-4 items-center">
+          <ImageOutlined class="h-6" />
+          查看封面大图
+        </div>
       </a>
     </n-list-item>
 
     <n-list-item v-if="anime?.bgmId">
       <a :href="'https://bgm.tv/subject/' + anime.bgmId" target="_blank">
-        <i class="bi bi-arrow-up-right-square-fill"></i> 去番组计划查看本作品
+        <div class="flex gap-x-4 items-center">
+          <OpenInNewOutlined class="h-6" />
+          去番组计划查看本作品
+        </div>
       </a>
     </n-list-item>
   </n-list>
@@ -76,6 +94,14 @@
 <script setup>
 import { ref } from "vue";
 import { lavaAnimeAPIs } from "../../common/api";
+import {
+  PlusFilled,
+  MinusFilled,
+  BookmarkAddOutlined,
+  ImageOutlined,
+  OpenInNewOutlined,
+  ChevronRightOutlined,
+} from "@vicons/material";
 
 const { anime } = defineProps({
   anime: { type: Object },
