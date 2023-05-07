@@ -30,46 +30,58 @@
       <n-divider>
         <div class="flex gap-2">
           更多记录见 GitHub
-          <n-a target="_blank" href="https://github.com/MagmaBlock/LavaAnimeLibWeb">前端</n-a>
-          <n-a target="_blank" href="https://github.com/MagmaBlock/LavaAnimeLib">后端</n-a>
+          <n-a
+            target="_blank"
+            href="https://github.com/MagmaBlock/LavaAnimeLibWeb"
+          >
+            前端
+          </n-a>
+          <n-a
+            target="_blank"
+            href="https://github.com/MagmaBlock/LavaAnimeLib"
+          >
+            后端
+          </n-a>
         </div>
       </n-divider>
     </Container>
   </div>
 </template>
 <script>
-import axios from 'axios';
-import GitHubCommits from '../../components/About/GitHubCommits.vue';
-import Container from '../../components/Layout/PageContainer/Container.vue';
-import TopNav from '../../components/NavBar/TopNav.vue';
+import axios from "axios";
+import GitHubCommits from "../../components/About/GitHubCommits.vue";
+import Container from "../../components/Layout/PageContainer/Container.vue";
+import TopNav from "../../components/NavBar/TopNav.vue";
 
 export default {
   data() {
     return {
       web: [],
-      server: []
-    }
+      server: [],
+    };
   },
   async mounted() {
-    document.title = '番剧库最近更新 | 熔岩番剧库 LavaAnimeLib'
-    this.web = await this.getGitHubCommits('LavaAnimeLibWeb')
-    this.server = await this.getGitHubCommits('LavaAnimeLib')
+    document.title = "番剧库最近更新 | 熔岩番剧库 LavaAnimeLib";
+    this.web = await this.getGitHubCommits("LavaAnimeLibWeb");
+    this.server = await this.getGitHubCommits("LavaAnimeLib");
   },
   methods: {
     async getGitHubCommits(repos) {
       try {
         let result = await axios.get(
           `https://api.github.com/repos/MagmaBlock/${repos}/commits`
-        )
+        );
         if (result.status == 200) {
-          return result.data
+          return result.data;
         }
       } catch (error) {
-        $message.error('从 GitHub API 获取数据失败...\n可能您的网络无法访问 GitHub')
-        return []
+        $message.error(
+          "从 GitHub API 获取数据失败...\n可能您的网络无法访问 GitHub"
+        );
+        return [];
       }
-    }
+    },
   },
-  components: { TopNav, Container, GitHubCommits }
-}
+  components: { TopNav, Container, GitHubCommits },
+};
 </script>

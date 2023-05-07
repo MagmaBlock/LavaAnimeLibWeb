@@ -22,16 +22,15 @@
   </div>
 </template>
 
-
 <script setup>
-import { useRoute, useRouter } from 'vue-router';
-import Container from '../../components/Layout/PageContainer/Container.vue';
-import TopNav from '../../components/NavBar/TopNav.vue';
+import { useRoute, useRouter } from "vue-router";
+import Container from "../../components/Layout/PageContainer/Container.vue";
+import TopNav from "../../components/NavBar/TopNav.vue";
 
 document.title = "用户信息 | 熔岩番剧库 LavaAnimeLib";
 
 // 当打开 /userinfo 时, 跳转到一个默认页
-if (useRoute().name == 'UserInfo') {
-  useRouter().replace({ name: 'UserInfoAvatar' })
+if (useRoute().name == "UserInfo") {
+  useRouter().replace({ name: "UserInfoAvatar" });
 }
 </script>

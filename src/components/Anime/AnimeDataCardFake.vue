@@ -1,12 +1,9 @@
 <script>
 export default {
   data() {
-    return {
-
-    }
-  }
-}
-
+    return {};
+  },
+};
 </script>
 
 <template>
@@ -26,24 +23,32 @@ export default {
         <!-- 第一行 -->
         <div class="inline-block">
           <span class="mr-2"><i class="bi bi-play-btn"></i> 播放 ... 次</span>
-          <span class="mr-2"><i class="bi bi-star"></i> ... 分
+          <span class="mr-2"
+            ><i class="bi bi-star"></i> ... 分
             <span
-              class="bg-gray-100 text-black dark:bg-zinc-700 dark:text-zinc-200 rounded-sm px-1.5 text-xs align-baseline">
+              class="bg-gray-100 text-black dark:bg-zinc-700 dark:text-zinc-200 rounded-sm px-1.5 text-xs align-baseline"
+            >
               Rank.#...
             </span>
           </span>
         </div>
         <!-- 第二行 -->
         <div class="inline-block">
-          <span class="mr-2"><i class="bi bi-calendar-event"></i> ... 开始放送</span>
+          <span class="mr-2"
+            ><i class="bi bi-calendar-event"></i> ... 开始放送</span
+          >
           <span class="mr-2"><i class="bi bi-collection"></i> ... 话</span>
         </div>
       </div>
       <!-- 标签 -->
       <div class="my-1 overflow-clip">
         <template v-for="a in 15">
-          <n-skeleton class="inline-block mr-1 mb-" :height="22" :width="40 + (50 - a) * Math.random()"
-            :sharp="false"></n-skeleton>
+          <n-skeleton
+            class="inline-block mr-1 mb-"
+            :height="22"
+            :width="40 + (50 - a) * Math.random()"
+            :sharp="false"
+          ></n-skeleton>
         </template>
       </div>
       <!-- 连接 -->

@@ -1,10 +1,16 @@
 <template>
   <n-list hoverable class="sm:w-80 select-none">
     <n-list-item class="select-text">
-      <div class="text-lg">{{ anime?.title || '...' }}</div>
-      <div class="text-xs">{{ anime?.index?.year }} {{ anime?.index?.type }}</div>
+      <div class="text-lg">{{ anime?.title || "..." }}</div>
+      <div class="text-xs">
+        {{ anime?.index?.year }} {{ anime?.index?.type }}
+      </div>
       <template #suffix>
-        <div v-if="anime.id" @click="$router.push({ name: 'Anime', params: { la: anime.id } })" class="cursor-pointer">
+        <div
+          v-if="anime.id"
+          @click="$router.push({ name: 'Anime', params: { la: anime.id } })"
+          class="cursor-pointer"
+        >
           <i class="bi bi-chevron-right"></i>
         </div>
       </template>
@@ -15,7 +21,11 @@
       <i class="bi bi-heart"></i> 添加到追番
     </n-list-item>
     <!-- 0-2 已追番 -->
-    <n-list-item class="text-blue-400" @click="editFollow(undefined, true)" v-else-if="followInfo.status >= 0">
+    <n-list-item
+      class="text-blue-400"
+      @click="editFollow(undefined, true)"
+      v-else-if="followInfo.status >= 0"
+    >
       <i class="bi bi-heart-fill"></i> 取消追番
     </n-list-item>
     <!-- undefined 加载中, -2 错误 -->
@@ -27,9 +37,24 @@
       <i class="bi bi-bookmark-plus-fill"></i> 标记为
       <template #suffix>
         <n-button-group size="tiny">
-          <n-button secondary :type="followInfo?.status == 0 ? 'primary' : 'default'" @click="editFollow(0)">想看</n-button>
-          <n-button secondary :type="followInfo?.status == 1 ? 'primary' : 'default'" @click="editFollow(1)">在看</n-button>
-          <n-button secondary :type="followInfo?.status == 2 ? 'primary' : 'default'" @click="editFollow(2)">看过</n-button>
+          <n-button
+            secondary
+            :type="followInfo?.status == 0 ? 'primary' : 'default'"
+            @click="editFollow(0)"
+            >想看</n-button
+          >
+          <n-button
+            secondary
+            :type="followInfo?.status == 1 ? 'primary' : 'default'"
+            @click="editFollow(1)"
+            >在看</n-button
+          >
+          <n-button
+            secondary
+            :type="followInfo?.status == 2 ? 'primary' : 'default'"
+            @click="editFollow(2)"
+            >看过</n-button
+          >
         </n-button-group>
       </template>
     </n-list-item>
@@ -49,40 +74,43 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { lavaAnimeAPIs } from '../../common/api';
+import { ref } from "vue";
+import { lavaAnimeAPIs } from "../../common/api";
 
 const { anime } = defineProps({
-  anime: { type: Object }
-})
-const followInfo = ref({})
+  anime: { type: Object },
+});
+const followInfo = ref({});
 
-getFollowInfo()
+getFollowInfo();
 async function getFollowInfo() {
   if (anime?.id) {
     try {
-      let info = await lavaAnimeAPIs.getAnimeFollowInfoAPI(anime?.id)
+      let info = await lavaAnimeAPIs.getAnimeFollowInfoAPI(anime?.id);
       if (info.data.data) {
-        followInfo.value = info.data.data
+        followInfo.value = info.data.data;
       }
     } catch (error) {
-      followInfo.value = { status: -2 }
+      followInfo.value = { status: -2 };
     }
   }
 }
 
 async function editFollow(status, remove) {
-  let followedBefore = followInfo.value?.status != -1
+  let followedBefore = followInfo.value?.status != -1;
   try {
-    let result = await lavaAnimeAPIs.editAnimeFollowAPI(anime?.id, status, remove)
+    let result = await lavaAnimeAPIs.editAnimeFollowAPI(
+      anime?.id,
+      status,
+      remove
+    );
     if (result.data?.code == 200) {
-      if (!followedBefore && !remove) window.$message.success("自己追的番就要好好看完哦^O^")
-      if (remove) window.$message.success("已取消追番")
+      if (!followedBefore && !remove)
+        window.$message.success("自己追的番就要好好看完哦^O^");
+      if (remove) window.$message.success("已取消追番");
     }
-  } catch (error) { }
+  } catch (error) {}
 
-  getFollowInfo()
+  getFollowInfo();
 }
-
-
 </script>

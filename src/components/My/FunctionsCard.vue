@@ -36,14 +36,14 @@
 </template>
 
 <script>
-import MyBasicCard from './MyBasicCard.vue';
-import BigButton from './BigButton.vue';
+import MyBasicCard from "./MyBasicCard.vue";
+import BigButton from "./BigButton.vue";
 
 export default {
   data() {
-    return {}
+    return {};
   },
   methods: {},
-  components: { BigButton, MyBasicCard }
-}
+  components: { BigButton, MyBasicCard },
+};
 </script>

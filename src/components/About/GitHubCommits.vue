@@ -6,10 +6,18 @@
           {{ commit.commit.message }}
         </div>
         <div class="flex items-center">
-          <img class="h-6 object-cover rounded-full mr-2" :src="commit.author.avatar_url" alt="头像">
+          <img
+            class="h-6 object-cover rounded-full mr-2"
+            :src="commit.author.avatar_url"
+            alt="头像"
+          />
           <div>
             {{ commit.author.login }} 提交于
-            <n-time :time="new Date()" :to="new Date(commit.commit.committer.date)" type="relative" />
+            <n-time
+              :time="new Date()"
+              :to="new Date(commit.commit.committer.date)"
+              type="relative"
+            />
           </div>
         </div>
       </a>
@@ -21,8 +29,8 @@ export default {
   props: {
     commits: {
       type: Array,
-      default: []
-    }
-  }
-}
+      default: [],
+    },
+  },
+};
 </script>
