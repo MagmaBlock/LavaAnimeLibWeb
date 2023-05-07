@@ -1,6 +1,7 @@
 <script>
 import AnimeCardMenu from "./AnimeCardMenu.vue";
 import LargeMenu from "../Layout/LargeMenu.vue";
+import { SmartDisplayOutlined, MenuFilled } from "@vicons/material";
 
 export default {
   props: {
@@ -19,7 +20,7 @@ export default {
       }
     },
   },
-  components: { AnimeCardMenu, LargeMenu },
+  components: { AnimeCardMenu, LargeMenu, SmartDisplayOutlined, MenuFilled },
 };
 </script>
 
@@ -77,8 +78,10 @@ export default {
     <div class="relative h-8 dark:bg-zinc-700">
       <div class="flex h-full">
         <div class="grid basis-3/4 content-center pl-3">
-          <div class="text-[13px]">
-            <i class="bi bi-play-btn"></i>
+          <div class="flex items-center gap-x-0.5 ">
+            <n-icon size="15">
+              <SmartDisplayOutlined />
+            </n-icon>
             {{
               anime?.views > 9999
                 ? (anime.views / 10000).toFixed(2) + "万"
@@ -90,8 +93,11 @@ export default {
           <!-- 菜单 -->
           <LargeMenu v-model:show="showMenu">
             <template #trigger>
-              <div class="cursor-pointer rounded p-1 hover:bg-black/20">
-                <i class="bi bi-list text-zinc-700 dark:text-gray-50"></i>
+              <div
+                class="grid place-items-center cursor-pointer rounded p-1.5 hover:bg-black/20"
+              >
+                <n-icon><MenuFilled /></n-icon>
+                <!-- <i class="bi bi-list text-zinc-700 dark:text-gray-50"></i> -->
               </div>
             </template>
             <AnimeCardMenu :anime="anime" />
