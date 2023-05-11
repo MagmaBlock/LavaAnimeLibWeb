@@ -50,5 +50,8 @@
   "bugs": {
     "url": "https://github.com/MagmaBlock/LavaAnimeLibWeb/issues"
   },
-  "homepage": "https://github.com/MagmaBlock/LavaAnimeLibWeb#readme"
+  "homepage": "https://github.com/MagmaBlock/LavaAnimeLibWeb#readme",
+  "prettier": {
+    "singleQuote": false
+  }
 }
