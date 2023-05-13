@@ -8,9 +8,9 @@
 </template>
 
 <script>
-import AnimeBasicCard from '../Cards/AnimeBasicCard.vue';
+import AnimeBasicCard from "../Cards/AnimeBasicCard.vue";
 
 export default {
-  components: { AnimeBasicCard }
-}
+  components: { AnimeBasicCard },
+};
 </script>

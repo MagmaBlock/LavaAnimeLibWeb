@@ -51,7 +51,7 @@ export default {
     addSearchHistory(value) {
       this.searchHistory.unshift(value);
       this.searchHistory = Array.from(new Set(this.searchHistory));
-      this.searchHistory.splice(30)
+      this.searchHistory.splice(30);
     },
     // 尝试使用 URL 参数或者 sessionStorage 还原搜索词
     useUrlParams() {

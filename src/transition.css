@@ -8,7 +8,6 @@
   opacity: 0;
 }
 
-
 .flow-out-enter-active {
   animation: go-top 0.3s ease-in;
 }

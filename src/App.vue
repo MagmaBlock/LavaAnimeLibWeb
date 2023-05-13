@@ -1,12 +1,12 @@
 <script>
-import View from './views/View.vue'
+import View from "./views/View.vue";
 
 export default {
   data() {
     return {};
   },
-  components: { View }
-}
+  components: { View },
+};
 </script>
 
 <template>

@@ -4,7 +4,13 @@
 <template>
   <div>
     <!-- 宽屏 -->
-    <n-popover v-if="isWide" trigger="manual" :show="showMe" :on-clickoutside="clickOutside" placement="top">
+    <n-popover
+      v-if="isWide"
+      trigger="manual"
+      :show="showMe"
+      :on-clickoutside="clickOutside"
+      placement="top"
+    >
       <template #trigger>
         <div @click="showMe = !showMe" ref="trigger">
           <slot name="trigger"></slot>
@@ -21,7 +27,12 @@
         <slot name="trigger"></slot>
       </div>
       <!-- 抽屉 -->
-      <n-drawer v-model:show="showMe" height="auto" placement="bottom" class="px-4 py-2">
+      <n-drawer
+        v-model:show="showMe"
+        height="auto"
+        placement="bottom"
+        class="px-4 py-2"
+      >
         <slot></slot>
       </n-drawer>
     </div>
@@ -29,29 +40,28 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed } from "vue";
 
 // 受控模式需要的 props 和 emits
-const props = defineProps(['show'])
-const emits = defineEmits(['update:show'])
+const props = defineProps(["show"]);
+const emits = defineEmits(["update:show"]);
 
 // 非受控模式的自有 show ref
-const showLocal = ref(false)
+const showLocal = ref(false);
 // Proxy
 const showMe = computed({
   get: () => props.show ?? showLocal.value,
   set: (value) => {
-    emits("update:show", value) // 受控模式
-    showLocal.value = value // 非受控模式
-  }
-})
-const isWide = window.innerWidth >= 640 ? true : false
+    emits("update:show", value); // 受控模式
+    showLocal.value = value; // 非受控模式
+  },
+});
+const isWide = window.innerWidth >= 640 ? true : false;
 
-const trigger = ref(null)
-const clickOutside = event => {
+const trigger = ref(null);
+const clickOutside = (event) => {
   // 避免在点击 trigger 时触发
-  if (trigger.value.contains(event.target)) return
-  showMe.value = false
-}
-
+  if (trigger.value.contains(event.target)) return;
+  showMe.value = false;
+};
 </script>

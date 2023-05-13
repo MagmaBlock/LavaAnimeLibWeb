@@ -1,23 +1,23 @@
 <script>
-import AnimeCard from '../../AnimeCard/AnimeCard.vue';
-import ShowMoreButton from './ShowMoreButton.vue'
+import AnimeCard from "../../AnimeCard/AnimeCard.vue";
+import ShowMoreButton from "./ShowMoreButton.vue";
 
 export default {
   data() {
     return {
-      page: null
+      page: null,
     };
   },
   props: {
     animes: Array, // 请传入一个包含动画信息的数组，数组中的每个对象均有 AnimeCard 所需的参数
     size: String, // 决定屏幕宽度  目前有 full large half
     fakeNumber: { type: Number, default: 18 }, // 未加载情况下显示多少个骨架卡片
-    loading: Boolean // 决定是否显示为加载状态
+    loading: Boolean, // 决定是否显示为加载状态
   },
   watch: {
     animes(newList, oldList) {
       this.page = 29; // 30 个
-    }
+    },
   },
   mounted() {
     this.page = 29;
@@ -25,10 +25,14 @@ export default {
   computed: {
     autoGroupClass() {
       switch (this.size) {
-        case "full": return this.fullClass;
-        case "large": return this.largeClass;
-        case "half": return this.halfClass;
-        default: return "";
+        case "full":
+          return this.fullClass;
+        case "large":
+          return this.largeClass;
+        case "half":
+          return this.halfClass;
+        default:
+          return "";
       }
     },
     fullClass() {
@@ -54,11 +58,11 @@ export default {
         lg:grid-cols-3 lg:gap-4
         xl:grid-cols-4
         2xl:grid-cols-5
-      `
-    }
+      `;
+    },
   },
-  components: { ShowMoreButton, AnimeCard }
-}
+  components: { ShowMoreButton, AnimeCard },
+};
 </script>
 
 <template>
@@ -75,7 +79,12 @@ export default {
         </template>
       </div>
       <ShowMoreButton v-if="animes?.length > page" @click="page = page + 30" />
-      <n-empty size="large" description="太可惜了，什么也没找到" class="py-16" v-if="animes?.length == 0">
+      <n-empty
+        size="large"
+        description="太可惜了，什么也没找到"
+        class="py-16"
+        v-if="animes?.length == 0"
+      >
       </n-empty>
     </n-spin>
   </div>

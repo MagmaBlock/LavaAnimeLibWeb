@@ -14,11 +14,7 @@
     <n-collapse-transition :show="openTab" v-if="openTab !== null" class="my-2">
       <slot></slot>
     </n-collapse-transition>
-    <n-collapse-transition
-      :show="!openTab"
-      v-if="$slots.close"
-      class="my-2"
-    >
+    <n-collapse-transition :show="!openTab" v-if="$slots.close" class="my-2">
       <slot name="close"></slot>
     </n-collapse-transition>
   </AnimeBasicCard>
