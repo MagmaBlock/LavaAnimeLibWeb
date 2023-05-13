@@ -1,4 +1,5 @@
 # LavaAnimeLibWeb
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FMagmaBlock%2FLavaAnimeLibWeb.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FMagmaBlock%2FLavaAnimeLibWeb?ref=badge_shield)
 
 熔岩番剧库的前端 V2，完全重写，高性能的单页面应用。
 
@@ -27,3 +28,7 @@ npm run dev
 ```sh
 npm run build
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FMagmaBlock%2FLavaAnimeLibWeb.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FMagmaBlock%2FLavaAnimeLibWeb?ref=badge_large)
