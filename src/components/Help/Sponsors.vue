@@ -61,7 +61,7 @@ export default {
         {
           name: "纯之",
           support: "其他",
-          message: "提供部分视频加速节点",
+          message: "提供部分网页和视频的加速服务节点",
           link: "https://moe.tips/",
         },
         {
