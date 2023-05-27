@@ -1,5 +1,6 @@
 <script>
 import View from "./views/View.vue";
+import ReloadPrompt from './components/ReloadPrompt.vue';
 
 export default {
   data() {
@@ -10,6 +11,7 @@ export default {
 </script>
 
 <template>
+  <ReloadPrompt />
   <ThemeProvier>
     <n-notification-provider>
       <n-message-provider>
