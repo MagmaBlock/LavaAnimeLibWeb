@@ -31,7 +31,7 @@ LavaAnimeAPI.interceptors.response.use(
 );
 
 // 获取当前 Token
-function getToken() {
+export function getToken() {
   let token = localStorage.getItem("token");
   if (!token) return;
   token = JSON.parse(token);

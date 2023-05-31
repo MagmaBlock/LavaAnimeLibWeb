@@ -1,16 +1,18 @@
 <template>
-  <AnimeBasicCard class="select-none overflow-hidden relative">
+  <AnimeBasicCard class="select-none overflow-hidden relative sm:rounded-none sm:shadow-none sm:border-none">
     <!-- 未选择集数的遮罩 -->
-    <div
-      class="absolute w-full h-full bg-white dark:bg-zinc-800 bg-opacity-90 dark:bg-opacity-90 z-10 grid place-items-center"
-      v-if="!video.url"
-    >
-      请先选择集数
-    </div>
+    <Transition name="fade">
+      <div
+        class="absolute w-full h-full bg-white dark:bg-zinc-800 bg-opacity-90 dark:bg-opacity-90 z-10 grid place-items-center"
+        v-if="!store.activeFile?.url"
+      >
+        请先选择集数
+      </div>
+    </Transition>
     <div
       class="flex flex-nowrap flex-shrink-0 overflow-x-scroll lg:overflow-auto p-2 gap-1 md:gap-2"
     >
-      <LocalPlayerIcons :video="video" :player="player" ref="icons">
+      <LocalPlayerIcons ref="icons">
         <template #showAll>
           <!-- 展开全部 -->
           <LocalPlayerIcon
@@ -42,7 +44,7 @@
           ></i>
         </template>
         <div class="flex flex-wrap gap-1 md:gap-2 mb-4">
-          <LocalPlayerIcons :video="video" :player="player" :allos="true" />
+          <LocalPlayerIcons :allos="true" />
         </div>
         <div class="text-gray-600 dark:text-gray-400 text-xs">
           番剧库会根据您使用的设备，判断支持的外部播放器。<br />而这里是所有设备可用的播放器，它们可能不支持您的设备。<br />
@@ -67,28 +69,17 @@
   </AnimeBasicCard>
 </template>
 
-<script>
+<script setup>
 import { ref } from "vue";
-import LocalPlayerIcon from "./LocalPlayerIcon.vue";
+import { useAnimeStore } from "../../../store/Anime";
+import AnimeBasicCard from "../Cards/AnimeBasicCard.vue";
 import LocalPlayerIcons from "./LocalPlayerIcons.vue";
+import LocalPlayerIcon from "./LocalPlayerIcon.vue";
 
-export default {
-  data() {
-    return {
-      moreModel: ref(false),
-    };
-  },
-  props: {
-    video: Object,
-    player: Object,
-  },
-  methods: {
-    pausePlayer() {
-      this.player.art.pause();
-      console.log("暂停来自上级的播放器.");
-    },
-  },
-  mounted() {},
-  components: { LocalPlayerIcons, LocalPlayerIcon },
-};
+const store = useAnimeStore();
+const moreModel = ref(false);
+
+function pausePlayer() {
+  // TODO
+}
 </script>
