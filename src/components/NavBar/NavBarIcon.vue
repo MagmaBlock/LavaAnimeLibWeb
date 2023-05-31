@@ -48,7 +48,7 @@ import { RouterLink } from "vue-router";
       class="ease-in duration-200"
     >
       <div
-        class="lg:mx-2 lg:py-2 lg:hover:bg-slate-200 lg:dark:hover:bg-zinc-700 rounded-md transition"
+        class="lg:mx-2 lg:py-2 lg:hover:bg-zinc-200 lg:dark:hover:bg-zinc-700 rounded-md transition"
       >
         <div class="text-[1.25rem] lg:text-[1.35rem] mb-[1px]">
           <i :class="realIconClass"></i>

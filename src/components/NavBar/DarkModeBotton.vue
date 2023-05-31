@@ -1,6 +1,6 @@
 <template>
   <div
-    class="text-xl grid place-items-center w-12 h-12 cursor-pointer text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-gray-200 lg:hover:bg-slate-200 lg:dark:hover:bg-zinc-700 rounded-md transition"
+    class="text-xl grid place-items-center w-12 h-12 cursor-pointer text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-zinc-200 lg:hover:bg-zinc-200 lg:dark:hover:bg-zinc-700 rounded-md transition"
     @click="switchDarkMode"
   >
     <i class="bi bi-moon-stars" v-if="darkMode"></i>
