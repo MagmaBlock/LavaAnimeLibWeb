@@ -14,5 +14,5 @@ const meta = document.createElement("meta");
 meta.name = "naive-ui-style";
 document.head.appendChild(meta);
 
-export const app = createApp(App).use(router).use(VueLazyLoad).use(pinia);
+export const app = createApp(App).use(pinia).use(router).use(VueLazyLoad);
 app.mount("#app");

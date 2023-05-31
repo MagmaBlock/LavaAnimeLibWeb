@@ -86,7 +86,7 @@ onUnmounted(() => {
 <template>
   <ContainerMobileFull>
     <!-- 开发模式视图 -->
-    <DevTool class="lg:px-12" v-if="this.$route.query.dev" />
+    <DevTool class="lg:px-12" v-if="route.query.dev" />
     <!-- 主视图，Grid 布局，仅在 lg 以上可用 -->
     <div
       class="lg:grid lg:grid-cols-3 lg:gap-6 lg:px-12 w-full"
