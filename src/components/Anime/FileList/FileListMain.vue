@@ -79,10 +79,7 @@ const bytesToSize = (bytes) => {
       <div>
         <n-collapse-transition :show="store.fileData?.activeEpisode">
           <div class="my-1">
-            <Transition
-              leave-active-class="absolute animate__animated animate__zoomOut"
-              enter-active-class="absolute animate__animated animate__zoomIn"
-            >
+            <Transition mode="out-in" name="fade">
               <div :key="store.fileData?.activeEpisode">
                 <FileInfo
                   v-for="video in store.episodeListFind(
