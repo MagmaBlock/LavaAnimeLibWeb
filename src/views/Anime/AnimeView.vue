@@ -16,6 +16,7 @@ import FileListMain from "../../components/Anime/FileList/FileListMain.vue";
 import DevTool from "../../components/Anime/DevTool.vue";
 import ErrorMessage from "../../components/Anime/FileList/ErrorMessage.vue";
 import NoPlayer from "../../components/Anime/NoPlayer.vue";
+import NoBrowserNotice from "../../components/Anime/LocalPlayer/NoBrowserNotice.vue";
 
 const store = useAnimeStore();
 const route = useRoute();
@@ -98,6 +99,12 @@ onUnmounted(() => {
         <div class="sm:shadow sm:mb-4 sm:rounded-md overflow-clip">
           <Transition name="fade">
             <AnimePlayer v-if="store.showArtPlayer" />
+          </Transition>
+          <Transition
+            enter-active-class="animate__animated animate__bounceIn"
+            leave-active-class="animate__animated absolute animate__fadeOut animate__faster"
+          >
+            <NoBrowserNotice v-if="store.isNoBrowser" />
           </Transition>
           <NoPlayer v-if="!store.showArtPlayer" />
           <!-- 本地播放器调用 -->
