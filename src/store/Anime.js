@@ -137,6 +137,12 @@ export const useAnimeStore = defineStore("anime", {
         });
       };
     },
+    isNoBrowser() {
+      return (
+        this.activeFile?.parseResult?.noBrowser ||
+        this.activeFile?.parseResult?.extensionName?.raw == "mkv"
+      );
+    },
   },
   actions: {
     /**

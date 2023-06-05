@@ -7,12 +7,6 @@
       class="absolute top-0 w-full h-full select-none"
     ></div>
   </div>
-  <Transition
-    enter-active-class="animate__animated animate__bounceIn"
-    leave-active-class="animate__animated absolute animate__fadeOut animate__faster"
-  >
-    <NoBrowserNotice v-if="store.activeFile?.parseResult?.noBrowser" />
-  </Transition>
 </template>
 
 <script setup>
@@ -21,7 +15,6 @@ import { ref, reactive, onMounted, onBeforeUnmount, watch, inject } from "vue";
 import { useAnimeStore } from "../../store/Anime";
 import { useThrottleFn } from "@vueuse/core";
 import canAutoplay from "can-autoplay";
-import NoBrowserNotice from "./LocalPlayer/NoBrowserNotice.vue";
 
 const store = useAnimeStore();
 const refreshPlayer = inject("refreshPlayer");

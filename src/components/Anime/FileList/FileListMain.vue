@@ -61,12 +61,6 @@ const bytesToSize = (bytes) => {
                   {{ episode.episode }}
                 </div>
                 <!-- 多集数时展现 -->
-                <!-- <div
-              v-if="episode.list.length > 1"
-              class="text-xs text-center leading-none h-2 scale-75"
-            >
-              {{ episode.list.length }}
-            </div> -->
                 <div
                   v-if="episode.list.length > 1"
                   class="absolute h-0.5 w-1.5 mx-auto inset-x-0 bottom-1 rounded-full"
@@ -85,17 +79,18 @@ const bytesToSize = (bytes) => {
       <div>
         <n-collapse-transition :show="store.fileData?.activeEpisode">
           <div class="my-1">
-            <template
-              v-for="video in store.episodeListFind(
-                store.fileData.activeEpisode
-              ).list"
-            >
-              <FileInfo
-                :video="video"
-                @click="store.changeVideo(video?.url)"
-                :active="video.name == store.activeFile?.name"
-              />
-            </template>
+            <Transition mode="out-in" name="fade">
+              <div :key="store.fileData?.activeEpisode">
+                <FileInfo
+                  v-for="video in store.episodeListFind(
+                    store.fileData.activeEpisode
+                  ).list"
+                  :video="video"
+                  @click="store.changeVideo(video?.url)"
+                  :active="video.name == store.activeFile?.name"
+                />
+              </div>
+            </Transition>
           </div>
         </n-collapse-transition>
       </div>
