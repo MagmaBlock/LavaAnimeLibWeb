@@ -1,145 +1,96 @@
-<script>
+<script setup>
+import { ref } from "vue";
+import { useAnimeStore } from "../../../store/Anime";
 import AnimeBasicCard from "../Cards/AnimeBasicCard.vue";
 import AnimeFlodCard from "../Cards/AnimeFlodCard.vue";
-import FIleInfoBotton from "./FIleInfoBotton.vue";
+import FileInfo from "./FileInfo.vue";
 
-export default {
-  inject: ["changePlayingFile"],
-  props: {
-    laData: Object,
-    fileList: Array,
-    selectedFile: Object,
-  },
-  data() {
-    return {
-      epfileList: {},
-      selectKey: "",
-      showEpList: false,
-      epSwitchLock: false,
-      otherFileList: {
-        other: [],
-        music: [],
-        unknowVideo: [],
-      },
-    };
-  },
-  computed: {
-    // 展示用的集数列表
-    epKeys() {
-      return Object.keys(this.epfileList).sort((a, b) => {
-        const aNum = parseInt(a.match(/\d+/)[0]);
-        const bNum = parseInt(b.match(/\d+/)[0]);
-        return aNum - bNum || a.length - b.length;
-      });
-    },
-    bottonClass() {
-      return {
-        default:
-          "bg-gray-100 hover:bg-gray-200 dark:bg-zinc-700 dark:text-white active:bg-blue-600 active:text-white",
-        active: "bg-blue-600 text-white",
-      };
-    },
-  },
-  methods: {
-    splitfileList() {
-      this.epfileList = {};
-      this.fileList.forEach((video) => {
-        if (video.type == "dir") return;
-        if (video.extensionName.type == "video") {
-          // 视频处理
-          if (video.episode) {
-            // 当前集数已识别出集数
-            if (!this.epfileList[video.episode]) {
-              // 如果 epfileList 没有相应集数的数组，创建相应数组
-              this.epfileList[video.episode] = new Array();
-            }
-            this.epfileList[video.episode].push(video); //
-          } else {
-            this.otherFileList.unknowVideo.push(video);
-          }
-        } else if (video.extensionName.type == "music") {
-          // 单独列出音乐类型
-          this.otherFileList.music.push(video);
-        } else {
-          // 非视频单独显示
-          this.otherFileList.other.push(video);
-        }
-      });
-    },
-    clickEpButton(key) {
-      if (this.epSwitchLock) return; // 锁定期间不可用
-      this.showEpList = false; // 隐藏列表
-      if (this.selectKey == key) {
-        // 点击已经选择
-        this.selectKey = "";
-        return;
-      }
-      this.selectKey = key; // 修改已选 Key
-      this.epSwitchLock = true;
-      let thisEpVideos = this.epfileList[key];
-      this.changePlayingFile(thisEpVideos[0], false); // 提交视频更改事件
-      setTimeout(() => {
-        this.showEpList = true; // 显示列表
-      }, 300);
-      setTimeout(() => {
-        this.epSwitchLock = false;
-      }, 500);
-    },
-  },
-  mounted() {
-    this.splitfileList();
-  },
-  watch: {
-    fileList() {
-      this.splitfileList();
-    },
-  },
-  components: { AnimeBasicCard, FIleInfoBotton, AnimeFlodCard },
+const store = useAnimeStore();
+
+const bottonClass = {
+  default:
+    "bg-gray-100 hover:bg-gray-200 dark:bg-zinc-700 dark:text-white active:bg-blue-600 active:text-white",
+  active: "bg-blue-600 text-white",
+};
+
+const epButtonClick = (episode) => {
+  if (episode.episode !== store.fileData.activeEpisode) {
+    store.changeEpisode(episode.episode);
+  }
+};
+
+// 字节体积格式化
+const bytesToSize = (bytes) => {
+  if (bytes === 0) return "0B";
+  const k = 1024;
+  const sizes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+  let i = Math.floor(Math.log(bytes) / Math.log(k));
+  return (bytes / Math.pow(k, i)).toPrecision(3) + "" + sizes[i];
 };
 </script>
 <template>
-  <!-- 总容器 -->
-  <div v-if="fileList.length">
+  <FileListLoading v-if="store.state.fileData.isLoading" />
+
+  <div
+    v-if="!store.state.fileData.isLoading && !store.state.fileData.errorCode"
+  >
     <!-- 识别到集数的视频 -->
-    <AnimeBasicCard class="px-4 py-2 sm:mb-4 select-none" v-if="epKeys.length">
-      <!-- 标题 -->
+    <AnimeBasicCard
+      class="px-4 py-2 sm:mb-4 select-none"
+      v-if="store.episodeList.length"
+    >
+      <!-- 卡片标题 -->
       <div class="text-base px-0.5 mb-2">正片</div>
-      <!-- 集数容器 -->
+      <!-- 集数 Grid 容器 -->
       <div class="grid grid-cols-6 gap-1">
-        <!-- 各集数 -->
-        <template v-for="key in epKeys">
-          <div
-            class="cursor-pointer ease-in duration-100 rounded overflow-hidden h-10 grid content-center relative"
-            :class="selectKey == key ? bottonClass.active : bottonClass.default"
-            @click="clickEpButton(key)"
-          >
-            <div class="leading-none pb-0.5 text-center">
-              {{ key }}
-            </div>
-            <div
-              v-if="epfileList[key].length > 1"
-              class="text-xs text-center leading-none h-2 scale-75"
-            >
-              {{ epfileList[key].length }}
-            </div>
-            <div
-              v-if="selectedFile.episode == key && selectKey !== key"
-              class="absolute inset-0 border-blue-600 border-2 rounded"
-            ></div>
-          </div>
+        <!-- 集数方块 -->
+        <template v-for="episode in store.episodeList">
+          <n-popover trigger="hover" :disabled="episode.list.length == 1">
+            <template #trigger>
+              <div
+                class="cursor-pointer ease-in duration-100 rounded overflow-hidden h-10 grid content-center relative"
+                :class="
+                  store.fileData.activeEpisode == episode.episode
+                    ? bottonClass.active
+                    : bottonClass.default
+                "
+                @click="epButtonClick(episode)"
+              >
+                <!-- 集数 -->
+                <div class="leading-none pb-0.5 text-center">
+                  {{ episode.episode }}
+                </div>
+                <!-- 多集数时展现 -->
+                <div
+                  v-if="episode.list.length > 1"
+                  class="absolute h-0.5 w-1.5 mx-auto inset-x-0 bottom-1 rounded-full"
+                  :class="
+                    store.fileData.activeEpisode == episode.episode
+                      ? 'bg-gray-50'
+                      : 'bg-gray-400'
+                  "
+                ></div>
+              </div>
+            </template>
+            <span>当前集数有 {{ episode.list.length }} 个视频</span>
+          </n-popover>
         </template>
       </div>
       <div>
-        <!-- 选中的 EP 视频列表 -->
-        <n-collapse-transition :show="showEpList">
+        <n-collapse-transition :show="store.fileData?.activeEpisode">
           <div class="my-1">
-            <template v-for="video in epfileList[selectKey]">
-              <FIleInfoBotton
-                :video="video"
-                @click="changePlayingFile(video, true)"
-                :active="video.name == selectedFile.name"
-              />
-            </template>
+            <Transition mode="out-in" name="fade">
+              <div :key="store.fileData?.activeEpisode">
+                <FileInfo
+                  v-for="video in store.episodeListFind(
+                    store.fileData.activeEpisode
+                  ).list"
+                  :video="video"
+                  @click="store.changeVideo(video?.url)"
+                  :active="video.name == store.activeFile?.name"
+                />
+              </div>
+            </Transition>
           </div>
         </n-collapse-transition>
       </div>
@@ -148,77 +99,90 @@ export default {
     <!-- 未识别到集数的视频 -->
     <AnimeFlodCard
       class="px-4 py-2 sm:mb-4 select-none"
-      :mobile-show="!epKeys.length"
-      v-if="otherFileList.unknowVideo.length"
+      :mobile-show="!store.episodeList.length"
+      v-if="store.noEpisodeList.length"
     >
       <!-- 标题 -->
       <template #title>
-        {{ epKeys.length ? "其他视频" : "视频" }}
+        {{ store.episodeList.length ? "其他视频" : "视频" }}
         <span class="text-sm text-zinc-500">
-          {{ otherFileList.unknowVideo.length }}
+          {{ store.noEpisodeList.length }}
         </span>
       </template>
-      <!-- 其他文件显示 -->
-      <template v-for="file in otherFileList.unknowVideo">
-        <FIleInfoBotton
-          :video="file"
-          @click="changePlayingFile(file, false)"
-          :active="file.name == selectedFile.name"
+      <!-- 其他视频显示 -->
+      <template v-for="video in store.noEpisodeList">
+        <FileInfo
+          :video="video"
+          @click="store.changeVideo(video.url)"
+          :active="video.name == store.activeFile?.name"
         />
       </template>
     </AnimeFlodCard>
 
     <!-- 音乐 -->
     <AnimeFlodCard
-      v-if="otherFileList.music.length"
+      v-if="store.musicList.length"
       class="px-4 py-2 sm:mb-4 select-none"
     >
       <!-- 标题 -->
       <template #title>
         相关音乐
         <span class="text-sm text-zinc-500">
-          {{ otherFileList.music.length }}
+          {{ store.musicList.length }}
         </span>
       </template>
       <!-- 其他文件显示 -->
-      <template v-for="file in otherFileList.music">
-        <FIleInfoBotton
+      <template v-for="file in store.musicList">
+        <FileInfo
           :video="file"
-          @click="changePlayingFile(file)"
-          :active="file.name == selectedFile.name"
+          @click="store.changeVideo(file.url, true)"
+          :active="file.name == store.activeFile?.name"
         />
       </template>
     </AnimeFlodCard>
 
     <!-- 附件文件，以上都没匹配到的文件就会过来 -->
     <AnimeFlodCard
-      v-if="otherFileList.other.length"
+      v-if="store.otherList.length"
       class="px-4 py-2 sm:mb-4 select-none"
     >
       <!-- 标题 -->
       <template #title>
         附件
         <span class="text-sm text-zinc-500">
-          {{ otherFileList.other.length }}
+          {{ store.otherList.length }}
         </span>
       </template>
       <!-- 其他文件显示 -->
-      <template v-for="file in otherFileList.other">
-        <FIleInfoBotton
-          :video="file"
-          @click="changePlayingFile(file)"
-          :active="file.name == selectedFile.name"
-        />
+      <template v-for="file in store.otherList">
+        <n-popover trigger="hover">
+          <template #trigger>
+            <a :href="file?.url" target="_blank" rel="noopener noreferrer">
+              <FileInfo :video="file" />
+            </a>
+          </template>
+          <span>
+            这是一个 {{ file?.parseResult?.extensionName?.result }} 附件, 大小
+            {{ bytesToSize(file?.size) }}, 点击可以下载
+          </span>
+        </n-popover>
       </template>
     </AnimeFlodCard>
   </div>
 
-  <AnimeBasicCard v-else class="py-6 select-none">
+  <AnimeBasicCard
+    v-if="
+      !store.state.fileData.isLoading &&
+      !store.state.fileData.errorCode &&
+      !store.fileData.fileList.length
+    "
+    class="py-6 sm:mb-4 select-none"
+  >
     <n-result
       status="418"
       title="暂无资源 敬请期待"
       :description="`来自 Bangumi 的放送时间 ${
-        laData.date || '未知 / 暂未定档'
+        store.animeData.date || '未知 / 暂未定档'
       }`"
       size="small"
     >

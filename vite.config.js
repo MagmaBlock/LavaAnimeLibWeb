@@ -60,6 +60,7 @@ export default defineConfig({
   },
   build: {
     target: ["chrome71"],
+    sourcemap: true
   },
   // experimental: {
   //   renderBuiltUrl(fileName) {

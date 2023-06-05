@@ -7,10 +7,6 @@
   </AnimeBasicCard>
 </template>
 
-<script>
+<script setup>
 import AnimeBasicCard from "../Cards/AnimeBasicCard.vue";
-
-export default {
-  components: { AnimeBasicCard },
-};
 </script>

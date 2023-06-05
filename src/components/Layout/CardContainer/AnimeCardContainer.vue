@@ -10,7 +10,7 @@ export default {
   },
   props: {
     animes: Array, // 请传入一个包含动画信息的数组，数组中的每个对象均有 AnimeCard 所需的参数
-    size: String, // 决定屏幕宽度  目前有 full large half
+    size: String, // 决定屏幕宽度  目前有 full large half alwaysMobile
     fakeNumber: { type: Number, default: 18 }, // 未加载情况下显示多少个骨架卡片
     loading: Boolean, // 决定是否显示为加载状态
   },
@@ -31,6 +31,8 @@ export default {
           return this.largeClass;
         case "half":
           return this.halfClass;
+        case "alwaysMobile":
+          return this.alwaysMobileClass;
         default:
           return "";
       }
@@ -58,6 +60,11 @@ export default {
         lg:grid-cols-3 lg:gap-4
         xl:grid-cols-4
         2xl:grid-cols-5
+      `;
+    },
+    alwaysMobileClass() {
+      return `grid grid-cols-3 gap-3
+        sm:grid-cols-3
       `;
     },
   },

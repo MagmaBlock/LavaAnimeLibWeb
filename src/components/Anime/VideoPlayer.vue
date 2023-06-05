@@ -232,7 +232,6 @@ export default {
       ...this.option,
       container: this.$refs.artRef,
     });
-    this.art.autoHeight = true;
     this.$refs.artRef.addEventListener("contextmenu", function (e) {
       e.preventDefault();
     });

@@ -1,15 +1,7 @@
-<script>
-export default {
-  data() {
-    return {};
-  },
-};
-</script>
-
 <template>
   <AnimeBasicCard>
     <!-- 面包屑导航 但是不能点 -->
-    <div class="px-4 py-2 text-sm text-gray-500 border-b-[1px]">
+    <div class="px-4 py-2 text-sm text-gray-500 border-b dark:border-zinc-700">
       <n-skeleton text></n-skeleton>
     </div>
     <!-- 主信息卡 -->

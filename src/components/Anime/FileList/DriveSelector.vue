@@ -1,23 +1,28 @@
 <template>
-  <AnimeFlodCard class="px-4 py-2 sm:mb-4 select-none" v-if="driveList.list">
+  <AnimeFlodCard
+    class="px-4 py-2 sm:mb-4 select-none"
+    v-if="!store.state.driveData.isLoading"
+  >
     <template #title>
       节点
-      <span v-if="driveList?.list?.length" class="mx-1 text-sm opacity-75">
-        {{ driveList?.list?.length }}个
+      <span v-if="store.driveData.list.length" class="mx-1 text-sm opacity-75">
+        {{ store.driveData.list.length }}个
       </span>
     </template>
-    <div class="grid grid-cols-1 gap-1 max-h-[35vh] overflow-y-scroll">
-      <template v-for="drive in driveList.list">
+    <div class="grid grid-cols-1 gap-1 max-h-[25vh] overflow-y-scroll">
+      <template v-for="drive in store.driveData.list">
         <DriveCard
-          :active="myDrive.selectedDrive == drive.id"
+          :active="store.myDrive.selectedDrive == drive.id"
           :name="drive.name"
           :description="drive.description"
-          @click="changeDrive(drive.id)"
+          @click="store.changeDrive(drive.id)"
+          :disable="store.animeData?.type?.nsfw && drive.banNSFW"
+          :loading="store.state.driveLoading == drive.id"
         />
       </template>
     </div>
     <n-checkbox
-      v-model:checked="myDrive.rememberMyChoice"
+      v-model:checked="store.myDrive.rememberMyChoice"
       class="mt-2 mx-1"
       size="small"
     >
@@ -25,38 +30,19 @@
     </n-checkbox>
     <template #close>
       <DriveCard
-        :name="activeDrive?.name"
-        :description="activeDrive?.description"
+        :name="store.activeDrive?.name"
+        :description="store.activeDrive?.description"
+        :disable="store.animeData?.type?.nsfw && store.activeDrive?.banNSFW"
+        :loading="store.state.driveLoading"
       />
     </template>
   </AnimeFlodCard>
 </template>
 
-<script>
+<script setup>
 import AnimeFlodCard from "../Cards/AnimeFlodCard.vue";
 import DriveCard from "./DriveCard.vue";
+import { useAnimeStore } from "../../../store/Anime";
 
-export default {
-  inject: ["changePlayingFile"],
-  emits: ["changeDrive"],
-  props: {
-    driveList: Object,
-    myDrive: Object,
-  },
-  methods: {
-    // 改变 Drive
-    changeDrive(drive) {
-      console.log("改变 Drive: ", drive);
-      this.$emit("changeDrive", drive);
-    },
-  },
-  computed: {
-    activeDrive() {
-      return this.driveList.list.find(
-        (drive) => drive?.id == this.myDrive?.selectedDrive
-      );
-    },
-  },
-  components: { AnimeFlodCard, DriveCard },
-};
+const store = useAnimeStore();
 </script>

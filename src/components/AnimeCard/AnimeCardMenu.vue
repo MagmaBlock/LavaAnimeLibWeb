@@ -71,7 +71,7 @@
       </template>
     </n-list-item>
 
-    <n-list-item v-if="anime?.bgmId">
+    <n-list-item v-if="anime?.bgmID">
       <a :href="anime?.images.large" target="_blank">
         <div class="flex gap-x-4 items-center">
           <ImageOutlined class="h-6" />
@@ -80,8 +80,8 @@
       </a>
     </n-list-item>
 
-    <n-list-item v-if="anime?.bgmId">
-      <a :href="'https://bgm.tv/subject/' + anime.bgmId" target="_blank">
+    <n-list-item v-if="anime?.bgmID">
+      <a :href="'https://bgm.tv/subject/' + anime.bgmID" target="_blank">
         <div class="flex gap-x-4 items-center">
           <OpenInNewOutlined class="h-6" />
           去番组计划查看本作品

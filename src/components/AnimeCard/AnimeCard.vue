@@ -52,7 +52,7 @@ export default {
         </div>
         <!-- 标题 -->
         <div
-          class="absolute inset-x-0 bottom-0 grid h-24 items-end break-all bg-gradient-to-b from-transparent to-black/75 px-3 py-3 text-[13px] text-white"
+          class="absolute inset-x-0 bottom-0 grid h-24 items-end break-all bg-gradient-to-b from-transparent to-black/75 px-3 py-3 text-[13px] text-white font-semibold"
         >
           <n-ellipsis :line-clamp="2" expand-trigger="hover">
             {{ anime?.title || "..." }}
@@ -71,6 +71,13 @@ export default {
             </div>
           </n-ellipsis>
         </div>
+        <!-- 额外 Tag -->
+        <span
+          class="absolute top-1 right-1 bg-blue-600 backdrop-blur bg-opacity-60 text-white text-xs font-semibold rounded-sm px-1.5 py-0.5"
+          v-if="anime?.relation"
+        >
+          {{ anime.relation }}
+        </span>
       </RouterLink>
     </div>
 
@@ -78,7 +85,7 @@ export default {
     <div class="relative h-8 dark:bg-zinc-700">
       <div class="flex h-full">
         <div class="grid basis-3/4 content-center pl-3">
-          <div class="flex items-center gap-x-0.5 ">
+          <div class="flex items-center gap-x-0.5">
             <n-icon size="15">
               <SmartDisplayOutlined />
             </n-icon>
