@@ -7,6 +7,7 @@ import vue from "@vitejs/plugin-vue";
 import Components from "unplugin-vue-components/vite";
 import { NaiveUiResolver } from "unplugin-vue-components/resolvers";
 import { VitePWA } from "vite-plugin-pwa";
+import { visualizer } from "rollup-plugin-visualizer";
 
 export default defineConfig({
   // https://cn.vitejs.dev/config/shared-options.html
@@ -45,6 +46,12 @@ export default defineConfig({
         enabled: false,
       },
     }),
+    visualizer({
+      gzipSize: true,
+      brotliSize: true,
+      emitFile: false,
+      filename: "dist/stats.html",
+    }),
   ],
   resolve: {
     alias: {
@@ -59,7 +66,7 @@ export default defineConfig({
   },
   build: {
     target: ["chrome71"],
-    sourcemap: true
+    sourcemap: true,
   },
   // experimental: {
   //   renderBuiltUrl(fileName) {
