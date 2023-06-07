@@ -1,25 +1,22 @@
-2
 <template>
-  <div>
+  <Container>
     <TopNav title="帮助"></TopNav>
-    <Container>
-      <div class="lg:flex">
-        <div class="lg:basis-1/4 select-none">
-          <List
-            :article="article"
-            :articles="articles"
-            @change-article="(a) => changeArticle(a)"
-            ref="List"
-          />
-          <Sponsors class="mt-8 hidden lg:block" />
-        </div>
-        <div class="lg:basis-3/4">
-          <MarkdownRender :content="article.content || ''" />
-        </div>
-      </div>
-      <Sponsors class="mt-16 block lg:hidden" />
-    </Container>
-  </div>
+    <LeftMenuRightContent class="mt-4">
+      <template #left>
+        <List
+          :article="article"
+          :articles="articles"
+          @change-article="(a) => changeArticle(a)"
+          ref="List"
+        />
+        <Sponsors class="mt-8 hidden lg:block" />
+      </template>
+      <template #right>
+        <MarkdownRender :content="article.content || ''" />
+        <Sponsors class="mt-8 block lg:hidden" />
+      </template>
+    </LeftMenuRightContent>
+  </Container>
 </template>
 <script>
 import Container from "../components/Layout/PageContainer/Container.vue";
