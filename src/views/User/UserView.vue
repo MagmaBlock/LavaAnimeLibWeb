@@ -10,7 +10,8 @@
   </ContainerMobileFull>
 </template>
 
-<script>
+<script setup>
+import { onMounted } from "vue";
 import ContainerMobileFull from "../../components/Layout/PageContainer/ContainerMobileFull.vue";
 import UserCard from "../../components/My/User/UserCard.vue";
 import FunctionsCard from "../../components/My/FunctionsCard.vue";
@@ -18,21 +19,7 @@ import MyCollections from "../../components/My/MyCollections.vue";
 import MyFollow from "../../components/My/MyFollow.vue";
 import AdminLinks from "../../components/Admin/AdminLinks.vue";
 
-export default {
-  data() {
-    return {};
-  },
-  methods: {},
-  mounted() {
-    document.title = "我的 | 熔岩番剧库 LavaAnimeLib";
-  },
-  components: {
-    FunctionsCard,
-    UserCard,
-    MyCollections,
-    ContainerMobileFull,
-    AdminLinks,
-    MyFollow,
-  },
-};
+onMounted(() => {
+  document.title = "我的 | 熔岩番剧库 LavaAnimeLib";
+});
 </script>

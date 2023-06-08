@@ -1,6 +1,10 @@
 <template>
   <!-- 深色模式弹窗设置 -->
-  <n-modal v-model:show="show" class="select-none">
+  <n-modal
+    :show="show"
+    @update:show="$emit('update:show', false)"
+    class="select-none"
+  >
     <n-card
       class="max-w-xl"
       title="深色模式设置"
@@ -12,7 +16,7 @@
       <template #header-extra>
         <i
           class="bi bi-x-lg hover:text-blue-600 cursor-pointer ml-2"
-          @click="show = false"
+          @click="$emit('update:show', false)"
         ></i>
       </template>
       <n-list hoverable clickable>
@@ -95,15 +99,12 @@
   </n-modal>
 </template>
 
-<script>
-import settings from "../../../common/Methods/settings";
+<script setup>
+import { useSettingsStore } from "../../../store/Settings";
 
-export default {
-  data() {
-    return {
-      settings: settings,
-      show: false,
-    };
-  },
-};
+const settings = useSettingsStore();
+defineProps({
+  show: Boolean,
+});
+defineEmits(["update:show"]);
 </script>

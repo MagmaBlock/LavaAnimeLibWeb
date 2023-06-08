@@ -18,13 +18,13 @@
         <template #name>使用帮助</template>
       </BigButton>
       <!-- 深色模式 -->
-      <BigButton @click="$refs.darkModeModel.show = true">
+      <BigButton @click="showDarkModeModel = true">
         <template #icon>
           <NightsStayRound />
         </template>
         <template #name>深色模式</template>
       </BigButton>
-      <DarkModeModel ref="darkModeModel"></DarkModeModel>
+      <DarkModeModel v-model:show="showDarkModeModel"></DarkModeModel>
       <BigButton @click="$router.push({ name: 'Update' })">
         <template #icon>
           <UpdateFilled />
@@ -35,7 +35,7 @@
   </MyBasicCard>
 </template>
 
-<script>
+<script setup>
 import MyBasicCard from "./MyBasicCard.vue";
 import BigButton from "./BigButton.vue";
 import {
@@ -44,19 +44,8 @@ import {
   NightsStayRound,
   UpdateFilled,
 } from "@vicons/material";
+import DarkModeModel from "./Settings/DarkModeModel.vue";
+import { ref } from "vue";
 
-export default {
-  data() {
-    return {};
-  },
-  methods: {},
-  components: {
-    BigButton,
-    MyBasicCard,
-    AccountBoxFilled,
-    ArticleOutlined,
-    NightsStayRound,
-    UpdateFilled,
-  },
-};
+const showDarkModeModel = ref(false);
 </script>
