@@ -18,11 +18,9 @@
     </n-button> -->
   </a>
 </template>
-<script>
-export default {
-  props: {
-    icon: String,
-    href: String,
-  },
-};
+<script setup>
+const props = defineProps({
+  icon: String,
+  href: String,
+});
 </script>

@@ -1,5 +1,7 @@
 <template>
-  <AnimeBasicCard class="select-none overflow-hidden relative sm:rounded-none sm:shadow-none sm:border-none">
+  <AnimeBasicCard
+    class="select-none overflow-hidden relative sm:rounded-none sm:shadow-none sm:border-none"
+  >
     <!-- 未选择集数的遮罩 -->
     <Transition name="fade">
       <div
@@ -80,6 +82,6 @@ const store = useAnimeStore();
 const moreModel = ref(false);
 
 function pausePlayer() {
-  // TODO
+  store?.artInstance?.pause();
 }
 </script>

@@ -115,7 +115,7 @@ import { onMounted, computed, ref } from "vue";
 
 import LocalPlayerIcon from "./LocalPlayerIcon.vue";
 import { useAnimeStore } from "../../../store/Anime";
-import { useClipboard } from "@vueuse/core";
+import { useClipboard, useThrottleFn } from "@vueuse/core";
 
 const store = useAnimeStore();
 const ua = uaParser();
@@ -132,7 +132,7 @@ const props = defineProps({
  * @param {String} type
  */
 function handleButtonClick(type) {
-  // TODO
+  useThrottleFn(store.reportView(false, type), 2000);
 }
 
 const getUrl = () => {
