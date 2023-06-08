@@ -1,6 +1,6 @@
 <template>
   <div
-    class="sticky flex flex-nowrap h-12 z-10 select-none transition overflow-hidden rounded-md border dark:border-zinc-700 shadow-lg bg-white bg-opacity-80 dark:bg-zinc-800 dark:bg-opacity-80"
+    class="sticky flex flex-nowrap h-12 z-10 select-none transition overflow-hidden rounded-md border dark:border-zinc-700 bg-white bg-opacity-80 dark:bg-zinc-800 dark:bg-opacity-80"
   >
     <div class="flex flex-nowarp">
       <div
