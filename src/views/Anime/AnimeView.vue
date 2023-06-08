@@ -9,7 +9,6 @@ import AnimeDataCardFake from "../../components/Anime/AnimeDataCardFake.vue";
 import LocalPlayers from "../../components/Anime/LocalPlayer/LocalPlayers.vue";
 import AnimePlayer from "../../components/Anime/AnimePlayer.vue";
 import ContainerMobileFull from "../../components/Layout/PageContainer/ContainerMobileFull.vue";
-import AnimeFileView from "./AnimeFileView.vue";
 import RelationAnimes from "../../components/Anime/RelationAnimes.vue";
 import DriveSelector from "../../components/Anime/FileList/DriveSelector.vue";
 import FileListMain from "../../components/Anime/FileList/FileListMain.vue";
@@ -122,11 +121,6 @@ onUnmounted(() => {
       </div>
       <!-- 右视图 占一列 -->
       <div class="lg:col-span-1">
-        <!-- <AnimeFileView
-          :la-i-d="store.laID"
-          :la-data="store.animeData"
-          :selected-file="store.activeFile"
-        /> -->
         <DriveSelector />
         <FileListMain />
         <ErrorMessage />
