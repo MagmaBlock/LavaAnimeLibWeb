@@ -38,7 +38,7 @@ export default {
 <template>
   <div class="bg-white dark:bg-neutral-900 transition-colors duration-500">
     <!-- 背景图片和他的特效 -->
-    <div class="w-screen h-screen">
+    <div class="w-screen h-screen overflow-hidden">
       <Transition
         enter-active-class="animate__animated animate__fadeIn animate__faster"
         leave-active-class="animate__animated animate__fadeOut animate__faster"
