@@ -77,7 +77,7 @@ const bytesToSize = (bytes) => {
         </template>
       </div>
       <div>
-        <n-collapse-transition :show="store.fileData?.activeEpisode">
+        <n-collapse-transition :show="!!store.fileData?.activeEpisode">
           <div class="my-1">
             <Transition mode="out-in" name="fade">
               <div :key="store.fileData?.activeEpisode">

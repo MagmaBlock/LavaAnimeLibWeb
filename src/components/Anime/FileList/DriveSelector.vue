@@ -33,7 +33,7 @@
         :name="store.activeDrive?.name"
         :description="store.activeDrive?.description"
         :disable="store.animeData?.type?.nsfw && store.activeDrive?.banNSFW"
-        :loading="store.state.driveLoading"
+        :loading="!!store.state.driveLoading"
       />
     </template>
   </AnimeFlodCard>
