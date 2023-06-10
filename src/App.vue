@@ -1,5 +1,6 @@
 <script setup>
 import View from "./views/View.vue";
+import ThemeProvier from './components/ThemeProvier.vue'
 </script>
 
 <template>

@@ -4,7 +4,6 @@
     :date-locale="dateZhCN"
     :theme="settings.darkMode.on ? darkTheme : null"
     :theme-overrides="themeOverrides"
-    :class="settings.darkMode.on ? 'dark bg-black' : ''"
   >
     <slot></slot>
   </n-config-provider>
@@ -14,7 +13,7 @@
 import { darkTheme, dateZhCN, zhCN } from "naive-ui";
 import { useSettingsStore } from "../store/Settings.js";
 import { usePreferredDark } from "@vueuse/core";
-import { watch } from "vue";
+import { watch, onBeforeMount } from "vue";
 
 const settings = useSettingsStore();
 
@@ -26,6 +25,22 @@ watch(isDark, () => settings.applySystemDark(isDark.value), {
 });
 
 settings.applyTimeDark();
+
+onBeforeMount(() => {
+  watch(
+    () => settings.darkMode.on,
+    () => {
+      if (settings.darkMode.on) {
+        document.querySelector("body").classList.add("dark");
+        document.querySelector("body").classList.add("bg-black");
+      } else {
+        document.querySelector("body").classList.remove("dark");
+        document.querySelector("body").classList.remove("bg-black");
+      }
+    },
+    { immediate: true }
+  );
+});
 
 // 覆盖默认主题配置
 const themeOverrides = {
