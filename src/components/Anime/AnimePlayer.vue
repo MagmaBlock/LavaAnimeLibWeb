@@ -43,6 +43,7 @@ onMounted(() => {
   };
 
   const artInstance = reactive(new Artplayer(options));
+  artInstance.playbackRate = localStorage.getItem('userPreferences/speed');
   store.artInstance = artInstance;
 
   watch(
@@ -87,6 +88,10 @@ onMounted(() => {
   artInstance.on("video:timeupdate", useThrottleFn(reportPlaying, 10000));
   artInstance.on("seek", reportPlaying);
   artInstance.on("pause", reportPlaying);
+  
+  artInstance.on('video:ratechange', () => {
+    localStorage.setItem('userPreferences/speed', artInstance.playbackRate.toString())
+  })
 
   // 尝试在被浏览器限制时静音开播
   artInstance.on("ready", () => {
