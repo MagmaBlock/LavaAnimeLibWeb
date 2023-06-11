@@ -96,9 +96,7 @@ onUnmounted(() => {
       <div class="lg:col-span-2">
         <!-- 视频框 -->
         <div class="sm:shadow sm:mb-4 sm:rounded-md overflow-clip">
-          <Transition name="fade">
-            <AnimePlayer v-if="store.showArtPlayer" />
-          </Transition>
+          <AnimePlayer v-if="store.showArtPlayer" />
           <Transition
             enter-active-class="animate__animated animate__bounceIn"
             leave-active-class="animate__animated absolute animate__fadeOut animate__faster"
