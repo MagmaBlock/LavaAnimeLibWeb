@@ -121,6 +121,7 @@ const store = useAnimeStore();
 const ua = uaParser();
 const { copy, copied, isSupported } = useClipboard({
   source: computed(() => store.activeFile?.url),
+  legacy: true,
 });
 
 const props = defineProps({
