@@ -11,20 +11,19 @@
 
 <script setup>
 import Artplayer from "artplayer";
-import { ref, reactive, onMounted, onBeforeUnmount, watch, inject } from "vue";
+import { reactive, onMounted, onBeforeUnmount, watch, inject } from "vue";
 import { useAnimeStore } from "../../store/Anime";
-import { useThrottleFn } from "@vueuse/core";
+import { useLocalStorage, useThrottleFn } from "@vueuse/core";
 import canAutoplay from "can-autoplay";
 
 const store = useAnimeStore();
 const refreshPlayer = inject("refreshPlayer");
 
+const rememberRate = useLocalStorage("rememberRate", false);
+
 onMounted(() => {
   const options = {
-    setting: true,
     autoMini: true,
-    playbackRate: true,
-    aspectRatio: true,
     autoplay: true,
     theme: "#2563eb",
     // poster: "https://anime-img.5t5.top/assets/no-bgm-bg.jpg",
@@ -34,17 +33,34 @@ onMounted(() => {
     mutex: true,
     fullscreen: true,
     fullscreenWeb: true,
-    flip: true,
     lock: true,
     autoOrientation: true,
     airplay: true,
     fastForward: true,
     container: "#artContainer",
+    setting: true,
+    flip: true,
+    playbackRate: true,
+    aspectRatio: true,
+    settings: [
+      {
+        html: "记住播放倍速",
+        tooltip: rememberRate.value ? "记住" : "关闭",
+        switch: rememberRate.value,
+        onSwitch: function (item) {
+          const nextState = !item.switch;
+          rememberRate.value = nextState;
+          item.tooltip = nextState ? "记住" : "关闭";
+          return nextState;
+        },
+      },
+    ],
   };
 
   const artInstance = reactive(new Artplayer(options));
   store.artInstance = artInstance;
 
+  // 监听文件变化情况
   watch(
     () => store.activeFile,
     async (newFile) => {
@@ -74,6 +90,7 @@ onMounted(() => {
     }
   });
 
+  // 播放行为上报
   const reportPlaying = () => {
     if (
       !store.artInstance?.duration ||
@@ -101,6 +118,23 @@ onMounted(() => {
     }, 200);
   });
 
+  // 记录播放速率变化
+  artInstance.on("video:ratechange", (e) => {
+    const rate = e.target?.playbackRate;
+    if (typeof rate == "number") {
+      localStorage.setItem("playbackRate", rate);
+    }
+  });
+
+  // (每次) 视频能够播放时, 更改播放速率
+  artInstance.on("video:canplaythrough", () => {
+    const rate = localStorage.getItem("playbackRate");
+    if (typeof rate == "string" && rememberRate.value) {
+      artInstance.video.playbackRate = JSON.parse(rate);
+    }
+  });
+
+  // 销毁
   onBeforeUnmount(() => {
     artInstance.destroy();
   });
