@@ -55,6 +55,19 @@ onMounted(() => {
         },
       },
     ],
+    controls: [
+      {
+        name: "next",
+        index: 20,
+        position: "left",
+        html: '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-7.5 -7.5 38 38"><path d="M7.58 16.89l5.77-4.07c.56-.4.56-1.24 0-1.63L7.58 7.11C6.91 6.65 6 7.12 6 7.93v8.14c0 .81.91 1.28 1.58.82zM16 7v10c0 .55.45 1 1 1s1-.45 1-1V7c0-.55-.45-1-1-1s-1 .45-1 1z" fill="currentColor"></path></svg>',
+        tooltip: "下一话",
+        click: useThrottleFn(function () {
+          const newEp = store.findNextEpisode();
+          if (newEp) store.changeEpisode(newEp);
+        }, 1000),
+      },
+    ],
   };
 
   const artInstance = reactive(new Artplayer(options));
@@ -133,6 +146,17 @@ onMounted(() => {
       artInstance.video.playbackRate = JSON.parse(rate);
     }
   });
+
+  // 监听集数变化, 重新检查是否有可以播放的下一话
+  watch(
+    () => store.fileData.activeEpisode,
+    () => {
+      artInstance.controls.update({
+        ...options.controls[0],
+        disable: !store.findNextEpisode(),
+      });
+    }
+  );
 
   // 销毁
   onBeforeUnmount(() => {

@@ -143,6 +143,20 @@ export const useAnimeStore = defineStore("anime", {
         this.activeFile?.parseResult?.extensionName?.raw == "mkv"
       );
     },
+    /**
+     * 查找下一个集数, 可能为空
+     * @param {String | undefined} episode
+     * @returns {String | undefined}
+     */
+    findNextEpisode(state) {
+      return (episode) => {
+        if (typeof episode != "string") episode = this.fileData.activeEpisode;
+        let currentIndex = this.episodeList.findIndex((findEp) => {
+          return findEp.episode == episode;
+        });
+        return this.episodeList[currentIndex + 1]?.episode;
+      };
+    },
   },
   actions: {
     /**
