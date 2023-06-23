@@ -1,4 +1,7 @@
 {
-  "rewrites": [{ "source": "/:path*", "destination": "/index.html" }]
+  "rewrites": [{ "source": "/:path*", "destination": "/index.html" }],
+  "github": {
+    "silent": true
+  }
 }
 
