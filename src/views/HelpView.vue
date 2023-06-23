@@ -27,7 +27,6 @@ import Sponsors from "../components/Help/Sponsors.vue";
 import LavaAnimeLib from "../assets/Help/LavaAnimeLib.md?raw";
 import WhyExternalPlayer from "../assets/Help/WhyExternalPlayer.md?raw";
 import ExternalPlayerList from "../assets/Help/ExternalPlayerList.md?raw";
-import Bangumi from "../assets/Help/Bangumi.md?raw";
 import TopNav from "../components/NavBar/TopNav.vue";
 
 export default {
@@ -38,7 +37,6 @@ export default {
         { id: "LavaAnimeLib", content: LavaAnimeLib },
         { id: "WhyExternalPlayer", content: WhyExternalPlayer },
         { id: "ExternalPlayerList", content: ExternalPlayerList },
-        { id: "Bangumi", content: Bangumi },
       ],
       notSupport: false,
     };
