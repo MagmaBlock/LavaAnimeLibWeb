@@ -12,7 +12,7 @@
     <div class="grid grid-cols-1 gap-1 max-h-[25vh] overflow-y-scroll">
       <template v-for="drive in store.driveData.list">
         <DriveCard
-          :active="store.myDrive.selectedDrive == drive.id"
+          :active="store.activeDrive?.id == drive.id"
           :name="drive.name"
           :description="drive.description"
           @click="store.changeDrive(drive.id)"
