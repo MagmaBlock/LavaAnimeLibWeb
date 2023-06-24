@@ -236,13 +236,13 @@ export const useAnimeStore = defineStore("anime", {
           params: { id: laID, drive: drive },
         });
         this.fileData.fileList = result.data.data;
+        this.showArtPlayer = true;
       } catch (error) {
         console.log("获取文件列表时发生", error, "错误");
         this.state.fileData.errorCode = error?.response?.status ?? error.code;
         this.state.fileData.errorMessage =
           error?.response?.data?.message ?? error.message;
       } finally {
-        this.showArtPlayer = true;
         this.state.fileData.isLoading = false;
         this.state.driveLoading = null; // End loading
       }
