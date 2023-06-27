@@ -13,9 +13,44 @@ const bottonClass = {
   active: "bg-blue-600 text-white",
 };
 
-const epButtonClick = (episode) => {
-  if (episode.episode !== store.fileData.activeEpisode) {
-    store.changeEpisode(episode.episode);
+const epButtonClick = async (episode) => {
+  if (episode.episode === store.fileData.activeEpisode) return;
+  // Promise.allSettled() 等待所有 Promise 都完成，无论是否出错
+  let result = await Promise.allSettled([
+    store.getAnimeViewHistory(),
+    store.changeEpisode(episode.episode),
+  ]);
+  // 等待视频切换和获取播放历史都完成后, 尝试跳转进度条
+  if (result[0].status !== "rejected") {
+    let viewHistory = result[0].value;
+    if (viewHistory.data.data.length) {
+      store.seekByHistory(
+        viewHistory.data.data.find((record) => {
+          return record.episode == episode.episode;
+        })
+      );
+    }
+  }
+};
+
+const videoButtonClick = async (video) => {
+  if (video.url === store.activeFile?.url) return;
+  let result = await Promise.allSettled([
+    store.getAnimeViewHistory(),
+    store.changeVideo(video.url),
+  ]);
+  if (result[0].status !== "rejected") {
+    let viewHistory = result[0].value;
+    if (viewHistory.data.data.length) {
+      let recentRecord = // 用名字或者相同集数跳进度
+        viewHistory.data.data.find((record) => {
+          return record.fileName == video.name;
+        }) ??
+        viewHistory.data.data.find((record) => {
+          return record.episode == video?.parseResult?.episode;
+        });
+      store.seekByHistory(recentRecord);
+    }
   }
 };
 
@@ -86,7 +121,7 @@ const bytesToSize = (bytes) => {
                     store.fileData.activeEpisode
                   ).list"
                   :video="video"
-                  @click="store.changeVideo(video?.url)"
+                  @click="videoButtonClick(video)"
                   :active="video.name == store.activeFile?.name"
                 />
               </div>
@@ -113,7 +148,7 @@ const bytesToSize = (bytes) => {
       <template v-for="video in store.noEpisodeList">
         <FileInfo
           :video="video"
-          @click="store.changeVideo(video.url)"
+          @click="videoButtonClick(video)"
           :active="video.name == store.activeFile?.name"
         />
       </template>
