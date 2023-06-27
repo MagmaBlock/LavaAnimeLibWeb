@@ -116,7 +116,6 @@ onMounted(() => {
   // 视频播放事件触发
   artInstance.on("video:timeupdate", useThrottleFn(reportPlaying, 10000));
   artInstance.on("seek", reportPlaying);
-  artInstance.on("pause", reportPlaying);
 
   // 尝试在被浏览器限制时静音开播
   artInstance.on("ready", () => {
