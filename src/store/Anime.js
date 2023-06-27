@@ -1,7 +1,7 @@
 import { useStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
 import { LavaAnimeAPI, getToken } from "../common/api";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import config from "../common/config";
 
 export const useAnimeStore = defineStore("anime", {
@@ -48,6 +48,7 @@ export const useAnimeStore = defineStore("anime", {
     bgmID: (state) => {
       return state.animeData?.bgmID ?? null;
     },
+    // 获得活跃文件. AnimePlayer 组件一旦创建就会 watch 此属性
     activeFile: (state) => {
       return state.fileData.fileList[state.fileData.activeFileIndex];
     },
@@ -236,7 +237,10 @@ export const useAnimeStore = defineStore("anime", {
           params: { id: laID, drive: drive },
         });
         this.fileData.fileList = result.data.data;
-        this.showArtPlayer = true;
+        if (this.fileData.fileList.length) {
+          // 确保没有出错以及有结果才启动播放器
+          this.showArtPlayer = true;
+        }
       } catch (error) {
         console.log("获取文件列表时发生", error, "错误");
         this.state.fileData.errorCode = error?.response?.status ?? error.code;
@@ -260,36 +264,84 @@ export const useAnimeStore = defineStore("anime", {
     /**
      * 切换当前选择的集数, 会优先选择浏览器支持的视频
      * @param {String} newEpisode
+     * @returns {Promise<String | undefined>}
      */
     changeEpisode(newEpisode) {
-      if (!this.episodeListFind(newEpisode)) return;
-      this.fileData.activeEpisode = newEpisode;
-      // 查找当前集数下合适的视频资源
-      const findResult = (findBetter = true) => {
-        return this.fileData.fileList.findIndex((file) => {
-          return (
-            file?.parseResult?.episode == newEpisode &&
-            file?.parseResult?.extensionName?.type == "video" &&
-            (findBetter ? file?.parseResult.noBrowser === false : true) // 优先找浏览器兼容
-          );
+      return new Promise((resolve, reject) => {
+        if (!this.episodeListFind(newEpisode)) return reject("episodeNotFound");
+        this.fileData.activeEpisode = newEpisode;
+        // 查找当前集数下合适的视频资源
+        const findResult = (findBetter = true) => {
+          return this.fileData.fileList.findIndex((file) => {
+            return (
+              file?.parseResult?.episode == newEpisode &&
+              file?.parseResult?.extensionName?.type == "video" &&
+              (findBetter ? file?.parseResult.noBrowser === false : true) // 优先找浏览器兼容
+            );
+          });
+        };
+        // 更改文件
+        this.fileData.activeFileIndex =
+          findResult() != -1 ? findResult() : findResult(false);
+
+        // 当播放器可播放且当前活跃视频集数仍是本次切换的视频集数时
+        this.artInstance.once("video:canplaythrough", () => {
+          if (this.fileData.activeEpisode == newEpisode) {
+            resolve();
+          } else {
+            reject("视频集数切换被其他事件中断");
+          }
         });
-      };
-      this.fileData.activeFileIndex =
-        findResult() != -1 ? findResult() : findResult(false);
+        // 加载当前集数视频发生错误
+        this.artInstance.once("error", (error) => {
+          if (this.fileData.activeEpisode == newEpisode) {
+            reject(error);
+          }
+        });
+      });
     },
     /**
      * 通过视频 URL 更改活跃视频
      * @param {String} newVideoUrl
+     * @param {Boolean} noEp 切换视频时不操作活跃集数. 用于播放非正片视频
+     * @returns {Promise<String | Error | undefined>}
      */
     changeVideo(newVideoUrl, noEp = false) {
-      this.fileData.activeFileIndex = this.fileData.fileList.findIndex(
-        (file) => {
-          return file?.url == newVideoUrl;
+      return new Promise((resolve, reject) => {
+        // 更改活跃文件的索引
+        this.fileData.activeFileIndex = this.fileData.fileList.findIndex(
+          (file) => {
+            return file?.url == newVideoUrl;
+          }
+        );
+        // 更改活跃集数
+        if (this.activeFile?.parseResult?.episode && !noEp) {
+          this.fileData.activeEpisode = this.activeFile?.parseResult?.episode;
         }
-      );
-      if (this.activeFile?.parseResult?.episode && !noEp) {
-        this.fileData.activeEpisode = this.activeFile?.parseResult?.episode;
-      }
+
+        // 当播放器可播放且当前活跃视频仍是本次切换的视频时
+        this.artInstance.once("video:canplaythrough", () => {
+          if (this.activeFile?.url == newVideoUrl) {
+            resolve();
+          } else {
+            reject("视频切换被其他事件中断");
+          }
+        });
+        // 加载当前视频发生错误
+        this.artInstance.once("error", (error) => {
+          if (this.activeFile?.url == newVideoUrl) {
+            reject(error);
+          }
+        });
+      });
+    },
+    /**
+     * 获取当前番剧的播放历史记录
+     */
+    async getAnimeViewHistory() {
+      return await LavaAnimeAPI.post("/v2/anime/history/my", {
+        animeID: this.laID,
+      });
     },
     /**
      * 上报播放情况
@@ -316,52 +368,87 @@ export const useAnimeStore = defineStore("anime", {
       }
     },
     /**
-     * 自动选择一个合适的集数并播放
+     * 自动选择一个合适的集数并播放，仅在每次选择节点后调用 (或首次打开番剧时)
      */
     async autoPlay() {
-      let viewHistory;
       try {
-        viewHistory = await LavaAnimeAPI.post("/v2/anime/history/my", {
-          animeID: this.laID,
-        });
-      } catch (error) {}
+        let viewHistory = await this.getAnimeViewHistory();
+        // 筛选出 WebPlayer 的播放历史
+        viewHistory.data.data = viewHistory.data.data?.filter(
+          (record) => record.watchMethod == "WebPlayer"
+        );
 
-      // 如果服务器上有播放历史
-      if (viewHistory?.data?.data?.length) {
-        let lastFile = viewHistory.data.data[0];
-        let findThisFile = this.fileData.fileList.findIndex((file) => {
-          return file?.name == lastFile.fileName;
-        });
-        if (findThisFile !== -1) {
-          console.log(
-            "匹配到和上次播放完全相同的文件",
-            this.fileData.fileList[findThisFile]
-          );
-          this.changeVideo(this.fileData.fileList[findThisFile]?.url);
-        } else {
-          console.log("上次播放的文件找不到, 使用同话数...", lastFile?.episode);
-          this.changeEpisode(lastFile?.episode);
+        if (viewHistory.data.data?.length == 0) {
+          return this.firstThisAnime();
         }
-        this.artInstance.once("video:canplaythrough", (e) => {
-          if (lastFile.currentTime) {
-            this.artInstance.video.currentTime = lastFile.currentTime;
-            const ep = lastFile.episode ? `第${lastFile.episode}话` : "未知话";
-            const m = Math.floor(lastFile.currentTime / 60);
-            const s = lastFile.currentTime % 60;
-            $message.info(`上次播放到 ${ep} ${m}:${s}, 已自动跳转`, 5000);
+
+        // 最近一次播放的视频
+        let lastRecord = viewHistory.data.data[0];
+        // 在当前的文件列表找出上次的视频
+        let findThisFile = this.fileData.fileList.find((file) => {
+          return file?.name == lastRecord.fileName;
+        });
+
+        // 选择要播放的相同文件 / 集数
+        if (findThisFile) {
+          console.log("匹配到和上次播放完全相同的文件", findThisFile);
+          try {
+            await this.changeVideo(findThisFile?.url);
+            this.seekByHistory(lastRecord);
+          } catch (error) {
+            console.error("切换视频时失败", error);
           }
-        });
-      } else {
-        // 没有任何文件, 放弃自动播放
-        if (!this.fileData.fileList.length) return;
-        // 如果能识别到集数列表, 自动选择第一个集数播放
-        if (this.episodeList.length) {
-          this.changeEpisode(this.episodeList[0].episode);
+        } else {
+          console.log("找不到文件, 同话数模式...", lastRecord?.episode);
+          try {
+            await this.changeEpisode(lastRecord?.episode);
+            this.seekByHistory(lastRecord);
+          } catch (error) {
+            console.error("切换集数时失败", error);
+            if (error == "episodeNotFound") {
+              // 之前的集数已经不再存在
+              return this.firstThisAnime();
+            }
+          }
         }
-        // 没有集数列表, 播放第一个视频
-        else {
-          this.changeVideo(this.fileData.fileList[0]?.url);
-        }
+      } catch (error) {
+        console.error(error);
+        // 获取播放历史失败 使用默认打开界面的情况
+        this.firstThisAnime();
+      }
+    },
+    /**
+     * (用于其他 actions 调用) 自动播放第一个集数/视频
+     */
+    firstThisAnime() {
+      // 如果能识别到集数列表, 自动选择第一个集数播放
+      if (this.episodeList.length) {
+        this.changeEpisode(this.episodeList[0].episode);
+      }
+      // 没有集数列表, 播放第一个视频
+      else if (this.fileData.fileList.length) {
+        this.changeVideo(
+          // 找文件列表中第一个是视频的文件
+          this.fileData.fileList.find((file) => {
+            return (
+              file?.type == "file" &&
+              file?.parseResult?.extensionName.type == "video"
+            );
+          })?.url
+        );
+      }
+    },
+    /**
+     * 传入历史记录, 跳转进度条并显示用户提示
+     * @param {Object | undefined} history
+     */
+    async seekByHistory(history) {
+      if (history?.currentTime) {
+        this.artInstance.video.currentTime = history.currentTime;
+        const ep = history?.episode ? `第 ${history.episode} 话` : "";
+        const m = Math.floor(history?.currentTime / 60);
+        const s = history?.currentTime % 60;
+        $message.info(`上次${ep}播放到 ${m}:${s}, 已自动跳转`, 5000);
       }
     },
   },
