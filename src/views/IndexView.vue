@@ -4,6 +4,7 @@ import Container from "../components/Layout/PageContainer/Container.vue";
 import AnimeCardContainer from "../components/Layout/CardContainer/AnimeCardContainer.vue";
 import SearchBar from "../components/Search/SearchBar.vue";
 import LeftMenuRightContent from "../components/Layout/PageLayout/LeftMenuRightContent.vue";
+import IndexActivityCard from "../components/Index/IndexActivityCard.vue";
 
 export default {
   data() {
@@ -11,7 +12,7 @@ export default {
       searchValue: "",
       selectedTab: {
         year: "2023年",
-        type: "4月春",
+        type: "7月夏",
       },
       tabs: { year: [], type: [] },
       animes: null,
@@ -91,6 +92,7 @@ export default {
     SearchBar,
     AnimeCardContainer,
     LeftMenuRightContent,
+    IndexActivityCard,
   },
 };
 </script>
@@ -163,20 +165,7 @@ export default {
               </template>
             </div>
           </n-spin>
-          <div
-            class="h-[0.5px] bg-gray-200 dark:bg-gray-700 my-6 hidden lg:block"
-          ></div>
-          <a
-            href="https://wj.qq.com/s2/12628399/e715/"
-            target="_blank"
-            class="hidden lg:block"
-          >
-            <img
-              src="https://anime-img.5t5.top/assets/header/2023/06/7%E6%9C%88.jpg"
-              alt="7月新番投票横向海报"
-              class="rounded-md transition active:scale-95 hover:brightness-110"
-            />
-          </a>
+          <IndexActivityCard />
         </div>
       </template>
       <!-- 番剧栅格部分 -->
