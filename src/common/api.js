@@ -23,7 +23,8 @@ LavaAnimeAPI.interceptors.response.use(
     } else {
       // 其他错误处理
       if (error?.response?.data.message) {
-        $message.error(error.response.data.message);
+        console.error(error);
+        // $message.error(error.response.data.message);
       }
     }
     return Promise.reject(error);
