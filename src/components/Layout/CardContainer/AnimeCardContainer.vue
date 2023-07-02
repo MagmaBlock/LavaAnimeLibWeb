@@ -49,7 +49,7 @@ const visible = useElementVisibility(target);
         </template>
       </div>
     </n-spin>
-    <ShowMoreButton v-if="animes?.length > page" @click="page = page + 30" />
+    <ShowMoreButton v-if="animes?.length > page + 1" @click="page = page + 30" />
     <n-empty
       size="large"
       description="太可惜了，什么也没找到"
