@@ -446,8 +446,10 @@ export const useAnimeStore = defineStore("anime", {
       if (history?.currentTime) {
         this.artInstance.video.currentTime = history.currentTime;
         const ep = history?.episode ? `第 ${history.episode} 话` : "";
-        const m = Math.floor(history?.currentTime / 60);
-        const s = history?.currentTime % 60;
+        const m = Math.floor(history?.currentTime / 60)
+          .toString()
+          .padStart(2, "0");
+        const s = (history?.currentTime % 60).toString().padStart(2, "0");
         $message.info(`上次${ep}播放到 ${m}:${s}, 已自动跳转`, 5000);
       }
     },
