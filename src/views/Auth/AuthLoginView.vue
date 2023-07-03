@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { AxiosError } from "axios";
 import { LavaAnimeAPI } from "../../common/api.js";
 
 export default {
@@ -59,7 +60,18 @@ export default {
           localStorage.setItem("token", JSON.stringify(token));
           this.$router.push({ name: "User" });
         }
-      } catch (error) {}
+      } catch (error) {
+        console.error(error);
+        if (error instanceof AxiosError) {
+          if (error.response?.data?.message) {
+            $message.error(error.response?.data?.message);
+          } else if (error.message) {
+            $message.error("无法发送网络请求: " + error.message);
+          }
+        } else {
+          $message.error("发生意外错误");
+        }
+      }
     },
   },
   mounted() {
