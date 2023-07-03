@@ -104,6 +104,11 @@ const router = createRouter({
           path: "/admin/invite",
           component: () => import("../views/Admin/AdminInviteCode.vue"),
         },
+        {
+          name: "AdminIndexActivity",
+          path: "/admin/index-activity",
+          component: () => import("../views/Admin/AdminIndexActivity.vue"),
+        },
       ],
     },
     {

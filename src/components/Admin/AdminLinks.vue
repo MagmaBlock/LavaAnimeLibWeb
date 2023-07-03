@@ -18,5 +18,6 @@ import { userInfo } from "../../common/API/user.js";
 const tabs = [
   { name: "主页头图", routeName: "AdminHeader" },
   { name: "邀请码管理", routeName: "AdminInvite" },
+  { name: "索引页活动", routeName: "AdminIndexActivity" },
 ];
 </script>

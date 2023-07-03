@@ -165,12 +165,15 @@ export default {
               </template>
             </div>
           </n-spin>
-          <IndexActivityCard />
         </div>
       </template>
       <!-- 番剧栅格部分 -->
       <template #right>
         <AnimeCardContainer :animes="this.animes" size="large" />
+      </template>
+      <!-- 扩展页尾 -->
+      <template #foot>
+        <IndexActivityCard />
       </template>
     </LeftMenuRightContent>
   </Container>
