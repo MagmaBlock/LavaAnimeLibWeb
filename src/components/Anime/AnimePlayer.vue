@@ -85,6 +85,25 @@ onMounted(() => {
         });
       }
 
+      // 寻找并生效字幕
+      let subtitles = store.fileData.fileList.filter((file) => {
+        if (file?.parseResult?.extensionName.type == "subtitle") {
+          if (
+            file?.parseResult?.episode ==
+              store.activeFile?.parseResult.episode ||
+            file.name.startsWith(
+              store.activeFile.parseResult.extensionName.trueName
+            )
+          ) {
+            return true;
+          }
+        }
+      });
+      console.log("找到字幕", subtitles);
+      if (subtitles.length) {
+        artInstance.subtitle.url = subtitles[0].url;
+      }
+
       if (newFile?.parseResult?.extensionName?.type == "music") {
         $message.info(`正在播放音乐 ${newFile?.name}`);
       }
