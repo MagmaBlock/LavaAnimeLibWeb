@@ -15,8 +15,10 @@ import { reactive, onMounted, onBeforeUnmount, watch, inject } from "vue";
 import { useAnimeStore } from "../../store/Anime";
 import { useLocalStorage, useThrottleFn } from "@vueuse/core";
 import canAutoplay from "can-autoplay";
+import { useMessage } from "naive-ui";
 
 const store = useAnimeStore();
+const message = useMessage();
 const refreshPlayer = inject("refreshPlayer");
 
 const rememberRate = useLocalStorage("rememberRate", false);
@@ -80,7 +82,7 @@ onMounted(() => {
       try {
         await artInstance.switchUrl(newFile?.url);
       } catch (error) {
-        $message.error("播放失败, 正在重试", {
+        message.error("播放失败, 正在重试", {
           duration: 6000,
         });
       }
@@ -105,7 +107,7 @@ onMounted(() => {
       }
 
       if (newFile?.parseResult?.extensionName?.type == "music") {
-        $message.info(`正在播放音乐 ${newFile?.name}`);
+        message.info(`正在播放音乐 ${newFile?.name}`);
       }
     }
   );
@@ -116,7 +118,7 @@ onMounted(() => {
     if (reconnectTime == 5) {
       // 销毁重建播放器
       refreshPlayer();
-      $message.error("无法连接到此播放节点，请尝试换一个节点或检查网络", {
+      message.error("无法连接到此播放节点，请尝试换一个节点或检查网络", {
         duration: 10000,
       });
     }
@@ -144,7 +146,7 @@ onMounted(() => {
       if (!canAutoplayResult) {
         artInstance.muted = true;
         artInstance.play();
-        $message.info("已为您静音开播, 可手动解除静音", { duration: 3000 });
+        message.info("已为您静音开播, 可手动解除静音");
       }
     }, 200);
   });
@@ -175,6 +177,27 @@ onMounted(() => {
       });
     }
   );
+
+  // 视频结束连播提示
+  artInstance.on(
+    "video:timeupdate",
+    useThrottleFn(() => {
+      // 如果视频总长度 < 20s 或者没有下一话, 返回
+      if (artInstance.duration < 20 || !store.findNextEpisode()) return;
+      const endingTime = artInstance.duration - artInstance.currentTime;
+      // 即将下一话
+      if (endingTime <= 10) {
+        artInstance.notice.show = `将在 ${Math.round(
+          endingTime
+        )} 秒后播放下一话`;
+      }
+    }, 1000)
+  );
+  // 视频结束切换下一话
+  artInstance.on("video:ended", () => {
+    const nextEp = store.findNextEpisode();
+    if (nextEp) store.changeEpisode(nextEp);
+  });
 
   // 销毁
   onBeforeUnmount(() => {
