@@ -165,9 +165,9 @@ onMounted(() => {
     }
   });
 
-  // 监听集数变化, 重新检查是否有可以播放的下一话
+  // 监听文件变化, 重新检查是否有可以播放的下一话
   watch(
-    () => store.fileData.activeEpisode,
+    () => store.activeFile,
     () => {
       artInstance.controls.update({
         ...options.controls[0],
