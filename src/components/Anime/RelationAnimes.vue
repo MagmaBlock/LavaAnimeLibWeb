@@ -19,7 +19,7 @@
     <n-collapse-transition :show="relationGrid">
       <AnimeCardContainer
         :animes="store.animeData?.relations"
-        size="alwaysMobile"
+        size="small"
       />
     </n-collapse-transition>
     <!-- 旧版展示 -->
