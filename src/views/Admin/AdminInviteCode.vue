@@ -1,10 +1,9 @@
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-    <div class="col-span-1">
+  <LeftMenuRightContent>
+    <template #left>
       <n-form>
         <n-form-item label="生成数量">
           <n-input-number
-            class="max-w-xs"
             v-model:value="amount"
             placeholder="生成数量"
             clearable
@@ -13,27 +12,24 @@
         <n-form-item label="开启到期时间">
           <n-switch v-model:value="timeLimit" />
         </n-form-item>
-      </n-form>
-      <n-form :disabled="!timeLimit">
-        <n-form-item label="快速设定几天后失效">
+        <n-form-item label="快速设定几天后失效" v-if="timeLimit">
           <n-input-number
-            class="max-w-xs"
             v-model:value="lateDays"
             placeholder="晚几天"
             clearable
           />
         </n-form-item>
-        <n-form-item label="失效时间">
+        <n-form-item label="失效时间" v-if="timeLimit">
           <n-date-picker
             v-model:value="expirationTime"
             type="datetime"
             clearable
           />
         </n-form-item>
+        <n-button secondary @click="send">确认生成</n-button>
       </n-form>
-      <n-button secondary @click="send">确认生成</n-button>
-    </div>
-    <div class="col-span-2">
+    </template>
+    <template #right>
       <n-table v-if="allCodes.length">
         <thead>
           <tr>
@@ -60,12 +56,13 @@
           </tr>
         </tbody>
       </n-table>
-    </div>
-  </div>
+    </template>
+  </LeftMenuRightContent>
 </template>
 
 <script>
 import { LavaAnimeAPI } from "../../common/api.js";
+import LeftMenuRightContent from "../../components/Layout/PageLayout/LeftMenuRightContent.vue";
 
 export default {
   data() {
