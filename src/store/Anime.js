@@ -443,15 +443,19 @@ export const useAnimeStore = defineStore("anime", {
      * @param {Object | undefined} history
      */
     async seekByHistory(history) {
-      if (history?.currentTime) {
-        this.artInstance.video.currentTime = history.currentTime;
-        const ep = history?.episode ? `第 ${history.episode} 话` : "";
-        const m = Math.floor(history?.currentTime / 60)
-          .toString()
-          .padStart(2, "0");
-        const s = (history?.currentTime % 60).toString().padStart(2, "0");
-        $message.info(`上次${ep}播放到 ${m}:${s}, 已自动跳转`, 5000);
+      if (!history.currentTime) return;
+      if (history.totalTime - history.currentTime < 20) {
+        $message.success("本话上次已看完");
+        return;
       }
+
+      this.artInstance.video.currentTime = history.currentTime;
+      const ep = history?.episode ? `第 ${history.episode} 话` : "";
+      const m = Math.floor(history?.currentTime / 60)
+        .toString()
+        .padStart(2, "0");
+      const s = (history?.currentTime % 60).toString().padStart(2, "0");
+      $message.info(`上次${ep}播放到 ${m}:${s}, 已自动跳转`, 5000);
     },
   },
 });
