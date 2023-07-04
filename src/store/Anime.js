@@ -1,7 +1,7 @@
 import { useStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
 import { LavaAnimeAPI, getToken } from "../common/api";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import config from "../common/config";
 
 export const useAnimeStore = defineStore("anime", {
@@ -168,10 +168,12 @@ export const useAnimeStore = defineStore("anime", {
     async buildPage(laID) {
       this.laID = parseInt(laID);
       this.getAnimeData(laID);
-      await (async () => {
-        await this.getDriveData();
-        await this.getFileData(this.laID, this.activeDrive.id);
-        await this.autoPlay();
+      (async () => {
+        try {
+          await this.getDriveData();
+          await this.getFileData(this.laID, this.activeDrive.id);
+          await this.autoPlay();
+        } catch (error) {}
       })();
     },
     async getAnimeData(laID) {
@@ -256,10 +258,12 @@ export const useAnimeStore = defineStore("anime", {
      * @param {String} newDrive 节点 ID
      */
     async changeDrive(newDrive) {
-      await this.getFileData(this.laID, newDrive);
-      this.myDrive.selectedDrive = newDrive; // 持久化保存
-      this.selectedDrive = newDrive;
-      this.autoPlay();
+      try {
+        await this.getFileData(this.laID, newDrive);
+        this.myDrive.selectedDrive = newDrive; // 持久化保存
+        this.selectedDrive = newDrive;
+        this.autoPlay();
+      } catch (error) {}
     },
     /**
      * 切换当前选择的集数, 会优先选择浏览器支持的视频

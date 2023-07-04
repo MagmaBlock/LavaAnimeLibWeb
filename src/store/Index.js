@@ -19,6 +19,7 @@ export const useIndexStore = defineStore("index", {
       try {
         let data = await LavaAnimeAPI.get("/v2/site/setting/get", {
           params: { key: "indexActivityCard" },
+          noCatch: true,
         });
 
         this.activityCard = data.data?.data;
