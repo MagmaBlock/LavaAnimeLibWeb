@@ -7,16 +7,18 @@
     <div class="lg:col-span-1 xl:col-span-2 lg:self-start lg:sticky lg:top-8">
       <slot name="left"></slot>
 
-      <div class="hidden lg:block">
-        <slot name="foot"></slot>
-      </div>
+      <slot name="foot" v-if="width >= 1024"></slot>
     </div>
     <div class="lg:col-span-2 xl:col-span-5">
       <slot name="right"></slot>
-      
-      <div class="lg:hidden">
-        <slot name="foot"></slot>
-      </div>
+
+      <slot name="foot" v-if="width < 1024"></slot>
     </div>
   </div>
 </template>
+
+<script setup>
+import { useWindowSize } from "@vueuse/core";
+
+const { width } = useWindowSize();
+</script>
