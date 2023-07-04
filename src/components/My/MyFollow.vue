@@ -33,19 +33,25 @@
         >
       </n-tabs>
     </div>
-    <AnimeCardContainer
-      v-if="!fetchFailed"
-      :animes="animeList"
-      size="full"
-      :loading="loading"
-    />
-    <n-result
-      v-else
-      class="my-8"
-      status="404"
-      title="获取失败"
-      description="未能连接到人类所在的世界..."
-    ></n-result>
+    <div class="overflow-clip">
+      <AnimeCardContainer
+        v-if="!fetchFailed"
+        :animes="animeList"
+        size="full"
+        :loading="loading"
+        :style="{
+          transform: translateVar,
+        }"
+        class="transition-transform duration-500 ease-out"
+      />
+      <n-result
+        v-else
+        class="my-8"
+        status="404"
+        title="获取失败"
+        description="未能连接到人类所在的世界..."
+      ></n-result>
+    </div>
     <n-pagination
       v-if="totalPages > 1"
       v-model:page="page"
@@ -57,7 +63,7 @@
 
 <script setup>
 import { nextTick, onMounted, ref, watch, computed } from "vue";
-import Hammer from "hammerjs";
+import { refThrottled, useSwipe } from "@vueuse/core";
 import { lavaAnimeAPIs } from "../../common/api";
 import AnimeCardContainer from "../Layout/CardContainer/AnimeCardContainer.vue";
 
@@ -142,24 +148,41 @@ async function refresh() {
   $message.success("已刷新!");
 }
 
+// 监听滑动的相关 ref
+const { isSwiping, direction, lengthX } = useSwipe(myFollowRef);
+// translateX 的计算
+const translateVar = refThrottled(
+  computed(() => {
+    if (isSwiping.value && ["left", "right"].includes(direction.value)) {
+      return `translateX(${-lengthX.value}px)`;
+    } else return "";
+  }),
+  50
+);
+// 监听滑动并翻页
+watch(isSwiping, () => {
+  // 滑动行为结束
+  if (isSwiping.value == false) {
+    if (["left", "right"].includes(direction.value)) {
+      if (Math.abs(lengthX.value) >= 180) {
+        // 从右往左滑
+        if (direction.value == "left") {
+          if (seletedTab.value == 2) seletedTab.value = 0;
+          else seletedTab.value++;
+        }
+        // 从左往右滑
+        if (direction.value == "right") {
+          if (seletedTab.value == 0) seletedTab.value = 2;
+          else seletedTab.value--;
+        }
+      }
+    }
+  }
+});
+
+// 启动组件
 onMounted(() => {
   getFollowTotal();
   getFollow(seletedTab.value, page.value);
-
-  // 手势相关处理 (左右滑动)
-  const hammer = new Hammer(myFollowRef.value?.$el);
-  hammer.on("swipe", (event) => {
-    if (event.pointerType != "touch") return;
-    if (event.direction == 2) {
-      // 从右往左滑
-      if (seletedTab.value == 2) seletedTab.value = 0;
-      else seletedTab.value++;
-    }
-    if (event.direction == 4) {
-      // 从左往右滑
-      if (seletedTab.value == 0) seletedTab.value = 2;
-      else seletedTab.value--;
-    }
-  });
 });
 </script>
