@@ -1,11 +1,17 @@
 <script setup>
+import { useClipboard } from "@vueuse/core";
 import { useAnimeStore } from "../../store/Anime";
 import AnimeBasicCard from "./Cards/AnimeBasicCard.vue";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 const store = useAnimeStore();
 
 const showMore = ref(false);
+
+const getPath = computed(() => {
+  return `D:\\OneDrive - MSFT\\LavaAnimeLib\\${store.animeData?.index.year}\\${store.animeData?.index.type}\\${store.animeData?.index.name}`;
+});
+const { copy, copied } = useClipboard();
 </script>
 
 <template>
@@ -18,7 +24,16 @@ const showMore = ref(false);
         {{ store.animeData?.index.type }}
         <i class="bi bi-chevron-right text-xs"></i>
       </RouterLink>
-      {{ store.animeData?.index.name }}
+      <!-- 临时小工具 -->
+      <n-tooltip placement="bottom" trigger="click">
+        <template #trigger>
+          {{ store.animeData?.index.name }}
+        </template>
+        {{ getPath }}
+        <NButton @click="copy(getPath)" size="small">
+          {{ copied ? "已复制" : "复制" }}
+        </NButton>
+      </n-tooltip>
     </div>
     <!-- 主信息卡 -->
     <div class="py-3 px-4">
