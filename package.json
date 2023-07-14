@@ -7,7 +7,7 @@
     "preview": "vite preview --port 4173"
   },
   "dependencies": {
-    "@vueuse/core": "^10.2.0",
+    "@vueuse/core": "^10.2.1",
     "animate.css": "^4.1.1",
     "artplayer": "^5.0.9",
     "axios": "^1.4.0",
