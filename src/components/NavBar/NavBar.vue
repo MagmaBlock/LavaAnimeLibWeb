@@ -34,7 +34,7 @@ import NavBarIcon from "./NavBarIcon.vue";
     <!-- 宽屏 -->
     <div class="hidden lg:block h-full py-8 pl-4">
       <div
-        class="lg:flex lg:flex-col w-20 z-50 h-full py-10 rounded-xl border dark:border-zinc-700 select-none shadow-lg transition bg-white bg-opacity-80 dark:bg-zinc-800 dark:bg-opacity-80"
+        class="lg:flex lg:flex-col w-20 z-50 h-full py-10 rounded-xl border dark:border-zinc-700 select-none shadow-lg transition bg-white dark:bg-zinc-800 bg-opacity-90 dark:bg-opacity-90"
       >
         <!-- Logo -->
         <div class="grid place-items-center mb-8">
