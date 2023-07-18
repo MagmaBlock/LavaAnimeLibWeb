@@ -7,7 +7,7 @@
         </div>
         <div class="flex items-center">
           <img
-            class="h-6 object-cover rounded-full mr-2"
+            class="h-5 object-cover rounded-full mr-1.5"
             :src="commit.author.avatar_url"
             alt="头像"
           />
