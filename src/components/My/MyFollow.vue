@@ -1,42 +1,40 @@
 <template>
-  <MyBasicCard class="sm:px-6 py-4 rounded-md" ref="myFollowRef">
-    <div class="mb-2">
-      <n-thing>
-        <template #header> 我的追番 </template>
-        <template #header-extra>
-          <n-button circle @click="refresh">
-            <template #icon>
-              <n-icon>
-                <RefreshFilled :class="loading ? 'animate-spin' : ''" />
-              </n-icon>
-            </template>
-          </n-button>
+  <n-card title="我的追番" ref="myFollowRef" :bordered="false" embedded>
+    <template #header-extra>
+      <n-button secondary round size="small" @click="refresh">
+        <template #icon>
+          <n-icon>
+            <RefreshFilled :class="loading ? 'animate-spin' : ''" />
+          </n-icon>
         </template>
-      </n-thing>
-      <n-tabs
-        type="segment"
-        v-model:value="seletedTab"
-        :default-value="2"
-        ref="tabsRef"
-        class="max-w-sm my-2"
-      >
-        <n-tab :name="0"
-          >想看<span class="ml-1" v-if="followTotals['0']"
-            >({{ followTotals["0"] }})</span
-          ></n-tab
-        >
-        <n-tab :name="1"
-          >在看<span class="ml-1" v-if="followTotals['1']"
-            >({{ followTotals["1"] }})</span
-          ></n-tab
-        >
-        <n-tab :name="2"
-          >看过<span class="ml-1" v-if="followTotals['2']"
-            >({{ followTotals["2"] }})</span
-          ></n-tab
-        >
-      </n-tabs>
-    </div>
+      </n-button>
+    </template>
+    <n-tabs
+      type="segment"
+      v-model:value="seletedTab"
+      :default-value="2"
+      class="max-w-md mb-4"
+      ref="tabsRef"
+    >
+      <n-tab :name="0">
+        想看
+        <span class="ml-1" v-if="followTotals['0']">
+          ({{ followTotals["0"] }})
+        </span>
+      </n-tab>
+      <n-tab :name="1">
+        在看
+        <span class="ml-1" v-if="followTotals['1']">
+          ({{ followTotals["1"] }})
+        </span>
+      </n-tab>
+      <n-tab :name="2">
+        看过
+        <span class="ml-1" v-if="followTotals['2']">
+          ({{ followTotals["2"] }})
+        </span>
+      </n-tab>
+    </n-tabs>
     <div class="overflow-clip">
       <AnimeCardContainer
         v-if="!fetchFailed"
@@ -56,13 +54,14 @@
         description="未能连接到人类所在的世界..."
       ></n-result>
     </div>
-    <n-pagination
-      v-if="totalPages > 1"
-      v-model:page="page"
-      :page-count="totalPages"
-      class="mt-4"
-    />
-  </MyBasicCard>
+    <template #action>
+      <n-pagination
+        v-if="totalPages > 1"
+        v-model:page="page"
+        :page-count="totalPages"
+      />
+    </template>
+  </n-card>
 </template>
 
 <script setup>
@@ -150,7 +149,6 @@ async function getFollowTotal() {
 async function refresh() {
   getFollowTotal();
   getFollow(seletedTab.value, page.value);
-  $message.success("已刷新!");
 }
 
 // 监听滑动的相关 ref
