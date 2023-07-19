@@ -36,7 +36,7 @@ export default {
 </script>
 
 <template>
-  <div class="bg-white dark:bg-neutral-900 transition-colors duration-500">
+  <div class="bg-white dark:bg-[#101014] transition-colors duration-500">
     <!-- 背景图片和他的特效 -->
     <div class="w-screen h-screen overflow-hidden">
       <Transition
