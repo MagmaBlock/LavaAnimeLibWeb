@@ -1,6 +1,5 @@
 <template>
-  <MyBasicCard class="flex rounded-md">
-    <!-- <div class="text-xl mb-2">其他功能</div> -->
+  <n-card :bordered="false" embedded>
     <!-- Contents -->
     <div class="flex-1 self-center grid grid-cols-4 sm:grid-cols-4 gap-2">
       <!-- 个人设置 -->
@@ -32,7 +31,7 @@
         <template #name>更新日志</template>
       </BigButton>
     </div>
-  </MyBasicCard>
+  </n-card>
 </template>
 
 <script setup>
