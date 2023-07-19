@@ -4,6 +4,7 @@
       <UserCard class="px-6 py-4 h-full" />
       <FunctionsCard class="p-2 h-full" />
     </div>
+    <MyViewHistory class="px-6 sm:my-4" />
     <MyFollow class="px-6 sm:my-4" />
     <AdminLinks class="mx-6 sm:mx-0" />
   </ContainerMobileFull>
@@ -16,6 +17,7 @@ import UserCard from "../../components/My/User/UserCard.vue";
 import FunctionsCard from "../../components/My/FunctionsCard.vue";
 import MyFollow from "../../components/My/MyFollow.vue";
 import AdminLinks from "../../components/Admin/AdminLinks.vue";
+import MyViewHistory from "../../components/My/ViewHistory/MyViewHistory.vue";
 
 onMounted(() => {
   document.title = "我的 | 熔岩番剧库 LavaAnimeLib";
