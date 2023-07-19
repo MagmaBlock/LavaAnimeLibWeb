@@ -2,13 +2,15 @@
   <MyBasicCard class="sm:px-6 py-4 rounded-md">
     <n-thing class="mb-4">
       <template #header> 观看历史 </template>
-      <template #header-extra>
-        <n-button circle>
+      <!-- TODO -->
+      <!-- <template #header-extra>
+        <n-button round text icon-placement="right">
           <template #icon>
             <n-icon> <ChevronRightFilled /> </n-icon>
           </template>
+          查看全部
         </n-button>
-      </template>
+      </template> -->
     </n-thing>
     <div class="relative">
       <div class="flex gap-2 overflow-x-scroll" ref="scroll" v-if="data.length">
