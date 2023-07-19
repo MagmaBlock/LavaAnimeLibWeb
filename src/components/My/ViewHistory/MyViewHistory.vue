@@ -1,17 +1,13 @@
 <template>
-  <MyBasicCard class="sm:px-6 py-4 rounded-md">
-    <n-thing class="mb-4">
-      <template #header> 观看历史 </template>
-      <!-- TODO -->
-      <!-- <template #header-extra>
-        <n-button round text icon-placement="right">
-          <template #icon>
-            <n-icon> <ChevronRightFilled /> </n-icon>
-          </template>
-          查看全部
-        </n-button>
-      </template> -->
-    </n-thing>
+  <n-card title="观看历史" :bordered="false" embedded>
+    <!-- TODO -->
+    <!-- <template #header-extra>
+      <n-button secondary round size="small" icon-placement="right">
+        <template #icon>
+          <n-icon> <ChevronRightFilled /> </n-icon>
+        </template>
+      </n-button>
+    </template> -->
     <div class="relative">
       <div class="flex gap-2 overflow-x-scroll" ref="scroll" v-if="data.length">
         <HistoryRecord v-for="history in data" :record="history" />
@@ -33,7 +29,7 @@
       </TransitionGroup>
       <n-empty v-if="!data.length" description="什么也没有看过"></n-empty>
     </div>
-  </MyBasicCard>
+  </n-card>
 </template>
 
 <script setup>
