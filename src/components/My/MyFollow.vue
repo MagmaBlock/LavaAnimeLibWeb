@@ -4,8 +4,12 @@
       <n-thing>
         <template #header> 我的追番 </template>
         <template #header-extra>
-          <n-button circle size="small" @click="refresh">
-            <i class="bi bi-arrow-clockwise"></i>
+          <n-button circle @click="refresh">
+            <template #icon>
+              <n-icon>
+                <RefreshFilled :class="loading ? 'animate-spin' : ''" />
+              </n-icon>
+            </template>
           </n-button>
         </template>
       </n-thing>
@@ -66,6 +70,7 @@ import { nextTick, onMounted, ref, watch, computed } from "vue";
 import { refThrottled, useSwipe } from "@vueuse/core";
 import { lavaAnimeAPIs } from "../../common/api";
 import AnimeCardContainer from "../Layout/CardContainer/AnimeCardContainer.vue";
+import { RefreshFilled } from "@vicons/material";
 
 // 此组件根部第一个 DOM
 const myFollowRef = ref(null);
