@@ -1,12 +1,16 @@
 <template>
-  <ContainerMobileFull class="mt-4 sm:mt-0">
-    <div class="grid grid-cols-1 lg:grid-cols-2 sm:gap-4 sm:mb-4 lg:h-32">
-      <UserCard class="px-6 py-4 h-full" />
-      <FunctionsCard class="p-2 h-full" />
+  <ContainerMobileFull>
+    <div class="grid grid-cols-1 gap-2 sm:gap-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 sm:gap-4">
+        <UserCard />
+        <FunctionsCard />
+      </div>
+      <div class="grid grid-cols-1 gap-2 sm:gap-4">
+        <MyViewHistory />
+        <MyFollow />
+        <AdminLinks :withCard="true" />
+      </div>
     </div>
-    <MyViewHistory class="px-6 sm:my-4" />
-    <MyFollow class="px-6 sm:my-4" />
-    <AdminLinks class="mx-6 sm:mx-0" />
   </ContainerMobileFull>
 </template>
 
@@ -15,9 +19,9 @@ import { onMounted } from "vue";
 import ContainerMobileFull from "../../components/Layout/PageContainer/ContainerMobileFull.vue";
 import UserCard from "../../components/My/User/UserCard.vue";
 import FunctionsCard from "../../components/My/FunctionsCard.vue";
+import MyViewHistory from "../../components/My/ViewHistory/MyViewHistory.vue";
 import MyFollow from "../../components/My/MyFollow.vue";
 import AdminLinks from "../../components/Admin/AdminLinks.vue";
-import MyViewHistory from "../../components/My/ViewHistory/MyViewHistory.vue";
 
 onMounted(() => {
   document.title = "我的 | 熔岩番剧库 LavaAnimeLib";
