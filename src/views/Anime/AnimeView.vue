@@ -30,7 +30,7 @@ const refreshPlayer = async () => {
 provide("refreshPlayer", refreshPlayer);
 
 const buildPage = () => {
-  store.buildPage(route.params.la);
+  store.buildPage(route.params.la, route.query.episode);
   watchOnce(
     () => store.state.animeData.isLoading,
     async () => {

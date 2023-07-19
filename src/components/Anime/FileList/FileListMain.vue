@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from "vue";
 import { useAnimeStore } from "../../../store/Anime";
 import AnimeBasicCard from "../Cards/AnimeBasicCard.vue";
 import AnimeFlodCard from "../Cards/AnimeFlodCard.vue";
@@ -11,26 +10,6 @@ const bottonClass = {
   default:
     "bg-gray-100 hover:bg-gray-200 dark:bg-zinc-700 dark:text-white active:bg-blue-600 active:text-white",
   active: "bg-blue-600 text-white",
-};
-
-const epButtonClick = async (episode) => {
-  if (episode.episode === store.fileData.activeEpisode) return;
-  // Promise.allSettled() 等待所有 Promise 都完成，无论是否出错
-  let result = await Promise.allSettled([
-    store.getAnimeViewHistory(),
-    store.changeEpisode(episode.episode),
-  ]);
-  // 等待视频切换和获取播放历史都完成后, 尝试跳转进度条
-  if (result[0].status !== "rejected") {
-    let viewHistory = result[0].value;
-    if (viewHistory.data.data.length) {
-      store.seekByHistory(
-        viewHistory.data.data.find((record) => {
-          return record.episode == episode.episode;
-        })
-      );
-    }
-  }
 };
 
 const videoButtonClick = async (video) => {
@@ -89,7 +68,7 @@ const bytesToSize = (bytes) => {
                     ? bottonClass.active
                     : bottonClass.default
                 "
-                @click="epButtonClick(episode)"
+                @click="store.changeEpisodeAutoHistory(episode.episode)"
               >
                 <!-- 集数 -->
                 <div class="leading-none pb-0.5 text-center">

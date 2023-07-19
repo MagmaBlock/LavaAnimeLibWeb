@@ -163,17 +163,25 @@ export const useAnimeStore = defineStore("anime", {
     /**
      * 初始化界面, 自动获取所有数据
      * @param {Number} laID
+     * @param {String} forceEpisode 可选, 指定要初始播放的集数
      * @returns {Promise}
      */
-    async buildPage(laID) {
+    async buildPage(laID, forceEpisode) {
       this.laID = parseInt(laID);
       this.getAnimeData(laID);
       (async () => {
-        try {
-          await this.getDriveData();
-          await this.getFileData(this.laID, this.activeDrive.id);
-          await this.autoPlay();
-        } catch (error) {}
+        await this.getDriveData();
+        await this.getFileData(this.laID, this.activeDrive.id);
+        // 如果 URL 指定了本次播放的集数
+        if (forceEpisode) {
+          try {
+            return await this.changeEpisodeAutoHistory(forceEpisode);
+          } catch (error) {
+            if (error == "episodeNotFound")
+              $message.error(`第 ${forceEpisode} 话不存在, 按正常情况播放`);
+          }
+        }
+        await this.autoPlay();
       })();
     },
     async getAnimeData(laID) {
@@ -377,16 +385,16 @@ export const useAnimeStore = defineStore("anime", {
     async autoPlay() {
       try {
         let viewHistory = await this.getAnimeViewHistory();
-        // 筛选出 WebPlayer 的播放历史
+        // 后处理: 仅筛选 WebPlayer 的播放历史
         viewHistory.data.data = viewHistory.data.data?.filter(
           (record) => record.watchMethod == "WebPlayer"
         );
 
+        // 如果没有历史记录, 直接以第一次打开
         if (viewHistory.data.data?.length == 0) {
           return this.firstThisAnime();
         }
-
-        // 最近一次播放的视频
+        // 有历史记录, 选择最近一次的播放记录
         let lastRecord = viewHistory.data.data[0];
         // 在当前的文件列表找出上次的视频
         let findThisFile = this.fileData.fileList.find((file) => {
@@ -460,6 +468,35 @@ export const useAnimeStore = defineStore("anime", {
         .padStart(2, "0");
       const s = (history?.currentTime % 60).toString().padStart(2, "0");
       $message.info(`上次${ep}播放到 ${m}:${s}, 已自动跳转`, 5000);
+    },
+    /**
+     * 切换集数, 同时自动跳转某集数的历史进度
+     * 此 API 会阻止相同集数切换
+     * @param {String} episode
+     * @returns
+     */
+    async changeEpisodeAutoHistory(episode) {
+      if (episode === this.fileData.activeEpisode) return;
+      // Promise.allSettled() 等待所有 Promise 都完成，无论是否出错
+      let result = await Promise.allSettled([
+        this.getAnimeViewHistory(),
+        this.changeEpisode(episode),
+      ]);
+      // 如果切换集数出现错误, throw 至上层处理
+      if (result[1].status == "rejected") {
+        throw result[1].reason;
+      }
+      // 等待视频切换和获取播放历史都成功后, 尝试跳转进度条
+      if (result[0].status !== "rejected") {
+        let viewHistory = result[0].value;
+        if (viewHistory.data.data.length) {
+          this.seekByHistory(
+            viewHistory.data.data.find((record) => {
+              return record.episode == episode;
+            })
+          );
+        }
+      }
     },
   },
 });
