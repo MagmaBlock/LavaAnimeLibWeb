@@ -67,7 +67,10 @@ useTitle(
   computed(() => {
     if (store.state.animeData.isLoading) {
       return "Loading... | 熔岩番剧库 LavaAnimeLib";
-    } else if (store.animeData?.title && store.activeFile === undefined) {
+    } else if (
+      store.animeData?.title &&
+      !store.activeFile?.parseResult?.episode
+    ) {
       return `${store.animeData?.title} | 熔岩番剧库 LavaAnimeLib`;
     } else if (
       store.animeData?.title &&
