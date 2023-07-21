@@ -1,6 +1,6 @@
 <script setup>
 import { useAnimeStore } from "../../store/Anime.js";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { watchOnce, useTitle } from "@vueuse/core";
 import { inject, watch, onUnmounted, computed, provide, nextTick } from "vue";
 
@@ -19,6 +19,7 @@ import NoBrowserNotice from "../../components/Anime/LocalPlayer/NoBrowserNotice.
 
 const store = useAnimeStore();
 const route = useRoute();
+const router = useRouter();
 
 const background = inject("background");
 
@@ -61,6 +62,19 @@ watch(
     buildPage();
   },
   { immediate: true }
+);
+
+watch(
+  () => store.fileData.activeEpisode,
+  () => {
+    if (store.fileData.activeEpisode) {
+      router.replace({
+        query: { ...route.query, episode: store.fileData.activeEpisode },
+      });
+    } else {
+      router.replace({ query: { ...route.query, episode: undefined } });
+    }
+  }
 );
 
 useTitle(
