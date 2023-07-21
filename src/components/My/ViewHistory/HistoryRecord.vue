@@ -13,18 +13,32 @@
         <div class="relative w-full rounded-md overflow-hidden">
           <div class="aspect-w-16 aspect-h-9">
             <img
-              :src="record?.animeData.images.poster"
+              v-if="record?.animeData?.images?.poster"
+              v-lazy="{
+                src: record?.animeData?.images?.poster,
+                loading:
+                  'https://bangumi-app-img.5t5.top/assets/PosterLoading.jpg',
+                error: 'https://bangumi-app-img.5t5.top/assets/noposter.png',
+              }"
               class="absolute object-cover"
               alt="记录封面"
             />
+            <div
+              v-else
+              class="absolute w-full h-full bg-zinc-200 dark:bg-zinc-800"
+            ></div>
           </div>
           <div
-            class="absolute inset-x-0 bottom-0 h-6 break-all bg-gradient-to-b from-transparent to-black/75 text-white px-4"
+            class="absolute inset-x-0 bottom-0 h-8 break-all bg-gradient-to-b from-transparent to-black/75 text-white px-4"
             v-if="getPercent"
           >
             <!-- 观看进度条 -->
             <div class="absolute inset-x-0 bottom-2 px-1.5">
               <div class="relative">
+                <div class="text-xs font-semibold mb-0.5 w-full text-right">
+                  {{ getMins(record?.currentTime) }} /
+                  {{ getMins(record?.totalTime) }}
+                </div>
                 <div
                   class="absolute bg-white/90 rounded-full h-[3px]"
                   :style="{ width: getPercent + '%' }"
@@ -62,24 +76,39 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, toRefs } from "vue";
 import dayjs from "dayjs";
 import calendar from "dayjs/plugin/calendar";
 dayjs.extend(calendar);
 
-const { record } = defineProps({
+const props = defineProps({
   record: {
     type: Object,
   },
 });
+const { record } = toRefs(props);
 
 const getPercent = computed(() => {
-  if (!record.currentTime || !record.totalTime) return null;
-  return Math.round((record.currentTime / record.totalTime) * 100);
+  if (!record.value.currentTime || !record.value.totalTime) return null;
+  return Math.round((record.value.currentTime / record.value.totalTime) * 100);
 });
 
+/**
+ * 根据秒计算分秒
+ * @param {Number} seconds
+ * @returns {String}
+ */
+const getMins = (seconds) => {
+  const min = Math.floor(seconds / 60);
+  const sec = ~~(seconds % 60);
+  const pad = (number) => {
+    return number.toString().padStart(2, "0");
+  };
+  return `${pad(min)}:${pad(sec)}`;
+};
+
 const getTimeInfo = computed(() => {
-  const time = dayjs(record.lastReportTime);
+  const time = dayjs(record.value.lastReportTime);
 
   return time.calendar();
 });
