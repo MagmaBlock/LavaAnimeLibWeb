@@ -129,7 +129,7 @@ const justWatched = computed(() => {
   }
 });
 
-setTimeout(() => {
+setInterval(() => {
   if (justWatched.value) getHistory();
 }, 8000);
 </script>
