@@ -70,7 +70,7 @@ import ScrollButton from "./ScrollButton.vue";
 import { ChevronRightFilled, RefreshFilled } from "@vicons/material";
 
 const data = ref([]);
-const showPop = ref(true); // 刚打开界面 10s 内展示提示
+const showPop = ref(true); // 刚打开界面 50s 内展示提示
 const loading = ref(true);
 
 buildPage();
@@ -78,15 +78,14 @@ async function buildPage() {
   data.value = [];
   loading.value = true;
   await getHistory();
+  showPop.value = true;
 
   setTimeout(() => {
     loading.value = false;
   }, 300);
-  showPop.value = true;
-
   setTimeout(() => {
     showPop.value = false;
-  }, 8000);
+  }, 5000);
 }
 
 // 横向滚动
