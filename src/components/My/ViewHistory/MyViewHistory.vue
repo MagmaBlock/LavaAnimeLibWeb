@@ -3,7 +3,13 @@
     <!-- Buttons -->
     <template #header-extra>
       <n-space>
-        <n-button secondary round size="small" @click="buildPage">
+        <n-button
+          secondary
+          round
+          size="small"
+          @click="buildPage"
+          :disabled="loading"
+        >
           <template #icon>
             <n-icon>
               <RefreshFilled :class="loading ? 'animate-spin' : ''" />
@@ -19,14 +25,28 @@
         </RouterLink>
       </n-space>
     </template>
-    <TransitionGroup name="fade" class="relative">
-      <!-- 正常数据 -->
-      <div class="flex gap-2 overflow-x-scroll" ref="scroll" v-if="data.length">
-        <template v-for="(history, index) in data">
+    <!-- 正常数据 -->
+    <TransitionGroup name="fade">
+      <div class="relative" v-if="data.length">
+        <!-- 翻页按钮 -->
+        <ScrollButton
+          v-if="!arrivedState.left"
+          class="z-10 absolute -left-4 inset-y-0 grid place-items-center"
+          direction="left"
+          @click="() => scrollAction('left')"
+        />
+        <ScrollButton
+          v-if="!arrivedState.right"
+          class="z-10 absolute -right-4 inset-y-0 grid place-items-center"
+          direction="right"
+          @click="() => scrollAction('right')"
+        />
+        <div class="flex gap-2 overflow-x-scroll" ref="scroll">
           <n-popover
             trigger="manual"
             class="animate-bounce"
             :show="justWatched && showPop && index == 0"
+            v-for="(history, index) in data"
           >
             <template #trigger>
               <Transition name="fade" mode="out-in">
@@ -40,21 +60,8 @@
               <div>✨ 刚刚正在观看</div>
             </Transition>
           </n-popover>
-        </template>
+        </div>
       </div>
-      <!-- 翻页按钮 -->
-      <ScrollButton
-        v-if="!arrivedState.left && data.length"
-        class="absolute -left-4 inset-y-0 grid place-items-center"
-        direction="left"
-        @click="() => scrollAction('left')"
-      />
-      <ScrollButton
-        v-if="!arrivedState.right && data.length"
-        class="absolute -right-4 inset-y-0 grid place-items-center"
-        direction="right"
-        @click="() => scrollAction('right')"
-      />
       <!-- 空状态 -->
       <n-empty v-if="!data.length && !loading" description="什么也没有看过" />
     </TransitionGroup>

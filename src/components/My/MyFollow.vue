@@ -1,7 +1,13 @@
 <template>
   <n-card title="我的追番" ref="myFollowRef" :bordered="false" embedded>
     <template #header-extra>
-      <n-button secondary round size="small" @click="refresh">
+      <n-button
+        secondary
+        round
+        size="small"
+        @click="refresh"
+        :disabled="loading"
+      >
         <template #icon>
           <n-icon>
             <RefreshFilled :class="loading ? 'animate-spin' : ''" />
