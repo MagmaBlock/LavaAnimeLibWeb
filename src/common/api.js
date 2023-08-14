@@ -1,5 +1,6 @@
 import axios from "axios";
 import config from "./config";
+import router from "../router/index";
 
 // 后端 API
 export const LavaAnimeAPI = axios.create({
@@ -26,6 +27,7 @@ LavaAnimeAPI.interceptors.response.use(
     if (error?.response?.status == 401) {
       localStorage.removeItem("token");
       $message.warning("尚未登录...");
+      router.push({ name: "AuthLogin" });
     }
     // 网络错误
     else if (error.code == "ERR_NETWORK") {
