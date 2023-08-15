@@ -51,8 +51,8 @@ export default {
           message: "111 大哥真给看吗",
           link: "https://arthals.ink/",
         },
+        { name: "小林", support: "￥250.00" },
         { name: "Longtianmu", support: "￥240", link: "https://ltm.ink/" },
-        { name: "小林", support: "￥200.00" },
         {
           name: "czy0729",
           support: "￥199.98",
