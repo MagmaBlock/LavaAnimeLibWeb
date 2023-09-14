@@ -29,3 +29,4 @@ coverage
 pnpm-lock.yaml
 
 dev-dist/*
+src/common/config.js
