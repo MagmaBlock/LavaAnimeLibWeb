@@ -164,5 +164,7 @@ onUnmounted(() => {
         class="w-fit p-10 rounded"
       />
     </div>
+    <!-- (模态框等) DOM 位置无关组件 -->
+    <AdminTool />
   </ContainerMobileFull>
 </template>

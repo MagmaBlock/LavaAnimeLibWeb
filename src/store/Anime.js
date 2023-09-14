@@ -42,6 +42,7 @@ export const useAnimeStore = defineStore("anime", {
       },
       artInstance: null,
       showArtPlayer: false,
+      showAdminTools: false,
     };
   },
   getters: {
@@ -271,7 +272,7 @@ export const useAnimeStore = defineStore("anime", {
         this.myDrive.selectedDrive = newDrive; // 持久化保存
         this.selectedDrive = newDrive;
         this.autoPlay();
-      } catch (error) {}
+      } catch (error) { }
     },
     /**
      * 切换当前选择的集数, 会优先选择浏览器支持的视频
