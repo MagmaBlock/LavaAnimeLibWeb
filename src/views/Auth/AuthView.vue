@@ -21,7 +21,7 @@ export default {
       this.$router.push({ name: "AuthLogin" });
     }
     this.background.url =
-      "https://dogefs.s3.ladydaily.com/~/source/unsplash/photo-1598063183638-4ffe7c5f0f8d?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&dl=j-lee-LYBSBjGo-5s-unsplash.jpg&w=1920";
+      "https://dogefs.s3.ladydaily.com/~/source/unsplash/photo-1559239115-ce3eb7cb87ea?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&dl=invictus-tailoring-sneaker-socks-5OZgVj0YVwQ-unsplash.jpg&w=1920";
     this.background.class = "blur-0";
     this.background.on = true;
   },
