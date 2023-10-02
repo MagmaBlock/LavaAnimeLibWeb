@@ -1,41 +1,33 @@
 <template>
-  <div>
-    <div class="text-2xl font-semibold">注册新账户</div>
-    <!-- <div class="opacity-80"></div> -->
-    <div
-      class="h-0.5 w-full my-4 rounded-full bg-black dark:bg-white opacity-10"
-    ></div>
-    <n-space class="w-72 sm:w-96" vertical>
-      <n-form>
-        <n-form-item label="邮箱">
-          <n-input v-model:value="email" type="email" placeholder="邮箱" />
-        </n-form-item>
-        <n-form-item label="用户名">
-          <n-input v-model:value="name" type="text" placeholder="用户名" />
-        </n-form-item>
-        <n-form-item label="密码">
-          <n-input
-            v-model:value="password"
-            type="password"
-            placeholder="密码"
-          />
-        </n-form-item>
-        <n-form-item label="邀请码">
-          <n-input
-            v-model:value="inviteCode"
-            type="text"
-            placeholder="邀请码 (必填)"
-          />
-        </n-form-item>
-      </n-form>
-      <div class="mt-2">
-        <RouterLink :to="{ name: 'AuthLogin' }" class="float-left">
-          <n-button quaternary> 去登录 </n-button>
-        </RouterLink>
-        <n-button strong @click="register" class="float-right"> 注册 </n-button>
-      </div>
-    </n-space>
-  </div>
+  <n-card>
+    <n-h2> 注册新账户 </n-h2>
+    <n-form>
+      <n-form-item show-require-mark label="邮箱">
+        <n-input v-model:value="email" type="email" placeholder="邮箱" />
+      </n-form-item>
+      <n-form-item show-require-mark label="用户名">
+        <n-input v-model:value="name" type="text" placeholder="用户名" />
+      </n-form-item>
+      <n-form-item show-require-mark label="密码">
+        <n-input v-model:value="password" type="password" placeholder="密码" />
+      </n-form-item>
+      <n-form-item show-require-mark label="邀请码">
+        <n-input
+          v-model:value="inviteCode"
+          type="text"
+          placeholder="邀请码 (必填)"
+        />
+      </n-form-item>
+    </n-form>
+    <template #action>
+      <RouterLink :to="{ name: 'AuthLogin' }" class="float-left">
+        <n-button secondary> 去登录 </n-button>
+      </RouterLink>
+      <n-button secondary type="primary" @click="register" class="float-right">
+        注册
+      </n-button>
+    </template>
+  </n-card>
 </template>
 
 <script>
