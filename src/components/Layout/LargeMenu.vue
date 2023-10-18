@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { computed, ref } from "vue";
 
 // 受控模式需要的 props 和 emits
 const props = defineProps(["show"]);

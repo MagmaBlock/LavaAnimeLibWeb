@@ -7,10 +7,12 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# 工具链
 node_modules
 .DS_Store
 dist
 dist-ssr
+dev-dist
 coverage
 *.local
 
@@ -18,7 +20,7 @@ coverage
 /cypress/screenshots/
 
 # Editor directories and files
-.vscode/*
+.vscode
 !.vscode/extensions.json
 .idea
 *.suo
@@ -26,7 +28,5 @@ coverage
 *.njsproj
 *.sln
 *.sw?
-pnpm-lock.yaml
-
-dev-dist/*
+# config
 src/common/config.js
