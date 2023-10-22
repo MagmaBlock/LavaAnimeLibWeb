@@ -1,34 +1,75 @@
-# LavaAnimeLibWeb
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FMagmaBlock%2FLavaAnimeLibWeb.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FMagmaBlock%2FLavaAnimeLibWeb?ref=badge_shield)
+# Nuxt 3 Minimal Starter
 
-熔岩番剧库的前端 V2，完全重写，高性能的单页面应用。
+Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
-## 实现
+## Setup
 
-Vite 2 + Vue 3 + Vue Router 4
+Make sure to install the dependencies:
 
-Tailwind CSS + Naive UI
-
-## 本地开发
-
-### 安装依赖
-
-```sh
+```bash
+# npm
 npm install
+
+# pnpm
+pnpm install
+
+# yarn
+yarn install
+
+# bun
+bun install
 ```
 
-### 启动开发服务器
+## Development Server
 
-```sh
+Start the development server on `http://localhost:3000`:
+
+```bash
+# npm
 npm run dev
+
+# pnpm
+pnpm run dev
+
+# yarn
+yarn dev
+
+# bun
+bun run dev
 ```
 
-### 构建
+## Production
 
-```sh
+Build the application for production:
+
+```bash
+# npm
 npm run build
+
+# pnpm
+pnpm run build
+
+# yarn
+yarn build
+
+# bun
+bun run build
 ```
 
+Locally preview production build:
 
-## License
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FMagmaBlock%2FLavaAnimeLibWeb.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FMagmaBlock%2FLavaAnimeLibWeb?ref=badge_large)
+```bash
+# npm
+npm run preview
+
+# pnpm
+pnpm run preview
+
+# yarn
+yarn preview
+
+# bun
+bun run preview
+```
+
+Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
