@@ -2,7 +2,7 @@
   <n-config-provider
     :locale="zhCN"
     :date-locale="dateZhCN"
-    :theme="settings.darkMode.on ? darkTheme : null"
+    :theme="settings.darkMode.enable ? darkTheme : null"
     :theme-overrides="themeOverrides"
   >
     <slot></slot>
@@ -28,9 +28,9 @@ settings.applyTimeDark();
 
 onBeforeMount(() => {
   watch(
-    () => settings.darkMode.on,
+    () => settings.darkMode.enable,
     () => {
-      if (settings.darkMode.on) {
+      if (settings.darkMode.enable) {
         document.querySelector("body").classList.add("dark");
         document.querySelector("body").classList.add("bg-black");
       } else {

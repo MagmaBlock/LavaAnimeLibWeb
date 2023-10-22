@@ -20,9 +20,11 @@
         ></i>
       </template>
       <n-list hoverable clickable>
-        <n-list-item @click="settings.darkMode.on = !settings.darkMode.on">
+        <n-list-item
+          @click="settings.darkMode.enable = !settings.darkMode.enable"
+        >
           深色模式
-          <n-switch :value="settings.darkMode.on" class="float-right" />
+          <n-switch :value="settings.darkMode.enable" class="float-right" />
         </n-list-item>
         <n-list-item
           @click="
@@ -100,7 +102,7 @@
 </template>
 
 <script setup>
-import { useSettingsStore } from "../../../store/Settings";
+import { useSettingsStore } from "../../../store/Settings.js";
 
 const settings = useSettingsStore();
 defineProps({
