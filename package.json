@@ -15,19 +15,21 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
+    "@nuxt/image": "^1.0.0",
+    "@pinia-plugin-persistedstate/nuxt": "^1.1.2",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/typography": "^0.5.10",
-    "@vicons/material": "^0.12.0",
+    "@types/ua-parser-js": "^0.7.38",
     "gravatar": "^1.8.2",
     "nuxt": "^3.8.0",
-    "vue": "^3.3.6",
+    "nuxt-icon": "^0.6.0",
+    "vue": "^3.3.7",
     "vue-router": "^4.2.5"
   },
   "dependencies": {
     "@bg-dev/nuxt-naiveui": "^1.5.2",
-    "@nuxtjs/tailwindcss": "^6.8.0",
+    "@nuxtjs/tailwindcss": "^6.8.1",
     "@pinia/nuxt": "^0.5.1",
-    "@vicons/ionicons5": "^0.12.0",
     "@vueuse/core": "^10.5.0",
     "animate.css": "^4.1.1",
     "artplayer": "^5.0.9",
@@ -37,7 +39,6 @@
     "github-markdown-css": "^5.3.0",
     "marked": "^9.1.2",
     "pinia": "^2.1.7",
-    "pinia-plugin-persistedstate": "^3.2.0",
     "ua-parser-js": "^1.0.36",
     "vue3-lazyload": "^0.3.8"
   }

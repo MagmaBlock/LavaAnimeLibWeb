@@ -1,0 +1,21 @@
+<template>
+  <ContainerPageMobileFull>
+    <div class="grid grid-cols-1 gap-2 sm:gap-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 sm:gap-4">
+        <UserInfoCard />
+        <UserFunctionsCard />
+      </div>
+      <div class="grid grid-cols-1 gap-2 sm:gap-4">
+        <UserHistory />
+        <UserFollow />
+        <AdminNav :withCard="true" />
+      </div>
+    </div>
+  </ContainerPageMobileFull>
+</template>
+
+<script setup>
+onMounted(() => {
+  document.title = "我的 | 熔岩番剧库 LavaAnimeLib";
+});
+</script>
