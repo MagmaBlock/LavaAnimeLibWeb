@@ -26,7 +26,7 @@ settings.applyTimeDark();
 
 useHead({
   htmlAttrs: {
-    class: () => (settings.darkMode.enable ? "dark bg-black" : ""),
+    class: () => (settings.darkMode.enable ? "dark" : ""),
   },
 });
 

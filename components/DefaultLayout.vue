@@ -17,11 +17,11 @@
         leave-active-class="animate__animated animate__fadeOut animate__faster"
       >
         <img
+          v-show="background.enable"
           class="w-full h-full scale-110 object-cover dark:brightness-50"
           :class="background.customClass"
           :src="background.imageUrl"
           alt="背景图片"
-          v-show="background.enable"
         />
       </Transition>
     </div>

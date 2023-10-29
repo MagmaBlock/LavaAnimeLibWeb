@@ -6,9 +6,10 @@ export const useBackgroundStore = defineStore("background", {
     customClass: "",
   }),
   actions: {
-    setBackground(backgroundUrl: string) {
+    setBackground(backgroundUrl: string, customClass?: string) {
       this.enable = true;
       this.imageUrl = backgroundUrl;
+      if (customClass) this.customClass = customClass;
     },
     resetBackground() {
       this.enable = false;
