@@ -9,14 +9,18 @@
         class="shrink-0 cursor-pointer"
         round
         :size="72"
-        :src="userStore.userInfo.data?.avatar?.url || '/Transparent_Akkarin.jpg'"
-        @click="$router.push({ name: 'UserInfoAvatar' })"
+        :src="
+          userStore.userInfo.data?.avatar?.url || '/Transparent_Akkarin.jpg'
+        "
+        @click="router.push({ path: '/user/info/avatar' })"
       />
       <div
         class="cursor-pointer"
-        @click="$router.push({ name: 'UserInfoName' })"
+        @click="router.push({ path: '/user/info/name' })"
       >
-        <div class="text-base font-semibold mb-1">{{ userStore.userInfo.name }}</div>
+        <div class="text-base font-semibold mb-1">
+          {{ userStore.userInfo.name }}
+        </div>
         <div class="text-xs opacity-80">{{ userStore.userInfo.email }}</div>
       </div>
       <div class="flex-1"></div>
@@ -36,7 +40,7 @@
     <div
       class="flex place-items-center gap-6 h-full cursor-pointer"
       v-else
-      @click="$router.push({ name: 'AuthLogin' })"
+      @click="router.push({ path: '/auth/login' })"
     >
       <NAvatar round :size="72" src="/Transparent_Akkarin.jpg" />
       <div>
@@ -48,8 +52,9 @@
 </template>
 
 <script setup lang="jsx">
-const userStore = useUserStore();
+const router = useRouter();
 
+const userStore = useUserStore();
 userStore.getUserInfo();
 
 const logoutMenu = [
