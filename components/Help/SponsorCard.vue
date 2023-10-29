@@ -1,6 +1,6 @@
 <template>
   <div
-    class="h-20 grid place-items-center rounded relative border border-gray-200 dark:border-zinc-800 dark:bg-zinc-800"
+    class="h-20 grid place-items-center rounded relative bg-zinc-100 dark:bg-zinc-800"
   >
     <div class="text-center">
       <div class="text-sm">{{ sponsor.name }}</div>
