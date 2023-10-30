@@ -3,7 +3,7 @@
     <!-- 浏览器升级提示 -->
     <div
       v-if="notSupport"
-      class="bg-orange-100 dark:bg-orange-950 p-4 text-xs lg:rounded-md lg:mb-4 select-all"
+      class="bg-orange-100 dark:bg-orange-950 p-4 text-xs lg:rounded lg:mb-4 select-all"
     >
       当前浏览器内核 {{ ua.getEngine().name }}
       {{ ua.getEngine().version }} 过旧，界面样式和功能可能发生异常。<br />
@@ -13,10 +13,10 @@
     <!-- 主页 -->
     <div class="lg:flex mb-4">
       <HomeHeaderPicture
-        class="lg:basis-1/2 xl:basis-2/5 sm:rounded-md lg:mr-4"
+        class="lg:basis-1/2 xl:basis-2/5 sm:rounded lg:mr-4"
       />
       <div
-        class="lg:basis-1/2 xl:basis-3/5 px-6 py-4 bg-gray-50 dark:bg-zinc-800 rounded-md hidden lg:block"
+        class="lg:basis-1/2 xl:basis-3/5 px-6 py-4 bg-gray-50 dark:bg-zinc-800 rounded hidden lg:block"
       >
         <div class="text-xl">最近更新</div>
         <div class="text-sm text-gray-500 mb-2">预留</div>

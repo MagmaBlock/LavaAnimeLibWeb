@@ -27,7 +27,7 @@ LavaAnimeAPI.interceptors.response.use(
     if (error?.response?.status == 401) {
       localStorage.removeItem("token");
       $message.warning("尚未登录...");
-      router.push({ name: "AuthLogin" });
+      router.push({ path: "/auth/login" });
     }
     // 网络错误
     else if (error.code == "ERR_NETWORK") {

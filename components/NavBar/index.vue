@@ -13,7 +13,7 @@
         <NavBarIcon to="/search" title="搜索">
           <Icon name="fluent:search-24-regular" />
         </NavBarIcon>
-        <NavBarIcon to="/anime_index" title="索引">
+        <NavBarIcon to="/anime-index" title="索引">
           <Icon name="fluent:collections-24-regular" />
         </NavBarIcon>
         <NavBarIcon to="/user" title="我的">
@@ -47,7 +47,7 @@
             <NavBarIcon to="/search" title="搜索">
               <Icon name="fluent:search-24-regular" />
             </NavBarIcon>
-            <NavBarIcon to="/anime_index" title="索引">
+            <NavBarIcon to="/anime-index" title="索引">
               <Icon name="fluent:collections-24-regular" />
             </NavBarIcon>
             <NavBarIcon to="/user" title="我的">

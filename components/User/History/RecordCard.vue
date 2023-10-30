@@ -1,7 +1,7 @@
 <template>
   <RouterLink
     :to="{
-      path: '/anime',
+      name: 'anime-la',
       params: { la: record.animeID },
       query: { episode: record.episode ?? undefined },
     }"

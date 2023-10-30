@@ -8,7 +8,7 @@
       <template #suffix>
         <div
           v-if="anime.id"
-          @click="$router.push({ name: 'Anime', params: { la: anime.id } })"
+          @click="router.push({ name: 'anime-la', params: { la: anime.id } })"
           class="cursor-pointer"
         >
           <Icon name="fluent:chevron-right-24-filled" size="18" />
@@ -94,6 +94,8 @@
 </template>
 
 <script setup>
+const router = useRouter();
+
 const { anime } = defineProps({
   anime: { type: Object },
 });

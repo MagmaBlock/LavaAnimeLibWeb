@@ -58,7 +58,7 @@ const useUrlParams = () => {
   }
 };
 const changeUrlParams = (value) => {
-  router.replace({ path: "/search", params: { value: value } });
+  router.replace({ name: "search-value", params: { value: value } });
   document.title = `搜索 - ${value} | 熔岩番剧库 LavaAnimeLib`;
 };
 const getHotAnimes = async () => {

@@ -1,8 +1,6 @@
 import { useStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
-import { LavaAnimeAPI, getToken } from "../common/api";
 import axios from "axios";
-import config from "../common/config";
 
 export const useAnimeStore = defineStore("anime", {
   state: () => {
@@ -272,7 +270,7 @@ export const useAnimeStore = defineStore("anime", {
         this.myDrive.selectedDrive = newDrive; // 持久化保存
         this.selectedDrive = newDrive;
         this.autoPlay();
-      } catch (error) { }
+      } catch (error) {}
     },
     /**
      * 切换当前选择的集数, 会优先选择浏览器支持的视频
@@ -370,7 +368,7 @@ export const useAnimeStore = defineStore("anime", {
       };
       try {
         await axios.post("/v2/anime/history/report", content, {
-          baseURL: config.api.lavaAnime,
+          baseURL: "https://anime-api.5t5.top",
           headers: {
             Authorization: getToken(),
           },

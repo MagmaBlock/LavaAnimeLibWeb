@@ -92,7 +92,9 @@ export default {
           <!-- 快速搜索框 -->
           <SearchBar
             v-model:search="searchValue"
-            @search="(value) => $router.push('/search/' + value)"
+            @search="
+              (value) => $router.push({ name: 'search-value', params: { value } })
+            "
           />
           <!-- 标题 -->
           <NH3 class="my-4">番剧索引</NH3>

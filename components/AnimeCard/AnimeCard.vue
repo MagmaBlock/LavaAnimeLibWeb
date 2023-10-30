@@ -35,7 +35,7 @@ const posterUrl = computed(() => {
 
     <!-- 上半：海报 + 标题 -->
     <div class="relative cursor-pointer overflow-hidden">
-      <NuxtLink>
+      <NuxtLink :to="{ name: 'anime-la', params: { la: anime?.id } }">
         <!-- 图片容器 -->
         <div class="aspect-w-2 aspect-h-3 overflow-hidden">
           <NuxtImg
