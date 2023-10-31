@@ -371,7 +371,7 @@ export const useAnimeStore = defineStore("anime", {
       };
       try {
         await axios.post("/v2/anime/history/report", content, {
-          baseURL: "https://anime-api.5t5.top",
+          baseURL: apiBaseUrl,
           headers: {
             Authorization: getToken(),
           },

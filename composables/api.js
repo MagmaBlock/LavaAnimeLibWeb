@@ -1,8 +1,10 @@
 import axios from "axios";
 
+export const apiBaseUrl = useRuntimeConfig().public.apiBaseUrl;
+
 // 后端 API
 export const LavaAnimeAPI = axios.create({
-  baseURL: "https://anime-api.5t5.top",
+  baseURL: apiBaseUrl,
 });
 
 const router = useRouter();

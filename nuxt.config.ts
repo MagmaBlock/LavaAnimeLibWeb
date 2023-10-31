@@ -9,6 +9,11 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "nuxt-icon",
   ],
+  runtimeConfig: {
+    public: {
+      apiBaseUrl: "https://anime-api.5t5.top",
+    },
+  },
   ssr: false,
   imports: {
     dirs: ["composables/store/*.{js,ts}"],
