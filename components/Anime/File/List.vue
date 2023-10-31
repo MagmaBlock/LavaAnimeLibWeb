@@ -1,12 +1,6 @@
 <script setup>
 const store = useAnimeStore();
 
-const bottonClass = {
-  default:
-    "bg-gray-100 hover:bg-gray-200 dark:bg-zinc-700 dark:text-white active:bg-blue-600 active:text-white",
-  active: "bg-blue-600 text-white",
-};
-
 const videoButtonClick = async (video) => {
   if (video.url === store.activeFile?.url) return;
   let result = await Promise.allSettled([
@@ -44,46 +38,61 @@ const bytesToSize = (bytes) => {
     v-if="!store.state.fileData.isLoading && !store.state.fileData.errorCode"
   >
     <!-- 识别到集数的视频 -->
-    <AnimeCardBasic
-      class="px-4 py-2 sm:mb-4 select-none"
-      v-if="store.episodeList.length"
-    >
+    <AnimeCardBasic class="sm:mb-4 select-none" v-if="store.episodeList.length">
       <!-- 卡片标题 -->
-      <div class="text-base px-0.5 mb-2">正片</div>
+      <template #header>
+        <div
+          class="flex place-items-center"
+          @click="store.fileData.ascOrder = !store.fileData.ascOrder"
+        >
+          <div>正片</div>
+          <div class="flex-1"></div>
+          <Transition name="fade" mode="out-in" class="cursor-pointer">
+            <Icon
+              name="material-symbols:keyboard-double-arrow-down-rounded"
+              size="16"
+              v-if="store.fileData.ascOrder"
+            />
+            <Icon
+              name="material-symbols:keyboard-double-arrow-up-rounded"
+              size="16"
+              v-else
+            />
+          </Transition>
+        </div>
+      </template>
       <!-- 集数 Grid 容器 -->
       <div class="grid grid-cols-6 gap-1">
         <!-- 集数方块 -->
-        <template v-for="episode in store.episodeList">
-          <NPopover trigger="hover" :disabled="episode.list.length == 1">
-            <template #trigger>
+        <NPopover
+          trigger="hover"
+          :disabled="episode.list.length == 1"
+          v-for="episode in store.episodeList"
+        >
+          <template #trigger>
+            <AnimeCardButton
+              class="relative h-10 grid content-center"
+              :active="store.fileData.activeEpisode == episode.episode"
+              @click="store.changeEpisodeAutoHistory(episode.episode)"
+            >
+              <!-- 集数 -->
+              <div class="leading-none pb-0.5 text-center">
+                {{ episode.episode }}
+              </div>
+              <!-- 多集数时展现 -->
               <div
-                class="cursor-pointer ease-in duration-100 rounded overflow-hidden h-10 grid content-center relative"
+                v-if="episode.list.length > 1"
+                class="absolute h-0.5 w-1.5 mx-auto inset-x-0 bottom-1 rounded"
                 :class="
                   store.fileData.activeEpisode == episode.episode
-                    ? bottonClass.active
-                    : bottonClass.default
+                    ? 'bg-gray-50'
+                    : 'bg-gray-400'
                 "
-                @click="store.changeEpisodeAutoHistory(episode.episode)"
-              >
-                <!-- 集数 -->
-                <div class="leading-none pb-0.5 text-center">
-                  {{ episode.episode }}
-                </div>
-                <!-- 多集数时展现 -->
-                <div
-                  v-if="episode.list.length > 1"
-                  class="absolute h-0.5 w-1.5 mx-auto inset-x-0 bottom-1 rounded"
-                  :class="
-                    store.fileData.activeEpisode == episode.episode
-                      ? 'bg-gray-50'
-                      : 'bg-gray-400'
-                  "
-                ></div>
-              </div>
-            </template>
-            <span>当前集数有 {{ episode.list.length }} 个视频</span>
-          </NPopover>
-        </template>
+              ></div>
+            </AnimeCardButton>
+          </template>
+          <span>当前集数有 {{ episode.list.length }} 个视频</span>
+        </NPopover>
       </div>
       <div>
         <NCollapseTransition :show="!!store.fileData?.activeEpisode">
@@ -107,14 +116,14 @@ const bytesToSize = (bytes) => {
 
     <!-- 未识别到集数的视频 -->
     <AnimeCardFlod
-      class="px-4 py-2 sm:mb-4 select-none"
+      class="sm:mb-4 select-none"
       :mobile-show="!store.episodeList.length"
       v-if="store.noEpisodeList.length"
     >
       <!-- 标题 -->
       <template #title>
         {{ store.episodeList.length ? "其他视频" : "视频" }}
-        <span class="text-sm text-zinc-500">
+        <span class="text-xs opacity-75 mx-2">
           {{ store.noEpisodeList.length }}
         </span>
       </template>
@@ -129,14 +138,11 @@ const bytesToSize = (bytes) => {
     </AnimeCardFlod>
 
     <!-- 音乐 -->
-    <AnimeCardFlod
-      v-if="store.musicList.length"
-      class="px-4 py-2 sm:mb-4 select-none"
-    >
+    <AnimeCardFlod v-if="store.musicList.length" class="sm:mb-4 select-none">
       <!-- 标题 -->
       <template #title>
         相关音乐
-        <span class="text-sm text-zinc-500">
+        <span class="text-xs opacity-75 mx-2">
           {{ store.musicList.length }}
         </span>
       </template>
@@ -151,14 +157,11 @@ const bytesToSize = (bytes) => {
     </AnimeCardFlod>
 
     <!-- 附件文件，以上都没匹配到的文件就会过来 -->
-    <AnimeCardFlod
-      v-if="store.otherList.length"
-      class="px-4 py-2 sm:mb-4 select-none"
-    >
+    <AnimeCardFlod v-if="store.otherList.length" class="sm:mb-4 select-none">
       <!-- 标题 -->
       <template #title>
         附件
-        <span class="text-sm text-zinc-500">
+        <span class="text-xs opacity-75 mx-2">
           {{ store.otherList.length }}
         </span>
       </template>

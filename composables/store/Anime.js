@@ -36,6 +36,7 @@ export const useAnimeStore = defineStore("anime", {
       fileData: {
         activeEpisode: null,
         activeFileIndex: null,
+        ascOrder: true,
         fileList: [],
       },
       artInstance: null,
@@ -98,6 +99,8 @@ export const useAnimeStore = defineStore("anime", {
           aEp.length - bEp.length
         );
       });
+
+      if (!state.fileData.ascOrder) result.reverse();
       return result;
     },
     noEpisodeList: (state) => {

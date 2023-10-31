@@ -1,22 +1,24 @@
 <template>
   <AnimeCardBasic>
-    <!-- 标题部分 -->
-    <div class="text-base px-0.5" @click="openTab = !openTab">
-      <!-- Title -->
-      <slot name="title"></slot>
-      <!-- Switch Button -->
-      <AnimeCardRoundedButton
-        class="float-right w-10 h-6 grid place-items-center"
-      >
-        <Icon name="material-symbols:keyboard-arrow-up" v-show="openTab" />
-        <Icon name="material-symbols:keyboard-arrow-down" v-show="!openTab" />
-      </AnimeCardRoundedButton>
-    </div>
+    <template #header>
+      <div class="flex place-items-center" @click="openTab = !openTab">
+        <slot name="title"></slot>
+        <div class="flex-1"></div>
+        <Transition class="cursor-pointer" name="fade" mode="out-in">
+          <Icon
+            name="material-symbols:keyboard-arrow-up"
+            size="16"
+            v-if="openTab"
+          />
+          <Icon name="material-symbols:keyboard-arrow-down" size="16" v-else />
+        </Transition>
+      </div>
+    </template>
     <!-- 内容部分 -->
-    <NCollapseTransition :show="openTab" v-if="openTab !== null" class="my-2">
+    <NCollapseTransition :show="openTab" v-if="openTab !== null">
       <slot></slot>
     </NCollapseTransition>
-    <NCollapseTransition :show="!openTab" v-if="$slots.close" class="my-2">
+    <NCollapseTransition :show="!openTab" v-if="$slots.close">
       <slot name="close"></slot>
     </NCollapseTransition>
   </AnimeCardBasic>
@@ -38,7 +40,7 @@ export default {
   },
   data() {
     return {
-      openTab: null,
+      openTab: false,
     };
   },
   mounted() {

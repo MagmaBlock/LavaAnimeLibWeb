@@ -1,14 +1,14 @@
 <template>
   <AnimeCardBasic>
     <!-- 面包屑导航 但是不能点 -->
-    <div class="px-4 py-2 text-sm text-gray-500 border-b dark:border-zinc-700">
-      <n-skeleton text></n-skeleton>
+    <div class="pb-2 text-sm text-gray-500">
+      <NSkeleton text></NSkeleton>
     </div>
     <!-- 主信息卡 -->
-    <div class="py-3 px-4">
+    <div class="pt-2">
       <!-- 标题块 -->
       <div class="mb-1">
-        <n-skeleton :height="28" :width="256"></n-skeleton>
+        <NSkeleton :height="28" :width="256"></NSkeleton>
       </div>
       <!-- 主要信息 -->
       <div class="px-0.5 text-sm leading-5 text-gray-500">
@@ -35,12 +35,12 @@
       <!-- 标签 -->
       <div class="my-1 overflow-clip">
         <template v-for="a in 15">
-          <n-skeleton
+          <NSkeleton
             class="inline-block mr-1 mb-"
             :height="22"
             :width="40 + (50 - a) * Math.random()"
             :sharp="false"
-          ></n-skeleton>
+          ></NSkeleton>
         </template>
       </div>
       <!-- 连接 -->

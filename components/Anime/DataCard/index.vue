@@ -10,7 +10,7 @@ const showTools = ref(false);
 <template>
   <AnimeCardBasic class="select-text">
     <!-- 面包屑导航 但是不能点 -->
-    <div class="px-4 py-2 text-sm text-gray-500 border-b dark:border-zinc-700">
+    <div class="pb-2 text-sm text-gray-500">
       <NuxtLink :to="{ path: '/anime-index' }">
         {{ store.animeData?.index.year }}
         <i class="bi bi-chevron-right text-xs"></i>
@@ -26,7 +26,7 @@ const showTools = ref(false);
       </span>
     </div>
     <!-- 主信息卡 -->
-    <div class="py-3 px-4">
+    <div class="pt-2">
       <!-- 标题块 -->
       <div class="mb-1">
         <div class="text-xl inline-block mr-2">

@@ -21,7 +21,10 @@ const buildPage = () => {
     async () => {
       if (!store.state.animeData.errorCode && store.animeData?.images?.poster) {
         // 启用背景
-        background.setBackground(store.animeData.images.poster, "blur-xl");
+        background.setBackground(
+          store.animeData.images.poster,
+          "blur-3xl opacity-50"
+        );
       }
 
       window.scrollTo({
@@ -94,7 +97,7 @@ onUnmounted(() => {
       <!-- 左视图 占两列 -->
       <div class="lg:col-span-2">
         <!-- 视频框 -->
-        <div class="sm:shadow sm:mb-4 sm:rounded overflow-clip">
+        <div class="sm:mb-4 sm:rounded overflow-clip">
           <AnimePlayer v-if="store.showArtPlayer" />
           <Transition
             enter-active-class="animate__animated animate__bounceIn"

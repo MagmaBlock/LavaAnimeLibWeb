@@ -1,16 +1,13 @@
 <template>
   <NSpin :show="loading">
-    <div
-      class="py-1.5 px-4 rounded transition-all cursor-pointer"
-      :class="[active ? activeClass : normalClass, disable ? disableClass : '']"
-    >
+    <AnimeCardButton class="py-1.5 px-4" :active="active">
       <div>
         {{ name }}
       </div>
       <div class="text-xs opacity-80">
         {{ description }}
       </div>
-    </div>
+    </AnimeCardButton>
   </NSpin>
 </template>
 

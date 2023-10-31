@@ -35,7 +35,7 @@
     @click="handleButtonClick('DanDanPlayWindows')"
     v-if="ua.os.name == 'Windows' || props.allos"
   >
-    弹弹Play <span v-if="props.allos">Windows</span>
+    弹弹Play <span v-if="props.allos" class="ml-1 text-xs">(Windows)</span>
   </AnimePlayerActionBarIcon>
   <!-- 弹弹Play 安卓 -->
   <AnimePlayerActionBarIcon
@@ -44,7 +44,7 @@
     @click="handleButtonClick('DanDanPlayAndroid')"
     v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS/i) || props.allos"
   >
-    弹弹Play <span v-if="props.allos">Android</span>
+    弹弹Play <span v-if="props.allos" class="ml-1 text-xs">(Android)</span>
   </AnimePlayerActionBarIcon>
   <!-- PotPlayer -->
   <AnimePlayerActionBarIcon

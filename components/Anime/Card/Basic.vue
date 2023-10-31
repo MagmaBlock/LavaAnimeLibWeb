@@ -1,7 +1,10 @@
 <template>
   <div
-    class="transition ease-in duration-200 border-b sm:shadow sm:border sm:rounded w-full h-fit bg-white dark:bg-zinc-800 dark:border-zinc-700 opacity-90"
+    class="grid grid-cols-1 gap-2 px-4 py-2 bg-zinc-50 dark:bg-zinc-900 rounded"
   >
-    <slot></slot>
+    <slot name="header"></slot>
+    <div>
+      <slot></slot>
+    </div>
   </div>
 </template>

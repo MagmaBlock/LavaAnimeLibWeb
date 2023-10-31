@@ -1,7 +1,5 @@
 <template>
-  <AnimeCardBasic
-    class="select-none overflow-hidden relative sm:rounded-none sm:shadow-none sm:border-none"
-  >
+  <AnimeCardBasic class="select-none overflow-hidden relative">
     <!-- 未选择集数的遮罩 -->
     <Transition name="fade">
       <div
@@ -12,7 +10,7 @@
       </div>
     </Transition>
     <div
-      class="flex flex-nowrap flex-shrink-0 overflow-x-scroll lg:overflow-auto p-2 gap-1 md:gap-2"
+      class="flex flex-nowrap flex-shrink-0 overflow-x-scroll lg:overflow-auto gap-1 md:gap-2"
     >
       <AnimePlayerActionBarIcons ref="icons">
         <template #showAll>
@@ -30,8 +28,8 @@
       </AnimePlayerActionBarIcons>
     </div>
     <!-- Model 模态框 -->
-    <n-modal v-model:show="moreModel" class="h-fit select-none">
-      <n-card
+    <NModal v-model:show="moreModel" class="h-fit select-none">
+      <NCard
         class="max-w-xl"
         title="全部播放器"
         :bordered="false"
@@ -66,8 +64,8 @@
         <div class="text-gray-600 dark:text-gray-400 text-xs mt-2">
           图标绘制：Arthals
         </div>
-      </n-card>
-    </n-modal>
+      </NCard>
+    </NModal>
   </AnimeCardBasic>
 </template>
 

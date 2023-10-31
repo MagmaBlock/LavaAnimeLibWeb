@@ -23,7 +23,7 @@
     </div>
     <!-- 宽屏 -->
     <div
-      class="hidden lg:flex flex-col w-[84px] h-full py-10 bg-zinc-100 dark:bg-zinc-900"
+      class="hidden lg:flex flex-col w-[84px] h-full py-10 bg-zinc-50 dark:bg-zinc-900"
     >
       <!-- Logo -->
       <div class="grid place-items-center mb-8">

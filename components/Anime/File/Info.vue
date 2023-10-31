@@ -4,10 +4,6 @@
     :class="active ? 'border-2 border-blue-500' : ''"
   >
     <div v-if="video.type == 'file'" class="cursor-pointer">
-      <!-- 集数
-      <n-tag class="absolute bottom-0 right-0 z-10 bg-opacity-50" v-if="video.episode" size="small" type="warning">
-        {{ video.episode }}
-      </n-tag> -->
       <!-- 普通标签 -->
       <span v-for="tag in video.parseResult.tagedName" class="inline-flex">
         <span v-if="typeof tag == 'string'" class="mx-0.5">{{ tag }}</span>

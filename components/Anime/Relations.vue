@@ -1,17 +1,21 @@
 <template>
   <AnimeCardBasic
-    class="px-4 py-2 select-none"
+    class="select-none"
     v-if="store.animeData?.relations && store.animeData?.relations[0]"
   >
-    <NSpace justify="space-between" class="mb-2">
-      <div class="text-base">相关作品</div>
+    <template #header>
       <div
+        class="flex place-items-center"
         @click="relationGrid = !relationGrid"
-        class="h-full grid place-items-center active:scale-90 transition-transform cursor-pointer"
       >
-        <Icon name="material-symbols:grid-on" size="20" />
+        <div>相关作品</div>
+        <div class="flex-1"></div>
+        <Transition class="cursor-pointer" name="fade" mode="out-in">
+          <Icon name="material-symbols:grid-on" size="16" v-if="relationGrid" />
+          <Icon name="material-symbols:grid-off" size="16" v-else />
+        </Transition>
       </div>
-    </NSpace>
+    </template>
 
     <!-- 新版 Grid 展示 -->
     <NCollapseTransition :show="relationGrid">
@@ -31,15 +35,13 @@
             },
           }"
         >
-          <div
-            class="bg-gray-100 hover:bg-gray-200 active:bg-gray-300 dark:bg-zinc-700 dark:hover:bg-zinc-600 cursor-pointer ease-in duration-200 rounded p-2"
-          >
+          <AnimeCardButton class="px-3 py-2">
             <span
               class="bg-blue-100 text-blue-600 dark:bg-blue-600 dark:bg-opacity-60 dark:text-white text-xs font-medium rounded px-1.5 mr-1"
             >
               {{ anime.relation }}
             </span>
-            <span>
+            <span class="text-xs">
               {{ anime.title }}
             </span>
             <span
@@ -54,7 +56,7 @@
             >
               NSFW
             </span>
-          </div>
+          </AnimeCardButton>
         </NuxtLink>
       </div>
     </NCollapseTransition>
