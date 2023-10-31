@@ -131,7 +131,9 @@ onMounted(() => {
                     secondary
                     v-for="value in searchRecommendation"
                   >
-                    <NuxtLink>
+                    <NuxtLink
+                      :to="{ name: 'anime-la', params: { la: value.id } }"
+                    >
                       <NEllipsis style="max-width: 200px">
                         {{ value.title }}
                       </NEllipsis>

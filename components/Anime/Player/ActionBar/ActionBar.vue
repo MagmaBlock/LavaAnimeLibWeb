@@ -3,30 +3,30 @@
     <!-- 未选择集数的遮罩 -->
     <Transition name="fade">
       <div
-        class="absolute w-full h-full bg-white dark:bg-zinc-800 bg-opacity-90 dark:bg-opacity-90 z-10 grid place-items-center"
+        class="absolute inset-0 bg-white dark:bg-zinc-900 bg-opacity-90 dark:bg-opacity-90 z-10 grid place-items-center"
         v-if="!store.activeFile?.url"
       >
         请先选择集数
       </div>
     </Transition>
-    <div
-      class="flex flex-nowrap flex-shrink-0 overflow-x-scroll lg:overflow-auto gap-1 md:gap-2"
-    >
-      <AnimePlayerActionBarIcons ref="icons">
-        <template #showAll>
-          <!-- 展开全部 -->
-          <AnimePlayerActionBarIcon
-            class="mr-2"
-            @click="
-              pausePlayer();
-              moreModel = true;
-            "
-          >
-            <i class="bi bi-three-dots"></i>
-          </AnimePlayerActionBarIcon>
-        </template>
-      </AnimePlayerActionBarIcons>
-    </div>
+    <NScrollbar x-scrollable>
+      <div class="flex flex-nowrap flex-shrink-0 gap-1 md:gap-2">
+        <AnimePlayerActionBarIcons ref="icons">
+          <template #showAll>
+            <!-- 展开全部 -->
+            <AnimePlayerActionBarIcon
+              class="mr-2"
+              @click="
+                pausePlayer();
+                moreModel = true;
+              "
+            >
+              <i class="bi bi-three-dots"></i>
+            </AnimePlayerActionBarIcon>
+          </template>
+        </AnimePlayerActionBarIcons>
+      </div>
+    </NScrollbar>
     <!-- Model 模态框 -->
     <NModal v-model:show="moreModel" class="h-fit select-none">
       <NCard
