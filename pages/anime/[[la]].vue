@@ -99,12 +99,6 @@ onUnmounted(() => {
         <!-- 视频框 -->
         <div class="sm:mb-4 sm:rounded overflow-clip">
           <AnimePlayer v-if="store.showArtPlayer" />
-          <Transition
-            enter-active-class="animate__animated animate__bounceIn"
-            leave-active-class="animate__animated absolute animate__fadeOut animate__faster"
-          >
-            <AnimeNoBrowserNotice v-if="store.isNoBrowser" />
-          </Transition>
           <AnimePlayerEmpty v-if="!store.showArtPlayer" />
           <!-- 本地播放器调用 -->
           <AnimePlayerActionBar />

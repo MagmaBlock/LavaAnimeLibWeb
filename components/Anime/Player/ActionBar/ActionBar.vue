@@ -9,6 +9,9 @@
         请先选择集数
       </div>
     </Transition>
+    <!-- 浏览器无法播放部分视频的警告 -->
+    <AnimeNoBrowserNotice v-if="store.isNoBrowser" class="mb-2" />
+    <!-- 操作栏部分 -->
     <NScrollbar x-scrollable>
       <div class="flex flex-nowrap flex-shrink-0 gap-1 md:gap-2">
         <AnimePlayerActionBarIcons ref="icons">

@@ -1,4 +1,4 @@
-import { useStorage } from "@vueuse/core";
+import { useLocalStorage, useStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
 import axios from "axios";
 
@@ -36,12 +36,12 @@ export const useAnimeStore = defineStore("anime", {
       fileData: {
         activeEpisode: null,
         activeFileIndex: null,
-        ascOrder: true,
         fileList: [],
       },
       artInstance: null,
       showArtPlayer: false,
       showAdminTools: false,
+      ascOrder: useLocalStorage("AnimeFileAscOrder", true),
     };
   },
   getters: {
@@ -100,33 +100,39 @@ export const useAnimeStore = defineStore("anime", {
         );
       });
 
-      if (!state.fileData.ascOrder) result.reverse();
+      if (!state.ascOrder) result.reverse();
       return result;
     },
     noEpisodeList: (state) => {
-      return state.fileData.fileList.filter((file) => {
+      let result = state.fileData.fileList.filter((file) => {
         return (
           file.type == "file" &&
           file.parseResult?.extensionName?.type == "video" &&
           !file.parseResult?.episode
         );
       });
+      if (!state.ascOrder) result.reverse();
+      return result;
     },
     musicList: (state) => {
-      return state.fileData.fileList.filter((file) => {
+      let result = state.fileData.fileList.filter((file) => {
         return (
           file.type == "file" &&
           file.parseResult?.extensionName?.type == "music"
         );
       });
+      if (!state.ascOrder) result.reverse();
+      return result;
     },
     otherList: (state) => {
-      return state.fileData.fileList.filter((file) => {
+      let result = state.fileData.fileList.filter((file) => {
         return (
           file.type == "file" &&
           !["video", "music"].includes(file.parseResult?.extensionName?.type)
         );
       });
+      if (!state.ascOrder) result.reverse();
+      return result;
     },
     /**
      * 提供集数, 返回指定集数的视频列表
