@@ -30,3 +30,4 @@ coverage
 *.sw?
 # config
 src/common/config.js
+.env

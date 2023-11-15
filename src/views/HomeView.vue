@@ -11,15 +11,7 @@
       15.6。番剧库最低保证在 Blink 71 能够显示出界面。
     </div>
     <!-- 主页 -->
-    <div class="lg:flex mb-4">
-      <HeaderPictures class="lg:basis-1/2 xl:basis-2/5 sm:rounded-md lg:mr-4" />
-      <div
-        class="lg:basis-1/2 xl:basis-3/5 px-6 py-4 bg-gray-50 dark:bg-zinc-800 rounded-md hidden lg:block"
-      >
-        <div class="text-xl">最近更新</div>
-        <div class="text-sm text-gray-500 mb-2">预留</div>
-      </div>
-    </div>
+    <RecentUpdates />
     <AnimeCollection />
   </ContainerMobileFull>
 </template>
@@ -30,6 +22,7 @@ import uaParser from "ua-parser-js";
 import HeaderPictures from "../components/Home/HeaderPictures.vue";
 import ContainerMobileFull from "../components/Layout/PageContainer/ContainerMobileFull.vue";
 import AnimeCollection from "../components/Home/Collection/AnimeCollection.vue";
+import RecentUpdates from "../components/Home/RecentUpdates.vue";
 
 export default {
   data() {
@@ -46,7 +39,12 @@ export default {
     )
       this.notSupport = true;
   },
-  components: { HeaderPictures, ContainerMobileFull, AnimeCollection },
+  components: {
+    HeaderPictures,
+    ContainerMobileFull,
+    AnimeCollection,
+    RecentUpdates,
+  },
 };
 </script>
 
