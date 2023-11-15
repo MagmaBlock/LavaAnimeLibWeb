@@ -12,15 +12,6 @@
     </div>
     <!-- 主页 -->
     <HomeRecentUpdate />
-    <div class="lg:flex mb-4">
-      <HomeHeaderPicture class="lg:basis-1/2 xl:basis-2/5 sm:rounded lg:mr-4" />
-      <div
-        class="lg:basis-1/2 xl:basis-3/5 px-6 py-4 bg-gray-50 dark:bg-zinc-800 rounded hidden lg:block"
-      >
-        <div class="text-xl">最近更新</div>
-        <div class="text-sm text-gray-500 mb-2">预留</div>
-      </div>
-    </div>
     <HomeCollection />
   </ContainerPageMobileFull>
 </template>
