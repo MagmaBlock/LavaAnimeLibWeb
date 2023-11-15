@@ -1,7 +1,7 @@
 <template>
   <NList clickable hoverable class="sm:w-80 select-none">
     <NListItem class="select-text">
-      <div class="text-lg">{{ anime?.title || "..." }}</div>
+      <div class="text-base">{{ anime?.title || "..." }}</div>
       <div class="text-xs">
         {{ anime?.index?.year }} {{ anime?.index?.type }}
       </div>
@@ -11,7 +11,7 @@
           @click="router.push({ name: 'anime-la', params: { la: anime.id } })"
           class="cursor-pointer"
         >
-          <Icon name="fluent:chevron-right-24-filled" size="18" />
+          <Icon name="material-symbols:chevron-right" size="20" />
         </div>
       </template>
     </NListItem>
@@ -19,7 +19,7 @@
     <!-- -1 未追番 -->
     <NListItem @click="editFollow(1)" v-if="followInfo.status == -1">
       <div class="flex gap-x-4 items-center">
-        <Icon name="fluent:add-24-filled" size="18" />
+        <Icon name="material-symbols:add" size="20" />
         添加到追番
       </div>
     </NListItem>
@@ -30,7 +30,7 @@
       v-else-if="followInfo.status >= 0"
     >
       <div class="flex gap-x-4 items-center">
-        <Icon name="fluent:subtract-24-filled" size="18" />
+        <Icon name="material-symbols:remove" size="20" />
         取消追番
       </div>
     </NListItem>
@@ -41,7 +41,7 @@
 
     <NListItem v-if="followInfo.status != -2">
       <div class="flex gap-x-4 items-center">
-        <Icon name="fluent:bookmark-add-24-filled" size="18" />
+        <Icon name="material-symbols:bookmark-add-outline" size="20" />
         标记为
       </div>
       <template #suffix>
@@ -76,7 +76,7 @@
     <NListItem v-if="anime?.bgmID">
       <a :href="anime?.images.large" target="_blank">
         <div class="flex gap-x-4 items-center">
-          <Icon name="fluent:image-search-24-filled" size="18" />
+          <Icon name="material-symbols:image-outline" size="20" />
           查看封面大图
         </div>
       </a>
@@ -85,7 +85,7 @@
     <NListItem v-if="anime?.bgmID">
       <a :href="'https://bgm.tv/subject/' + anime.bgmID" target="_blank">
         <div class="flex gap-x-4 items-center">
-          <Icon name="fluent:attach-arrow-right-24-filled" size="18" />
+          <Icon name="material-symbols:link" size="20" />
           去番组计划查看本作品
         </div>
       </a>

@@ -28,7 +28,7 @@ const posterUrl = computed(() => {
 <template>
   <!-- 卡片 -->
   <div
-    class="relative box-content overflow-hidden select-none rounded border-2 border-white/0 transition ease-out hover:lg:scale-[1.02] hover:border-2 hover:border-blue-600 hover:shadow-md"
+    class="relative box-content overflow-hidden select-none rounded transition ease-out border-2 border-white/0 hover:border-2 hover:border-blue-600 hover:lg:brightness-90"
     @contextmenu="handleMenu"
   >
     <div class="absolute h-full w-full bg-gray-100 dark:bg-gray-500"></div>
@@ -79,25 +79,26 @@ const posterUrl = computed(() => {
     <!-- 信息区 -->
     <div class="relative h-8 dark:bg-zinc-700">
       <div class="flex h-full">
-        <div class="grid basis-3/4 content-center pl-2.5">
-          <div class="flex items-center gap-x-0.5">
-            <Icon name="fluent:play-circle-20-regular" size="16" />
-            {{
-              anime?.views > 9999
-                ? (anime.views / 10000).toFixed(2) + "万"
-                : anime?.views
-            }}
+        <div class="grid basis-3/4 pl-3">
+          <div class="flex place-items-center gap-x-[3px]">
+            <Icon name="bi:play-btn" size="15" />
+            <div v-if="anime?.views">
+              {{
+                anime?.views > 9999
+                  ? (anime.views / 10000).toFixed(2) + "万"
+                  : anime?.views
+              }}
+            </div>
           </div>
         </div>
         <div class="grid basis-1/4 place-items-center">
           <!-- 菜单 -->
-          <ContainerMenuLarge v-model:show="showMenu">
+          <ContainerMenuLarge v-model:show="showMenu" v-if="anime?.id">
             <template #trigger>
               <div
                 class="grid place-items-center cursor-pointer rounded p-1.5 hover:bg-black/20"
               >
-                <Icon name="fluent:more-horizontal-20-regular" size="16" />
-                <!-- <i class="bi bi-list text-zinc-700 dark:text-gray-50"></i> -->
+                <Icon name="bi:list" />
               </div>
             </template>
             <AnimeCardMenu :anime="anime" />
