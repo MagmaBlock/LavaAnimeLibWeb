@@ -21,7 +21,7 @@
     </div>
     <!-- 宽屏 -->
     <div
-      class="hidden lg:flex flex-col w-[84px] h-full py-10 bg-zinc-50 dark:bg-zinc-900"
+      class="hidden lg:flex flex-col w-[84px] h-full py-10 bg-zinc-50 dark:bg-zinc-900 rounded"
     >
       <!-- Logo -->
       <div class="grid place-items-center mb-8">
@@ -29,7 +29,7 @@
           <img
             src="/icon.svg"
             alt="Logo"
-            class="w-10 h-10 rounded hover:brightness-90 active:scale-95 transition"
+            class="w-10 h-10 rounded-lg active:brightness-90 active:scale-95 transition"
           />
         </NuxtLink>
       </div>

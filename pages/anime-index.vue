@@ -93,7 +93,8 @@ export default {
           <SearchBar
             v-model:search="searchValue"
             @search="
-              (value) => $router.push({ name: 'search-value', params: { value } })
+              (value) =>
+                $router.push({ name: 'search-value', params: { value } })
             "
           />
           <!-- 标题 -->
@@ -104,10 +105,12 @@ export default {
             <NSpace :size="8">
               <!-- 年份骨架屏 -->
               <template v-if="loading.year">
-                <div
-                  class="inline-block w-16 h-7 bg-gray-300 dark:bg-zinc-800 animate-pulse"
-                  v-for="a in 19"
-                ></div>
+                <IndexSelectButton
+                  v-for="a in 25"
+                  class="animate-pulse text-white/0"
+                >
+                  2077年
+                </IndexSelectButton>
               </template>
               <!-- 年份内容 -->
               <template v-if="!loading.year" v-for="yearName in tabs.year">
@@ -126,12 +129,14 @@ export default {
           <NSpin :show="loading.type" class="my-4">
             <NSpace :size="8">
               <!-- 分类骨架屏 -->
-              <div class="leading-none" v-if="loading.type">
-                <div
-                  class="inline-block w-16 h-7 bg-gray-300 dark:bg-zinc-800 animate-pulse"
+              <template v-if="loading.type">
+                <IndexSelectButton
                   v-for="a in 9"
-                ></div>
-              </div>
+                  class="animate-pulse text-white/0"
+                >
+                  2077月
+                </IndexSelectButton>
+              </template>
               <!-- 分类内容 -->
               <template v-if="!loading.type" v-for="typeName in tabs.type">
                 <IndexSelectButton

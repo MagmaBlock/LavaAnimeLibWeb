@@ -3,8 +3,8 @@
     class="rounded cursor-pointer duration-100 px-2.5 py-1"
     :class="
       active
-        ? 'bg-blue-600 text-white'
-        : 'bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:active:bg-gray-500 dark:text-zinc-200'
+        ? 'bg-blue-600 text-white shadow'
+        : 'bg-zinc-100 hover:bg-zinc-200 active:bg-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:active:bg-zinc-600'
     "
   >
     <slot></slot>
