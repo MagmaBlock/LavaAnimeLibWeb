@@ -1,5 +1,3 @@
-<script setup></script>
-
 <template>
   <div>
     <!-- 手机 -->
@@ -44,9 +42,20 @@
             <NavBarIcon to="/" title="主页">
               <Icon name="fluent:home-24-regular" />
             </NavBarIcon>
-            <NavBarIcon to="/search" title="搜索">
-              <Icon name="fluent:search-24-regular" />
-            </NavBarIcon>
+            <NPopover
+              trigger="hover"
+              placement="right"
+              @update:show="closeCanceler"
+              ref="searchPop"
+            >
+              <template #trigger>
+                <NavBarIcon to="/search" title="搜索">
+                  <Icon name="fluent:search-24-regular" />
+                </NavBarIcon>
+              </template>
+              <!-- 在这里使用非异步的此组件，将导致 NuxtAPI 错误 -->
+              <LazyNavBarQuickSearch @close="closePop" ref="searchBar" />
+            </NPopover>
             <NavBarIcon to="/anime-index" title="索引">
               <Icon name="fluent:collections-24-regular" />
             </NavBarIcon>
@@ -63,3 +72,20 @@
     </div>
   </div>
 </template>
+
+<script setup>
+const searchPop = ref(null);
+const searchBar = ref(null);
+
+// 提供给搜索框的关闭 pop 用函数
+const closePop = () => {
+  if (searchPop.value instanceof NPopover) {
+    searchPop.value.setShow(false);
+  }
+};
+
+// 在搜索框焦点时，防止 pop 被关闭
+const closeCanceler = (value) => {
+  // TODO
+};
+</script>

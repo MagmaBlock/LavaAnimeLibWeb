@@ -23,7 +23,12 @@
               activeValue = -1;
             "
             :value="search"
-            @input="$emit('update:search', $event.target.value)"
+            @input="
+              emits(
+                'update:search',
+                ($event.target as InputHTMLAttributes).value
+              )
+            "
           />
         </template>
         <!-- 弹出总容器 -->
@@ -56,101 +61,104 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      showPre: false,
-      preSearchValues: [],
-      preSearchLock: false,
-      activeValue: -1,
-      haveFocused: false,
-    };
-  },
-  props: {
-    search: String,
-  },
-  emits: ["search", "update:search"],
-  watch: {
-    search(newV, oldV) {
-      // 监听搜索词改变
-      let search = newV.trim();
-      if (search) {
-        this.preSearch(search);
-      } else {
-        this.showPre = false;
-        this.preSearchValues = [];
-      }
-    },
-  },
-  methods: {
-    inputKeyHandler(key) {
-      if (key.key == "ArrowDown") {
-        key.preventDefault();
-        if (this.activeValue === -1) {
-          this.activeValue = 0;
-          return;
-        }
-        if (this.activeValue < this.preSearchValues.length - 1) {
-          this.activeValue++;
-        } else {
-          this.activeValue = -1;
-        }
-      }
-      if (key.key == "ArrowUp") {
-        key.preventDefault();
-        if (this.activeValue === -1) {
-          this.activeValue = this.preSearchValues.length - 1;
-          return;
-        }
-        if (this.activeValue > 0) {
-          this.activeValue--;
-        } else {
-          this.activeValue = -1;
-        }
-      }
-      if (key.key == "Enter") {
-        if (this.activeValue == -1) {
-          this.$emit("search", this.search);
-        } else {
-          this.$emit("search", this.preSearchValues[this.activeValue]);
-        }
-      }
-    },
-    focusHandler() {
-      this.haveFocused = true;
-      if (this.preSearchValues.length > 0) {
-        this.showPre = true;
-      }
-    },
-    async preSearch(value) {
-      value = value.trim();
-      if (!value || this.preSearchLock) return; // 如果搜索值为空或正在节流则不继续请求
-      this.preSearchLock = true; // Lock
-      try {
-        let results = (
-          await LavaAnimeAPI.get("/v2/search/quick", {
-            params: { value: value },
-          })
-        ).data;
-        // 如果有结果则显示结果
-        if (results.code == 200 && results.data.length > 0) {
-          this.preSearchValues = results.data;
-          if (this.haveFocused) this.showPre = true;
-          console.log(
-            `Received ${results.data.length} preSearchValues from server.`
-          );
-        } else {
-          this.showPre = false;
-          console.log("No preSearchValues, hide");
-        }
-      } catch (error) {
-        console.error("预搜索发生错误: ", error);
-      }
-      setTimeout(() => {
-        this.preSearchLock = false;
-      }, 500); // 0.5 秒可触发一次防止网络请求阻塞
-    },
-  },
+<script setup lang="ts">
+import type { AxiosResponse } from "axios";
+import type { InputHTMLAttributes } from "vue";
+
+const showPre = ref(false);
+const preSearchValues = ref([]);
+const preSearchLock = ref(false);
+const activeValue = ref(-1);
+const haveFocused = ref(false);
+
+const props = defineProps({
+  search: String,
+});
+
+const emits = defineEmits(["search", "update:search"]);
+
+watch(
+  () => props.search,
+  (newValue) => {
+    if (newValue === null || newValue === undefined) return;
+    let search = newValue.trim();
+    if (search) {
+      preSearch(search);
+    } else {
+      showPre.value = false;
+      preSearchValues.value = [];
+    }
+  }
+);
+
+const inputKeyHandler = (key: KeyboardEvent) => {
+  if (key.key == "ArrowDown") {
+    key.preventDefault();
+    if (activeValue.value === -1) {
+      activeValue.value = 0;
+      return;
+    }
+    if (activeValue.value < preSearchValues.value.length - 1) {
+      activeValue.value++;
+    } else {
+      activeValue.value = -1;
+    }
+  }
+  if (key.key == "ArrowUp") {
+    key.preventDefault();
+    if (activeValue.value === -1) {
+      activeValue.value = preSearchValues.value.length - 1;
+      return;
+    }
+    if (activeValue.value > 0) {
+      activeValue.value--;
+    } else {
+      activeValue.value = -1;
+    }
+  }
+  if (key.key == "Enter") {
+    if (activeValue.value == -1) {
+      emits("search", props.search);
+    } else {
+      emits("search", preSearchValues.value[activeValue.value]);
+    }
+  }
+};
+
+const focusHandler = () => {
+  haveFocused.value = true;
+  if (preSearchValues.value.length > 0) {
+    showPre.value = true;
+  }
+};
+
+const preSearch = async (value: string) => {
+  value = value.trim();
+  if (preSearchLock.value) return; // 如果搜索值为空或正在节流则不继续请求
+  preSearchLock.value = true; // Lock
+  try {
+    let results: AxiosResponse = await LavaAnimeAPI.get("/v2/search/quick", {
+      params: { value: value },
+    });
+    results = results.data;
+
+    // 如果有结果则显示结果
+    // @ts-expect-error
+    if (results?.code == 200 && results.data.length > 0) {
+      preSearchValues.value = results.data;
+      if (haveFocused.value) showPre.value = true;
+      console.log(
+        `Received ${results.data.length} preSearchValues from server.`
+      );
+    } else {
+      showPre.value = false;
+      console.log("No preSearchValues, hide");
+    }
+  } catch (error) {
+    console.error("预搜索发生错误: ", error);
+  }
+  setTimeout(() => {
+    preSearchLock.value = false;
+  }, 500); // 0.5 秒可触发一次防止网络请求阻塞
 };
 </script>
