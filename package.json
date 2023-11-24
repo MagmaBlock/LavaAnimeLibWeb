@@ -26,7 +26,7 @@
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/typography": "^0.5.10",
     "@vicons/material": "^0.12.0",
-    "@vitejs/plugin-vue": "^4.4.0",
+    "@vitejs/plugin-vue": "^4.5.0",
     "autoprefixer": "^10.4.16",
     "gravatar": "^1.8.2",
     "naive-ui": "^2.35.0",
