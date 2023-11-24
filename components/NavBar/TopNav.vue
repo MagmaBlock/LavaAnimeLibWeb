@@ -1,17 +1,15 @@
 <template>
   <div
-    class="sticky flex flex-nowrap h-12 z-10 select-none transition overflow-hidden bg-zinc-100 dark:bg-zinc-900"
+    class="flex flex-nowrap h-12 z-10 select-none overflow-hidden bg-zinc-50 dark:bg-zinc-900 backdrop-blur-2xl bg-opacity-75 dark:bg-opacity-75 backdrop-brightness-125"
   >
-    <div class="flex flex-nowarp">
-      <div
-        class="grid place-items-center w-12 h-full text-lg hover:bg-gray-200 dark:hover:bg-zinc-800 transition cursor-pointer"
-        @click="backHandler"
-      >
-        <Icon name="material-symbols:chevron-left" size="24" />
-      </div>
-      <div class="grid place-items-center h-full px-2 text-base">
-        {{ title }}
-      </div>
+    <div
+      class="grid place-items-center w-12 hover:bg-zinc-200 active:scale-90 dark:hover:bg-zinc-800 transition"
+      @click="backHandler"
+    >
+      <Icon name="material-symbols:chevron-left" size="24" />
+    </div>
+    <div class="grid place-items-center px-2 text-base">
+      {{ title }}
     </div>
   </div>
 </template>
