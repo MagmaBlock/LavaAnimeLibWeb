@@ -1,9 +1,7 @@
 <template>
   <ContainerPageMobileFull>
     <template #head>
-      <NavBarTopNav
-        class="sticky top-0 backdrop-blur-2xl bg-opacity-75 dark:bg-opacity-75"
-      />
+      <NavBarTopNav />
     </template>
     <NCard title="观看历史" :bordered="false" embedded>
       <template #header-extra>

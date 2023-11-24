@@ -29,7 +29,7 @@
           <img
             src="/icon.svg"
             alt="Logo"
-            class="w-10 h-10 rounded hover:brightness-105 transition"
+            class="w-10 h-10 rounded hover:brightness-90 active:scale-95 transition"
           />
         </NuxtLink>
       </div>
