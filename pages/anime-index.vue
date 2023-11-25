@@ -102,50 +102,52 @@ export default {
           <NH4 class="hidden lg:inline">按年份</NH4>
           <!-- 年份部分 -->
           <NSpin :show="loading.year" class="my-4">
+            <!-- 年份内容 -->
             <NSpace :size="8">
-              <!-- 年份骨架屏 -->
-              <template v-if="loading.year">
-                <IndexSelectButton
-                  v-for="a in 25"
-                  class="animate-pulse text-white/0"
-                >
-                  2077年
-                </IndexSelectButton>
-              </template>
-              <!-- 年份内容 -->
-              <template v-if="!loading.year" v-for="yearName in tabs.year">
-                <IndexSelectButton
-                  :active="selectedTab.year == yearName"
-                  @click="onTagClick(yearName, 'year')"
-                >
-                  {{ yearName }}
-                </IndexSelectButton>
-              </template>
+              <IndexSelectButton
+                v-if="!loading.year"
+                v-for="yearName in tabs.year"
+                :active="selectedTab.year == yearName"
+                @click="onTagClick(yearName, 'year')"
+              >
+                {{ yearName }}
+              </IndexSelectButton>
+            </NSpace>
+            <!-- 年份骨架屏 -->
+            <NSpace :size="8">
+              <IndexSelectButton
+                class="animate-pulse text-white/0"
+                v-if="loading.year"
+                v-for="a in 25"
+              >
+                2077年
+              </IndexSelectButton>
             </NSpace>
           </NSpin>
           <NDivider class="hidden lg:block" />
           <!-- 分类部分 -->
           <NH4 class="hidden lg:inline">季度、类型</NH4>
           <NSpin :show="loading.type" class="my-4">
+            <!-- 分类骨架屏 -->
             <NSpace :size="8">
-              <!-- 分类骨架屏 -->
-              <template v-if="loading.type">
-                <IndexSelectButton
-                  v-for="a in 9"
-                  class="animate-pulse text-white/0"
-                >
-                  2077月
-                </IndexSelectButton>
-              </template>
-              <!-- 分类内容 -->
-              <template v-if="!loading.type" v-for="typeName in tabs.type">
-                <IndexSelectButton
-                  :active="selectedTab.type == typeName"
-                  @click="onTagClick(typeName, 'type')"
-                >
-                  {{ typeName }}
-                </IndexSelectButton>
-              </template>
+              <IndexSelectButton
+                class="animate-pulse text-white/0"
+                v-if="loading.type"
+                v-for="a in 9"
+              >
+                2077月
+              </IndexSelectButton>
+            </NSpace>
+            <!-- 分类内容 -->
+            <NSpace :size="8">
+              <IndexSelectButton
+                v-if="!loading.type"
+                v-for="typeName in tabs.type"
+                :active="selectedTab.type == typeName"
+                @click="onTagClick(typeName, 'type')"
+              >
+                {{ typeName }}
+              </IndexSelectButton>
             </NSpace>
           </NSpin>
         </div>

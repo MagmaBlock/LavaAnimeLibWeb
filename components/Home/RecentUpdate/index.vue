@@ -97,8 +97,6 @@ try {
   }
 } catch (error) {}
 
-console.log(data.value);
-
 const getTimeInfo = (dateTime) => {
   const time = dayjs(dateTime);
 
