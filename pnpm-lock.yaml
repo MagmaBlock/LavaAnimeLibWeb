@@ -27,8 +27,8 @@ dependencies:
     specifier: ^5.3.0
     version: 5.3.0
   marked:
-    specifier: ^5.1.2
-    version: 5.1.2
+    specifier: ^11.0.1
+    version: 11.0.1
   pinia:
     specifier: ^2.1.7
     version: 2.1.7(vue@3.3.6)
@@ -2994,9 +2994,9 @@ packages:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.4.15
 
-  /marked@5.1.2:
-    resolution: {integrity: sha512-ahRPGXJpjMjwSOlBoTMZAK7ATXkli5qCPxZ21TG44rx1KEo44bii4ekgTDQPNRQ4Kh7JMb9Ub1PVk1NxRSsorg==}
-    engines: {node: '>= 16'}
+  /marked@11.0.1:
+    resolution: {integrity: sha512-P4kDhFEMlvLePBPRwOcMOv6+lYUbhfbSxJFs3Jb4Qx7v6K7l+k8Dxh9CEGfRvK71tL+qIFz5y7Pe4uzt4+/A3A==}
+    engines: {node: '>= 18'}
     hasBin: true
     dev: false
 
