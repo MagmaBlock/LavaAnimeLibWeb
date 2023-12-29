@@ -59,6 +59,10 @@ export default {
           link: "https://github.com/czy0729",
         },
         {
+          name: "MicTimo",
+          support: "￥66.00",
+        },
+        {
           name: "纯之",
           support: "其他",
           message: "提供部分网页和视频的加速服务节点",
