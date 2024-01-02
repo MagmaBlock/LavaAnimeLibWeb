@@ -57,7 +57,7 @@ const store = useAnimeStore();
 const { copy } = useClipboard();
 // 计算
 const getPath = computed(() => {
-  return `D:\\Downloads\\LavaAnimeLib\\${store.animeData?.index.year}\\${store.animeData?.index.type}\\${store.animeData?.index.name}`;
+  return `C:\\Users\\Administrator\\Downloads\\LavaAnimeLib\\${store.animeData?.index.year}\\${store.animeData?.index.type}\\${store.animeData?.index.name}`;
 });
 const getRuleName = computed(() => {
   let month = store.animeData?.index.type.match(/^\d{1,2}/);
