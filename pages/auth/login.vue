@@ -47,27 +47,13 @@ const login = async () => {
     return;
   }
   try {
-    let loginResult = await LavaAnimeAPI.post("/v2/user/login", {
+    let loginResult = await LavaAnimeAPI.post("/auth/login", {
       account: account.value,
       password: password.value,
     });
-    if (loginResult.data.code == 200) {
-      message.success(loginResult.data.message);
-      let token = loginResult.data.data.token;
-      localStorage.setItem("token", JSON.stringify(token));
-      router.push({ path: "/user" });
-    }
-  } catch (error) {
-    console.error(error);
-    if (error instanceof AxiosError) {
-      if (error.response?.data?.message) {
-        message.error(error.response?.data?.message);
-      } else if (error.message) {
-        message.error("无法发送网络请求: " + error.message);
-      }
-    } else {
-      message.error("发生意外错误");
-    }
-  }
+    message.success("登录成功, 欢迎回来, " + loginResult.data?.user?.name);
+    localStorage.setItem("token", JSON.stringify(loginResult.data.token));
+    router.push({ path: "/user" });
+  } catch (error) {}
 };
 </script>

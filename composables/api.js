@@ -11,24 +11,22 @@ const router = useRouter();
 
 // 请求前置 - 增加验证头
 LavaAnimeAPI.interceptors.request.use(function (config) {
-  config.headers.Authorization = getToken();
+  config.headers.Authorization = `Bearer ${getToken()}`;
   return config;
 });
 
 // 请求响应处理
 LavaAnimeAPI.interceptors.response.use(
   // 2xx
-  function (response) {
-    return response;
-  },
+  (response) => response,
   // !2xx
-  function (error) {
+  (error) => {
     // 请求可以在 config 中添加 noCatch 字段禁止错误处理
     if (error?.config?.noCatch) return Promise.reject(error);
     // 未登录处理
     if (error?.response?.status == 401) {
       localStorage.removeItem("token");
-      $message.warning("尚未登录...");
+      $message.warning("登录状态无效");
       router.push({ path: "/auth/login" });
     }
     // 网络错误
@@ -37,12 +35,12 @@ LavaAnimeAPI.interceptors.response.use(
       $message.error("无法连接到服务器");
     }
     // 含有错误信息的服务端响应
-    else if (error?.response?.data.message) {
+    else if (error.response?.data.message) {
       $message.error(error.response.data.message);
     }
     // 其他错误处理
     else {
-      console.error("后端请求错误", error);
+      console.error("请求后端错误", error);
     }
     return Promise.reject(error);
   }

@@ -50,34 +50,31 @@ const register = async () => {
       return;
     }
 
-    let regResult = await LavaAnimeAPI.post("/v2/user/register", {
+    const regResult = await LavaAnimeAPI.post("/auth/register", {
       email: email.value,
       password: password.value,
       name: name.value,
       inviteCode: inviteCode.value,
     });
-    if (regResult.data.code == 200) {
-      // 成功注册
-      message.success(regResult.data.message);
-      // 开始尝试登录
-      let loginResult = await LavaAnimeAPI.post("/v2/user/login", {
-        account: email.value,
-        password: password.value,
-      });
-      if (loginResult.data.code == 200) {
-        // 成功登录
-        message.success(loginResult.data.message);
-        let token = loginResult.data.data.token;
-        localStorage.setItem("token", JSON.stringify(token));
-        router.push({ path: "/user" });
-      } else {
-        // 注册成功但是登录失败？
-        router.push({ path: "/login" });
-        message.error("注册成功但是登录失败？不管了，先把你传送到登录页");
-      }
-    }
-  } catch (error) {
-    // 失败
-  }
+    message.success("注册成功");
+    console.log(regResult);
+
+    // // 开始尝试登录
+    // let loginResult = await LavaAnimeAPI.post("/v2/user/login", {
+    //   account: email.value,
+    //   password: password.value,
+    // });
+    // if (loginResult.data.code == 200) {
+    //   // 成功登录
+    //   message.success(loginResult.data.message);
+    //   let token = loginResult.data.data.token;
+    //   localStorage.setItem("token", JSON.stringify(token));
+    //   router.push({ path: "/user" });
+    // } else {
+    //   // 注册成功但是登录失败？
+    //   router.push({ path: "/login" });
+    //   message.error("注册成功但是登录失败？不管了，先把你传送到登录页");
+    // }
+  } catch (error) {}
 };
 </script>
