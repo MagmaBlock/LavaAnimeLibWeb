@@ -86,8 +86,8 @@ devDependencies:
     specifier: ^3.4.1
     version: 3.4.1
   unplugin-vue-components:
-    specifier: ^0.25.2
-    version: 0.25.2(rollup@2.79.1)(vue@3.4.10)
+    specifier: ^0.26.0
+    version: 0.26.0(rollup@2.79.1)(vue@3.4.10)
   vite:
     specifier: ^4.5.1
     version: 4.5.1
@@ -4023,8 +4023,8 @@ packages:
     engines: {node: '>= 10.0.0'}
     dev: true
 
-  /unplugin-vue-components@0.25.2(rollup@2.79.1)(vue@3.4.10):
-    resolution: {integrity: sha512-OVmLFqILH6w+eM8fyt/d/eoJT9A6WO51NZLf1vC5c1FZ4rmq2bbGxTy8WP2Jm7xwFdukaIdv819+UI7RClPyCA==}
+  /unplugin-vue-components@0.26.0(rollup@2.79.1)(vue@3.4.10):
+    resolution: {integrity: sha512-s7IdPDlnOvPamjunVxw8kNgKNK8A5KM1YpK5j/p97jEKTjlPNrA0nZBiSfAKKlK1gWZuyWXlKL5dk3EDw874LQ==}
     engines: {node: '>=14'}
     peerDependencies:
       '@babel/parser': ^7.15.8
