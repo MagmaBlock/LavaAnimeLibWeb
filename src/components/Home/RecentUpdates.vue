@@ -79,11 +79,10 @@
 </template>
 
 <script setup>
-import dayjs from "dayjs";
 import { ref, onMounted } from "vue";
-import calendar from "dayjs/plugin/calendar";
 import { LavaAnimeAPI } from "../../common/api.js";
-dayjs.extend(calendar);
+import moment from "moment";
+import "moment/dist/locale/zh-cn";
 
 const data = ref([]);
 
@@ -103,8 +102,6 @@ onMounted(async () => {
 });
 
 const getTimeInfo = (dateTime) => {
-  const time = dayjs(dateTime);
-
-  return time.calendar();
+  return moment(dateTime).locale("zh-cn").calendar();
 };
 </script>
