@@ -9,6 +9,7 @@
         <MyViewHistory />
         <MyFollow />
         <AdminLinks :withCard="true" />
+        <VideoTogether />
       </div>
     </div>
   </ContainerMobileFull>
@@ -22,6 +23,7 @@ import FunctionsCard from "../../components/My/FunctionsCard.vue";
 import MyViewHistory from "../../components/My/ViewHistory/MyViewHistory.vue";
 import MyFollow from "../../components/My/MyFollow.vue";
 import AdminLinks from "../../components/Admin/AdminLinks.vue";
+import VideoTogether from "../../components/My/VideoTogether.vue";
 
 onMounted(() => {
   document.title = "我的 | 熔岩番剧库 LavaAnimeLib";
