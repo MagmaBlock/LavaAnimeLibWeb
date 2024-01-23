@@ -14,6 +14,18 @@
       在右下角悬浮窗中创建房间，并与其他用户分享您的房间。
     </NP>
 
+    <n-collapse>
+      <n-collapse-item title="如何使用？">
+        <div>打开下方开关后，您应该能在浏览器右下角看到一个图标，点击打开。由房主设备创建一个房间，其他观众仅需同样在番剧库打开此功能后进入房间。从机会自动同步房主的浏览操作。建议您和其他观众连麦以获得更佳体验。</div>
+      </n-collapse-item>
+      <n-collapse-item title="播放时，非房主无法操作？">
+        <div>这是正常现象，您的进度条会持续和主机同步。</div>
+      </n-collapse-item>
+      <n-collapse-item title="播放的话数/视频不同怎么办？">
+        <div>由于技术实现原因，可能出现您和主机播放话数/视频不同的情况。请与主机沟通确保播放了同一个视频。</div>
+      </n-collapse-item>
+    </n-collapse>
+
     <template #action>
       <NSwitch v-model:value="isEnable" />
     </template>
