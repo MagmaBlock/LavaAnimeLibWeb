@@ -27,8 +27,8 @@ dependencies:
     specifier: ^5.5.0
     version: 5.5.0
   marked:
-    specifier: ^5.1.2
-    version: 5.1.2
+    specifier: ^12.0.0
+    version: 12.0.0
   moment:
     specifier: ^2.30.1
     version: 2.30.1
@@ -3081,9 +3081,9 @@ packages:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.4.15
 
-  /marked@5.1.2:
-    resolution: {integrity: sha512-ahRPGXJpjMjwSOlBoTMZAK7ATXkli5qCPxZ21TG44rx1KEo44bii4ekgTDQPNRQ4Kh7JMb9Ub1PVk1NxRSsorg==}
-    engines: {node: '>= 16'}
+  /marked@12.0.0:
+    resolution: {integrity: sha512-Vkwtq9rLqXryZnWaQc86+FHLC6tr/fycMfYAhiOIXkrNmeGAyhSxjqu0Rs1i0bBqw5u0S7+lV9fdH2ZSVaoa0w==}
+    engines: {node: '>= 18'}
     hasBin: true
     dev: false
 
