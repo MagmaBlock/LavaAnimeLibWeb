@@ -8,9 +8,10 @@
         {{ sponsor.support }}
       </div>
     </div>
-    <div class="text-gray-600 dark:text-zinc-400 text-xs px-2 overflow-hidden">
-      {{ sponsor.message }}
-    </div>
+    <div
+      class="text-gray-600 dark:text-zinc-400 text-xs px-2 overflow-hidden"
+      v-html="sponsor.message"
+    ></div>
     <a
       target="_blank"
       :href="sponsor.link"

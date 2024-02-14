@@ -22,7 +22,7 @@
                   {{ sponsor.support }}
                 </div>
               </template>
-              {{ sponsor.message || "没有留言" }}
+              <p v-html="sponsor.message"></p>
               <template #action>
                 <n-a v-if="sponsor.link" :href="sponsor.link" target="_blank"
                   >查看附加的链接</n-a
@@ -48,16 +48,17 @@ export default {
         {
           name: "Arthals",
           support: "￥1111.00",
-          message: "111 大哥真给看吗",
+          message: "111 大哥真给看吗 <br> (包含非番剧库赞助)",
           link: "https://arthals.ink/",
+        },
+        {
+          name: "czy0729",
+          support: "￥367.98",
+          message: "(包含非番剧库赞助)",
+          link: "https://github.com/czy0729",
         },
         { name: "小林", support: "￥300.00" },
         { name: "Longtianmu", support: "￥240", link: "https://ltm.ink/" },
-        {
-          name: "czy0729",
-          support: "￥199.98",
-          link: "https://github.com/czy0729",
-        },
         {
           name: "MicTimo",
           support: "￥66.00",
@@ -92,13 +93,20 @@ export default {
           link: "https://arthals.ink/",
         },
         { name: "Loliy", support: "￥23.00", message: "喝快乐水" },
+        { name: "射命墨瑟", support: "￥9.00", message: "(包含非番剧库赞助)" },
       ],
     };
   },
   mounted() {
-    let model = { name: "", support: "", link: "", message: "" }; // 兜底模板防 undefined
     this.sponsorsRaw.forEach((sponsor) => {
-      this.sponsors.push({ ...model, ...sponsor, showModal: ref(false) });
+      this.sponsors.push({
+        name: "",
+        support: "",
+        link: "",
+        message: "",
+        ...sponsor,
+        showModal: ref(false),
+      });
     });
   },
   components: { SponsorCard },
