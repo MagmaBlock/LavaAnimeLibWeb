@@ -6,12 +6,12 @@
     embedded
     v-if="
       userStore.userInfo?.data?.permission?.admin ||
-      route.name.startsWith('Admin')
+      route.name.startsWith('admin')
     "
   >
     <NSpace>
       <template v-for="tab in tabs">
-        <RouterLink :to="{ path: tab.routeName }">
+        <RouterLink :to="{ name: tab.routeName }">
           <NButton strong secondary>
             {{ tab.name }}
           </NButton>
@@ -35,8 +35,8 @@ defineProps({
 });
 
 const tabs = [
-  { name: "主页头图", routeName: "AdminHeader" },
-  { name: "邀请码管理", routeName: "AdminInvite" },
-  { name: "索引页活动", routeName: "AdminIndexActivity" },
+  { name: "主页头图", routeName: "admin-header" },
+  { name: "邀请码管理", routeName: "admin-invite" },
+  { name: "索引页活动", routeName: "admin-index-activity" },
 ];
 </script>
