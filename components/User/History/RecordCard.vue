@@ -72,9 +72,8 @@
 </template>
 
 <script setup>
-import dayjs from "dayjs";
-import calendar from "dayjs/plugin/calendar";
-dayjs.extend(calendar);
+import moment from "moment";
+import "moment/dist/locale/zh-cn";
 
 const props = defineProps({
   record: {
@@ -103,8 +102,6 @@ const getMins = (seconds) => {
 };
 
 const getTimeInfo = computed(() => {
-  const time = dayjs(record.value.lastReportTime);
-
-  return time.calendar();
+  return moment(record.value.lastReportTime).locale("zh-cn").calendar();
 });
 </script>

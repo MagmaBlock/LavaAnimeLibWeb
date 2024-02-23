@@ -80,9 +80,8 @@
 </template>
 
 <script setup>
-import dayjs from "dayjs";
-import calendar from "dayjs/plugin/calendar";
-dayjs.extend(calendar);
+import moment from "moment";
+import "moment/dist/locale/zh-cn";
 
 const data = ref([]);
 
@@ -98,9 +97,7 @@ try {
 } catch (error) {}
 
 const getTimeInfo = (dateTime) => {
-  const time = dayjs(dateTime);
-
-  return time.calendar();
+  return moment(dateTime).locale("zh-cn").calendar();
 };
 
 // interface RecentUpdate {

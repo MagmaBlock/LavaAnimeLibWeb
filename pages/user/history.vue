@@ -14,7 +14,7 @@
           </template>
         </NButton>
       </template>
-      <TransitionGroup name="fade" class="relative">
+      <Transition name="fade" class="relative">
         <!-- 正常数据 -->
         <div v-if="data.length">
           <template v-for="(historyInDay, index) in groupedData">
@@ -29,9 +29,9 @@
             <UniListShowMore :onSee="getMoreHistory" v-else-if="!ended" />
           </template>
         </div>
-        <!-- 空状态 -->
-        <NEmpty v-if="!data.length && !loading" description="什么也没有看过" />
-      </TransitionGroup>
+      </Transition>
+      <!-- 空状态 -->
+      <NEmpty v-if="!data.length && !loading" description="什么也没有看过" />
     </NCard>
     <NBackTop :bottom="120" />
   </ContainerPageMobileFull>
