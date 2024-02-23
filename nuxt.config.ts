@@ -95,4 +95,10 @@ export default defineNuxtConfig({
       enabled: false,
     },
   },
+  vite: {
+    build: {
+      target: ["chrome71"],
+      sourcemap: true,
+    },
+  },
 });
