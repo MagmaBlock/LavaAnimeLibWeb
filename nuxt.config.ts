@@ -44,6 +44,10 @@ export default defineNuxtConfig({
           href: "https://registry.npmmirror.com/bootstrap-icons/1.10.5/files/font/bootstrap-icons.min.css",
           crossorigin: "anonymous",
         },
+        {
+          rel: "manifest",
+          href: "manifest.webmanifest",
+        },
       ],
       script: [
         {
