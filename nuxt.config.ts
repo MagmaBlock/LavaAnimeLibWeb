@@ -64,7 +64,7 @@ export default defineNuxtConfig({
       ],
     },
     workbox: {
-      globPatterns: ["**/*.{js,css,ico,png,svg}"],
+      globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
     },
     devOptions: {
       enabled: false,
