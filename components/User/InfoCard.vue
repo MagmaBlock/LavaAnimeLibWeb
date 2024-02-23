@@ -61,7 +61,14 @@ const logoutMenu = [
   {
     label: "在当前设备上登出",
     key: false,
-    icon: () => <Icon name="material-symbols:logout" size="18" />,
+    icon: () => (
+      <Icon name="material-symbols:laptop-windows-outline" size="18" />
+    ),
+  },
+  {
+    label: "在所有设备上登出",
+    key: true,
+    icon: () => <Icon name="material-symbols:devices-other" size="18" />,
   },
 ];
 
