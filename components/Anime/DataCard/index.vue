@@ -13,9 +13,13 @@ const showTools = ref(false);
     <div class="pb-2 text-sm text-gray-500">
       <NuxtLink :to="{ path: '/anime-index' }">
         {{ store.animeData?.index.year }}
-        <i class="bi bi-chevron-right text-xs"></i>
+        <span class="text-xs inline-block">
+          <Icon name="bi-chevron-right"></Icon>
+        </span>
         {{ store.animeData?.index.type }}
-        <i class="bi bi-chevron-right text-xs"></i>
+        <span class="text-xs inline-block">
+          <Icon name="bi-chevron-right"></Icon>
+        </span>
       </NuxtLink>
       <!-- 番剧库运营工具 -->
       <span
