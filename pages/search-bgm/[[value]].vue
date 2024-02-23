@@ -26,17 +26,17 @@
           <template #icon>
             <Icon name="material-symbols:info" />
           </template>
-          <a href="https://bgm.tv/" target="_blank" rel="noopener noreferrer">
+          <NA href="https://bgm.tv/" target="_blank" rel="noopener noreferrer">
             Bangumi
-          </a>
+          </NA>
           是由
-          <a
+          <NA
             href="https://bgm.tv/user/Sai"
             target="_blank"
             ref="noopener noreferrer"
           >
             Sai
-          </a>
+          </NA>
           于桂林发起的 ACG 分享与交流项目。目前已是中文最全 ACGN
           资料库。番剧库中的番剧几乎均关联了 Bangumi 的相关条目。<br /><br />
           如果您正在使用 czy0729 开发的第三方 Bangumi 客户端，您可以在客户端的
