@@ -36,7 +36,7 @@ export default defineNuxtConfig({
       ],
       link: [
         { rel: "icon", href: "/favicon.ico" },
-        { rel: "apple-touch-icon", href: "apple-touch-icon.png" },
+        { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
         {
           rel: "preload",
           as: "style",
@@ -46,7 +46,7 @@ export default defineNuxtConfig({
         },
         {
           rel: "manifest",
-          href: "manifest.webmanifest",
+          href: "/manifest.webmanifest",
         },
       ],
       script: [
