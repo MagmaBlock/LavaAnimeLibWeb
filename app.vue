@@ -6,6 +6,7 @@
           <NuxtPage />
         </NuxtLayout>
       </DefaultLayout>
+      <VideoTogetherProvider />
     </NaiveUIProvider>
   </ThemeProvider>
 </template>
