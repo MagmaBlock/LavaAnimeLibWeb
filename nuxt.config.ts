@@ -23,13 +23,15 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      link: [
+      script: [
         {
-          rel: "preload",
-          as: "style",
-          onload: "this.rel='stylesheet'",
-          href: "https://registry.npmmirror.com/bootstrap-icons/1.10.5/files/font/bootstrap-icons.min.css",
-          crossorigin: "anonymous",
+          async: true,
+          src: "https://umami.magma.ink/script.js",
+          "data-website-id": "bcf9db29-ac5a-449c-a35d-259655934be1",
+        },
+        {
+          async: true,
+          src: "https://hm.baidu.com/hm.js?c3b6ee9c2eff1642f7465f8e97766227",
         },
       ],
     },
