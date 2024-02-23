@@ -60,93 +60,84 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import gravatar from "gravatar";
+
 definePageMeta({
   layout: "user-info",
 });
 
-import gravatar from "gravatar";
+const userStore = useUserStore();
+userStore.getUserInfo();
 
-export default {
-  data() {
-    return {
-      type: "url",
-      newAvatarURL: "",
-      qqNumber: "",
-      gravatarEmail: "",
-      gravatarHost: "https://gravatar.loli.net",
-      gravatarHostOptions: [
-        {
-          label: "sm.ms 镜像 (loli.net)",
-          value: "https://gravatar.loli.net",
-        },
-        {
-          label: "极客族镜像",
-          value: "https://sdn.geekzu.org",
-        },
-        {
-          label: "Cravatar 镜像",
-          value: "https://cravatar.cn",
-        },
-        {
-          label: "webp.se 镜像",
-          value: "https://gravatar.webp.se",
-        },
-        {
-          label: "WordPress 官方 (大陆被墙)",
-          value: "default",
-        },
-      ],
-    };
+const newAvatarURL = ref("");
+const qqNumber = ref("");
+const gravatarEmail = ref("");
+const gravatarHost = ref("https://gravatar.loli.net");
+const gravatarHostOptions = ref([
+  {
+    label: "sm.ms 镜像 (loli.net)",
+    value: "https://gravatar.loli.net",
   },
-  setup() {
-    const userStore = useUserStore();
-    userStore.getUserInfo();
-    return { userStore };
+  {
+    label: "极客族镜像",
+    value: "https://sdn.geekzu.org",
   },
-  watch: {
-    qqNumber(value) {
-      this.newAvatarURL = `https://q.qlogo.cn/g?b=qq&nk=${value}&s=640`;
-    },
-    gravatarEmail() {
-      this.newAvatarURL = this.generateGravatarUrl();
-    },
-    gravatarHost() {
-      this.newAvatarURL = this.generateGravatarUrl();
-    },
+  {
+    label: "Cravatar 镜像",
+    value: "https://cravatar.cn",
   },
-  methods: {
-    async saveAvatar() {
-      try {
-        let result = await LavaAnimeAPI.post("/v2/user/info/avatar", {
-          url: this.newAvatarURL,
-        });
-        if (result.data.code == 200) {
-          $message.success(result.data.message);
-        }
-      } catch (error) {}
-    },
-    generateGravatarUrl() {
-      let url = gravatar.url(this.gravatarEmail, {
-        s: "400",
-        protocol: "https",
-      });
-      let urlPath = new URL(url).pathname + new URL(url).search;
-      if (this.gravatarHost == "default") {
-        return url;
-      } else {
-        return this.gravatarHost + urlPath;
-      }
-    },
+  {
+    label: "webp.se 镜像",
+    value: "https://gravatar.webp.se",
   },
-  computed: {
-    avatarUrl() {
-      return (
-        this.newAvatarURL ||
-        this.userStore.userInfo.data?.avatar?.url ||
-        "/Transparent_Akkarin.jpg"
-      );
-    },
+  {
+    label: "WordPress 官方 (大陆被墙)",
+    value: "default",
   },
-};
+]);
+
+watch(qqNumber, (value) => {
+  newAvatarURL.value = `https://q.qlogo.cn/g?b=qq&nk=${value}&s=640`;
+});
+
+watch(gravatarEmail, () => {
+  newAvatarURL.value = generateGravatarUrl();
+});
+
+watch(gravatarHost, () => {
+  newAvatarURL.value = generateGravatarUrl();
+});
+
+async function saveAvatar() {
+  try {
+    let result = await LavaAnimeAPI.post("/v2/user/info/avatar", {
+      url: newAvatarURL.value,
+    });
+    if (result.data.code == 200) {
+      $message.success(result.data.message);
+    }
+  } catch (error) {}
+}
+
+function generateGravatarUrl() {
+  let url = gravatar.url(gravatarEmail.value, {
+    s: "400",
+    protocol: "https",
+  });
+  let urlPath = new URL(url).pathname + new URL(url).search;
+  if (gravatarHost.value == "default") {
+    return url;
+  } else {
+    return gravatarHost.value + urlPath;
+  }
+}
+
+const avatarUrl = computed(() => {
+  return (
+    newAvatarURL.value ||
+    userStore.userInfo.data?.avatar?.url ||
+    "/Transparent_Akkarin.jpg"
+  );
+});
 </script>
