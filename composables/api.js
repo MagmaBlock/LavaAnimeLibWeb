@@ -1,3 +1,4 @@
+import { useThrottleFn } from "@vueuse/core";
 import axios from "axios";
 
 export const apiBaseUrl = useRuntimeConfig().public.apiBaseUrl;
@@ -7,7 +8,10 @@ export const LavaAnimeAPI = axios.create({
   baseURL: apiBaseUrl,
 });
 
-const router = useRouter();
+const goToLogin = useThrottleFn(() => {
+  $message.warning("尚未登录...");
+  useRouter().push({ path: "/auth/login" });
+}, 5000);
 
 // 请求前置 - 增加验证头
 LavaAnimeAPI.interceptors.request.use(function (config) {
@@ -28,8 +32,7 @@ LavaAnimeAPI.interceptors.response.use(
     // 未登录处理
     if (error?.response?.status == 401) {
       localStorage.removeItem("token");
-      $message.warning("尚未登录...");
-      router.push({ path: "/auth/login" });
+      goToLogin();
     }
     // 网络错误
     else if (error.code == "ERR_NETWORK") {
