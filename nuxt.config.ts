@@ -37,6 +37,13 @@ export default defineNuxtConfig({
       link: [
         { rel: "icon", href: "/favicon.ico" },
         { rel: "apple-touch-icon", href: "apple-touch-icon.png" },
+        {
+          rel: "preload",
+          as: "style",
+          onload: "this.rel='stylesheet'",
+          href: "https://registry.npmmirror.com/bootstrap-icons/1.10.5/files/font/bootstrap-icons.min.css",
+          crossorigin: "anonymous",
+        },
       ],
       script: [
         {
