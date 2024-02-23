@@ -56,7 +56,7 @@ export default defineNuxtConfig({
     shim: false,
   },
   pwa: {
-    registerType: "autoUpdate",
+    registerType: "prompt",
     includeAssets: ["favicon.ico", "icon.svg", "apple-touch-icon.png"],
     manifest: {
       name: "熔岩番剧库",
