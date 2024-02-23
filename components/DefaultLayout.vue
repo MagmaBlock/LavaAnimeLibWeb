@@ -33,8 +33,7 @@ const background = useBackgroundStore();
 
 useHeadSafe({
   bodyAttrs: {
-    class:
-      "bg-white dark:bg-[#101014] text-gray-800 dark:text-zinc-200 select-none",
+    class: "dark:bg-[#101014] text-gray-800 dark:text-zinc-200 select-none",
   },
 });
 </script>
