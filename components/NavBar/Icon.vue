@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 const route = useRoute();
 
 const props = defineProps({
@@ -8,15 +8,15 @@ const props = defineProps({
     default: "图标",
   },
   // 目标路径
-  to: {
+  name: {
     type: String,
-    default: "/",
+    default: "index",
   },
 });
 
 // 根据路由点亮图标
 const colorClass = computed(() => {
-  return route.path == props.to
+  return route.name == props.name
     ? "text-blue-600 dark:text-blue-500"
     : "text-gray-500 dark:text-gray-400";
 });
@@ -24,7 +24,11 @@ const colorClass = computed(() => {
 
 <template>
   <div class="w-full self-center">
-    <NuxtLink :to="to" :class="colorClass" class="text-center duration-200">
+    <NuxtLink
+      :to="{ name }"
+      :class="colorClass"
+      class="text-center duration-200"
+    >
       <div
         class="lg:mx-2 lg:py-2 lg:hover:bg-zinc-200 lg:dark:hover:bg-zinc-800 rounded"
       >

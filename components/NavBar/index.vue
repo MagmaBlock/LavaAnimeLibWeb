@@ -5,16 +5,16 @@
       <div
         class="w-full py-2 px-2 place-self-center grid grid-cols-4 bg-white dark:bg-zinc-800 border dark:border-zinc-700 bg-opacity-80 dark:bg-opacity-75 backdrop-blur-lg backdrop-brightness-90 dark:backdrop-brightness-75 shadow-md rounded select-none"
       >
-        <NavBarIcon to="/" title="主页">
+        <NavBarIcon name="index" title="主页">
           <Icon name="fluent:home-24-regular" />
         </NavBarIcon>
-        <NavBarIcon to="/search" title="搜索">
+        <NavBarIcon name="search-value" title="搜索">
           <Icon name="fluent:search-24-regular" />
         </NavBarIcon>
-        <NavBarIcon to="/anime-index" title="索引">
+        <NavBarIcon name="anime-index" title="索引">
           <Icon name="fluent:collections-24-regular" />
         </NavBarIcon>
-        <NavBarIcon to="/user" title="我的">
+        <NavBarIcon name="user" title="我的">
           <Icon name="fluent:library-24-regular" />
         </NavBarIcon>
       </div>
@@ -39,27 +39,27 @@
       >
         <NScrollbar>
           <div class="grid grid-cols-1 gap-y-2">
-            <NavBarIcon to="/" title="主页">
+            <NavBarIcon name="index" title="主页">
               <Icon name="fluent:home-24-regular" />
             </NavBarIcon>
-            <NPopover
+            <!-- <NPopover
               trigger="hover"
               placement="right"
               @update:show="closeCanceler"
               ref="searchPop"
-            >
-              <template #trigger>
-                <NavBarIcon to="/search" title="搜索">
-                  <Icon name="fluent:search-24-regular" />
-                </NavBarIcon>
-              </template>
-              <!-- 在这里使用非异步的此组件，将导致 NuxtAPI 错误 -->
-              <LazyNavBarQuickSearch @close="closePop" ref="searchBar" />
-            </NPopover>
-            <NavBarIcon to="/anime-index" title="索引">
+            > -->
+            <!-- <template #trigger> -->
+            <NavBarIcon name="search-value" title="搜索">
+              <Icon name="fluent:search-24-regular" />
+            </NavBarIcon>
+            <!-- </template> -->
+            <!-- 在这里使用非异步的此组件，将导致 NuxtAPI 错误 -->
+            <!-- <LazyNavBarQuickSearch @close="closePop" ref="searchBar" /> -->
+            <!-- </NPopover> -->
+            <NavBarIcon name="anime-index" title="索引">
               <Icon name="fluent:collections-24-regular" />
             </NavBarIcon>
-            <NavBarIcon to="/user" title="我的">
+            <NavBarIcon name="user" title="我的">
               <Icon name="fluent:library-24-regular" />
             </NavBarIcon>
           </div>
