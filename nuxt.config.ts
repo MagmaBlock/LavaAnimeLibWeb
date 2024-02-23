@@ -24,6 +24,21 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
+      title: "Loading... | 熔岩番剧库 LavaAnimeLib",
+      meta: [
+        {
+          name: "description",
+          content: "熔岩番剧库 LavaAnimeLib",
+        },
+        {
+          name: "theme-color",
+          content: "#ffffff",
+        },
+      ],
+      link: [
+        { rel: "icon", href: "/favicon.ico" },
+        { rel: "apple-touch-icon", href: "apple-touch-icon.png" },
+      ],
       script: [
         {
           async: true,
