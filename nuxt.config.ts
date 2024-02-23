@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@pinia-plugin-persistedstate/nuxt",
     "@nuxt/image",
+    "@vite-pwa/nuxt",
     // "nuxt-icon",
   ],
   runtimeConfig: {
@@ -39,5 +40,34 @@ export default defineNuxtConfig({
   css: ["~/assets/css/scrollbar.css", "~/assets/css/transition.css"],
   typescript: {
     shim: false,
+  },
+  pwa: {
+    registerType: "autoUpdate",
+    includeAssets: ["favicon.ico", "icon.svg", "apple-touch-icon.png"],
+    manifest: {
+      name: "熔岩番剧库",
+      short_name: "熔岩番剧库",
+      description: "熔岩番剧库 LavaAnimeLib",
+      theme_color: "#ffffff",
+      icons: [
+        {
+          src: "pwa-192x192.png",
+          sizes: "192x192",
+          type: "image/png",
+        },
+        {
+          src: "pwa-512x512.png",
+          sizes: "512x512",
+          type: "image/png",
+          purpose: "any maskable",
+        },
+      ],
+    },
+    workbox: {
+      globPatterns: ["**/*.{js,css,ico,png,svg}"],
+    },
+    devOptions: {
+      enabled: false,
+    },
   },
 });
