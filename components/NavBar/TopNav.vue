@@ -6,7 +6,7 @@
       class="grid place-items-center w-12 hover:bg-zinc-200 active:scale-90 dark:hover:bg-zinc-800 transition"
       @click="backHandler"
     >
-      <Icon name="material-symbols:chevron-left" size="24" />
+      <Icon name="material-symbols:chevron-left" size="24"></Icon>
     </div>
     <div class="grid place-items-center px-2 text-base">
       {{ title }}
