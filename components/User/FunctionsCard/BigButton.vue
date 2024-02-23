@@ -2,7 +2,7 @@
   <span>
     <!-- 宽屏 -->
     <div
-      class="hidden sm:grid py-4 rounded transition hover:bg-zinc-200 dark:hover:bg-zinc-800 active:scale-95"
+      class="hidden sm:grid py-4 rounded-md transition hover:bg-zinc-200 dark:hover:bg-zinc-800 active:scale-95"
     >
       <div
         class="grid place-items-center text-gray-700 dark:text-zinc-100 text-xs w-full text-center"

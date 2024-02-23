@@ -1,6 +1,6 @@
 <template>
   <div
-    class="grid grid-cols-1 gap-2 px-4 py-2 bg-zinc-50 dark:bg-zinc-900 rounded"
+    class="grid grid-cols-1 gap-2 px-4 py-2 bg-zinc-50 dark:bg-zinc-900 sm:rounded-md"
   >
     <slot name="header"></slot>
     <div>

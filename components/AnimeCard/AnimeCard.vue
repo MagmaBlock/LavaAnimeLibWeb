@@ -28,7 +28,7 @@ const posterUrl = computed(() => {
 <template>
   <!-- 卡片 -->
   <div
-    class="relative box-content overflow-hidden select-none rounded transition ease-out border-2 border-white/0 hover:border-2 hover:border-blue-600 hover:lg:brightness-90"
+    class="relative box-content overflow-hidden select-none rounded-md transition ease-out border-2 border-white/0 hover:border-2 hover:border-blue-600 hover:lg:brightness-90"
     @contextmenu="handleMenu"
   >
     <div class="absolute h-full w-full bg-gray-100 dark:bg-gray-500"></div>

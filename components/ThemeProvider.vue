@@ -38,7 +38,8 @@ const themeOverrides = {
     primaryColorHover: "#4098FCFF",
     primaryColorPressed: "#1060C9FF",
     primaryColorSuppl: "#4098FCFF",
-    borderRadius: "4px",
+    borderRadius: "6px",
+    borderRadiusSmall: "4px",
   },
 };
 

@@ -3,7 +3,7 @@
     <!-- 浏览器升级提示 -->
     <div
       v-if="notSupport"
-      class="bg-orange-100 dark:bg-orange-950 p-4 text-xs lg:rounded lg:mb-4 select-all"
+      class="bg-orange-100 dark:bg-orange-950 p-4 text-xs lg:rounded-md lg:mb-4 select-all"
     >
       当前浏览器内核 {{ ua.getEngine().name }}
       {{ ua.getEngine().version }} 过旧，界面样式和功能可能发生异常。<br />

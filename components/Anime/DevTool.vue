@@ -1,5 +1,5 @@
 <template>
-  <AnimeCardBasic class="mb-4">
+  <AnimeCardBasic>
     <NSpace :align="'center'">
       <div class="font-bold">Debug</div>
       <NDivider vertical />

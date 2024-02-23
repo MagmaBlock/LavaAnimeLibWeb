@@ -18,7 +18,7 @@
           <span class="mr-2"
             ><i class="bi bi-star"></i> ... 分
             <span
-              class="bg-gray-100 text-black dark:bg-zinc-700 dark:text-zinc-200 rounded px-1.5 text-xs align-baseline"
+              class="bg-gray-100 text-black dark:bg-zinc-700 dark:text-zinc-200 rounded-md px-1.5 text-xs align-baseline"
             >
               Rank.#...
             </span>

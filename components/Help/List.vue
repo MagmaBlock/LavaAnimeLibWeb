@@ -2,7 +2,7 @@
   <div class="max-h-96">
     <div class="text-lg font-medium">帮助列表</div>
     <div class="text-xs my-2 text-gray-500">在这里你可以获取到一些帮助</div>
-    <div class="mt-4 bg-gray-100 dark:bg-zinc-800 rounded overflow-hidden">
+    <div class="mt-4 bg-gray-100 dark:bg-zinc-800 rounded-md overflow-hidden">
       <div
         class="text-sm py-2 px-4 font-medium hover:bg-gray-200 active:bg-gray-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:active:bg-zinc-700"
         v-for="thisArt in articles"

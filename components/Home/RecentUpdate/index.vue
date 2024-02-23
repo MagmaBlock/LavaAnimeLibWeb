@@ -1,7 +1,7 @@
 <template>
   <NCard title="近期更新" embedded :bordered="false">
     <div
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4"
     >
       <!-- 每个更新卡片 -->
       <NuxtLink
@@ -16,7 +16,7 @@
               }
             : {}
         "
-        class="grid grid-cols-3 place-items-start rounded overflow-hidden bg-white dark:bg-zinc-950 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+        class="grid grid-cols-3 place-items-start rounded-md overflow-hidden bg-white dark:bg-zinc-950 hover:bg-zinc-100 dark:hover:bg-zinc-800"
       >
         <div class="col-span-1 w-full h-full">
           <div class="aspect-w-2 aspect-h-3">

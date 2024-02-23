@@ -30,7 +30,7 @@ const colorClass = computed(() => {
       class="text-center duration-200"
     >
       <div
-        class="lg:mx-2 lg:py-2 lg:hover:bg-zinc-200 lg:dark:hover:bg-zinc-800 rounded"
+        class="lg:mx-2 lg:py-2 lg:hover:bg-zinc-200 lg:dark:hover:bg-zinc-800 rounded-md"
       >
         <div
           class="grid place-items-center text-2xl lg:text-[28px] my-0.5 lg:my-1"

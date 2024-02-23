@@ -87,7 +87,7 @@ onUnmounted(() => {
   <ContainerPageMobileFull>
     <!-- 开发模式视图 -->
     <DevOnly>
-      <AnimeDevTool />
+      <AnimeDevTool class="sm:mb-4" />
     </DevOnly>
     <!-- 主视图，Grid 布局，仅在 lg 以上可用 -->
     <div
@@ -97,12 +97,12 @@ onUnmounted(() => {
       <!-- 左视图 占两列 -->
       <div class="lg:col-span-2">
         <!-- 视频框 -->
-        <div class="sm:mb-4 sm:rounded overflow-clip">
+        <div class="sm:mb-4 sm:rounded-md overflow-clip">
           <AnimePlayer v-if="store.showArtPlayer" />
           <AnimePlayerEmpty v-if="!store.showArtPlayer" />
           <!-- 本地播放器调用 -->
-          <AnimePlayerActionBar />
         </div>
+        <AnimePlayerActionBar class="sm:mb-4" />
         <!-- 番剧卡，仅在 sm 以上显示 -->
         <AnimeDataCard
           v-if="!store.state.animeData.isLoading"
@@ -140,7 +140,7 @@ onUnmounted(() => {
         status="404"
         title="404 资源不存在"
         :description="store.state.animeData.errorMessage ?? '未知错误'"
-        class="w-fit p-10 rounded"
+        class="w-fit p-10 rounded-md"
       />
     </div>
     <!-- (模态框等) DOM 位置无关组件 -->

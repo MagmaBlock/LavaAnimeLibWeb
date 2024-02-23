@@ -7,10 +7,10 @@
     }"
   >
     <div
-      class="grid grid-cols-7 gap-x-3 w-80 select-none rounded cursor-pointer transition-transform active:scale-95"
+      class="grid grid-cols-7 gap-x-3 w-80 select-none rounded-md cursor-pointer transition-transform active:scale-95"
     >
       <div class="col-span-3">
-        <div class="relative w-full rounded overflow-hidden">
+        <div class="relative w-full rounded-md overflow-hidden">
           <div class="aspect-w-16 aspect-h-9">
             <NuxtImg
               v-if="record?.animeData?.images?.poster"

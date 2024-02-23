@@ -12,7 +12,7 @@
     <Transition name="fade">
       <div
         v-if="copied"
-        class="absolute border-2 border-blue-500 inset-0 rounded"
+        class="absolute border-2 border-blue-500 inset-0 rounded-md"
       ></div>
     </Transition>
     <span v-if="!copied">复制</span>

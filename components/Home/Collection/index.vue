@@ -17,7 +17,7 @@
         <!-- 单内容块 -->
         <div
           v-for="content in collection.content"
-          class="bg-gray-50 dark:bg-zinc-800 rounded px-4 lg:px-6 py-3"
+          class="bg-gray-50 dark:bg-zinc-800 rounded-md px-4 lg:px-6 py-3"
         >
           <!-- 小标题 -->
           <div class="opacity-60 md:text-base font-medium mb-2">

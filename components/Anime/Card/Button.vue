@@ -31,5 +31,5 @@ const activeColorClass = computed(() => {
   }
 });
 
-const isRounded = computed(() => (props.rounded ? "rounded" : ""));
+const isRounded = computed(() => (props.rounded ? "rounded-md" : ""));
 </script>
