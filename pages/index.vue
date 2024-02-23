@@ -17,10 +17,9 @@
 </template>
 
 <script setup lang="ts">
-import { useTitle } from "@vueuse/core";
-import uaParser from "ua-parser-js";
+useHead({ title: "首页" });
 
-useTitle("主页 | 熔岩番剧库 LavaAnimeLib");
+import uaParser from "ua-parser-js";
 
 const ua = new uaParser();
 const notSupport = ref(false);

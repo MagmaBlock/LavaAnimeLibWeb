@@ -16,7 +16,5 @@
 </template>
 
 <script setup>
-onMounted(() => {
-  document.title = "我的 | 熔岩番剧库 LavaAnimeLib";
-});
+useHead({ title: "我的" });
 </script>

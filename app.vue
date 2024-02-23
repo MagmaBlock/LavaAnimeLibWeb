@@ -12,6 +12,14 @@
 </template>
 
 <script setup lang="ts">
+useHead({
+  titleTemplate: (titleChunk) => {
+    return titleChunk
+      ? `${titleChunk} - 熔岩番剧库 LavaAnimeLib`
+      : "熔岩番剧库 LavaAnimeLib";
+  },
+});
+
 import dayjs from "dayjs";
 import "dayjs/locale/zh-cn";
 import updateLocale from "dayjs/plugin/updateLocale";

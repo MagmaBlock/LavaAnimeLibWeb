@@ -24,7 +24,6 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: "Loading... | 熔岩番剧库 LavaAnimeLib",
       meta: [
         {
           name: "description",

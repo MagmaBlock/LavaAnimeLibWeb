@@ -60,23 +60,23 @@ watch(
   }
 );
 
-useTitle(
-  computed(() => {
+useHead({
+  title: computed(() => {
     if (store.state.animeData.isLoading) {
-      return "Loading... | 熔岩番剧库 LavaAnimeLib";
+      return "加载中...";
     } else if (
       store.animeData?.title &&
       !store.activeFile?.parseResult?.episode
     ) {
-      return `${store.animeData?.title} | 熔岩番剧库 LavaAnimeLib`;
+      return `${store.animeData?.title}`;
     } else if (
       store.animeData?.title &&
       store.activeFile?.parseResult?.episode
     ) {
-      return `${store.animeData?.title} 第${store.activeFile.parseResult.episode}话 | 熔岩番剧库 LavaAnimeLib`;
+      return `${store.animeData?.title} 第${store.activeFile.parseResult.episode}话`;
     }
-  })
-);
+  }),
+});
 
 onUnmounted(() => {
   background.resetBackground();

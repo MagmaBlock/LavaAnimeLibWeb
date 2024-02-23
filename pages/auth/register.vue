@@ -35,6 +35,8 @@ definePageMeta({
   layout: "auth",
 });
 
+useHead({ title: "注册" });
+
 const email = ref("");
 const password = ref("");
 const name = ref("");

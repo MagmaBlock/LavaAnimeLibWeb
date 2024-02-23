@@ -38,6 +38,8 @@
 </template>
 
 <script setup>
+useHead({ title: "观看历史" });
+
 import dayjs from "dayjs";
 
 const data = ref([]);

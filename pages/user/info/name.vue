@@ -27,6 +27,8 @@ definePageMeta({
   layout: "user-info",
 });
 
+useHead({ title: "修改用户名" });
+
 const userStore = useUserStore();
 userStore.getUserInfo();
 

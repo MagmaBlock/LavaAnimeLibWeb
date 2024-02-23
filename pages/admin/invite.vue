@@ -118,6 +118,7 @@ export default {
     },
   },
   mounted() {
+    useHead({ title: "邀请码管理" });
     this.setTimeDays(1);
     this.allVaildCodes();
   },

@@ -31,6 +31,8 @@ definePageMeta({
   layout: "admin",
 });
 
+useHead({ title: "索引页活动管理" });
+
 const store = useIndexStore();
 const message = useMessage();
 

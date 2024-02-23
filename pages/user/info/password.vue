@@ -19,6 +19,8 @@ definePageMeta({
   layout: "user-info",
 });
 
+useHead({ title: "修改密码" });
+
 const newPassword = ref("");
 
 const message = useMessage();

@@ -110,6 +110,7 @@ export default {
     },
   },
   async mounted() {
+    useHead({ title: "主页头图管理" });
     this.headers = await homeHeaderGet();
     this.password = localStorage.getItem("adminPassword") || "";
   },

@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-document.title = "使用 Bangumi ID 搜索 | 熔岩番剧库 LavaAnimeLib";
+useHead({ title: "使用 Bangumi ID 搜索" });
 
 const bgmID = ref(null);
 const searchResults = ref([]);

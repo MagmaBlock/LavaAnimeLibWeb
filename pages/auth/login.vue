@@ -33,6 +33,8 @@ definePageMeta({
   layout: "auth",
 });
 
+useHead({ title: "登录" });
+
 import { AxiosError } from "axios";
 
 const account = ref();

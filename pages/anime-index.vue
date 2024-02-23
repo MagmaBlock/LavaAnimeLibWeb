@@ -75,7 +75,7 @@ export default {
     },
   },
   async mounted() {
-    document.title = "索引 | 熔岩番剧库 LavaAnimeLib";
+    useHead({ title: "番剧索引" });
     this.getSessionCache();
     this.getIndex();
     this.queryIndex();

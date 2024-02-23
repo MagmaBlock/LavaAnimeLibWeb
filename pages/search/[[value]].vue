@@ -59,7 +59,7 @@ const useUrlParams = () => {
 };
 const changeUrlParams = (value) => {
   router.replace({ name: "search-value", params: { value: value } });
-  document.title = `搜索 - ${value} | 熔岩番剧库 LavaAnimeLib`;
+  useHead({ title: `搜索 - ${value}` });
 };
 const getHotAnimes = async () => {
   try {
@@ -71,7 +71,7 @@ const getHotAnimes = async () => {
 };
 
 onMounted(() => {
-  document.title = "搜索 | 熔岩番剧库 LavaAnimeLib";
+  useHead({ title: "搜索" });
   useUrlParams();
   getHotAnimes();
 });

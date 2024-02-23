@@ -55,7 +55,7 @@ export default {
     };
   },
   async mounted() {
-    document.title = "番剧库最近更新 | 熔岩番剧库 LavaAnimeLib";
+    useHead({ title: "番剧库最近更新" });
     this.web = await this.getGitHubCommits("LavaAnimeLibWeb");
     this.server = await this.getGitHubCommits("LavaAnimeLib");
   },

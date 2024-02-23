@@ -21,8 +21,6 @@
 <script setup lang="tsx">
 import type { MenuOption } from "naive-ui";
 
-document.title = "用户信息 | 熔岩番剧库 LavaAnimeLib";
-
 const router = useRouter();
 
 const options: MenuOption[] = [

@@ -38,7 +38,8 @@ export default {
     };
   },
   mounted() {
-    document.title = "帮助 | 熔岩番剧库 LavaAnimeLib";
+    useHead({ title: "使用帮助" });
+
     let defaultArticle = this.$route.query.article || "LavaAnimeLib"; // 默认选中文章
     this.articles.forEach((a) => {
       if (a.id == defaultArticle) {

@@ -67,6 +67,8 @@ definePageMeta({
   layout: "user-info",
 });
 
+useHead({ title: "修改头像" });
+
 const userStore = useUserStore();
 userStore.getUserInfo();
 
