@@ -67,7 +67,7 @@ export default defineNuxtConfig({
     shim: false,
   },
   pwa: {
-    registerType: "prompt",
+    registerType: "autoUpdate",
     includeAssets: ["favicon.ico", "icon.svg", "apple-touch-icon.png"],
     manifest: {
       name: "熔岩番剧库",
@@ -88,8 +88,15 @@ export default defineNuxtConfig({
         },
       ],
     },
-    workbox: {
-      globPatterns: ["**/*.{js,css,ico,png,svg}"],
+   workbox: {
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+    },
+    injectManifest: {
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+    },
+    client: {
+      installPrompt: true,
+      periodicSyncForUpdates: 30,
     },
     devOptions: {
       enabled: false,

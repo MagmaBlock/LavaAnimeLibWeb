@@ -4,6 +4,7 @@
       <DefaultLayout>
         <NuxtLayout>
           <NuxtPage />
+          <NuxtPwaManifest />
         </NuxtLayout>
       </DefaultLayout>
       <VideoTogetherProvider />
