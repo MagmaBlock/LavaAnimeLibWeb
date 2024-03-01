@@ -22,20 +22,20 @@
         >
           <div class="message">
             <span v-if="$pwa.offlineReady">
-              App ready to work offline
+              熔岩番剧库现已离线可用
             </span>
             <span v-else>
-              New content available, click on reload button to update.
+              有新的熔岩番剧库更新可用.
             </span>
           </div>
           <button
             v-if="$pwa.needRefresh"
             @click="$pwa.updateServiceWorker()"
           >
-            Reload
+            刷新
           </button>
           <button @click="$pwa.cancelPrompt()">
-            Close
+            关闭
           </button>
         </div>
         <div
@@ -45,14 +45,14 @@
         >
           <div class="message">
             <span>
-              Install PWA
+              安装熔岩番剧库
             </span>
           </div>
           <button @click="$pwa.install()">
-            Install
+            安装
           </button>
           <button @click="$pwa.cancelInstall()">
-            Cancel
+            取消
           </button>
         </div>
       </ClientOnly>
