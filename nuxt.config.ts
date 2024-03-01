@@ -96,7 +96,7 @@ export default defineNuxtConfig({
     },
     client: {
       installPrompt: true,
-      periodicSyncForUpdates: 30,
+      periodicSyncForUpdates: 7200,
     },
     devOptions: {
       enabled: false,
