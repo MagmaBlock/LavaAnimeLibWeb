@@ -24,14 +24,14 @@
     "@vite-pwa/nuxt": "^0.5.0",
     "gravatar": "^1.8.2",
     "nuxt": "^3.10.3",
-    "vue": "^3.4.19",
+    "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
   "dependencies": {
     "@bg-dev/nuxt-naiveui": "^1.10.2",
     "@nuxtjs/tailwindcss": "^6.11.4",
     "@pinia/nuxt": "^0.5.1",
-    "@vueuse/core": "^10.8.0",
+    "@vueuse/core": "^10.9.0",
     "animate.css": "^4.1.1",
     "artplayer": "^5.1.1",
     "axios": "^1.6.7",
