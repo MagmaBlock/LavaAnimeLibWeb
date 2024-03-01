@@ -32,12 +32,12 @@ const showTools = ref(false);
     <!-- 主信息卡 -->
     <div class="pt-2">
       <!-- 标题块 -->
-      <div class="mb-1">
-        <div class="text-xl inline-block mr-2">
+      <NSpace class="mb-1" :align="'end'">
+        <div class="text-xl inline-block">
           {{ store.animeData?.title }}
-          <span class="text-base"
-            >({{ store.animeData?.index.year.replace("年", "") }})</span
-          >
+          <span class="text-base">
+            ({{ store.animeData?.index.year.replace("年", "") }})
+          </span>
         </div>
         <div
           class="text-sm leading-5 text-gray-500 inline-block"
@@ -45,7 +45,22 @@ const showTools = ref(false);
         >
           {{ store.animeData?.name }} · {{ store.animeData?.platform }}
         </div>
-      </div>
+        <!-- Tags -->
+        <NSpace :size="2">
+          <span
+            v-if="store.animeData?.type?.bdrip"
+            class="rounded px-1.5 text-xs font-medium bg-blue-500 text-white"
+          >
+            BD
+          </span>
+          <span
+            v-if="store.animeData?.type?.nsfw"
+            class="rounded px-1.5 text-xs font-medium bg-yellow-500 text-white"
+          >
+            NSFW
+          </span>
+        </NSpace>
+      </NSpace>
       <!-- 主要信息 -->
       <div class="px-0.5 text-sm leading-5 text-gray-500">
         <!-- 第一行 -->
@@ -57,8 +72,8 @@ const showTools = ref(false);
           <div class="mr-2 my-1" v-if="!store.animeData?.bgmID">
             本作是 Bangumi 未收录番剧，或者可能根本不是一个影视作品
           </div>
-          <span class="mr-2" v-if="store.animeData?.bgmID"
-            ><i class="bi bi-star"></i> {{ store.animeData?.rating.score }} 分
+          <span class="mr-2" v-if="store.animeData?.bgmID">
+            <i class="bi bi-star"></i> {{ store.animeData?.rating.score }} 分
             <span
               v-if="store.animeData?.rating.rank"
               class="bg-gray-100 text-black dark:bg-zinc-700 dark:text-zinc-200 rounded px-1.5 text-xs align-baseline"
@@ -71,12 +86,17 @@ const showTools = ref(false);
         <div v-if="store.animeData?.bgmID" class="inline-block">
           <span class="mr-2"
             ><i class="bi bi-calendar-event"></i>
-            {{ store.animeData?.date || "未来" }} 开始放送</span
-          >
+            {{ store.animeData?.date || "未来" }} 开始放送
+          </span>
           <span class="mr-2"
-            ><i class="bi bi-collection"></i>
-            {{ store.animeData?.eps }} 话</span
-          >
+            ><i class="bi bi-collection"></i> {{ store.animeData?.eps }} 话
+          </span>
+        </div>
+        <!-- 其他提示 -->
+        <div>
+          <div v-if="store.animeData?.type?.nsfw">
+            此作品被标记为 “NSFW”, 可能含有不适宜在公开场合观看的内容。
+          </div>
         </div>
       </div>
       <!-- 标签 -->
