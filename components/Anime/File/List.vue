@@ -32,7 +32,11 @@ const videoButtonClick = async (video) => {
 
     <!-- 正常 -->
     <AnimeCardBasic
-      v-if="!store.state.fileData.isLoading && !store.state.fileData.errorCode"
+      v-if="
+        !store.state.fileData.isLoading &&
+        !store.state.fileData.errorCode &&
+        store.fileData.fileList.length
+      "
     >
       <!-- 卡片标题 -->
       <template #header>
@@ -162,15 +166,17 @@ const videoButtonClick = async (video) => {
       "
       class="py-6"
     >
-      <NResult
-        status="418"
-        title="暂无资源 敬请期待"
-        :description="`来自 Bangumi 的放送时间 ${
-          store.animeData.date || '未知 / 暂未定档'
-        }`"
-        size="small"
-      >
-      </NResult>
+      <NResult status="418" title="此节点中暂无文件" size="small" />
+      <div class="text-center">
+        <div class="text-base my-1">可能原因</div>
+        <ul>
+          <li>1. 当前节点不含有此动画</li>
+          <li>
+            2. 当前动画暂无资源或未放送，根据 Bangumi，开播时间为
+            {{ store.animeData.date || "未知 / 暂未定档" }}
+          </li>
+        </ul>
+      </div>
     </AnimeCardBasic>
   </div>
 </template>
