@@ -11,7 +11,9 @@
     </NScrollbar>
 
     <!-- 背景图片和他的特效 -->
-    <div class="absolute inset-y-0 inset-x-0 overflow-hidden -z-50">
+    <div
+      class="absolute inset-y-0 inset-x-0 h-screen w-screen overflow-hidden -z-50"
+    >
       <Transition
         enter-active-class="animate__animated animate__fadeIn animate__faster"
         leave-active-class="animate__animated animate__fadeOut animate__faster"
