@@ -11,29 +11,8 @@
     </NScrollbar>
 
     <!-- 背景图片和他的特效 -->
-    <div class="fixed inset-0 -z-50">
-      <Transition
-        enter-active-class="animate__animated animate__fadeIn animate__faster"
-        leave-active-class="animate__animated animate__fadeOut animate__faster"
-      >
-        <img
-          v-show="background.enable"
-          class="w-full h-full scale-110 object-cover dark:brightness-50"
-          :class="background.customClass"
-          :src="background.imageUrl"
-          alt="背景图片"
-        />
-      </Transition>
-    </div>
+    <BackgroundProvider />
   </div>
 </template>
 
-<script lang="ts" setup>
-const background = useBackgroundStore();
-
-useHeadSafe({
-  bodyAttrs: {
-    class: "dark:bg-[#101014] text-gray-800 dark:text-zinc-200 select-none",
-  },
-});
-</script>
+<script lang="ts" setup></script>
