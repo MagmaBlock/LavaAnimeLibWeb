@@ -1,6 +1,6 @@
 <template>
   <div
-    class="grid place-items-center w-12 h-12 cursor-pointer text-gray-500 dark:text-gray-400 lg:hover:bg-zinc-200 lg:dark:hover:bg-zinc-800 active:scale-90 rounded-md transition-transform"
+    class="grid place-items-center w-12 h-12 cursor-pointer text-gray-500 dark:text-gray-400 lg:hover:bg-zinc-200 lg:dark:hover:bg-zinc-800 active:scale-95 rounded-md transition-transform"
     @click="switchDarkMode"
   >
     <Icon
