@@ -80,8 +80,8 @@ class LavaAnimeAPIs {
   /**
    * 新增/更新/删除 追番
    * @param {Number} id
-   * @param {Number} status
-   * @param {Boolean} remove
+   * @param {Number | undefined} status
+   * @param {Boolean | undefined} remove
    */
   async editAnimeFollowAPI(id, status, remove) {
     return LavaAnimeAPI.post("/v2/anime/follow/edit", { id, status, remove });

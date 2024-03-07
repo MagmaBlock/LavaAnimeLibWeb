@@ -31,42 +31,45 @@ const showTools = ref(false);
     </div>
     <!-- 主信息卡 -->
     <div class="pt-2">
-      <!-- 标题块 -->
-      <NSpace class="mb-1" :align="'end'">
-        <div class="text-xl inline-block">
-          {{ store.animeData?.title }}
-          <span class="text-base">
-            ({{ store.animeData?.index.year.replace("年", "") }})
-          </span>
-        </div>
-        <div
-          class="text-sm leading-5 text-gray-500 inline-block"
-          v-if="store.animeData?.bgmID"
-        >
-          {{ store.animeData?.name }} · {{ store.animeData?.platform }}
-        </div>
-        <!-- Tags -->
-        <NSpace :size="2">
-          <span
-            v-if="store.animeData?.type?.bdrip"
-            class="rounded px-1.5 text-xs font-medium bg-blue-500 text-white"
+      <NSpace justify="space-between" :wrap="false">
+        <!-- 标题块 -->
+        <NSpace class="mb-1" :align="'end'">
+          <div class="text-xl inline-block">
+            {{ store.animeData?.title }}
+            <span class="text-base">
+              ({{ store.animeData?.index.year.replace("年", "") }})
+            </span>
+          </div>
+          <div
+            class="text-sm leading-5 text-gray-500 inline-block"
+            v-if="store.animeData?.bgmID"
           >
-            BD
-          </span>
-          <span
-            v-if="store.animeData?.type?.nsfw"
-            class="rounded px-1.5 text-xs font-medium bg-yellow-500 text-white"
-          >
-            NSFW
-          </span>
+            {{ store.animeData?.name }} · {{ store.animeData?.platform }}
+          </div>
+          <!-- Tags -->
+          <NSpace :size="2">
+            <span
+              v-if="store.animeData?.type?.bdrip"
+              class="rounded px-1.5 text-xs font-medium bg-blue-500 text-white"
+            >
+              BD
+            </span>
+            <span
+              v-if="store.animeData?.type?.nsfw"
+              class="rounded px-1.5 text-xs font-medium bg-yellow-500 text-white"
+            >
+              NSFW
+            </span>
+          </NSpace>
         </NSpace>
+        <AnimeFollowButton :anime-id="store.laID" />
       </NSpace>
       <!-- 主要信息 -->
       <div class="px-0.5 text-sm leading-5 text-gray-500">
         <!-- 第一行 -->
         <div class="inline-block">
-          <span class="mr-2"
-            ><i class="bi bi-play-btn"></i> 播放
+          <span class="mr-2">
+            <i class="bi bi-play-btn"></i> 播放
             {{ store.animeData?.views }} 次</span
           >
           <div class="mr-2 my-1" v-if="!store.animeData?.bgmID">
@@ -84,12 +87,12 @@ const showTools = ref(false);
         </div>
         <!-- 第二行 -->
         <div v-if="store.animeData?.bgmID" class="inline-block">
-          <span class="mr-2"
-            ><i class="bi bi-calendar-event"></i>
+          <span class="mr-2">
+            <i class="bi bi-calendar-event"></i>
             {{ store.animeData?.date || "未来" }} 开始放送
           </span>
-          <span class="mr-2"
-            ><i class="bi bi-collection"></i> {{ store.animeData?.eps }} 话
+          <span class="mr-2">
+            <i class="bi bi-collection"></i> {{ store.animeData?.eps }} 话
           </span>
         </div>
         <!-- 其他提示 -->
