@@ -19,5 +19,8 @@ export const useBackgroundStore = defineStore("background", {
     setCustomClass(customClass: string) {
       this.customClass = customClass;
     },
+    setEnable(isEnable: boolean) {
+      this.enable = isEnable;
+    },
   },
 });

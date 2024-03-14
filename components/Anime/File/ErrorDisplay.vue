@@ -1,5 +1,5 @@
 <template>
-  <AnimeCardBasic class="py-4 sm:mb-4" v-if="store.state.fileData.errorCode">
+  <AnimeCardBasic class="py-4" v-if="store.state.fileData.errorCode">
     <NResult
       status="info"
       title="出现错误"

@@ -1,58 +1,70 @@
 import { useLocalStorage, useStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
 import axios from "axios";
+import type Artplayer from "artplayer";
 
 export const useAnimeStore = defineStore("anime", {
   state: () => {
     return {
-      laID: null,
+      laID: null as number | null,
       state: {
         animeData: {
           isLoading: true,
-          errorCode: null,
-          errorMessage: null,
+          errorCode: null as number | null,
+          errorMessage: null as string | null,
         },
         driveData: {
           isLoading: true,
-          errorCode: null,
-          errorMessage: null,
+          errorCode: null as number | null,
+          errorMessage: null as string | null,
         },
         fileData: {
           isLoading: true,
-          errorCode: null,
-          errorMessage: null,
+          errorCode: null as number | null,
+          errorMessage: null as string | null,
         },
-        driveLoading: null,
+        driveLoading: null as string | null,
       },
-      animeData: {},
-      driveData: {
-        default: null,
-        list: [],
-      },
+      animeData: null as AnimeData | null,
+      driveData: null as DriveData | null,
       myDrive: useStorage("myDrive", {
         rememberMyChoice: false,
-        selectedDrive: null,
+        selectedDrive: null as string | null,
       }),
       fileData: {
-        activeEpisode: null,
-        activeFileIndex: null,
-        fileList: [],
+        activeEpisode: null as string | null,
+        activeFileIndex: null as number | null,
+        fileList: null as FileData | null,
       },
-      artInstance: null,
+      artInstance: null as Artplayer | null,
       showArtPlayer: false,
       showAdminTools: false,
       ascOrder: useLocalStorage("AnimeFileAscOrder", true),
     };
   },
   getters: {
+    /**
+     * 获取 Bangumi ID
+     */
     bgmID: (state) => {
       return state.animeData?.bgmID ?? null;
     },
-    // 获得活跃文件. AnimePlayer 组件一旦创建就会 watch 此属性
+    /**
+     * 获得活跃文件. AnimePlayer 组件一旦创建就会 watch 此属性
+     */
     activeFile: (state) => {
+      if (
+        state.fileData.activeFileIndex === null ||
+        state.fileData.fileList === null
+      )
+        return null;
       return state.fileData.fileList[state.fileData.activeFileIndex];
     },
+    /**
+     * 获取选中的节点
+     */
     activeDrive: (state) => {
+      if (state.driveData === null) return null;
       // 开启了记住选择 返回曾经的选择
       if (state.myDrive.rememberMyChoice && state.myDrive.selectedDrive) {
         return state.driveData.list.find((drive) => {
@@ -69,8 +81,11 @@ export const useAnimeStore = defineStore("anime", {
         });
       }
     },
-    // 获取集数和集数对应的视频
+    /**
+     * 获取集数和集数对应的视频
+     */
     episodeList: (state) => {
+      if (state.fileData.fileList === null) return;
       let result = [];
       for (let file of state.fileData.fileList) {
         // 只要解析出集数的视频文件
@@ -94,16 +109,21 @@ export const useAnimeStore = defineStore("anime", {
       result.sort((a, b) => {
         const aEp = new String(a.episode);
         const bEp = new String(b.episode);
-        return (
-          parseInt(aEp.match(/\d+/)[0]) - parseInt(bEp.match(/\d+/)[0]) ||
-          aEp.length - bEp.length
-        );
+        const aEpNumberString = aEp.match(/\d+/)?.[0];
+        const bEpNumberString = bEp.match(/\d+/)?.[0];
+        if (aEpNumberString && bEpNumberString) {
+          const aNum = Number(aEpNumberString);
+          const bNum = Number(bEpNumberString);
+          return aNum - bNum;
+        }
+        return aEp.length - bEp.length;
       });
 
       if (!state.ascOrder) result.reverse();
       return result;
     },
     noEpisodeList: (state) => {
+      if (state.fileData.fileList === null) return;
       let result = state.fileData.fileList.filter((file) => {
         return (
           file.type == "file" &&
@@ -115,6 +135,7 @@ export const useAnimeStore = defineStore("anime", {
       return result;
     },
     musicList: (state) => {
+      if (state.fileData.fileList === null) return;
       let result = state.fileData.fileList.filter((file) => {
         return (
           file.type == "file" &&
@@ -125,6 +146,7 @@ export const useAnimeStore = defineStore("anime", {
       return result;
     },
     otherList: (state) => {
+      if (state.fileData.fileList === null) return;
       let result = state.fileData.fileList.filter((file) => {
         return (
           file.type == "file" &&
@@ -508,3 +530,205 @@ export const useAnimeStore = defineStore("anime", {
     },
   },
 });
+
+export type AnimeData = {
+  date: string;
+  platform: string;
+  images: {
+    small: string;
+    grid: string;
+    large: string;
+    medium: string;
+    common: string;
+    poster: string;
+  };
+  summary: string;
+  name: string;
+  name_cn: string;
+  tags: Array<{
+    name: string;
+    count: number;
+  }>;
+  infobox: Array<{
+    key: string;
+    value: any;
+  }>;
+  rating: {
+    rank: number;
+    total: number;
+    count: {
+      "1": number;
+      "2": number;
+      "3": number;
+      "4": number;
+      "5": number;
+      "6": number;
+      "7": number;
+      "8": number;
+      "9": number;
+      "10": number;
+    };
+    score: number;
+  };
+  total_episodes: number;
+  collection: {
+    on_hold: number;
+    dropped: number;
+    wish: number;
+    collect: number;
+    doing: number;
+  };
+  id: number;
+  eps: number;
+  volumes: number;
+  locked: boolean;
+  nsfw: boolean;
+  type: {
+    bdrip: boolean;
+    nsfw: boolean;
+  };
+  bgmID: number;
+  index: {
+    year: string;
+    type: string;
+    name: string;
+  };
+  views: number;
+  title: string;
+  deleted: boolean;
+  relations: Array<{
+    id: number;
+    bgmID: number;
+    index: {
+      year: string;
+      type: string;
+      name: string;
+    };
+    views: number;
+    title: string;
+    type: {
+      bdrip: boolean;
+      nsfw: boolean;
+    };
+    images: {
+      small: string;
+      grid: string;
+      large: string;
+      medium: string;
+      common: string;
+      poster: string;
+    };
+    deleted: boolean;
+    relation: string;
+  }>;
+  characters: Array<{
+    images: {
+      small: string;
+      grid: string;
+      large: string;
+      medium: string;
+    };
+    name: string;
+    relation: string;
+    actors: Array<{
+      images: {
+        small: string;
+        grid: string;
+        large: string;
+        medium: string;
+      };
+      name: string;
+      short_summary: string;
+      career: Array<string>;
+      id: number;
+      type: number;
+      locked: boolean;
+    }>;
+    type: number;
+    id: number;
+  }>;
+};
+
+export type NoBangumiAnimeData = {
+  id: number;
+  index: {
+    year: string;
+    type: string;
+    name: string;
+  };
+  views: number;
+  title: string;
+  type: {
+    bdrip: boolean;
+    nsfw: boolean;
+  };
+  images: {
+    small: string;
+    grid: string;
+    large: string;
+    medium: string;
+    common: string;
+    poster: string;
+  };
+  deleted: boolean;
+};
+
+export type DriveData = {
+  default: string;
+  list: Array<{
+    id: string;
+    name: string;
+    description: string;
+    banNSFW: boolean;
+  }>;
+};
+
+export type FileData = Array<{
+  name: string;
+  size: number;
+  updated: string;
+  driver: string;
+  thumbnail: string;
+  type: string;
+  parseResult?: {
+    animeTitle: string;
+    animeYear: any;
+    episode?: string;
+    extensionName: {
+      result: string;
+      type: string;
+      raw: string;
+      trueName: string;
+    };
+    fileName: string;
+    groups: Array<{
+      result: string;
+      raw: string;
+      type: string;
+    }>;
+    videoSource: Array<{
+      result: string;
+      raw: string;
+      type: string;
+    }>;
+    videoQuality: Array<{
+      result: string;
+      raw: string;
+      type: string;
+      noBrowser?: boolean;
+    }>;
+    videoSubtitle: Array<{
+      result: string;
+      raw: string;
+      type: string;
+    }>;
+    otherInfo: Array<{
+      result: string;
+      raw: string;
+      type: string;
+    }>;
+    tagedName: Array<any>;
+    noBrowser: boolean;
+  };
+  url?: string;
+}>;

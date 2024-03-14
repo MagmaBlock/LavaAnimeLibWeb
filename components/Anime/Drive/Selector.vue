@@ -1,8 +1,5 @@
 <template>
-  <AnimeCardFlod
-    class="sm:mb-4 select-none"
-    v-if="!store.state.driveData.isLoading"
-  >
+  <AnimeCardFlod class="select-none" v-if="!store.state.driveData.isLoading">
     <template #title>
       <div>
         节点

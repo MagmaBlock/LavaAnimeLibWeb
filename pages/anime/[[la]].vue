@@ -1,11 +1,16 @@
 <script setup>
-import { watchOnce, useTitle } from "@vueuse/core";
+import { watchOnce } from "@vueuse/core";
+import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 
 const store = useAnimeStore();
 const background = useBackgroundStore();
 
 const route = useRoute();
 const router = useRouter();
+
+const breakpoints = useBreakpoints(breakpointsTailwind);
+
+const currentMobilePage = ref("anime");
 
 const refreshPlayer = async () => {
   store.showArtPlayer = false;
@@ -19,14 +24,6 @@ const buildPage = () => {
   watchOnce(
     () => store.state.animeData.isLoading,
     async () => {
-      if (!store.state.animeData.errorCode && store.animeData?.images?.poster) {
-        // 启用背景
-        background.setBackground(
-          store.animeData.images.poster,
-          "blur-3xl opacity-50"
-        );
-      }
-
       window.scrollTo({
         top: 0,
         left: 0,
@@ -47,6 +44,7 @@ watch(
   { immediate: true }
 );
 
+// 集数监控更改路由查询参数
 watch(
   () => store.fileData.activeEpisode,
   () => {
@@ -60,6 +58,7 @@ watch(
   }
 );
 
+// title 显示
 useHead({
   title: computed(() => {
     if (store.state.animeData.isLoading) {
@@ -78,6 +77,32 @@ useHead({
   }),
 });
 
+// 背景图相关
+watch(
+  () => store.animeData?.images?.poster,
+  () => {
+    if (store.animeData?.images?.poster) {
+      // 启用背景
+      background.setBackground(
+        store.animeData.images.poster,
+        "blur-3xl opacity-50"
+      );
+    }
+  }
+);
+
+watch(
+  breakpoints.greaterOrEqual("sm"),
+  (isGreater) => {
+    if (isGreater == true) {
+      background.setEnable(true);
+    } else {
+      background.setEnable(false);
+    }
+  },
+  { immediate: true }
+);
+
 onUnmounted(() => {
   background.resetBackground();
 });
@@ -89,48 +114,81 @@ onUnmounted(() => {
     <DevOnly>
       <AnimeDevTool class="sm:mb-4" />
     </DevOnly>
-    <!-- 主视图，Grid 布局，仅在 lg 以上可用 -->
+    <!-- (模态框等) DOM 位置无关组件 -->
+    <AnimeAdminTool />
+    <!-- PC 端主视图，Grid 布局，仅在 lg 以上可用 -->
     <div
-      class="lg:grid lg:grid-cols-3 lg:gap-6 w-full"
-      v-if="!store.state.animeData.errorCode"
+      class="grid grid-cols-3 gap-6 w-full"
+      v-if="
+        store.state.animeData.errorCode == null &&
+        breakpoints.greaterOrEqual('lg').value
+      "
     >
       <!-- 左视图 占两列 -->
-      <div class="lg:col-span-2">
+      <NFlex vertical :size="16" class="col-span-2">
         <!-- 视频框 -->
-        <div class="sm:mb-4 sm:rounded-md overflow-clip">
+        <div class="rounded-md overflow-clip">
           <AnimePlayer v-if="store.showArtPlayer" />
           <AnimePlayerEmpty v-if="!store.showArtPlayer" />
-          <!-- 本地播放器调用 -->
         </div>
-        <AnimePlayerActionBar class="sm:mb-4" />
-        <!-- 番剧卡，仅在 sm 以上显示 -->
-        <AnimeDataCard
-          v-if="!store.state.animeData.isLoading"
-          class="hidden sm:block sm:mb-4"
-        />
-        <AnimeDataCardFake
-          v-if="store.state.animeData.isLoading"
-          class="hidden sm:block sm:mb-4"
-        />
-      </div>
+        <!-- 本地播放器调用 -->
+        <AnimePlayerActionBar />
+        <!-- 番剧卡 -->
+        <AnimeMetaCard />
+      </NFlex>
       <!-- 右视图 占一列 -->
-      <div class="lg:col-span-1">
+      <NFlex vertical :size="16" class="col-span-1">
         <AnimeDriveSelector />
         <AnimeFileList />
         <AnimeFileErrorDisplay />
-        <!-- 番剧卡，仅在手机端显示 -->
-        <AnimeDataCard
-          v-if="!store.state.animeData.isLoading"
-          class="sm:hidden"
-        />
-        <AnimeDataCardFake
-          v-if="store.state.animeData.isLoading"
-          class="sm:hidden"
-        />
+        <!-- 关联作品 -->
+        <AnimeRelations v-if="!store.state.animeData.isLoading" />
+      </NFlex>
+    </div>
+    <!-- 移动端主视图 -->
+    <div
+      v-if="
+        store.state.animeData.errorCode == null &&
+        breakpoints.smaller('lg').value
+      "
+    >
+      <div class="overflow-clip sm:rounded-md">
+        <!-- 视频框 -->
+        <AnimePlayer v-if="store.showArtPlayer" />
+        <AnimePlayerEmpty v-if="!store.showArtPlayer" />
+        <!-- 本地播放器调用 -->
+        <AnimePlayerActionBar class="sm:mb-4" />
+      </div>
+
+      <AnimeCardBasic class="overflow-clip sm:rounded-t-md">
+        <NTabs type="line">
+          <NTab name="anime" @click="currentMobilePage = 'anime'"> 番剧 </NTab>
+          <NTab name="file" @click="currentMobilePage = 'play'"> 播放 </NTab>
+        </NTabs>
+      </AnimeCardBasic>
+
+      <!-- 番剧页 -->
+      <div
+        class="overflow-clip sm:rounded-b-md"
+        v-if="currentMobilePage == 'anime'"
+      >
+        <!-- 番剧卡-->
+        <AnimeMetaCard />
         <!-- 关联作品 -->
         <AnimeRelations v-if="!store.state.animeData.isLoading" />
       </div>
+
+      <!-- 播放页 -->
+      <div
+        class="overflow-clip sm:rounded-b-md"
+        v-if="currentMobilePage == 'play'"
+      >
+        <AnimeDriveSelector />
+        <AnimeFileList />
+        <AnimeFileErrorDisplay />
+      </div>
     </div>
+
     <!-- 错误处理视图 -->
     <div
       v-if="store.state.animeData.errorCode == 404"
@@ -143,7 +201,5 @@ onUnmounted(() => {
         class="w-fit p-10 rounded-md"
       />
     </div>
-    <!-- (模态框等) DOM 位置无关组件 -->
-    <AnimeAdminTool />
   </ContainerPageMobileFull>
 </template>

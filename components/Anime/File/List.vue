@@ -26,7 +26,7 @@ const videoButtonClick = async (video) => {
 };
 </script>
 <template>
-  <div class="sm:mb-4">
+  <div>
     <!-- Loading -->
     <AnimeFileListLoading v-if="store.state.fileData.isLoading" />
 

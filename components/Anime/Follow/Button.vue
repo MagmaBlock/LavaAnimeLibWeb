@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 const { animeId } = defineProps({
-  animeId: { type: Number },
+  animeId: { type: [Number], require: true },
 });
 
 const followInfo: Ref<any> = ref({});
