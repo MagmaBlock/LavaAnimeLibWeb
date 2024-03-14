@@ -1,39 +1,34 @@
 <template>
-  <AnimeCardBasic>
-    <NSpace :align="'center'">
-      <div class="font-bold">Debug</div>
-      <NDivider vertical />
-      <div>LavaAnimeID : {{ store.laID }}</div>
+  <NCard size="small" title="DevTool">
+    <NFlex :align="'center'">
+      <div>LA{{ store.laID }}</div>
       <NDivider vertical />
       <NuxtLink
         :to="{
           name: 'anime-la',
           params: { la: store.laID - 1 },
-          // query: { dev: route.query?.dev },
         }"
       >
-        <NButton size="small" secondary> 前一个 </NButton>
+        <NButton size="small" secondary> Next </NButton>
       </NuxtLink>
       <NuxtLink
         :to="{
           name: 'anime-la',
           params: { la: store.laID + 1 },
-          // query: { dev: route.query?.dev },
         }"
       >
-        <NButton size="small" secondary> 后一个 </NButton>
+        <NButton size="small" secondary> Previous </NButton>
       </NuxtLink>
       <NuxtLink
         :to="{
           name: 'anime-la',
           params: { la: Math.round(Math.random() * 1000) },
-          // query: { dev: route.query?.dev },
         }"
       >
-        <NButton size="small" secondary> 随机 </NButton>
+        <NButton size="small" secondary> Random </NButton>
       </NuxtLink>
-    </NSpace>
-  </AnimeCardBasic>
+    </NFlex>
+  </NCard>
 </template>
 
 <script setup>
