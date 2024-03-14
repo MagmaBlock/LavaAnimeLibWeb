@@ -77,32 +77,28 @@ useHead({
   }),
 });
 
-// 背景图相关
-watch(
-  () => store.animeData?.images?.poster,
-  () => {
-    if (store.animeData?.images?.poster) {
+/**
+ * 背景图相关
+ */
+// 监听 poster 变化
+watch(() => store.animeData?.images?.poster, refreshBackground);
+// 监听断点变化
+watch(breakpoints.greaterOrEqual("sm"), refreshBackground, { immediate: true });
+// 刷新背景
+function refreshBackground() {
+  if (store.animeData?.images?.poster) {
+    if (breakpoints.isGreaterOrEqual("sm") == true) {
       // 启用背景
       background.setBackground(
         store.animeData.images.poster,
         "blur-3xl opacity-50"
       );
-    }
-  }
-);
-
-watch(
-  breakpoints.greaterOrEqual("sm"),
-  (isGreater) => {
-    if (isGreater == true) {
-      background.setEnable(true);
     } else {
       background.setEnable(false);
     }
-  },
-  { immediate: true }
-);
-
+  }
+}
+// 监听离开界面，解除背景
 onUnmounted(() => {
   background.resetBackground();
 });
