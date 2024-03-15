@@ -8,7 +8,9 @@
         <NSkeleton v-else :width="64" />
       </div>
     </template>
-    评分数据来自 Bangumi 番组计划，“#” 代表此番剧在 Bangumi 的全站排名
+    评分数据来自 Bangumi 番组计划
+    <br />
+    “#” 代表此番剧在 Bangumi 的全站排名
   </NPopover>
 </template>
 

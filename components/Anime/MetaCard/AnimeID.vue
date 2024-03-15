@@ -5,7 +5,7 @@
         <Icon icon="material-symbols:alternate-email" /> LA{{ id }}
       </div>
     </template>
-    代表此动画在本站点的 LavaAnimeLib ID
+    <div class="break-words">代表此动画在本站点的 ID</div>
   </NPopover>
 </template>
 
