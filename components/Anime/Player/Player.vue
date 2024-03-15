@@ -25,7 +25,6 @@ onMounted(() => {
     autoMini: true,
     autoplay: true,
     theme: "#2563eb",
-    // poster: "https://anime-img.5t5.top/assets/no-bgm-bg.jpg",
     hotkey: true,
     volume: 1,
     pip: true,
@@ -76,12 +75,12 @@ onMounted(() => {
   watch(
     () => store.activeFile,
     async (newFile) => {
+      if (!newFile?.url) return;
+
       try {
         await artInstance.switchUrl(newFile?.url);
       } catch (error) {
-        message.error("播放失败, 正在重试", {
-          duration: 6000,
-        });
+        message.error("播放失败, 正在重试");
       }
 
       // 寻找并生效字幕
@@ -99,6 +98,7 @@ onMounted(() => {
         }
       });
       console.log("找到字幕", subtitles);
+
       if (subtitles.length) {
         artInstance.subtitle.url = subtitles[0].url;
       }
@@ -106,7 +106,8 @@ onMounted(() => {
       if (newFile?.parseResult?.extensionName?.type == "music") {
         message.info(`正在播放音乐 ${newFile?.name}`);
       }
-    }
+    },
+    { immediate: true }
   );
 
   // 播放器出错损坏处理
@@ -139,9 +140,11 @@ onMounted(() => {
   // 尝试在被浏览器限制时静音开播
   artInstance.on("ready", () => {
     setTimeout(async () => {
-      let canAutoplayResult = (await canAutoplay.video()).result;
-      console.log("Can autoplay? Test result: ", canAutoplayResult);
-      if (!canAutoplayResult) {
+      const count = usePageLifeCycle().getClickCount();
+      console.log("以下是 Vue 实例挂载后 window 的点击次数：", count);
+      if (count > 0) {
+        artInstance.play();
+      } else {
         artInstance.muted = true;
         artInstance.play();
         message.info("已为您静音开播, 可手动解除静音");
@@ -173,7 +176,8 @@ onMounted(() => {
         ...options.controls[0],
         disable: !store.findNextEpisode(),
       });
-    }
+    },
+    { immediate: true }
   );
 
   // 视频结束连播提示
@@ -191,6 +195,7 @@ onMounted(() => {
       }
     }, 1000)
   );
+
   // 视频结束切换下一话
   artInstance.on("video:ended", () => {
     const nextEp = store.findNextEpisode();

@@ -36,4 +36,9 @@ dayjs.updateLocale("zh-cn", {
     sameElse: "YYYY-MM-DD HH:mm",
   },
 });
+
+usePageLifeCycle().setPageMount();
+window.addEventListener("click", () => {
+  usePageLifeCycle().addClickCount();
+});
 </script>
