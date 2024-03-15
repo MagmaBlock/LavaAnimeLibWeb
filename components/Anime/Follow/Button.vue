@@ -1,8 +1,13 @@
 <template>
   <div>
     <NDropdown trigger="click" :options="menuOptions" @select="handleSelect">
-      <div>
-        <NButton secondary v-if="followInfo.status >= 0" :loading="loading">
+      <div class="ml-4">
+        <NButton
+          secondary
+          size="small"
+          v-if="followInfo.status >= 0"
+          :loading="loading"
+        >
           <template #icon>
             <NIcon>
               <Icon icon="material-symbols:bookmark-remove" />
@@ -13,6 +18,7 @@
         <NButton
           secondary
           type="primary"
+          size="small"
           v-if="followInfo.status === -1"
           :loading="loading"
         >
