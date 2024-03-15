@@ -35,6 +35,11 @@
                   :nsfw="store.animeData?.type?.nsfw"
                 />
               </NFlex>
+              <AnimeMetaCardPosterImage
+                :poster-url="store.animeData?.images?.poster"
+                :mini="true"
+                class="sm:hidden"
+              />
               <!-- 基础信息行 -->
               <NFlex vertical size="small">
                 <NFlex class="text-gray-500">

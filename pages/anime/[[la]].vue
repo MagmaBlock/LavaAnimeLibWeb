@@ -10,7 +10,7 @@ const router = useRouter();
 
 const breakpoints = useBreakpoints(breakpointsTailwind);
 
-const currentMobilePage = ref("anime");
+const currentMobilePage = ref("play");
 
 const refreshPlayer = async () => {
   store.showArtPlayer = false;
@@ -102,6 +102,8 @@ function refreshBackground() {
 onUnmounted(() => {
   background.resetBackground();
 });
+
+const isMobileOpenDetails = ref(false);
 </script>
 
 <template>
@@ -148,41 +150,46 @@ onUnmounted(() => {
         breakpoints.smaller('lg').value
       "
     >
+      <!-- 视频框 -->
       <div class="overflow-clip sm:rounded-md">
-        <!-- 视频框 -->
         <AnimePlayer v-if="store.showArtPlayer" />
         <AnimePlayerEmpty v-if="!store.showArtPlayer" />
-        <!-- 本地播放器调用 -->
-        <AnimePlayerActionBar class="sm:mb-4" />
       </div>
 
-      <AnimeCardBasic class="overflow-clip sm:rounded-t-md">
-        <NTabs type="line">
+      <NCard
+        size="small"
+        content-style="padding: 0;"
+        :bordered="false"
+        class="overflow-clip sm:rounded-t-md"
+      >
+        <NTabs type="line" :tabs-padding="20">
           <NTab name="anime" @click="currentMobilePage = 'anime'"> 番剧 </NTab>
-          <NTab name="file" @click="currentMobilePage = 'play'"> 播放 </NTab>
         </NTabs>
-      </AnimeCardBasic>
+      </NCard>
 
-      <!-- 番剧页 -->
-      <div
-        class="overflow-clip sm:rounded-b-md"
-        v-if="currentMobilePage == 'anime'"
+      <!-- 番剧卡-->
+      <AnimeMetaCardMini @open-details="isMobileOpenDetails = true" />
+      <NDrawer
+        v-model:show="isMobileOpenDetails"
+        :default-height="502"
+        placement="bottom"
+        resizable
       >
-        <!-- 番剧卡-->
-        <AnimeMetaCard />
-        <!-- 关联作品 -->
-        <AnimeRelations v-if="!store.state.animeData.isLoading" />
-      </div>
-
-      <!-- 播放页 -->
-      <div
-        class="overflow-clip sm:rounded-b-md"
-        v-if="currentMobilePage == 'play'"
-      >
-        <AnimeDriveSelector />
-        <AnimeFileList />
-        <AnimeFileErrorDisplay />
-      </div>
+        <NDrawerContent
+          :closable="true"
+          title="详情"
+          body-content-style="padding: 0px;"
+        >
+          <AnimeMetaCard />
+        </NDrawerContent>
+      </NDrawer>
+      <!-- 本地播放器调用 -->
+      <AnimePlayerActionBar />
+      <AnimeDriveSelector />
+      <AnimeFileList />
+      <AnimeFileErrorDisplay />
+      <!-- 关联作品 -->
+      <AnimeRelations v-if="!store.state.animeData.isLoading" />
     </div>
 
     <!-- 错误处理视图 -->
