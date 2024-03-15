@@ -1,7 +1,7 @@
 <template>
-  <NCard size="small" title="DevTool">
+  <NCard size="small" :bordered="false">
     <NFlex :align="'center'">
-      <div>LA{{ store.laID }}</div>
+      <AnimeMetaCardAnimeID :id="store.laID" />
       <NDivider vertical />
       <NuxtLink
         :to="{
