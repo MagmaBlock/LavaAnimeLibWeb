@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="ml-4">
     <NDropdown trigger="click" :options="menuOptions" @select="handleSelect">
-      <div class="ml-4">
+      <div>
         <NButton
           secondary
           size="small"
@@ -30,9 +30,9 @@
       </div>
     </NDropdown>
     <NSkeleton
-      :width="80"
+      :width="72"
       :sharp="false"
-      size="medium"
+      size="small"
       v-if="Object.keys(followInfo).length === 0"
     />
   </div>
