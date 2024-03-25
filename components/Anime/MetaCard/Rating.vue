@@ -1,11 +1,10 @@
 <template>
-  <NPopover>
+  <NPopover v-if="rating">
     <template #trigger>
       <div class="flex place-items-center gap-1 cursor-help">
         <Icon icon="material-symbols:star-rounded" />
-        <div v-if="rating">{{ rating }} 分</div>
+        <div>{{ rating }} 分</div>
         <div v-if="rank">#{{ rank }}</div>
-        <NSkeleton v-else :width="64" />
       </div>
     </template>
     评分数据来自 Bangumi 番组计划

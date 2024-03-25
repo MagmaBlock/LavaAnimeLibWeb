@@ -2,7 +2,7 @@
   <NSpace :align="'baseline'">
     <div class="text-lg font-semibold">
       <p v-if="title">{{ title }}</p>
-      <NSkeleton v-else :width="128" />
+      <NSkeleton v-if="loading" :width="128" />
     </div>
     <div class="text-sm font-semibold text-gray-500" v-if="originalTitle">
       <p>{{ originalTitle }}</p>
@@ -17,6 +17,9 @@ defineProps({
   },
   originalTitle: {
     type: String,
+  },
+  loading: {
+    type: Boolean,
   },
 });
 </script>

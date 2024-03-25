@@ -29,12 +29,14 @@
                 <AnimeMetaCardTitle
                   :title="store.animeData?.title"
                   :original-title="store.animeData?.name"
+                  :loading="store.state.animeData.isLoading"
                 />
                 <AnimeMetaCardAttributeLabels
                   :bdrip="store.animeData?.type?.bdrip"
                   :nsfw="store.animeData?.type?.nsfw"
                 />
               </NFlex>
+              <!-- 手机端封面图 -->
               <AnimeMetaCardPosterImage
                 :poster-url="store.animeData?.images?.poster"
                 :mini="true"
@@ -64,7 +66,10 @@
           </NFlex>
 
           <!-- Tags -->
-          <AnimeMetaCardTags :tags="store.animeData?.tags" />
+          <AnimeMetaCardTags
+            :tags="store.animeData?.tags"
+            :loading="store.state.animeData.isLoading"
+          />
         </NFlex>
       </NFlex>
     </template>

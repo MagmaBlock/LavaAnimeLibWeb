@@ -1,5 +1,5 @@
 <template>
-  <NPopover>
+  <NPopover v-if="id">
     <template #trigger>
       <div class="flex place-items-center gap-1 cursor-help">
         <Icon icon="material-symbols:alternate-email" /> LA{{ id }}

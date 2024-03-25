@@ -23,7 +23,7 @@
       </NTag>
     </template>
     <!-- 骨架 -->
-    <template v-for="a in 20" v-else>
+    <template v-for="a in 20" v-if="loading">
       <NSkeleton :width="80 - 50 * Math.random()" :height="22" />
     </template>
   </NSpace>
@@ -32,6 +32,7 @@
 <script lang="ts" setup>
 defineProps<{
   tags?: Tag[];
+  loading?: boolean;
 }>();
 
 export type Tag = {
