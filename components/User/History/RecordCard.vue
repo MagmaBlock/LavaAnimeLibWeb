@@ -12,10 +12,9 @@
       <div class="col-span-3">
         <div class="relative w-full rounded-md overflow-hidden">
           <div class="aspect-w-16 aspect-h-9">
-            <NuxtImg
+            <img
               v-if="record?.animeData?.images?.poster"
               :src="record?.animeData?.images?.poster"
-              placeholder="https://bangumi-app-img.5t5.top/assets/PosterLoading.jpg"
               class="absolute object-cover"
               alt="记录封面"
             />

@@ -23,10 +23,9 @@
           disablepictureinpicture
         ></video>
         <!-- 如果为图片 -->
-        <NuxtImg
+        <img
           class="object-cover w-full min-h-full overflow-hidden"
           :src="pic.pic"
-          placeholder="/Home/headerPic/LavaAnime.jpg"
           v-else
         />
         <!-- 底部阴影 -->

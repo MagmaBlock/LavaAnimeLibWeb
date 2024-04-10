@@ -6,7 +6,6 @@ export default defineNuxtConfig({
     "@bg-dev/nuxt-naiveui",
     "@pinia/nuxt",
     "@pinia-plugin-persistedstate/nuxt",
-    "@nuxt/image",
     "@vite-pwa/nuxt",
     // "nuxt-icon",
   ],

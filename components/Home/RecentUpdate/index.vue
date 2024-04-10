@@ -20,10 +20,9 @@
       >
         <div class="col-span-1 w-full h-full">
           <div class="aspect-w-2 aspect-h-3">
-            <NuxtImg
+            <img
               v-if="record.anime?.images?.poster"
               :src="record.anime?.images?.poster"
-              placeholder="https://bangumi-app-img.5t5.top/assets/PosterLoading.jpg"
               class="object-cover"
             />
             <div

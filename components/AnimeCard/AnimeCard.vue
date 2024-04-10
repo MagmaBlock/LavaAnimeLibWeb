@@ -38,12 +38,7 @@ const posterUrl = computed(() => {
       <NuxtLink :to="{ name: 'anime-la', params: { la: anime?.id } }">
         <!-- 图片容器 -->
         <div class="aspect-w-2 aspect-h-3 overflow-hidden">
-          <NuxtImg
-            :src="posterUrl"
-            placeholder="https://bangumi-app-img.5t5.top/assets/PosterLoading.jpg"
-            class="absolute object-cover"
-            alt="封面图片"
-          />
+          <img :src="posterUrl" class="absolute object-cover" alt="封面图片" />
         </div>
         <!-- 标题 -->
         <div
