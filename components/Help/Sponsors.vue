@@ -60,6 +60,10 @@ export default {
         { name: "小林", support: "￥300.00" },
         { name: "Longtianmu", support: "￥240", link: "https://ltm.ink/" },
         {
+          name: "M*h",
+          support: "￥66.60",
+        },
+        {
           name: "MicTimo",
           support: "￥66.00",
         },
