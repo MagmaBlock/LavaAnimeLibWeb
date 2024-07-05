@@ -41,7 +41,7 @@ const videoButtonClick = async (video) => {
       <!-- 卡片标题 -->
       <template #header>
         <div class="flex place-items-center" @click="ascOrder = !ascOrder">
-          <div>播放列表</div>
+          <div>{{ store.getColorEgg?.fileList?.title ?? "播放列表" }}</div>
           <div class="flex-1"></div>
           <Icon name="mdi:sort-ascending" size="16" v-if="ascOrder" />
           <Icon name="mdi:sort-descending" size="16" v-else />

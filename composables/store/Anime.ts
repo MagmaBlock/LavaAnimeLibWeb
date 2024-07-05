@@ -40,6 +40,20 @@ export const useAnimeStore = defineStore("anime", {
       showArtPlayer: false,
       showAdminTools: false,
       ascOrder: useLocalStorage("AnimeFileAscOrder", true),
+      // 部分番剧的界面彩蛋
+      colorEgg: [
+        {
+          bgmID: 484761,
+          episodeName: "头",
+          follow: {
+            add: "加入小鹿部",
+            remove: "逃不掉了",
+          },
+          fileList: {
+            title: "鹿园",
+          },
+        },
+      ],
     };
   },
   getters: {
@@ -187,6 +201,9 @@ export const useAnimeStore = defineStore("anime", {
         });
         return this.episodeList[currentIndex + 1]?.episode;
       };
+    },
+    getColorEgg: (state) => {
+      return state.colorEgg.find((egg) => egg.bgmID === state.animeData?.bgmID);
     },
   },
   actions: {
