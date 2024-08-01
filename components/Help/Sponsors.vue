@@ -64,6 +64,10 @@ export default {
           support: "￥66.60",
         },
         {
+          name: "刻舟－求劍",
+          support: "￥66.60",
+        },
+        {
           name: "MicTimo",
           support: "￥66.00",
         },
