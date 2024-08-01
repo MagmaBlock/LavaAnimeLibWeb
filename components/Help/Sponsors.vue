@@ -11,8 +11,8 @@
             @click="sponsor.showModal = true"
           />
 
-          <n-modal v-model:show="sponsor.showModal">
-            <n-card
+          <NModal v-model:show="sponsor.showModal">
+            <NCard
               style="max-width: 400px"
               :title="sponsor.name"
               :bordered="false"
@@ -27,12 +27,12 @@
               </template>
               <p v-html="sponsor.message"></p>
               <template #action>
-                <n-a v-if="sponsor.link" :href="sponsor.link" target="_blank"
-                  >查看附加的链接</n-a
+                <NA v-if="sponsor.link" :href="sponsor.link" target="_blank"
+                  >查看附加的链接</NA
                 >
               </template>
-            </n-card>
-          </n-modal>
+            </NCard>
+          </NModal>
         </template>
       </div>
     </div>
@@ -58,9 +58,9 @@ export default {
           link: "https://github.com/czy0729",
         },
         { name: "小林", support: "￥300.00" },
-        { name: "Longtianmu", support: "￥240", link: "https://ltm.ink/" },
+        { name: "Longtianmu", support: "￥240" },
         {
-          name: "M*h",
+          name: "M***h",
           support: "￥66.60",
         },
         {
@@ -82,8 +82,12 @@ export default {
         {
           name: "若葉",
           support: "其他",
-          message: "提供新域名等支持",
+          message: "提供域名赞助",
           link: "https://loliloli.moe/",
+        },
+        {
+          name: "Ender_DeerOVO",
+          support: "￥50.00",
         },
         {
           name: "XJH_Jorhai",

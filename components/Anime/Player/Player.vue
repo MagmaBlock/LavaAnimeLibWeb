@@ -12,7 +12,6 @@
 <script setup>
 import Artplayer from "artplayer";
 import { useLocalStorage, useThrottleFn } from "@vueuse/core";
-import canAutoplay from "can-autoplay";
 
 const store = useAnimeStore();
 const message = useMessage();
