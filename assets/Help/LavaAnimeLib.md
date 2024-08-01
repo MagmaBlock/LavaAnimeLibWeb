@@ -12,14 +12,13 @@
 
 - 番剧资料信息
   - [Bangumi 番组计划](https://bgm.tv/)
-- LavaAnimeWeb V2 新前端技术实现 *完全重写*
-  - [Vite 2](https://cn.vitejs.dev/) 下一代的前端工具链
+- LavaAnimeWeb V2 新前端技术实现 _完全重写_
+  - [Nuxt.js](https://nuxt.com/) 一个直观而强大的 Vue 全栈框架
   - [Vue 3](https://cn.vuejs.org/) 渐进式 JavaScript 前端框架
-  - [Vue Router 4](https://router.vuejs.org/zh/) Vue.js 的官方路由，用于构建单界面应用
   - [tailwindcss](https://tailwindcss.com/) 使用 className 快速开发 CSS 的工具样式库
   - [Naive UI](https://www.naiveui.com/zh-CN/os-theme) 有点意思 十分年轻的 Vue 3 前端样式组件库
   - [Artplayer](https://artplayer.org/document/zh-cn/) 一款现代多功能的 HTML 5 视频播放器
-- LavaAnimeLib V2 新后端技术实现 *完全重写*
+- LavaAnimeLib V2 新后端技术实现 _完全重写_
   - [Express 4](http://expressjs.com/) 基于 NodeJS 的 Web 应用开发框架
   - [NodeJS](https://nodejs.org/en/) 在服务端上运行的 JavaScript
   - [AList](https://alist-doc.nn.ci/) 支持大量云存储管理的列表程序，支持 Web、WebDAV 和 HTTP API 对接。
@@ -31,11 +30,4 @@
 
 直至 22 年 1 月，基于 Cloudreve 的 API 用 JQuery 写出了第一个界面，LavaAnimeLibWeb V1 自此诞生。
 
-22 年 6 月 8 日，[前端的第二个大版本](https://github.com/MagmaBlock/LavaAnimeLibWeb/commit/11a27d95a3741b76b1fd08bd39857c17ffe675ae)立项，基于 Vite Vue 进行全面重写，2022 年 8 月 22 日，V2 前端 Beta 公开测试。 
-
----
-
-如果你觉得咱有个眼熟想要一起讨论，可以加入一下 QQ 群 1054724367。目前暂时不推荐完全只会追番的陌生人加群，因为这个群可能更趋向于技术（？
-
-同时，创立这个小资源库的原因纯粹是因为“我就追个番”。2021 年发生了太多魔幻的事情，B 站、A 站相继倒下，不是不追正版，而是我们都成了正版受害者。希望有生之年这样的情况能有所改善。
-
+22 年 6 月 8 日，[前端的第二个大版本](https://github.com/MagmaBlock/LavaAnimeLibWeb/commit/11a27d95a3741b76b1fd08bd39857c17ffe675ae)立项，基于 Vite Vue 进行全面重写，2022 年 8 月 22 日，V2 前端 Beta 公开测试。
