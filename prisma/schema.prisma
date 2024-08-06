@@ -1,0 +1,293 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// 番剧作品
+model Anime {
+  id           Int         @id @default(autoincrement())
+  name         String
+  originalName String?
+  summary      String?     @db.Text
+  poster       UploadFile? @relation(fields: [posterFileId], references: [id])
+  posterFileId Int?
+  createdAt    DateTime    @default(now())
+
+  // Informations
+  bdrip         Boolean        @default(false)
+  nsfw          Boolean        @default(false)
+  platform      AnimePlatform?
+  date          DateTime?
+  releaseYear   Int?
+  releaseSeason String?
+  region        Region?
+
+  tags         AnimeTag[] // 1-n, 此作品的相关标签
+  sites        AnimeSiteLink[] // m-n, 此作品在其他平台的关联
+  ratings      AnimeRating[] // 1-n, 来自多个平台的评分
+  episodes     AnimeEpisode[] // 1-n, 此作品的多个剧集
+  files        LibFile[] // 1-n, 此作品在所有节点中的所有文件
+  userCollects AnimeCollection[]
+  userViews    ViewHistory[]
+}
+
+enum AnimePlatform {
+  TV
+  Web
+  OVA
+  Movie
+  Other
+}
+
+enum Region {
+  Japan
+  China
+  Korea
+  Europe
+  America
+  Other
+}
+
+// 描述作品特点和内容的标签
+model AnimeTag {
+  name   String
+  count  Int?
+  source AnimeInfoSource @default(Bangumi)
+
+  anime   Anime @relation(fields: [animeId], references: [id])
+  animeId Int
+
+  @@id([name, source, animeId])
+}
+
+// 其他站点的作品关联
+model AnimeSiteLink {
+  id         Int             @id @default(autoincrement())
+  siteType   AnimeInfoSource
+  siteId     String
+  lastUpdate DateTime?
+
+  animes Anime[]
+
+  @@unique([siteId, siteType])
+}
+
+// 描述评分
+model AnimeRating {
+  id    Int   @id @default(autoincrement())
+  score Float // 评分
+  rank  Int? // 在该来源中的排名
+  count Int? // 评分人数
+
+  anime   Anime           @relation(fields: [animeId], references: [id])
+  animeId Int
+  source  AnimeInfoSource // 评分来源
+
+  @@unique([animeId, source])
+}
+
+// 番剧作品关联到外部站点、番剧数据信息的来源
+enum AnimeInfoSource {
+  Bangumi
+  User
+}
+
+// 描述一个动画的集数
+model AnimeEpisode {
+  id             Int         @id @default(autoincrement())
+  episodeDisplay Float // 显示用集数，若是 Bangumi，对应 sort 字段
+  episodeIndex   Float       @default(0) // 集数索引，一般用于排序等. 对应 Bangumi ep 字段. 可重复
+  type           EpisodeType @default(Other) // 本季类型
+  name           String? // 标题
+  originalName   String? // 标题 (原文)
+  summary        String?     @db.Text // 简介
+  airDate        String? // 放送日期
+  duration       Int? // 时长 (秒)
+
+  anime   Anime           @relation(fields: [animeId], references: [id])
+  animeId Int
+  source  AnimeInfoSource
+
+  files LibFile[] // m-n, 此集数下的所有文件
+
+  @@unique([animeId, type, episodeDisplay]) // 同一个动画的相同类型集数不可重复
+}
+
+enum EpisodeType {
+  Normal
+  SP
+  OP
+  ED
+  Other
+}
+
+// 描述一个资源库
+model Library {
+  id          String           @id @db.VarChar(32)
+  name        String
+  description String?
+  type        LibraryType      @default(Alist)
+  config      Json?
+  structure   LibraryStructure
+  noNSFW      Boolean          @default(false)
+  noDownload  Boolean          @default(false)
+  files       LibFile[]
+  userViews   ViewHistory[]
+}
+
+// 库的类型
+enum LibraryType {
+  Alist
+  // TODO: Local
+}
+
+enum LibraryStructure {
+  LavaAnimeLibV2
+}
+
+// 描述一个库中的文件
+model LibFile {
+  id          Int            @id @default(autoincrement())
+  name        String
+  type        FileType       @default(Other)
+  path        String         @db.VarChar(512) // 文件所在路径 (不含文件名)
+  isDirectory Boolean        @default(false)
+  size        Float?
+  removed     Boolean        @default(false) // 是否已被删除
+  lastFoundAt DateTime       @default(now()) // 最后一次找到此文件的时间
+  library     Library        @relation(fields: [libraryId], references: [id])
+  libraryId   String         @db.VarChar(32)
+  anime       Anime?         @relation(fields: [animeId], references: [id])
+  animeId     Int?
+  episodes    AnimeEpisode[] // m-n, 一个文件可能对应多个集数 (如一个视频对应 1-3 集的极端情况)
+  userViews   ViewHistory[]
+
+  @@unique(fields: [name, path, libraryId], name: "uniqueFileInLib") // 确定一个库中的唯一一个文件
+}
+
+enum FileType {
+  Video
+  Audio
+  Image
+  Document
+  Subtitle
+  Archive
+  Seed
+  Other
+}
+
+// 存储用户文件的存储器
+model Storage {
+  id   Int         @id @default(autoincrement())
+  name String
+  type StorageType
+
+  UploadFile UploadFile[]
+}
+
+// 枚举支持的存储设备
+enum StorageType {
+  S3
+  Local
+}
+
+// 用户上传文件, 如作品图片、头像、评论区图片等
+model UploadFile {
+  id        Int      @id @default(autoincrement())
+  type      FileType
+  storage   Storage  @relation(fields: [storageId], references: [id])
+  storageId Int
+  path      String   @db.VarChar(512)
+  createdAt DateTime @default(now())
+  animes    Anime[]
+}
+
+model User {
+  id               Int               @id @default(autoincrement())
+  email            String            @unique
+  name             String            @unique
+  password         String
+  createdAt        DateTime          @default(now())
+  settings         Json?
+  role             UserRole          @default(Default)
+  infomations      UserInfomation[]
+  animeCollections AnimeCollection[] // 用户的收藏记录
+  inviteCodes      InviteCode[]      @relation(name: "create")
+  inviteBy         InviteCode?       @relation(name: "use")
+  viewHistories    ViewHistory[]
+}
+
+
+enum UserRole {
+  Default
+  Admin
+}
+
+// 用户的其他信息
+model UserInfomation {
+  id     Int     @id @default(autoincrement())
+  avatar String?
+
+  owner   User @relation(fields: [ownerId], references: [id])
+  ownerId Int
+}
+
+// 用户追番记录
+model AnimeCollection {
+  id        Int                   @id @default(autoincrement())
+  user      User                  @relation(fields: [userId], references: [id])
+  userId    Int
+  anime     Anime                 @relation(fields: [animeId], references: [id])
+  animeId   Int
+  status    AnimeCollectionStatus @default(Plan)
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+
+  @@unique([userId, animeId])
+}
+
+enum AnimeCollectionStatus {
+  Plan
+  Watching
+  Finished
+}
+
+model InviteCode {
+  code        String    @id
+  createdBy   User?     @relation("create", fields: [createdById], references: [id])
+  createdById Int?
+  createdAt   DateTime  @default(now())
+  usedBy      User?     @relation("use", fields: [usedById], references: [id])
+  usedById    Int?      @unique
+  usedAt      DateTime?
+  expiredAt   DateTime?
+}
+
+model Setting {
+  key       String   @id
+  value     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ViewHistory {
+  id          Int      @id @default(autoincrement())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+  anime       Anime    @relation(fields: [animeId], references: [id])
+  animeId     Int
+  file        LibFile  @relation(fields: [libFileId], references: [id])
+  libFileId   Int
+  currentTime Int?
+  totalTime   Int?
+  userIP      String?
+  watchMethod String?
+  library     Library  @relation(fields: [libraryId], references: [id])
+  libraryId   String   @db.VarChar(32)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
