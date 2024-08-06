@@ -1,3 +1,5 @@
+import type { TokenPayload } from "~/server/types/token";
+
 export class TokenService {
   /**
    * 更新 Token 有效期
@@ -30,7 +32,3 @@ export class TokenService {
     }
   }
 }
-
-export type TokenPayload = {
-  id: number;
-};

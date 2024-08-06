@@ -9,10 +9,11 @@ import {
   UserPasswordBadError,
   UserPasswordError,
 } from "../error/error";
-import type { TokenPayload } from "../token/service";
 import { encryptedPasswordFactory } from "./password/interface";
 import { Sha256Password } from "./password/sha256";
 import { UserValidator } from "./validator/user";
+import type { LoginSuccessResult } from "~/server/types/user";
+import type { TokenPayload } from "~/server/types/token";
 
 export class UserService {
   /**
@@ -136,7 +137,6 @@ export class UserService {
           id: userId,
         },
         data: {
-          encryption: "Sha256",
           password: encryptedPassword.serialize(),
         },
       });
@@ -149,8 +149,3 @@ export class UserService {
     }
   }
 }
-
-export type LoginSuccessResult = {
-  token: string;
-  user: User;
-};
