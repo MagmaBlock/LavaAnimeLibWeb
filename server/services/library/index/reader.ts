@@ -1,16 +1,17 @@
-import nodePath from "path/posix";
-import type { StorageReader } from "../stroage/reader/interface";
 import type { LibFile } from "@prisma/client";
+import nodePath from "path/posix";
+import { App } from "../../app";
+import type { StorageReader } from "../stroage/reader/interface";
 
 /**
  * 读取数据库中 LibFile 的类
  * 本类中的方法均是对数据库的读方法
  */
 export class LibraryIndexReader {
-  libraryTool: StorageReader;
+  private storageReader: StorageReader;
 
   constructor(libraryTool: StorageReader) {
-    this.libraryTool = libraryTool;
+    this.storageReader = libraryTool;
   }
 
   /**
@@ -21,10 +22,10 @@ export class LibraryIndexReader {
   async getFile(path: string): Promise<LibFile | null> {
     const parsePath = nodePath.parse(path);
 
-    return await usePrisma.libFile.findUnique({
+    return await App.instance.prisma.libFile.findUnique({
       where: {
         uniqueFileInLib: {
-          libraryId: this.libraryTool.library.id,
+          libraryId: this.storageReader.library.id,
           path: parsePath.dir,
           name: parsePath.base,
         },
@@ -39,9 +40,9 @@ export class LibraryIndexReader {
   async getFirstSubFiles(path: string): Promise<LibFile[]> {
     path = nodePath.join(path);
 
-    return await usePrisma.libFile.findMany({
+    return await App.instance.prisma.libFile.findMany({
       where: {
-        libraryId: this.libraryTool.library.id,
+        libraryId: this.storageReader.library.id,
         removed: false,
         path,
       },
@@ -55,9 +56,9 @@ export class LibraryIndexReader {
   async getAllSubFiles(path: string): Promise<LibFile[]> {
     path = nodePath.join(path);
 
-    return await usePrisma.libFile.findMany({
+    return await App.instance.prisma.libFile.findMany({
       where: {
-        libraryId: this.libraryTool.library.id,
+        libraryId: this.storageReader.library.id,
         removed: false,
         path: { startsWith: path },
       },
@@ -70,13 +71,17 @@ export class LibraryIndexReader {
   async getFirstSubFilesWithNoAnime(path: string): Promise<LibFile[]> {
     path = nodePath.join(path);
 
-    return await usePrisma.libFile.findMany({
+    return await App.instance.prisma.libFile.findMany({
       where: {
-        libraryId: this.libraryTool.library.id,
+        libraryId: this.storageReader.library.id,
         removed: false,
         path,
         animeId: null,
       },
     });
+  }
+
+  getStorageReader(): StorageReader {
+    return this.storageReader;
   }
 }

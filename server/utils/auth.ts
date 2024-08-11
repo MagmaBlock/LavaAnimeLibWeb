@@ -1,9 +1,6 @@
 import chalk from "chalk";
 import { H3Event } from "h3";
 import { ForbiddenError, UnauthorizedError } from "../services/error/error";
-import { JwtAuthentication } from "../services/token/authentication/jwt";
-
-export const useAuth = new JwtAuthentication(process.env.AUTH_SECRET);
 
 /**
  * 读取请求来源的用户
@@ -51,7 +48,7 @@ const getUserByToken = defineCachedFunction(
     if (!payload?.id) return null;
 
     try {
-      const user = usePrisma.user.findFirst({
+      const user = this.prisma.user.findFirst({
         where: {
           id: payload.id,
         },

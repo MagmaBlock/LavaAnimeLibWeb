@@ -1,5 +1,5 @@
-import moment from "moment";
 import { createHmac } from "crypto";
+import moment from "moment";
 import type { Authentication } from "./interface";
 
 export class JwtAuthentication implements Authentication {

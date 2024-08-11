@@ -1,7 +1,7 @@
+import type { LibFile, Library } from "@prisma/client";
+import type { LibraryIndexReader } from "../../index/reader";
 import type { LibraryIndexUpdater } from "../../index/updater";
 import type { LibraryScraper } from "../../scraper/interface";
-import type { LibraryIndexReader } from "../../index/reader";
-import type { Library, LibFile } from "@prisma/client";
 
 /**
  * 资源库工具的接口
@@ -17,9 +17,9 @@ export interface StorageReader {
   updateIndex(path: string): Promise<LibFile[]>;
 
   /**
-   * 获取此 Library 应当使用的扫描器
+   * 获取此 Library 应当使用的索引更新器
    */
-  getScanner(): LibraryIndexUpdater;
+  getIndexUpdater(): LibraryIndexUpdater;
 
   /**
    * 获取此 Library 应当使用的挂削器
@@ -27,7 +27,7 @@ export interface StorageReader {
   getScraper(): LibraryScraper;
 
   /**
-   * 获取此 Library 的读取器
+   * 获取此 Library 应当使用的索引读取器
    */
-  getReader(): LibraryIndexReader;
+  getIndexReader(): LibraryIndexReader;
 }

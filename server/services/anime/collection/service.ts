@@ -1,4 +1,5 @@
 import { AnimeCollectionStatus, type AnimeCollection } from "@prisma/client";
+import { App } from "../../app";
 
 /**
  * 管理用户的动画追番
@@ -19,7 +20,7 @@ export class AnimeCollectionSerivce {
   ): Promise<AnimeCollection> {
     // 使用upsert操作来实现创建或更新，根据提供的userId和animeId来判断记录是否存在
     // 如果存在，则更新收藏状态；如果不存在，则创建新的收藏记录
-    const result = await usePrisma.animeCollection.upsert({
+    const result = await App.instance.prisma.animeCollection.upsert({
       create: {
         userId,
         animeId,
@@ -47,7 +48,7 @@ export class AnimeCollectionSerivce {
    * @returns 返回删除操作的结果，通常包含受影响的行数等信息
    */
   async remove(userId: number, animeId: number): Promise<AnimeCollection> {
-    const result = await usePrisma.animeCollection.delete({
+    const result = await App.instance.prisma.animeCollection.delete({
       where: {
         userId_animeId: {
           userId,
@@ -59,30 +60,30 @@ export class AnimeCollectionSerivce {
     return result;
   }
 
-/**
- * 异步获取用户收藏的特定动画
- * 
- * 本函数通过用户的ID和动画的ID来查找该用户是否收藏了此动画
- * 它使用Prisma ORM来查询数据库中的动画收藏记录
- * 
- * @param userId 用户的ID
- * @param animeId 动画的ID
- * @returns 返回找到的动画收藏记录，如果没有找到则返回null
- */
-async get(userId: number, animeId: number): Promise<AnimeCollection | null> {
-  // 使用Prisma ORM的findUnique方法来查找唯一的动画收藏记录
-  // 这里通过组合主键(userId_animeId)来确保查找的唯一性
-  const result = await usePrisma.animeCollection.findUnique({
-    where: {
-      userId_animeId: {
-        userId,
-        animeId,
+  /**
+   * 异步获取用户收藏的特定动画
+   *
+   * 本函数通过用户的ID和动画的ID来查找该用户是否收藏了此动画
+   * 它使用Prisma ORM来查询数据库中的动画收藏记录
+   *
+   * @param userId 用户的ID
+   * @param animeId 动画的ID
+   * @returns 返回找到的动画收藏记录，如果没有找到则返回null
+   */
+  async get(userId: number, animeId: number): Promise<AnimeCollection | null> {
+    // 使用Prisma ORM的findUnique方法来查找唯一的动画收藏记录
+    // 这里通过组合主键(userId_animeId)来确保查找的唯一性
+    const result = await App.instance.prisma.animeCollection.findUnique({
+      where: {
+        userId_animeId: {
+          userId,
+          animeId,
+        },
       },
-    },
-  });
+    });
 
-  return result;
-}
+    return result;
+  }
 
   /**
    * 获取与指定用户相关的所有动漫收藏
@@ -95,7 +96,7 @@ async get(userId: number, animeId: number): Promise<AnimeCollection | null> {
    * @returns 返回一个Promise，解析为包含用户动漫收藏的数组
    */
   async getAllWithUser(userId: number) {
-    const result = await usePrisma.animeCollection.findMany({
+    const result = await App.instance.prisma.animeCollection.findMany({
       where: {
         userId,
       },
@@ -117,7 +118,7 @@ async get(userId: number, animeId: number): Promise<AnimeCollection | null> {
    * @returns 返回一个Promise，解析为包含与指定动画ID相关联的所有收藏的数组
    */
   async getAllWithAnime(animeId: number) {
-    const result = await usePrisma.animeCollection.findMany({
+    const result = await App.instance.prisma.animeCollection.findMany({
       where: {
         animeId,
       },

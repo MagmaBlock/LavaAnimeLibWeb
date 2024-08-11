@@ -2,6 +2,7 @@ import { AnimeInfoSource, AnimePlatform, EpisodeType } from "@prisma/client";
 import { remove as removeDiacritics } from "diacritics";
 import moment from "moment";
 import { BangumiAPI } from "~/server/services/api/bangumi";
+import { App } from "~/server/services/app";
 import type {
   BangumiAPIEpisode,
   BangumiAPIEpisodes,
@@ -24,15 +25,17 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
       return;
     }
 
-    const { animes } = await usePrisma.animeSiteLink.findFirstOrThrow({
-      where: {
-        siteType: "Bangumi",
-        siteId: bangumiId,
-      },
-      include: {
-        animes: true,
-      },
-    });
+    const { animes } = await App.instance.prisma.animeSiteLink.findFirstOrThrow(
+      {
+        where: {
+          siteType: "Bangumi",
+          siteId: bangumiId,
+        },
+        include: {
+          animes: true,
+        },
+      }
+    );
 
     const bangumiSubject = await this.bangumiAPI.getSubjects(Number(bangumiId));
 
@@ -69,7 +72,7 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
     bangumiEpisodes: BangumiAPIEpisodes
   ) {
     for (const bangumiEpisode of bangumiEpisodes.data) {
-      const upsert = await usePrisma.animeEpisode.upsert({
+      const upsert = await App.instance.prisma.animeEpisode.upsert({
         where: {
           animeId_type_episodeDisplay: {
             animeId,
@@ -103,7 +106,7 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
           source: "Bangumi",
         },
       });
-      logger.trace(
+      App.instance.logger.trace(
         `已从 ${upsert.source} 更新 animeId ${upsert.animeId} 的 ${upsert.type} 集数 ${upsert.episodeDisplay} 数据.`
       );
     }
@@ -124,7 +127,7 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
    * @param animeId
    */
   private async saveLastUpdate(animeSiteId: string) {
-    await usePrisma.animeSiteLink.update({
+    await App.instance.prisma.animeSiteLink.update({
       where: {
         siteId_siteType: {
           siteId: animeSiteId,
@@ -150,7 +153,7 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
     else if (bangumiSubject.platform === "OVA") platform = "OVA";
     else if (bangumiSubject.platform === "WEB") platform = "Web";
 
-    await usePrisma.anime.update({
+    await App.instance.prisma.anime.update({
       where: {
         id: animeId,
       },
@@ -162,7 +165,7 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
       },
     });
 
-    logger.trace(`从 Bangumi 更新了番剧 ${animeId} 的基础信息.`);
+    App.instance.logger.trace(`从 Bangumi 更新了番剧 ${animeId} 的基础信息.`);
   }
 
   /**
@@ -172,7 +175,7 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
     animeId: number,
     bangumiSubject: BangumiAPISubject
   ) {
-    await usePrisma.animeTag.deleteMany({
+    await App.instance.prisma.animeTag.deleteMany({
       where: {
         source: AnimeInfoSource.Bangumi,
         animeId: animeId,
@@ -216,12 +219,12 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
     });
 
     // 添加新的 Banugmi 标签
-    await usePrisma.animeTag.createMany({
+    await App.instance.prisma.animeTag.createMany({
       data: tags,
       skipDuplicates: true,
     });
 
-    logger.trace(`从 Bangumi 更新了番剧 ${animeId} 的最新标签.`);
+    App.instance.logger.trace(`从 Bangumi 更新了番剧 ${animeId} 的最新标签.`);
   }
 
   /**
@@ -231,7 +234,7 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
     animeId: number,
     bangumiSubject: BangumiAPISubject
   ) {
-    await usePrisma.animeRating.upsert({
+    await App.instance.prisma.animeRating.upsert({
       where: {
         animeId_source: {
           animeId: animeId,
@@ -252,6 +255,6 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
       },
     });
 
-    logger.trace(`更新了番剧 ${animeId} 的最新 Bangumi 评分`);
+    App.instance.logger.trace(`更新了番剧 ${animeId} 的最新 Bangumi 评分`);
   }
 }

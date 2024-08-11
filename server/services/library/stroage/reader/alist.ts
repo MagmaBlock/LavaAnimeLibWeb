@@ -1,22 +1,23 @@
+import { FileType, type LibFile, type Library } from "@prisma/client";
+import axios, { AxiosError } from "axios";
+import { posix as pathPosix } from "path";
+import { App } from "~/server/services/app";
+import type {
+  AlistAPIFile,
+  AlistLibraryConfig,
+} from "~/server/types/library/storage/reader/alist";
 import {
   InternalServerError,
   LibraryNotConfiguredError,
   NotFoundError,
   ServiceUnavailableError,
 } from "../../../error/error";
-import { FileType, type LibFile, type Library } from "@prisma/client";
-import type { StorageReader } from "./interface";
-import { posix as pathPosix } from "path";
-import axios, { AxiosError } from "axios";
+import { extensionMap } from "../../file/type/type";
+import { LibraryIndexReader } from "../../index/reader";
 import { LibraryIndexUpdater } from "../../index/updater";
 import type { LibraryScraper } from "../../scraper/interface";
 import { scraperFactory } from "../../scraper/interface";
-import { LibraryIndexReader } from "../../index/reader";
-import { extensionMap } from "../../file/type/type";
-import type {
-  AlistAPIFile,
-  AlistLibraryConfig,
-} from "~/server/types/library/storage/reader/alist";
+import type { StorageReader } from "./interface";
 
 /**
  * Alist 操作器实现
@@ -82,13 +83,13 @@ export class AlistStorageReader implements StorageReader {
 
       // 其他意外情况
       if (!Array.isArray(alistFiles)) {
-        logger.error("Alist 返回意外结果:", listGet.data);
+        App.instance.logger.error("Alist 返回意外结果:", listGet.data);
         throw new ServiceUnavailableError("Alist 服务异常");
       }
     } catch (error) {
       // Alist 在找不到路径时，不会回复 4xx，而是 200 中的 body 中的 code = 500
       if (error instanceof AxiosError) {
-        logger.error("Alist 请求失败:", error.message);
+        App.instance.logger.error("Alist 请求失败:", error.message);
       }
       throw error;
     }
@@ -101,7 +102,7 @@ export class AlistStorageReader implements StorageReader {
       for (let index in alistFiles) {
         let alistFile = alistFiles[index];
 
-        await usePrisma.libFile.upsert({
+        await App.instance.prisma.libFile.upsert({
           where: {
             uniqueFileInLib: {
               name: alistFile.name,
@@ -141,7 +142,7 @@ export class AlistStorageReader implements StorageReader {
      *      (是在 LibraryScanner.scan() 完成的)
      */
     try {
-      inDBLibFiles = await usePrisma.libFile.findMany({
+      inDBLibFiles = await App.instance.prisma.libFile.findMany({
         where: {
           libraryId: this.library.id,
           path,
@@ -158,7 +159,7 @@ export class AlistStorageReader implements StorageReader {
 
         // 如果此 DB 的文件在 Alist 中不存在，将文件标记为 "removed"
         if (thisFileInAlist === undefined) {
-          await usePrisma.libFile.update({
+          await App.instance.prisma.libFile.update({
             where: {
               uniqueFileInLib: {
                 libraryId: dbFile.libraryId,
@@ -170,7 +171,7 @@ export class AlistStorageReader implements StorageReader {
               removed: true,
             },
           });
-          logger.trace(
+          App.instance.logger.trace(
             `${this.library.name}(${this.library.id}) 删除 ${dbFile.path}${dbFile.name}`
           );
         }
@@ -179,7 +180,7 @@ export class AlistStorageReader implements StorageReader {
       throw error;
     }
 
-    const result = await usePrisma.libFile.findMany({
+    const result = await App.instance.prisma.libFile.findMany({
       where: {
         libraryId: this.library.id,
         path,
@@ -190,15 +191,15 @@ export class AlistStorageReader implements StorageReader {
     return result;
   }
 
-  getScanner(): LibraryIndexUpdater {
+  getIndexUpdater(): LibraryIndexUpdater {
     return new LibraryIndexUpdater(this);
   }
 
   getScraper(): LibraryScraper {
-    return scraperFactory(this);
+    return scraperFactory(this, App.instance.prisma, App.instance.logger);
   }
 
-  getReader(): LibraryIndexReader {
+  getIndexReader(): LibraryIndexReader {
     return new LibraryIndexReader(this);
   }
 

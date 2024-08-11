@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+
   modules: [
     "@nuxtjs/tailwindcss",
     "@bg-dev/nuxt-naiveui",
@@ -9,18 +10,23 @@ export default defineNuxtConfig({
     "@vite-pwa/nuxt",
     // "nuxt-icon",
   ],
+
   runtimeConfig: {
     public: {
       apiBaseUrl: "https://anime-api.5t5.top",
     },
   },
+
   ssr: false,
+
   imports: {
     dirs: ["composables/store/*.{js,ts}"],
   },
+
   piniaPersistedstate: {
     storage: "localStorage",
   },
+
   app: {
     head: {
       meta: [
@@ -61,10 +67,13 @@ export default defineNuxtConfig({
       ],
     },
   },
+
   css: ["~/assets/css/scrollbar.css", "~/assets/css/transition.css"],
+
   typescript: {
     shim: false,
   },
+
   pwa: {
     registerType: "prompt",
     includeAssets: ["favicon.ico", "icon.svg", "apple-touch-icon.png"],
@@ -94,10 +103,13 @@ export default defineNuxtConfig({
       enabled: false,
     },
   },
+
   vite: {
     build: {
       target: ["chrome71"],
       sourcemap: true,
     },
   },
+
+  compatibilityDate: "2024-08-11",
 });

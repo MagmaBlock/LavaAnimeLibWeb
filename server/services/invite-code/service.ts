@@ -1,5 +1,6 @@
-import { createHash } from "crypto";
 import { Prisma, type InviteCode } from "@prisma/client";
+import { createHash } from "crypto";
+import { App } from "../app";
 import {
   InviteCodeConflictError,
   InviteCodeNotFoundError,
@@ -20,7 +21,7 @@ export class InviteCodeService {
     expiredAt?: Date
   ): Promise<InviteCode> {
     try {
-      return await usePrisma.inviteCode.create({
+      return await App.instance.prisma.inviteCode.create({
         data: {
           code: code ?? this.getRandomInviteCode(),
           createdById,
@@ -61,7 +62,7 @@ export class InviteCodeService {
     }
 
     try {
-      return await usePrisma.inviteCode.createMany({
+      return await App.instance.prisma.inviteCode.createMany({
         data: codes,
         skipDuplicates: true,
       });
@@ -100,7 +101,7 @@ export class InviteCodeService {
     expiredLt?: Date
   ): Promise<Prisma.BatchPayload> {
     try {
-      return await usePrisma.inviteCode.deleteMany({
+      return await App.instance.prisma.inviteCode.deleteMany({
         where: {
           code: code ?? undefined,
           createdById: createdById ?? undefined,
@@ -119,7 +120,7 @@ export class InviteCodeService {
    */
   async test(code: string): Promise<boolean> {
     try {
-      const find = await usePrisma.inviteCode.findFirst({
+      const find = await App.instance.prisma.inviteCode.findFirst({
         where: {
           code: code,
           usedBy: null,
@@ -150,7 +151,7 @@ export class InviteCodeService {
    */
   async use(code: string, usedById: number): Promise<InviteCode> {
     try {
-      return await usePrisma.inviteCode.update({
+      return await App.instance.prisma.inviteCode.update({
         // 查找没有过期的此邀请码
         where: {
           code: code,

@@ -1,12 +1,17 @@
-import { AnimeInfoSource, type LibFile, Region } from "@prisma/client";
+import {
+  AnimeInfoSource,
+  type LibFile,
+  Region
+} from "@prisma/client";
 import nodePath from "path/posix";
-import type { StorageReader } from "../stroage/reader/interface";
-import { LibraryIndexReader } from "../index/reader";
-import type { LibraryScraper } from "./interface";
 import type {
   LibraryScrapeResult,
   LibraryScrapeResultAnime,
 } from "~/server/types/library/scraper/result";
+import { App } from "../../app";
+import { LibraryIndexReader } from "../index/reader";
+import type { StorageReader } from "../stroage/reader/interface";
+import type { LibraryScraper } from "./interface";
 
 /**
  * LavaAnimeLibV2 是番剧库的上一代版本
@@ -32,12 +37,12 @@ import type {
  * -- 网络动画/
  */
 export class LavaAnimeLibV2LibraryScraper implements LibraryScraper {
-  libraryTool: StorageReader;
-  reader: LibraryIndexReader;
+  private storageReader: StorageReader;
+  private indexReader: LibraryIndexReader;
 
   constructor(libraryTool: StorageReader) {
-    this.libraryTool = libraryTool;
-    this.reader = libraryTool.getReader();
+    this.storageReader = libraryTool;
+    this.indexReader = libraryTool.getIndexReader();
   }
 
   /**
@@ -57,16 +62,16 @@ export class LavaAnimeLibV2LibraryScraper implements LibraryScraper {
 
     // 开始挂削流程
     const allYears = await this.readAllYears();
-    logger.debug("所有年份:", allYears);
+    App.instance.logger.debug("所有年份:", allYears);
     // 遍历所有年份
     for (let year of allYears) {
       const allTypes = await this.readTypesInYear(year);
-      logger.debug(`${year} 下读取到 ${allTypes.length} 个类型.`);
+      App.instance.logger.debug(`${year} 下读取到 ${allTypes.length} 个类型.`);
       // 遍历所有类型
       for (let type of allTypes) {
         const allAnimes = await this.readAnimesInType(year, type);
         if (allAnimes.length) {
-          logger.debug(
+          App.instance.logger.debug(
             `${year} ${type} 下读取到 ${allAnimes.length} 个新动漫.`
           );
         }
@@ -86,7 +91,7 @@ export class LavaAnimeLibV2LibraryScraper implements LibraryScraper {
    * @returns 纯数字年份
    */
   private async readAllYears(): Promise<number[]> {
-    const root = await this.reader.getFirstSubFilesWithNoAnime("/");
+    const root = await this.indexReader.getFirstSubFilesWithNoAnime("/");
     const allYears: number[] = [];
     root.forEach((record) => {
       if (record.isDirectory) {
@@ -105,7 +110,9 @@ export class LavaAnimeLibV2LibraryScraper implements LibraryScraper {
    */
   private async readTypesInYear(year: number): Promise<string[]> {
     const yearPath = `/${year}年`;
-    const yearRoot = await this.reader.getFirstSubFilesWithNoAnime(yearPath);
+    const yearRoot = await this.indexReader.getFirstSubFilesWithNoAnime(
+      yearPath
+    );
     const allTypes: string[] = [];
     yearRoot.forEach((record) => {
       if (record.isDirectory) {
@@ -125,7 +132,9 @@ export class LavaAnimeLibV2LibraryScraper implements LibraryScraper {
     type: string
   ): Promise<string[]> {
     const typePath = `/${year}年/${type}`;
-    const typeRoot = await this.reader.getFirstSubFilesWithNoAnime(typePath);
+    const typeRoot = await this.indexReader.getFirstSubFilesWithNoAnime(
+      typePath
+    );
     const allAnimes: string[] = [];
     typeRoot.forEach((record) => {
       if (record.isDirectory) {
@@ -216,11 +225,11 @@ export class LavaAnimeLibV2LibraryScraper implements LibraryScraper {
       })(),
     };
 
-    const parentFolder = await this.reader.getFile(pathStartsWith);
+    const parentFolder = await this.indexReader.getFile(pathStartsWith);
     if (!parentFolder || parentFolder.animeId !== null) {
       return null;
     }
-    const allChilds = await this.reader.getAllSubFiles(pathStartsWith);
+    const allChilds = await this.indexReader.getAllSubFiles(pathStartsWith);
 
     return {
       anime: newAnime,
@@ -237,16 +246,16 @@ export class LavaAnimeLibV2LibraryScraper implements LibraryScraper {
    * @param path
    */
   private async markAnimeForBlankFiles(path: string): Promise<void> {
-    const allBlank = await usePrisma.libFile.findMany({
+    const allBlank = await App.instance.prisma.libFile.findMany({
       where: {
-        libraryId: this.libraryTool.library.id,
+        libraryId: this.storageReader.library.id,
         animeId: null,
         removed: false,
         path: { startsWith: path },
       },
     });
 
-    logger.trace(
+    App.instance.logger.trace(
       `${path} 下找到了 ${allBlank.length} 个无归属文件(夹), 尝试寻找归属...`
     );
 
@@ -256,7 +265,7 @@ export class LavaAnimeLibV2LibraryScraper implements LibraryScraper {
     const findFatherOrGrandpa = async (file: LibFile) => {
       // 获取父文件夹的信息
       const parent =
-        cache.get(file.path) || (await this.reader.getFile(file.path));
+        cache.get(file.path) || (await this.indexReader.getFile(file.path));
       // 处在根目录中的文件无法向上查找
       if (parent === null) return null;
       if (parent.animeId) {
@@ -271,10 +280,10 @@ export class LavaAnimeLibV2LibraryScraper implements LibraryScraper {
     for (const file of allBlank) {
       const parentAnimeId = await findFatherOrGrandpa(file);
       if (parentAnimeId) {
-        logger.debug(
+        App.instance.logger.debug(
           `${nodePath.join(file.path, file.name)} 找到了归属: ${parentAnimeId}`
         );
-        await usePrisma.libFile.update({
+        await App.instance.prisma.libFile.update({
           where: {
             id: file.id,
           },
@@ -283,38 +292,12 @@ export class LavaAnimeLibV2LibraryScraper implements LibraryScraper {
           },
         });
       } else {
-        logger.trace(`${nodePath.join(file.path, file.name)} 未找到归属.`);
+        // App.instance.logger.trace(`${nodePath.join(file.path, file.name)} 未找到归属.`);
       }
     }
+  }
 
-    // const root = await this.reader.readPath(path);
-    // const parent = await this.reader.readPathRoot(path);
-    // // logger.debug(path);
-    // // 尝试染色
-    // for (const child of root) {
-    //   // 此子没有归属，可以尝试染色
-    //   if (child.animeId === null) {
-    //     // 如果是根目录, 其不在库中有记录，无法染色
-    //     if (path === "/") continue;
-    //     // 如果父文件夹并没有归属，那么也无法向下染色
-    //     if (parent.animeId === null) continue;
-    //     // 染色
-    //     await usePrisma.libFile.update({
-    //       where: {
-    //         id: child.id,
-    //       },
-    //       data: {
-    //         animeId: parent.animeId,
-    //       },
-    //     });
-    //     logger.debug(`文件(夹) ${child.name} 现在属于 ${parent.animeId}`);
-    //   }
-    // }
-    // // 文件夹递归
-    // for (const child of root) {
-    //   if (child.isDirectory) {
-    //     await this.markAnimeForBlankFiles(nodePath.join(path, child.name));
-    //   }
-    // }
+  getStorageReader(): StorageReader {
+    return this.storageReader;
   }
 }

@@ -1,4 +1,5 @@
 import type { EpisodeConnectResult } from "~/server/types/library/file/episode/connector";
+import { App } from "../app";
 import { LibraryFileEpisodeConnector } from "../library/file/episode/connector";
 
 /**
@@ -12,7 +13,7 @@ export class AnimeService {
   async connectAnimeFileWithEpisode(
     animeIDs: number[]
   ): Promise<EpisodeConnectResult[]> {
-    const animes = await usePrisma.anime.findMany({
+    const animes = await App.instance.prisma.anime.findMany({
       where: {
         id: {
           in: animeIDs,
@@ -26,6 +27,8 @@ export class AnimeService {
     const allResult = [];
 
     for (const anime of animes) {
+      console.log("anime", anime);
+
       const result = await new LibraryFileEpisodeConnector().connect(
         anime.files
       );
@@ -39,7 +42,7 @@ export class AnimeService {
    * 将所有 Anime 的 LibFile 与 AnimeEpisode 关联。
    */
   async connectAllAnimeFileWithEpisode() {
-    const allAnimeIds = await usePrisma.anime.findMany({
+    const allAnimeIds = await App.instance.prisma.anime.findMany({
       select: { id: true },
     });
 

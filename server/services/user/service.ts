@@ -1,4 +1,7 @@
 import { Prisma, type User } from "@prisma/client";
+import type { TokenPayload } from "~/server/types/token";
+import type { LoginSuccessResult } from "~/server/types/user";
+import { App } from "../app";
 import {
   InviteCodeNotFoundError,
   UserEmailBadError,
@@ -9,13 +12,18 @@ import {
   UserPasswordBadError,
   UserPasswordError,
 } from "../error/error";
+import type { TokenService } from "../token/service";
 import { encryptedPasswordFactory } from "./password/interface";
 import { Sha256Password } from "./password/sha256";
 import { UserValidator } from "./validator/user";
-import type { LoginSuccessResult } from "~/server/types/user";
-import type { TokenPayload } from "~/server/types/token";
 
 export class UserService {
+  private tokenService: TokenService;
+
+  constructor(tokenService: TokenService) {
+    this.tokenService = tokenService;
+  }
+
   /**
    * 注册新用户
    * @param email
@@ -29,7 +37,7 @@ export class UserService {
     name: string,
     password: string,
     inviteCode: string
-  ) {
+  ): Promise<User> {
     if (!UserValidator.isEmail(email))
       throw new UserEmailBadError("邮箱不合法");
     if (!UserValidator.isVaildName(name))
@@ -43,7 +51,7 @@ export class UserService {
     encryptedPassword.encrypt(password);
 
     try {
-      const create = await usePrisma.user.create({
+      const create = await App.instance.prisma.user.create({
         data: {
           email,
           name,
@@ -95,9 +103,9 @@ export class UserService {
    * @param password 明文密码
    * @returns 返回一个 JWT Token
    */
-  async login(account: string, password: string) {
+  async login(account: string, password: string): Promise<LoginSuccessResult> {
     try {
-      let user = await usePrisma.user.findFirst({
+      let user = await App.instance.prisma.user.findFirst({
         where: {
           OR: [{ email: account }, { name: account }],
         },
@@ -107,7 +115,7 @@ export class UserService {
       let encryptedPassword = encryptedPasswordFactory(user.password);
       if (encryptedPassword.verify(password)) {
         return <LoginSuccessResult>{
-          token: useAuth.sign(<TokenPayload>{
+          token: this.tokenService.signToken(<TokenPayload>{
             id: user.id,
           }),
           user,
@@ -132,7 +140,7 @@ export class UserService {
     encryptedPassword.encrypt(newPassword);
 
     try {
-      await usePrisma.user.update({
+      await App.instance.prisma.user.update({
         where: {
           id: userId,
         },

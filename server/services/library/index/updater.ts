@@ -1,4 +1,5 @@
 import pathTool from "path/posix";
+import { App } from "../../app";
 import type { StorageReader } from "../stroage/reader/interface";
 
 /**
@@ -6,10 +7,10 @@ import type { StorageReader } from "../stroage/reader/interface";
  * 本类中的方法均是对数据库的写方法
  */
 export class LibraryIndexUpdater {
-  private libraryTool: StorageReader;
+  private storageReader: StorageReader;
 
   constructor(libraryTool: StorageReader) {
-    this.libraryTool = libraryTool;
+    this.storageReader = libraryTool;
   }
 
   /**
@@ -20,18 +21,18 @@ export class LibraryIndexUpdater {
     const scanedRecords: number[] = [];
     await this.scanLikeATree(rootPath, scanedRecords);
 
-    const removed = await usePrisma.libFile.updateMany({
+    const removed = await App.instance.prisma.libFile.updateMany({
       data: { removed: true },
       where: {
-        libraryId: this.libraryTool.library.id,
+        libraryId: this.storageReader.library.id,
         id: { notIn: scanedRecords },
         removed: false,
         path: { startsWith: rootPath },
       },
     });
 
-    logger.info(
-      `${this.libraryTool.library.name}(${this.libraryTool.library.id}) - ${rootPath} 中成功扫描到了 ${scanedRecords.length} 个文件(夹)，已经标记删除了数据库中 ${removed.count} 条本次扫描未扫描到的记录.`
+    App.instance.logger.info(
+      `${this.storageReader.library.name}(${this.storageReader.library.id}) - ${rootPath} 中成功扫描到了 ${scanedRecords.length} 个文件(夹)，已经标记删除了数据库中 ${removed.count} 条本次扫描未扫描到的记录.`
     );
   }
 
@@ -41,10 +42,10 @@ export class LibraryIndexUpdater {
    * @param scanedRecords 已扫描到的文件记录的数组. 在此传入一个数组 (的引用), 每次递归迭代时会向其中添加已扫描记录的 ID
    */
   protected async scanLikeATree(rootPath: string, scanedRecords: number[]) {
-    logger.trace(
-      `${this.libraryTool.library.name}(${this.libraryTool.library.id}) 扫描 ${rootPath}`
+    App.instance.logger.trace(
+      `${this.storageReader.library.name}(${this.storageReader.library.id}) 扫描 ${rootPath}`
     );
-    let root = await this.libraryTool.updateIndex(rootPath);
+    let root = await this.storageReader.updateIndex(rootPath);
 
     root.forEach((record) => {
       scanedRecords.push(record.id);
@@ -57,5 +58,9 @@ export class LibraryIndexUpdater {
       // 递归扫描
       await this.scanLikeATree(thisChildPath, scanedRecords);
     }
+  }
+
+  getStorageReader(): StorageReader {
+    return this.storageReader;
   }
 }

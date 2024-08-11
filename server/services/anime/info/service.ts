@@ -1,16 +1,17 @@
 import type { AnimeInfoSource } from "@prisma/client";
+import { App } from "../../app";
 import { BangumiAnimeInfoUpdater } from "./updater/bangumi";
 
 export class AnimeInfoService {
   /**
-   * 自动更新所有在指定时间之前最后更新的动画信息。
+   * 自动更新所有 lastUpdate 早于 before 的动画的信息。
    * @param before 指定的时间点，用于筛选需要更新的动画信息。
    * 此函数首先查询出所有需要更新的动画及其站点信息，然后针对每个过时的站点，
    * 调用相应的更新器来更新该站点下所有关联的动画作品信息。
    */
   async updateAllInfo(before: Date) {
     // 查询需要更新的动画列表，包含每个动画的所有站点信息
-    const animeNeedToUpdate = await usePrisma.anime.findMany({
+    const animeNeedToUpdate = await App.instance.prisma.anime.findMany({
       where: {
         sites: {
           some: {
@@ -38,20 +39,20 @@ export class AnimeInfoService {
     for (const site of allSitesOutdated) {
       const updater = this.getInfoUpdater(site.siteType);
       if (!updater) {
-        logger.warn(
+        App.instance.logger.warn(
           `无法找到 ${site.siteType} 的更新器，无法更新 ${site.siteId} 的信息.`
         );
         continue;
       }
 
-      logger.info(
+      App.instance.logger.info(
         `正在更新 ${site.siteType} ${site.siteId} 在库内所有相关作品的信息.`
       );
 
       await updater.updateRelationAnimes(site.siteId);
     }
 
-    logger.info(
+    App.instance.logger.info(
       `更新库内所有番剧的第三方站点资料数据完成. (${before.toLocaleString()} 前)`
     );
   }
