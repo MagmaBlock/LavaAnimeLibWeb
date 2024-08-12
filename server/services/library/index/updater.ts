@@ -1,6 +1,7 @@
 import pathTool from "path/posix";
 import { App } from "../../app";
 import type { StorageReader } from "../stroage/reader/interface";
+import pLimit from "p-limit";
 
 /**
  * 操纵 LibraryTool 类对资源库存储器进行扫描
@@ -51,13 +52,18 @@ export class LibraryIndexUpdater {
       scanedRecords.push(record.id);
     });
 
+    const limit = pLimit(4);
+    const tasks = [];
+
     for (const child of root) {
       // 文件没有子目录, 跳过
       if (child.isDirectory === false) continue;
       const thisChildPath = pathTool.join(rootPath, child.name);
       // 递归扫描
-      await this.scanLikeATree(thisChildPath, scanedRecords);
+      tasks.push(limit(() => this.scanLikeATree(thisChildPath, scanedRecords)));
     }
+
+    await Promise.all(tasks);
   }
 
   getStorageReader(): StorageReader {

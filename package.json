@@ -48,6 +48,7 @@
     "marked": "^9.1.6",
     "moment": "^2.30.1",
     "ofetch": "^1.3.4",
+    "p-limit": "^6.1.0",
     "pinia": "^2.2.0",
     "ua-parser-js": "^1.0.38",
     "vue3-lazyload": "^0.3.8",
