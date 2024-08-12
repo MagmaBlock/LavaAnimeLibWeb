@@ -20,8 +20,8 @@ export type LibraryScrapeResultAnime = {
   id?: number; // 如果此项有值，则表示该番剧已存在，不需要创建新番，而是将 files 添加到该番剧中
   name: string;
   originalName?: string;
-  bdrip: boolean;
-  nsfw: boolean;
+  bdrip?: boolean;
+  nsfw?: boolean;
   platform?: AnimePlatform;
   date?: Date;
   releaseYear?: number;

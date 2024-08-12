@@ -1,8 +1,4 @@
-import {
-  AnimeInfoSource,
-  type LibFile,
-  Region
-} from "@prisma/client";
+import { AnimeInfoSource, type LibFile, Region } from "@prisma/client";
 import nodePath from "path/posix";
 import type {
   LibraryScrapeResult,
@@ -193,37 +189,66 @@ export class LavaAnimeLibV2LibraryScraper implements LibraryScraper {
     const parseFolder = this.parseV2AnimeFolderName(anime);
     // 路径前缀，在此文件夹中的后代文件都视为此动画的文件
     const pathStartsWith = `/${year}年/${type}/${anime}`;
-    // 创建新的 NewAnime 对象
-    const newAnime: LibraryScrapeResultAnime = {
-      name: parseFolder.title,
-      bdrip: parseFolder.bdrip,
-      nsfw: parseFolder.nsfw,
-      releaseYear: year,
-      releaseSeason: (() => {
-        if (["1月冬", "4月春", "7月夏", "10月秋"].includes(type)) {
-          return type;
-        }
-      })(),
-      region: (() => {
-        // 默认将季度动画的动画地区设置为日本
-        if (["1月冬", "4月春", "7月夏", "10月秋"].includes(type)) {
-          return Region.Japan;
-        }
-      })(),
-      sites: (() => {
-        // 如果此动画有 BGM ID，则将其添加到 sites 中
-        if (parseFolder.bgmID !== null) {
-          return [
-            {
-              siteType: AnimeInfoSource.Bangumi,
-              siteId: parseFolder.bgmID,
+
+    // 创建新的 LibraryScrapeResultAnime 对象
+    const scrapeResultAnime: LibraryScrapeResultAnime = await (async () => {
+      // 如果有 BgmID，则尝试寻找库内已有的相同 Bangumi ID 的动画
+      if (parseFolder.bgmID !== null) {
+        const sameBangumiAnimes = await App.instance.prisma.anime.findFirst({
+          where: {
+            sites: {
+              every: {
+                siteType: "Bangumi",
+                siteId: parseFolder.bgmID,
+              },
             },
-          ];
-        } else {
-          return [];
+          },
+          include: {
+            sites: true,
+          },
+        });
+
+        if (sameBangumiAnimes) {
+          return {
+            id: sameBangumiAnimes.id,
+            name: sameBangumiAnimes.name,
+            sites: sameBangumiAnimes.sites,
+          };
         }
-      })(),
-    };
+      }
+
+      // 如果库内没有一致的 Bangumi Site Anime，则创建新的 LibraryScrapeResultAnime 对象
+      return {
+        name: parseFolder.title,
+        bdrip: parseFolder.bdrip,
+        nsfw: parseFolder.nsfw,
+        releaseYear: year,
+        releaseSeason: (() => {
+          if (["1月冬", "4月春", "7月夏", "10月秋"].includes(type)) {
+            return type;
+          }
+        })(),
+        region: (() => {
+          // 默认将季度动画的动画地区设置为日本
+          if (["1月冬", "4月春", "7月夏", "10月秋"].includes(type)) {
+            return Region.Japan;
+          }
+        })(),
+        sites: (() => {
+          // 如果此动画有 BGM ID，则将其添加到 sites 中
+          if (parseFolder.bgmID !== null) {
+            return [
+              {
+                siteType: AnimeInfoSource.Bangumi,
+                siteId: parseFolder.bgmID,
+              },
+            ];
+          } else {
+            return [];
+          }
+        })(),
+      };
+    })();
 
     const parentFolder = await this.indexReader.getFile(pathStartsWith);
     if (!parentFolder || parentFolder.animeId !== null) {
@@ -232,7 +257,7 @@ export class LavaAnimeLibV2LibraryScraper implements LibraryScraper {
     const allChilds = await this.indexReader.getAllSubFiles(pathStartsWith);
 
     return {
-      anime: newAnime,
+      anime: scrapeResultAnime,
       files: [
         parentFolder, // 父文件夹
         ...allChilds, // 此文件夹下的所有文件
