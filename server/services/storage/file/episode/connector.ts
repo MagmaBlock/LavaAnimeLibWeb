@@ -1,4 +1,4 @@
-import type { AnimeEpisode, EpisodeType, LibFile } from "@prisma/client";
+import type { AnimeEpisode, EpisodeType, StorageIndex } from "@prisma/client";
 import { parseFileName } from "anime-name-tool";
 import nodePath from "path/posix";
 import { App } from "~/server/services/app";
@@ -6,51 +6,51 @@ import type { EpisodeConnectResult } from "~/server/types/library/file/episode/c
 
 export class LibraryFileEpisodeConnector {
   /**
-   * 连接库中的文件到 AnimeEpisode
+   * 连接存储器中的文件到 AnimeEpisode
    * 此函数遍历提供的文件数组，尝试将每个文件与相应的动画剧集连接
-   * @param libFiles 库文件数组，包含要连接的文件信息
+   * @param files 库文件数组，包含要连接的文件信息
    * @returns 返回一个对象，包含连接的总文件数和未找到匹配剧集的视频文件列表
    */
-  async connect(libFiles: LibFile[]): Promise<EpisodeConnectResult> {
+  async connect(files: StorageIndex[]): Promise<EpisodeConnectResult> {
     // 初始化连接结果对象
     let connectResult = {
       totalConnectedCount: 0, // 连接的总文件数
-      videoEpisodeNotFound: <LibFile[]>[], // 未找到匹配剧集的视频文件列表
+      videoEpisodeNotFound: <StorageIndex[]>[], // 未找到匹配剧集的视频文件列表
     };
 
     // 遍历库文件
-    for (const libFile of libFiles) {
+    for (const file of files) {
       // 排除没有关联到番剧的文件
-      if (!libFile.animeId) continue;
+      if (!file.animeId) continue;
       // 排除目录
-      if (libFile.isDirectory) continue;
+      if (file.isDirectory) continue;
 
       // 解析文件名以获取剧集信息
-      const fileNameParsed = parseFileName(libFile.name);
+      const fileNameParsed = parseFileName(file.name);
 
       let maybeEpisodes: AnimeEpisode[]; // 可能匹配的剧集列表
       let thisFileEpisodetype: EpisodeType; // 当前文件的剧集类型
 
       // 文件名含集数
       if (fileNameParsed.episode) {
-        thisFileEpisodetype = this.getEpisodeType(libFile);
+        thisFileEpisodetype = this.getEpisodeType(file);
         maybeEpisodes = await this.findEpisodes(
-          libFile,
+          file,
           thisFileEpisodetype,
           fileNameParsed.episode
         );
       }
       // 文件名不含集数
       else {
-        if (libFile.type === "Video") {
-          thisFileEpisodetype = this.getEpisodeType(libFile);
+        if (file.type === "Video") {
+          thisFileEpisodetype = this.getEpisodeType(file);
           // 根据文件类型和剧集类型查找剧集
           if (thisFileEpisodetype === "Normal") {
-            maybeEpisodes = await this.findNoEpisodeEpisodes(libFile);
+            maybeEpisodes = await this.findNoEpisodeEpisodes(file);
           }
           if (["SP", "OP", "ED"].includes(thisFileEpisodetype)) {
             maybeEpisodes = await this.findEpisodes(
-              libFile,
+              file,
               thisFileEpisodetype,
               1
             );
@@ -63,9 +63,9 @@ export class LibraryFileEpisodeConnector {
       // 如果找到了与此文件相匹配的集数
       if (maybeEpisodes.length > 0) {
         // 更新库文件，连接找到的剧集
-        await App.instance.prisma.libFile.update({
+        await App.instance.prisma.storageIndex.update({
           where: {
-            id: libFile.id,
+            id: file.id,
           },
           data: {
             episodes: {
@@ -78,8 +78,8 @@ export class LibraryFileEpisodeConnector {
         connectResult.totalConnectedCount += maybeEpisodes.length;
       } else {
         // 如果未找到匹配的剧集且文件类型为视频，则将其添加到未找到匹配剧集的列表
-        if (libFile.type === "Video") {
-          connectResult.videoEpisodeNotFound.push(libFile);
+        if (file.type === "Video") {
+          connectResult.videoEpisodeNotFound.push(file);
         }
       }
     }
@@ -90,13 +90,13 @@ export class LibraryFileEpisodeConnector {
   /**
    * 为文件名中没有集数的文件尝试寻找集数
    * 剧场版动画、电影通常不在文件名中有集数，因此需要为其匹配可能的集数
-   * @param libFile
+   * @param file
    */
-  async findNoEpisodeEpisodes(libFile: LibFile): Promise<AnimeEpisode[]> {
-    if (libFile.animeId === null) return [];
+  async findNoEpisodeEpisodes(file: StorageIndex): Promise<AnimeEpisode[]> {
+    if (file.animeId === null) return [];
 
     const anime = await App.instance.prisma.anime.findFirst({
-      where: { id: libFile.animeId },
+      where: { id: file.animeId },
       include: { episodes: true },
     });
 
@@ -122,22 +122,22 @@ export class LibraryFileEpisodeConnector {
   /**
    * 根据提供的剧集信息，在数据库中查找相应的剧集记录。
    *
-   * @param LibFile 一个包含动画ID的对象，用于指定查询的动画。
+   * @param file 一个包含动画ID的对象，用于指定查询的动画。
    * @param thisFileEpisodetype 指定剧集的类型，例如“正片”或“特别篇”。
    * @param episode 要查询的剧集，可以是单个剧集号、剧集范围（用管道符号分隔）或剧集数组。
    * @returns 返回一个包含剧集记录的数组，如果找不到则返回空数组。
    */
   private async findEpisodes(
-    LibFile: LibFile,
+    file: StorageIndex,
     thisFileEpisodetype: EpisodeType,
     episode: string | number | number[]
   ): Promise<AnimeEpisode[]> {
-    if (LibFile.animeId === null) return [];
+    if (file.animeId === null) return [];
     // 当剧集参数为单个数字时，尝试查找对应的单个剧集记录。
     if (typeof episode === "number") {
       const episodeRecord = await App.instance.prisma.animeEpisode.findFirst({
         where: {
-          animeId: LibFile.animeId,
+          animeId: file.animeId,
           type: thisFileEpisodetype,
           episodeDisplay: episode,
         },
@@ -151,7 +151,7 @@ export class LibraryFileEpisodeConnector {
         const episodeRecordIndex =
           await App.instance.prisma.animeEpisode.findFirst({
             where: {
-              animeId: LibFile.animeId,
+              animeId: file.animeId,
               type: thisFileEpisodetype,
               episodeIndex: episode,
             },
@@ -164,7 +164,7 @@ export class LibraryFileEpisodeConnector {
         const episodeRecordSP =
           await App.instance.prisma.animeEpisode.findFirst({
             where: {
-              animeId: LibFile.animeId,
+              animeId: file.animeId,
               type: "SP",
               episodeDisplay: episode,
             },
@@ -191,7 +191,7 @@ export class LibraryFileEpisodeConnector {
           const [startA, endA] = A.split(",");
           const AResult = await App.instance.prisma.animeEpisode.findMany({
             where: {
-              animeId: LibFile.animeId,
+              animeId: file.animeId,
               type: thisFileEpisodetype,
               episodeDisplay: {
                 gte: parseFloat(startA),
@@ -204,7 +204,7 @@ export class LibraryFileEpisodeConnector {
           const [startB, endB] = B.split(",");
           const BResult = await App.instance.prisma.animeEpisode.findMany({
             where: {
-              animeId: LibFile.animeId,
+              animeId: file.animeId,
               type: thisFileEpisodetype,
               episodeDisplay: {
                 gte: parseFloat(startB),
@@ -221,7 +221,7 @@ export class LibraryFileEpisodeConnector {
           const [A, B] = episode.split("|");
           const AResult = await App.instance.prisma.animeEpisode.findMany({
             where: {
-              animeId: LibFile.animeId,
+              animeId: file.animeId,
               type: thisFileEpisodetype,
               episodeDisplay: parseFloat(A),
             },
@@ -230,7 +230,7 @@ export class LibraryFileEpisodeConnector {
 
           const BResult = await App.instance.prisma.animeEpisode.findMany({
             where: {
-              animeId: LibFile.animeId,
+              animeId: file.animeId,
               type: thisFileEpisodetype,
               episodeDisplay: parseFloat(B),
             },
@@ -250,7 +250,7 @@ export class LibraryFileEpisodeConnector {
 
       const result = await App.instance.prisma.animeEpisode.findMany({
         where: {
-          animeId: LibFile.animeId,
+          animeId: file.animeId,
           type: thisFileEpisodetype,
           episodeDisplay: {
             gte: episodeStart,
@@ -272,12 +272,12 @@ export class LibraryFileEpisodeConnector {
    * @param result 源信息对象，包含媒体类型等数据。
    * @returns 返回剧集类型的枚举值，可能是"Normal"、"SP"、"OP"或"ED"之一。
    */
-  private getEpisodeType(libFile: LibFile): EpisodeType {
-    if (libFile.name.match(/\b(SP)\d{0,2}\b/)) return "SP";
-    if (libFile.name.match(/\b(NCOP)\d{0,2}\b/)) return "OP";
-    if (libFile.name.match(/\b(NCED)\d{0,2}\b/)) return "ED";
+  private getEpisodeType(file: StorageIndex): EpisodeType {
+    if (file.name.match(/\b(SP)\d{0,2}\b/)) return "SP";
+    if (file.name.match(/\b(NCOP)\d{0,2}\b/)) return "OP";
+    if (file.name.match(/\b(NCED)\d{0,2}\b/)) return "ED";
 
-    const parentDir = nodePath.basename(libFile.path);
+    const parentDir = nodePath.basename(file.path);
     if (parentDir.match(/\b(SPs|SP|Extra)\b/gi)) return "SP";
     if (parentDir.match(/\b(NCOP)\b/gi)) return "OP";
     if (parentDir.match(/\b(NCED)\b/gi)) return "ED";
