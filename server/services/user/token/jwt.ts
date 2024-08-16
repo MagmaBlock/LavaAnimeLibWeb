@@ -1,8 +1,8 @@
 import { createHmac } from "crypto";
 import moment from "moment";
-import type { Authentication } from "./interface";
+import type { Token } from "./interface";
 
-export class JwtAuthentication implements Authentication {
+export class JwtToken implements Token {
   private secret: string;
   private header: object;
 
