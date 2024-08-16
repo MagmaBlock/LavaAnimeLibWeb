@@ -8,10 +8,15 @@ import type { Storage, StorageIndex } from "@prisma/client";
 
 export class StorageIndexManager {
   private storageSystem: StorageSystem;
+  private readonly concurrencyLimit = 4;
   constructor(storage: Storage) {
     this.storageSystem = App.instance.services
       .getService(LibraryService)
       .getStorageSystem(storage);
+  }
+
+  getStorageReader(): StorageSystem {
+    return this.storageSystem;
   }
 
   /**
@@ -37,7 +42,7 @@ export class StorageIndexManager {
   /**
    * 使用绝对路径获取某个文件夹的一层子文件/文件夹
    */
-  async getFileList(path: string): Promise<StorageIndex[]> {
+  async getDirContents(path: string): Promise<StorageIndex[]> {
     path = nodePathPosix.join(path);
 
     return await App.instance.prisma.storageIndex.findMany({
@@ -68,7 +73,7 @@ export class StorageIndexManager {
   /**
    * 使用绝对路径获取某个文件夹的一层子文件/文件夹(但仅限没有 anime 归属的)
    */
-  async getFileListWithNoAnime(path: string): Promise<StorageIndex[]> {
+  async getDirContentsNoAnimeBind(path: string): Promise<StorageIndex[]> {
     path = nodePathPosix.join(path);
 
     return await App.instance.prisma.storageIndex.findMany({
@@ -79,63 +84,6 @@ export class StorageIndexManager {
         animeId: null,
       },
     });
-  }
-
-  getStorageReader(): StorageSystem {
-    return this.storageSystem;
-  }
-  /**
-   * 对 Library 进行全盘扫描, 数据库中的记录同步删改
-   * @param rootPath 根路径
-   */
-  public async scan(rootPath: string) {
-    const scanedRecords: number[] = [];
-    await this.scanLikeATree(rootPath, scanedRecords);
-
-    const removed = await App.instance.prisma.storageIndex.updateMany({
-      data: { removed: true },
-      where: {
-        storageId: this.storageSystem.storage.id,
-        id: { notIn: scanedRecords },
-        removed: false,
-        path: { startsWith: rootPath },
-      },
-    });
-
-    App.instance.logger.info(
-      `${this.storageSystem.storage.name}(${this.storageSystem.storage.id}) - ${rootPath} 中成功扫描到了 ${scanedRecords.length} 个文件(夹)，已经标记删除了数据库中 ${removed.count} 条本次扫描未扫描到的记录.`
-    );
-  }
-
-  /**
-   * 递归扫描器
-   * @param rootPath
-   * @param scanedRecords 已扫描到的文件记录的数组. 在此传入一个数组 (的引用), 每次递归迭代时会向其中添加已扫描记录的 ID
-   */
-  protected async scanLikeATree(rootPath: string, scanedRecords: number[]) {
-    App.instance.logger.trace(
-      `${this.storageSystem.storage.name}(${this.storageSystem.storage.id}) 扫描 ${rootPath}`
-    );
-
-    await this.updateIndex(rootPath);
-    const root = await this.getFileList(rootPath);
-
-    root.forEach((record) => {
-      scanedRecords.push(record.id);
-    });
-
-    const limit = pLimit(4);
-    const tasks = [];
-
-    for (const child of root) {
-      // 文件没有子目录, 跳过
-      if (child.isDirectory === false) continue;
-      const thisChildPath = pathTool.join(rootPath, child.name);
-      // 递归扫描
-      tasks.push(limit(() => this.scanLikeATree(thisChildPath, scanedRecords)));
-    }
-
-    await Promise.all(tasks);
   }
 
   /**
@@ -190,7 +138,7 @@ export class StorageIndexManager {
      *      若数据库中包含有上级目录已经被删除的文件(夹)，则不是在这里删除的。
      *      (是在 this.scan() 完成的)
      */
-    const storageIndexs = await this.getFileList(path);
+    const storageIndexs = await this.getDirContents(path);
 
     // 遍历数据库中当前库路径中所有未删除的文件
     for (const index of storageIndexs) {
@@ -218,5 +166,89 @@ export class StorageIndexManager {
         );
       }
     }
+  }
+
+  /**
+   * 对 Library 进行全盘扫描, 数据库中的记录同步删改
+   * @param rootPath 根路径
+   */
+  public async scan(rootPath: string) {
+    const scannedRecords = new Set<number>();
+    await this.scanRecursively(rootPath, scannedRecords);
+
+    const removedCount = await this.markRemovedRecords(
+      rootPath,
+      scannedRecords
+    );
+
+    this.logScanResult(rootPath, scannedRecords.size, removedCount);
+  }
+
+  /**
+   * 递归扫描器
+   * @param currentPath 当前扫描的路径
+   * @param scannedRecords 已扫描到的文件记录的集合
+   */
+  private async scanRecursively(
+    currentPath: string,
+    scannedRecords: Set<number>
+  ) {
+    App.instance.logger.trace(
+      `${this.storageSystem.storage.name}(${this.storageSystem.storage.id}) 扫描 ${currentPath}`
+    );
+
+    await this.updateIndex(currentPath);
+    const currentDirContents = await this.getDirContents(currentPath);
+
+    currentDirContents.forEach((record) => scannedRecords.add(record.id));
+
+    const limit = pLimit(this.concurrencyLimit);
+    const subDirectoryScans = currentDirContents
+      .filter((item) => item.isDirectory)
+      .map((dir) => {
+        const subDirPath = pathTool.join(currentPath, dir.name);
+        return limit(() => this.scanRecursively(subDirPath, scannedRecords));
+      });
+
+    await Promise.all(subDirectoryScans);
+  }
+
+  /**
+   * 标记数据库中已删除的记录
+   * @param rootPath 根路径
+   * @param scannedRecords 已扫描到的记录集合
+   * @returns 被标记为删除的记录数量
+   */
+  private async markRemovedRecords(
+    rootPath: string,
+    scannedRecords: Set<number>
+  ): Promise<number> {
+    const result = await App.instance.prisma.storageIndex.updateMany({
+      data: { removed: true },
+      where: {
+        storageId: this.storageSystem.storage.id,
+        id: { notIn: Array.from(scannedRecords) },
+        removed: false,
+        path: { startsWith: rootPath },
+      },
+    });
+
+    return result.count;
+  }
+
+  /**
+   * 记录扫描结果
+   * @param rootPath 根路径
+   * @param scannedCount 扫描到的记录数量
+   * @param removedCount 标记为删除的记录数量
+   */
+  private logScanResult(
+    rootPath: string,
+    scannedCount: number,
+    removedCount: number
+  ) {
+    App.instance.logger.info(
+      `${this.storageSystem.storage.name}(${this.storageSystem.storage.id}) - ${rootPath} 中成功扫描到了 ${scannedCount} 个文件(夹)，已经标记删除了数据库中 ${removedCount} 条本次扫描未扫描到的记录.`
+    );
   }
 }
