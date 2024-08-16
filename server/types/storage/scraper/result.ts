@@ -1,9 +1,9 @@
-import type { Anime, AnimeSiteLink, LibFile } from "@prisma/client";
+import type { Anime, AnimeSiteLink, StorageIndex } from "@prisma/client";
 
 /**
  * 挂削器的结果，类似一种指令
  */
-export type LibraryScrapeResult = {
+export type StorageScrapeResult = {
   createAnime?: Partial<Anime>;
   updateAnime?: {
     animeId: number;
@@ -15,6 +15,6 @@ export type LibraryScrapeResult = {
   };
   connectFile?: {
     animeId?: number; // createAnime 时不需指定
-    file: LibFile;
+    file: StorageIndex;
   };
 };

@@ -8,7 +8,7 @@ import type {
   AlistMoveOrCopyRequest,
   AlistRemoveRequest,
   AlistStorageConfig,
-} from "~/server/types/library/storage/reader/alist";
+} from "~/server/types/storage/storage/reader/alist";
 import { extensionMap } from "../file/type/type";
 import type { StorageSystem } from "./interface";
 

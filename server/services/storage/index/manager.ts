@@ -1,22 +1,20 @@
 import { App } from "../../app";
 import nodePathPosix from "node:path/posix";
-import { LibraryService } from "../service";
+import { StorageService } from "../service";
 import type { StorageSystem } from "../system/interface";
 import pLimit from "p-limit";
 import pathTool from "path/posix";
 import type { Storage, StorageIndex } from "@prisma/client";
 
 export class StorageIndexManager {
+  public storage: Storage;
   private storageSystem: StorageSystem;
   private readonly concurrencyLimit = 4;
   constructor(storage: Storage) {
     this.storageSystem = App.instance.services
-      .getService(LibraryService)
+      .getService(StorageService)
       .getStorageSystem(storage);
-  }
-
-  getStorageReader(): StorageSystem {
-    return this.storageSystem;
+    this.storage = this.storageSystem.storage;
   }
 
   /**

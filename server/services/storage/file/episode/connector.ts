@@ -2,7 +2,7 @@ import type { AnimeEpisode, EpisodeType, StorageIndex } from "@prisma/client";
 import { parseFileName } from "anime-name-tool";
 import nodePath from "path/posix";
 import { App } from "~/server/services/app";
-import type { EpisodeConnectResult } from "~/server/types/library/file/episode/connector";
+import type { EpisodeConnectResult } from "~/server/types/storage/file/episode/connector";
 
 export class LibraryFileEpisodeConnector {
   /**
