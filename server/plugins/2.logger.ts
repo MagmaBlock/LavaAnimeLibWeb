@@ -1,6 +1,8 @@
 import chalk from "chalk";
 import { H3Event } from "h3";
 import moment from "moment";
+import { App } from "../services/app";
+import { UserService } from "../services/user/service";
 
 export default defineNitroPlugin((nitro) => {
   nitro.hooks.hook("request", (event) => {
@@ -14,7 +16,8 @@ export default defineNitroPlugin((nitro) => {
 
 async function printLog(event: H3Event) {
   const queryCost = new Date().getTime() - event.context.startAt;
-  let user = await assertUser(event).catch(() => null);
+
+  let user = await App.instance.services.getService(UserService).getUser(event);
   let status = getResponseStatus(event);
 
   console.info(
