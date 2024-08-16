@@ -1,0 +1,516 @@
+import type { FileType, Storage, StorageIndex } from "@prisma/client";
+import axios, { AxiosError } from "axios";
+import { posix as pathPosix } from "path";
+import type {
+  AlistApiResponse,
+  AlistGetResponse,
+  AlistListResponse,
+  AlistMoveOrCopyRequest,
+  AlistRemoveRequest,
+  AlistStorageConfig,
+} from "~/server/types/library/storage/reader/alist";
+import { extensionMap } from "../file/type/type";
+import type { StorageSystem } from "./interface";
+
+/**
+ * Alist 操作器实现
+ */
+export class AlistStorageSystem implements StorageSystem {
+  storage: Storage;
+  private alistToken: string;
+  private alistTokenExpiresAt: Date; // 48h after get
+
+  constructor(storage: Storage) {
+    if (storage.type !== "Alist") {
+      throw new Error(
+        "构造 AlistLibrary 时的 Library 对象的 type 应该是 Alist"
+      );
+    }
+    this.storage = storage;
+    this.alistToken = "";
+    this.alistTokenExpiresAt = new Date(0);
+    this.refreshToken();
+  }
+
+  async copy(path: string, targetFolder: string): Promise<void> {
+    await this.refreshToken();
+    console.log({
+      src_dir: pathPosix.dirname(
+        pathPosix.join(this.getConfig().baseDir, path)
+      ),
+      dst_dir: pathPosix.join(this.getConfig().baseDir, targetFolder),
+      names: [
+        pathPosix.basename(pathPosix.join(this.getConfig().baseDir, path)),
+      ],
+    });
+
+    try {
+      const copy = await axios.post<AlistApiResponse<null>>(
+        "/api/fs/copy",
+        <AlistMoveOrCopyRequest>{
+          src_dir: pathPosix.dirname(
+            pathPosix.join(this.getConfig().baseDir, path)
+          ),
+          dst_dir: pathPosix.join(this.getConfig().baseDir, targetFolder),
+          names: [
+            pathPosix.basename(pathPosix.join(this.getConfig().baseDir, path)),
+          ],
+        },
+        {
+          baseURL: this.getConfig().host,
+          headers: {
+            Authorization: this.alistToken,
+          },
+        }
+      );
+
+      if (copy.data.code !== 200) {
+        throw new Error(`复制文件失败: ${copy.data?.message}`);
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        throw new Error(`Alist 请求失败: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+  async move(path: string, targetFolder: string): Promise<void> {
+    await this.refreshToken();
+    try {
+      const move = await axios.post<AlistApiResponse<null>>(
+        "/api/fs/move",
+        <AlistMoveOrCopyRequest>{
+          src_dir: pathPosix.dirname(
+            pathPosix.join(this.getConfig().baseDir, path)
+          ),
+          dst_dir: pathPosix.join(this.getConfig().baseDir, targetFolder),
+          names: [
+            pathPosix.basename(pathPosix.join(this.getConfig().baseDir, path)),
+          ],
+        },
+        {
+          baseURL: this.getConfig().host,
+          headers: {
+            Authorization: this.alistToken,
+          },
+        }
+      );
+
+      if (move.data.code !== 200) {
+        throw new Error(`移动文件失败: ${move.data?.message}`);
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        throw new Error(`Alist 请求失败: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+  async list(path: string): Promise<Partial<StorageIndex>[]> {
+    await this.refreshToken();
+    try {
+      const listGet = await axios.post<AlistApiResponse<AlistListResponse>>(
+        "/api/fs/list",
+        {
+          path: pathPosix.join(this.getConfig().baseDir, path),
+        },
+        {
+          baseURL: this.getConfig().host,
+          headers: {
+            Authorization: this.alistToken,
+          },
+        }
+      );
+
+      if (
+        listGet.data?.code === 200 &&
+        Array.isArray(listGet.data.data?.content)
+      ) {
+        return listGet.data.data.content.map((item) => ({
+          name: item.name,
+          type: this.getFileType(item.name),
+          path: pathPosix.normalize(path),
+          isDirectory: item.is_dir,
+          size: item.size,
+        }));
+      }
+
+      throw new Error("Alist 返回意外结果");
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        throw new Error(`Alist 请求失败: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+
+  async info(path: string): Promise<Partial<StorageIndex>> {
+    await this.refreshToken();
+    try {
+      const getInfo = await axios.post<AlistApiResponse<AlistGetResponse>>(
+        "/api/fs/get",
+        {
+          path: pathPosix.join(this.getConfig().baseDir, path),
+        },
+        {
+          baseURL: this.getConfig().host,
+          headers: {
+            Authorization: this.alistToken,
+          },
+        }
+      );
+
+      if (getInfo.data?.code === 200) {
+        const item = getInfo.data.data;
+        return {
+          name: item.name,
+          type: this.getFileType(item.name),
+          path: pathPosix.dirname(pathPosix.normalize(path)),
+          isDirectory: item.is_dir,
+          size: item.size,
+        };
+      }
+
+      throw new Error("Alist 返回意外结果");
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        throw new Error(`Alist 请求失败: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+
+  async mkdir(path: string): Promise<void> {
+    await this.refreshToken();
+    try {
+      const response = await axios.post<AlistApiResponse<null>>(
+        "/api/fs/mkdir",
+        {
+          path: pathPosix.join(this.getConfig().baseDir, path),
+        },
+        {
+          baseURL: this.getConfig().host,
+          headers: {
+            Authorization: this.alistToken,
+          },
+        }
+      );
+
+      if (response.data?.code !== 200) {
+        throw new Error(`创建文件夹失败: ${response.data?.message}`);
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        throw new Error(`Alist 请求失败: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+
+  async remove(path: string): Promise<void> {
+    await this.refreshToken();
+    try {
+      const response = await axios.post<AlistApiResponse<null>>(
+        "/api/fs/remove",
+        <AlistRemoveRequest>{
+          names: [pathPosix.basename(path)],
+          dir: pathPosix.dirname(
+            pathPosix.join(this.getConfig().baseDir, path)
+          ),
+        },
+        {
+          baseURL: this.getConfig().host,
+          headers: {
+            Authorization: this.alistToken,
+          },
+        }
+      );
+
+      if (response.data?.code !== 200) {
+        throw new Error(`删除文件/文件夹失败: ${response.data?.message}`);
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        throw new Error(`Alist 请求失败: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+  readFile(path: string): Promise<Buffer | null> {
+    throw new Error("Method not implemented.");
+  }
+  readFileStream(path: string): Promise<ReadableStream | null> {
+    throw new Error("Method not implemented.");
+  }
+  readFileString(path: string): Promise<string | null> {
+    throw new Error("Method not implemented.");
+  }
+  uploadFromBuffer(path: string, buffer: Buffer): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  getUploadUrl(path: string): Promise<string | null> {
+    throw new Error("Method not implemented.");
+  }
+  async getDownloadUrl(path: string): Promise<string | null> {
+    try {
+      const getInfo = await axios.post<AlistApiResponse<AlistGetResponse>>(
+        "/api/fs/get",
+        {
+          path: pathPosix.join(this.getConfig().baseDir, path),
+        },
+        {
+          baseURL: this.getConfig().host,
+          headers: {
+            Authorization: this.alistToken,
+          },
+        }
+      );
+
+      if (getInfo.data.code !== 200) {
+        throw new Error(`获取文件信息失败: ${getInfo.data?.message}`);
+      } else {
+        if (getInfo.data.data.raw_url) return getInfo.data.data.raw_url;
+      }
+      return null;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        throw new Error(`Alist 请求失败: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+
+  private getConfig(): AlistStorageConfig {
+    if (this.storage.config === null) throw new Error("存储器配置有误");
+    let config = <AlistStorageConfig>JSON.parse(this.storage.config);
+
+    if (
+      typeof config?.host !== "string" ||
+      typeof config?.password !== "string" ||
+      typeof config?.baseDir !== "string"
+    ) {
+      throw new Error("存储器配置有误");
+    }
+
+    return config;
+  }
+
+  private async refreshToken(): Promise<void> {
+    if (this.alistTokenExpiresAt > new Date()) return;
+
+    try {
+      const token = await axios.post<AlistApiResponse<{ token: string }>>(
+        "/api/auth/login",
+        {
+          username: this.getConfig().username,
+          password: this.getConfig().password,
+        },
+        {
+          baseURL: this.getConfig().host,
+        }
+      );
+
+      if (token.data.code === 200) {
+        this.alistToken = token.data.data.token;
+        this.alistTokenExpiresAt = new Date(Date.now() + 1000 * 60 * 60 * 48);
+        return;
+      }
+
+      throw new Error("Alist 返回意外结果");
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        throw new Error(`Alist 请求失败: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * 根据文件名获取文件类型。
+   *
+   * 此方法通过解析文件名的扩展名来确定文件类型。它首先从文件名中提取扩展名，
+   * 然后通过一个预定义的映射表（extensionMap）来查找与扩展名匹配的文件类型。
+   * 如果找不到匹配的类型，则默认返回"Other"。
+   *
+   * @param fileName 文件名，可以包含路径和扩展名。
+   * @returns 文件类型，根据扩展名匹配的结果返回；如果找不到匹配的类型，则返回"Other"。
+   */
+  private getFileType(fileName: string): FileType {
+    // 解析文件名获取扩展名
+    let thisExt = pathPosix.parse(fileName).ext;
+
+    // 如果扩展名不为空
+    if (thisExt !== "") {
+      // 去除扩展名前的点号
+      thisExt = thisExt.slice(1);
+
+      // 遍历extensionMap，寻找匹配的扩展名及其对应的文件类型
+      for (const [reg, extType] of extensionMap.entries()) {
+        // 使用正则表达式测试扩展名是否匹配
+        if (reg.test(thisExt)) {
+          // 如果匹配，返回对应的文件类型
+          return extType[1];
+        }
+      }
+    }
+
+    // 如果没有找到匹配的扩展名，返回"Other"
+    return "Other";
+  }
+
+  // /**
+  //  * 从 Alist 刷新最新的文件记录到数据库, 并返回最新的 LibFile 列表
+  //  * @param path
+  //  * @returns
+  //  */
+  // async updateIndex(path: string): Promise<LibFile[]> {
+  //   let alistFiles: AlistAPIFile[] = [];
+  //   let inDBLibFiles: LibFile[] = [];
+
+  //   /**
+  //    * 以下块：从 Alist 获取最新的文件列表，存入 alistFiles
+  //    * 若失败将掷出错误
+  //    */
+  //   try {
+  //     const listGet = await axios.post(
+  //       "/api/fs/list",
+  //       {
+  //         path: pathPosix.join(this.getConfig().baseDir, path),
+  //         password: this.getConfig().password,
+  //       },
+  //       {
+  //         baseURL: this.getConfig().host,
+  //       }
+  //     );
+
+  //     // 成功且有文件
+  //     if (
+  //       listGet.data?.code === 200 &&
+  //       Array.isArray(listGet.data.data?.content)
+  //     ) {
+  //       alistFiles = listGet.data.data?.content;
+  //     }
+
+  //     // 成功但为空
+  //     if (listGet.data?.code === 200 && listGet.data.data?.content === null) {
+  //       alistFiles = [];
+  //     }
+
+  //     // 找不到文件夹
+  //     if (
+  //       listGet.data?.code === 500 &&
+  //       listGet.data?.message.match("not found")
+  //     ) {
+  //       throw new NotFoundError(listGet.data.message);
+  //     }
+
+  //     // 其他意外情况
+  //     if (!Array.isArray(alistFiles)) {
+  //       App.instance.logger.error("Alist 返回意外结果:", listGet.data);
+  //       throw new ServiceUnavailableError("Alist 服务异常");
+  //     }
+  //   } catch (error) {
+  //     // Alist 在找不到路径时，不会回复 4xx，而是 200 中的 body 中的 code = 500
+  //     if (error instanceof AxiosError) {
+  //       App.instance.logger.error("Alist 请求失败:", error.message);
+  //     }
+  //     throw error;
+  //   }
+
+  //   /**
+  //    * 以下块：遍历 alistFiles，将其插入或更新到数据库
+  //    */
+  //   try {
+  //     // 首先遍历 Alist 的资源，将获取到的文件写入到数据库
+  //     for (let index in alistFiles) {
+  //       let alistFile = alistFiles[index];
+
+  //       await App.instance.prisma.libFile.upsert({
+  //         where: {
+  //           uniqueFileInLib: {
+  //             name: alistFile.name,
+  //             path,
+  //             libraryId: this.storage.id,
+  //           },
+  //         },
+  //         update: {
+  //           type: alistFile.is_dir ? "Other" : this.getFileType(alistFile.name),
+  //           isDirectory: alistFile.is_dir,
+  //           size: alistFile.size, // 只为文件标记尺寸
+  //           removed: false,
+  //           lastFoundAt: new Date(),
+  //         },
+  //         create: {
+  //           type: alistFile.is_dir ? "Other" : this.getFileType(alistFile.name),
+  //           libraryId: this.storage.id,
+  //           path, // 数据库内存储的应是不含存储库前缀的路径
+  //           name: alistFile.name,
+  //           isDirectory: alistFile.is_dir,
+  //           size: alistFile.size, // 只为文件标记尺寸
+  //           removed: false,
+  //           lastFoundAt: new Date(),
+  //         },
+  //       });
+  //     }
+  //   } catch (error) {
+  //     throw error;
+  //   }
+
+  //   /**
+  //    * 以下块：将基于 Alist 更新后的数据库记录和 Alist 中的进行对比
+  //    * 若此 path 下的文件(夹)不存在，则会将文件标记为 "removed"
+  //    *
+  //    * P.S. 这里只能删除到调用此函数时传入的 path 的子文件、子文件夹
+  //    *      若数据库中包含有上级目录已经被删除的文件(夹)，则不是在这里删除的。
+  //    *      (是在 LibraryScanner.scan() 完成的)
+  //    */
+  //   try {
+  //     inDBLibFiles = await App.instance.prisma.libFile.findMany({
+  //       where: {
+  //         libraryId: this.storage.id,
+  //         path,
+  //         removed: false,
+  //       },
+  //     });
+
+  //     // 遍历数据库中当前库路径中所有未删除的文件
+  //     for (const dbFile of inDBLibFiles) {
+  //       // 在 Alist 中查找此文件
+  //       const thisFileInAlist = alistFiles.find(
+  //         (alistFile) => alistFile.name === dbFile.name
+  //       );
+
+  //       // 如果此 DB 的文件在 Alist 中不存在，将文件标记为 "removed"
+  //       if (thisFileInAlist === undefined) {
+  //         await App.instance.prisma.libFile.update({
+  //           where: {
+  //             uniqueFileInLib: {
+  //               libraryId: dbFile.libraryId,
+  //               path: dbFile.path,
+  //               name: dbFile.name,
+  //             },
+  //           },
+  //           data: {
+  //             removed: true,
+  //           },
+  //         });
+  //         App.instance.logger.trace(
+  //           `${this.storage.name}(${this.storage.id}) 删除 ${dbFile.path}${dbFile.name}`
+  //         );
+  //       }
+  //     }
+  //   } catch (error) {
+  //     throw error;
+  //   }
+
+  //   const result = await App.instance.prisma.libFile.findMany({
+  //     where: {
+  //       libraryId: this.storage.id,
+  //       path,
+  //       removed: false,
+  //     },
+  //   });
+
+  //   return result;
+  // }
+}

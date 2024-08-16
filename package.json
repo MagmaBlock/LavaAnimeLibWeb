@@ -24,14 +24,14 @@
     "@vite-pwa/nuxt": "^0.9.1",
     "gravatar": "^1.8.2",
     "nuxt": "^3.12.4",
-    "prisma": "^5.17.0",
+    "prisma": "^5.18.0",
     "vue": "^3.4.35"
   },
   "dependencies": {
     "@bg-dev/nuxt-naiveui": "^1.14.0",
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@pinia/nuxt": "^0.5.2",
-    "@prisma/client": "^5.17.0",
+    "@prisma/client": "^5.18.0",
     "@vueuse/core": "^10.11.0",
     "animate.css": "^4.1.1",
     "anime-name-tool": "^1.0.3",
