@@ -1,22 +1,19 @@
-import { AnimeInfoSource, type LibFile, Region } from "@prisma/client";
+import { type Anime, type LibFile, type Library } from "@prisma/client";
+import pLimit from "p-limit";
 import nodePath from "path/posix";
-import type {
-  LibraryScrapeResult,
-  LibraryScrapeResultAnime,
-} from "~/server/types/library/scraper/result";
+import type { LibraryScrapeResult } from "~/server/types/library/scraper/result";
 import { App } from "../../app";
-import { LibraryIndexReader } from "../index/reader";
-import type { StorageReader } from "../stroage/reader/interface";
+import { LibraryIndexManager } from "../index/manager";
 import type { LibraryScraper } from "./interface";
 
 /**
- * LavaAnimeLibV2 是番剧库的上一代版本
+ * LavaAnimeLibV2 是番剧库的上一代版本，在本版本中作为一种结构。
  * V2 中，对番剧目录的结构规范主要为以下方式：
  *
- * LavaAnimeLib -> 年代 -> 季度/类别 -> 番剧名 + 空格 + Bangumi Subject ID
+ * LavaAnimeLib -> 年代 -> 季度/类别 -> 番剧名 + 空格 + 可选标签 + Bangumi Subject ID
  *  - 年代包含"年"字，如 "2023年"
  *  - 季度/类别为日本动画的四个季度，附带季节名，如 "1月冬"，同时还有"SP、OVA、OAD等"、"三次元"、"其他地区"、"剧场版"、"网络动画"等分类
- *  - 番剧文件夹包含番剧名、Bangumi Subject ID、BDRip、NSFW，中间使用空格隔开
+ *  - 番剧文件夹包含番剧名、方括号括住的标签 BDRip 和 NSFW、Bangumi Subject ID。中间使用空格隔开
  *
  * 示例：
  * LavaAnimeLib/
@@ -24,6 +21,7 @@ import type { LibraryScraper } from "./interface";
  * -- 1月冬/
  * --- 别当欧尼酱了！ 378862
  * -- 4月春/
+ * --- 某某某 [BDRip] 123456
  * -- 7月夏/
  * -- 10月秋/
  * -- SP、OVA、OAD等/
@@ -31,146 +29,160 @@ import type { LibraryScraper } from "./interface";
  * -- 其他地区/
  * -- 剧场版/
  * -- 网络动画/
+ *
+ * 此结构要求存储库根目录内第一层就是年份文件夹，也就是 LavaAnimeLib/ 是根目录。
+ * 本结构中的番剧只支持关联到 Bangumi，在没有合法 bgmId 的情况下，将不会关联站点。
  */
 export class LavaAnimeLibV2LibraryScraper implements LibraryScraper {
-  private storageReader: StorageReader;
-  private indexReader: LibraryIndexReader;
+  private library: Library;
+  private indexManager: LibraryIndexManager;
+  private bgmToAnimeCache: Map<string, [Date, Anime[]]>;
 
-  constructor(libraryTool: StorageReader) {
-    this.storageReader = libraryTool;
-    this.indexReader = libraryTool.getIndexReader();
+  constructor(library: Library) {
+    this.library = library;
+    this.indexManager = new LibraryIndexManager(library);
+    this.bgmToAnimeCache = new Map();
   }
 
   /**
-   * 挂削文件库。
+   * 对文件进行挂削，本方法将挂削提供的所有文件，并返回一个 LibraryScrapeResult
+   * @param files
+   * @returns
+   */
+  async scrapeFiles(files: LibFile[]): Promise<LibraryScrapeResult[]> {
+    const limit = pLimit(16);
+    const tasks = files.map((file) => {
+      return limit(() => this.scrapeFile(file));
+    });
+    return Promise.all(tasks);
+  }
+
+  /**
+   * 传入文件 startsWith，将自动寻找路径下的所有文件，并挂削
    *
-   * 本方法会自动触发向后代染色。（向后代关联 anime）
-   * 然后寻找没有关联到 anime 的文件夹，然后尝试挂削。
    * @param pathStartsWith
    * @returns 挂削结果
    */
-  async scrapeLibrary(pathStartsWith: string): Promise<LibraryScrapeResult[]> {
-    // 结果存储
-    const scrapeResult: LibraryScrapeResult[] = [];
+  async scrapeStartsWith(
+    pathStartsWith: string
+  ): Promise<LibraryScrapeResult[]> {
+    let files: LibFile[] = [];
 
-    // 先对所有文件进行一个染色
-    await this.markAnimeForBlankFiles("/");
+    const childFiles = await App.instance.prisma.libFile.findMany({
+      where: { path: { startsWith: pathStartsWith } },
+    });
 
-    // 开始挂削流程
-    const allYears = await this.readAllYears();
-    App.instance.logger.debug("所有年份:", allYears);
-    // 遍历所有年份
-    for (let year of allYears) {
-      const allTypes = await this.readTypesInYear(year);
-      App.instance.logger.debug(`${year} 下读取到 ${allTypes.length} 个类型.`);
-      // 遍历所有类型
-      for (let type of allTypes) {
-        const allAnimes = await this.readAnimesInType(year, type);
-        if (allAnimes.length) {
-          App.instance.logger.debug(
-            `${year} ${type} 下读取到 ${allAnimes.length} 个新动漫.`
-          );
-        }
-        // 遍历所有可能的动画
-        for (let anime of allAnimes) {
-          const parseResult = await this.parseAnimes(year, type, anime);
-          if (parseResult) scrapeResult.push(parseResult);
-        }
+    files = files.concat(childFiles);
+
+    const pathSplit = pathStartsWith.match(/^(.*)(\/)(.*)$/);
+    if (pathSplit) {
+      const [fullMatch, group1, group2, group3] = pathSplit;
+      const pathFile = await App.instance.prisma.libFile.findFirst({
+        where: {
+          path: group1,
+          name: group3,
+        },
+      });
+      if (pathFile) {
+        files.push(pathFile);
       }
     }
-    return scrapeResult;
+
+    return this.scrapeFiles(files);
   }
 
   /**
-   * 读取所有年份
-   * 只会返回没有关联到 anime 的文件夹
-   * @returns 纯数字年份
+   * 此方法将 LibFile 解析成可读的对象
+   * @param file
    */
-  private async readAllYears(): Promise<number[]> {
-    const root = await this.indexReader.getFirstSubFilesWithNoAnime("/");
-    const allYears: number[] = [];
-    root.forEach((record) => {
-      if (record.isDirectory) {
-        // 只读取"xxxx年"的年份
-        if (record.name.match(/^\d{4}年$/g)) {
-          allYears.push(Number(record.name.replace("年", "")));
-        }
-      }
-    });
-    return allYears;
-  }
-
-  /**
-   * 获取年份下的分类
-   * 只会返回没有关联到 anime 的文件夹
-   */
-  private async readTypesInYear(year: number): Promise<string[]> {
-    const yearPath = `/${year}年`;
-    const yearRoot = await this.indexReader.getFirstSubFilesWithNoAnime(
-      yearPath
-    );
-    const allTypes: string[] = [];
-    yearRoot.forEach((record) => {
-      if (record.isDirectory) {
-        allTypes.push(record.name);
-      }
-    });
-
-    return allTypes;
-  }
-
-  /**
-   * 获取所有的动画文件夹名
-   * 只会返回没有关联到 anime 的文件夹
-   */
-  private async readAnimesInType(
-    year: number,
-    type: string
-  ): Promise<string[]> {
-    const typePath = `/${year}年/${type}`;
-    const typeRoot = await this.indexReader.getFirstSubFilesWithNoAnime(
-      typePath
-    );
-    const allAnimes: string[] = [];
-    typeRoot.forEach((record) => {
-      if (record.isDirectory) {
-        allAnimes.push(record.name);
-      }
-    });
-    return allAnimes;
-  }
-
-  /**
-   * 根据 LavaAnimeLibV2 规范的文件夹名, 解析出标题、bgmID、是否为 BD、NSFW
-   * 如果这个文件夹名不合规范，即找不到结尾的 BgmID，
-   * 那么这个方法 bgmID 为 null，title 是文件夹名，bdrip 和 nsfw 按预期工作。
-   */
-  private parseV2AnimeFolderName(folderName: string): {
-    bgmID: string | null;
-    title: string;
+  private parseYearTypeAnime(file: LibFile): {
+    year: number | null;
+    type: string | null;
+    title: string | null;
     bdrip: boolean;
     nsfw: boolean;
+    bgmID: string | null;
   } {
-    let bgmID: string | null = null;
-    const maybeBgmID = folderName.match("\\d+$");
-    if (maybeBgmID) {
-      bgmID = maybeBgmID[0];
+    const pathParts = file.path.split("/").filter((part) => part !== "");
+    const yearFolder = pathParts?.[0] ?? file.name;
+    const typeFolder =
+      pathParts?.[1] ?? (pathParts.length === 1 ? file.name : null);
+    const animeFolder =
+      pathParts?.[2] ?? (pathParts.length === 2 ? file.name : null);
+
+    const yearMatch = yearFolder?.match(/^\d{4}年$/);
+    const yearNumber = yearMatch ? Number(yearFolder.replace("年", "")) : null;
+
+    const parsedAnimeFolder = animeFolder
+      ? parseV2AnimeFolderName(animeFolder)
+      : null;
+
+    return {
+      year: yearNumber,
+      type: typeFolder,
+      title: parsedAnimeFolder?.title ?? null,
+      bdrip: parsedAnimeFolder?.bdrip ?? false,
+      nsfw: parsedAnimeFolder?.nsfw ?? false,
+      bgmID: parsedAnimeFolder?.bgmID ?? null,
+    };
+
+    /**
+     * 根据 LavaAnimeLibV2 规范的文件夹名, 解析出标题、bgmID、是否为 BD、NSFW
+     * 如果这个文件夹名不合规范，即找不到结尾的 BgmID，
+     * 那么这个方法 bgmID 为 null，title 是文件夹名，bdrip 和 nsfw 按预期工作。
+     */
+    function parseV2AnimeFolderName(folderName: string): {
+      bgmID: string | null;
+      title: string;
+      bdrip: boolean;
+      nsfw: boolean;
+    } {
+      let bgmID: string | null = null;
+      const maybeBgmID = folderName.match("\\d+$");
+      if (maybeBgmID) {
+        bgmID = maybeBgmID[0];
+      }
+
+      let title = bgmID ? folderName.replace(bgmID, "").trim() : folderName;
+
+      // tag parse
+      let bdrip = false;
+      let nsfw = false;
+      if (title.match(/\[BDRip\]/gi)) {
+        title = title.replace(/\[BDRip\]/gi, "").trim();
+        bdrip = true;
+      }
+      if (title.match(/\[NSFW\]/gi)) {
+        title = title.replace(/\[NSFW\]/gi, "").trim();
+        nsfw = true;
+      }
+      return { bgmID, title, bdrip, nsfw };
+    }
+  }
+
+  /**
+   * 获取目前已有的动画中，绑定了指定 Bangumi 的动画
+   * @param bgmID
+   */
+  private async getBgmLinkedAnimesWithCache(bgmID: string): Promise<Anime[]> {
+    const cache = this.bgmToAnimeCache.get(bgmID);
+    if (cache) {
+      const [cacheTime, animes] = cache;
+      if (new Date().getTime() - cacheTime.getTime() < 1000 * 30) {
+        return animes;
+      }
     }
 
-    let title = bgmID ? folderName.replace(bgmID, "").trim() : folderName;
+    const animes = await App.instance.prisma.anime.findMany({
+      where: {
+        sites: {
+          some: { siteType: "Bangumi", siteId: bgmID },
+        },
+      },
+    });
 
-    // tag parse
-    let bdrip = false;
-    let nsfw = false;
-    if (title.match(/\[BDRip\]/gi)) {
-      title = title.replace(/\[BDRip\]/gi, "").trim();
-      bdrip = true;
-    }
-    if (title.match(/\[NSFW\]/gi)) {
-      title = title.replace(/\[NSFW\]/gi, "").trim();
-      nsfw = true;
-    }
-    return { bgmID, title, bdrip, nsfw };
+    this.bgmToAnimeCache.set(bgmID, [new Date(), animes]);
+    return animes;
   }
 
   /**
@@ -180,100 +192,95 @@ export class LavaAnimeLibV2LibraryScraper implements LibraryScraper {
    * @param anime 动画文件夹名
    * @returns LibraryScrapeResult 时是成功找到并挂削新番剧。null 时是父文件夹不存在或文件夹已经有番剧归属。
    */
-  private async parseAnimes(
-    year: number,
-    type: string,
-    anime: string
-  ): Promise<LibraryScrapeResult | null> {
-    // 解析动画文件夹的名称
-    const parseFolder = this.parseV2AnimeFolderName(anime);
-    // 路径前缀，在此文件夹中的后代文件都视为此动画的文件
-    const pathStartsWith = `/${year}年/${type}/${anime}`;
+  private async scrapeFile(file: LibFile): Promise<LibraryScrapeResult> {
+    const parseFileResult = this.parseYearTypeAnime(file);
+    if (
+      parseFileResult.year === null ||
+      parseFileResult.type === null ||
+      parseFileResult.title === null
+    ) {
+      return {};
+    }
 
-    // 创建新的 LibraryScrapeResultAnime 对象
-    const scrapeResultAnime: LibraryScrapeResultAnime = await (async () => {
-      // 如果有 BgmID，则尝试寻找库内已有的相同 Bangumi ID 的动画
-      if (parseFolder.bgmID !== null) {
-        const sameBangumiAnimes = await App.instance.prisma.anime.findFirst({
-          where: {
-            sites: {
-              every: {
-                siteType: "Bangumi",
-                siteId: parseFolder.bgmID,
-              },
+    // 有 bangumiID 情况
+    if (parseFileResult.bgmID !== null) {
+      const maybeAnime = await this.getBgmLinkedAnimesWithCache(
+        parseFileResult.bgmID
+      );
+
+      // 如果库内已有该番剧，直接关联此文件
+      if (maybeAnime.length !== 0) {
+        return {
+          connectFile: { animeId: maybeAnime[0].id, file: file },
+        };
+      }
+      // 如果库内没有该番剧，则直接创建新 Anime
+      else {
+        return {
+          createAnime: {
+            name: parseFileResult.title,
+            bdrip: parseFileResult.bdrip,
+            nsfw: parseFileResult.nsfw,
+            releaseYear: parseFileResult.year,
+            releaseSeason: ["1月冬", "4月春", "7月夏", "10月秋"].includes(
+              parseFileResult.type
+            )
+              ? parseFileResult.type
+              : null,
+            region: ["1月冬", "4月春", "7月夏", "10月秋"].includes(
+              parseFileResult.type
+            )
+              ? "Japan"
+              : null,
+          },
+          connectSite: {
+            site: {
+              siteType: "Bangumi",
+              siteId: parseFileResult.bgmID,
             },
           },
-          include: {
-            sites: true,
+          connectFile: {
+            file: file,
           },
-        });
-
-        if (sameBangumiAnimes) {
-          return {
-            id: sameBangumiAnimes.id,
-            name: sameBangumiAnimes.name,
-            sites: sameBangumiAnimes.sites,
-          };
-        }
+        };
       }
-
-      // 如果库内没有一致的 Bangumi Site Anime，则创建新的 LibraryScrapeResultAnime 对象
-      return {
-        name: parseFolder.title,
-        bdrip: parseFolder.bdrip,
-        nsfw: parseFolder.nsfw,
-        releaseYear: year,
-        releaseSeason: (() => {
-          if (["1月冬", "4月春", "7月夏", "10月秋"].includes(type)) {
-            return type;
-          }
-        })(),
-        region: (() => {
-          // 默认将季度动画的动画地区设置为日本
-          if (["1月冬", "4月春", "7月夏", "10月秋"].includes(type)) {
-            return Region.Japan;
-          }
-        })(),
-        sites: (() => {
-          // 如果此动画有 BGM ID，则将其添加到 sites 中
-          if (parseFolder.bgmID !== null) {
-            return [
-              {
-                siteType: AnimeInfoSource.Bangumi,
-                siteId: parseFolder.bgmID,
-              },
-            ];
-          } else {
-            return [];
-          }
-        })(),
-      };
-    })();
-
-    const parentFolder = await this.indexReader.getFile(pathStartsWith);
-    if (!parentFolder || parentFolder.animeId !== null) {
-      return null;
     }
-    const allChilds = await this.indexReader.getAllSubFiles(pathStartsWith);
-
-    return {
-      anime: scrapeResultAnime,
-      files: [
-        parentFolder, // 父文件夹
-        ...allChilds, // 此文件夹下的所有文件
-      ],
-    };
+    // 无 BangumiID 情况
+    else {
+      return {
+        createAnime: {
+          name: parseFileResult.title,
+          bdrip: parseFileResult.bdrip,
+          nsfw: parseFileResult.nsfw,
+          releaseYear: parseFileResult.year,
+          releaseSeason: ["1月冬", "4月春", "7月夏", "10月秋"].includes(
+            parseFileResult.type
+          )
+            ? parseFileResult.type
+            : null,
+          region: ["1月冬", "4月春", "7月夏", "10月秋"].includes(
+            parseFileResult.type
+          )
+            ? "Japan"
+            : null,
+        },
+        connectFile: {
+          file: file,
+        },
+      };
+    }
   }
 
   /**
    * 将当前库中没有归属的文件向父级目录寻找 anime 归属标记
    * 即向后代染色
+   * @deprecated
    * @param path
    */
   private async markAnimeForBlankFiles(path: string): Promise<void> {
     const allBlank = await App.instance.prisma.libFile.findMany({
       where: {
-        libraryId: this.storageReader.library.id,
+        libraryId: this.library.id,
         animeId: null,
         removed: false,
         path: { startsWith: path },
@@ -290,7 +297,7 @@ export class LavaAnimeLibV2LibraryScraper implements LibraryScraper {
     const findFatherOrGrandpa = async (file: LibFile) => {
       // 获取父文件夹的信息
       const parent =
-        cache.get(file.path) || (await this.indexReader.getFile(file.path));
+        cache.get(file.path) || (await this.indexManager.getFile(file.path));
       // 处在根目录中的文件无法向上查找
       if (parent === null) return null;
       if (parent.animeId) {
@@ -320,9 +327,5 @@ export class LavaAnimeLibV2LibraryScraper implements LibraryScraper {
         // App.instance.logger.trace(`${nodePath.join(file.path, file.name)} 未找到归属.`);
       }
     }
-  }
-
-  getStorageReader(): StorageReader {
-    return this.storageReader;
   }
 }
