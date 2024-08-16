@@ -13,7 +13,7 @@ export class AnimeCollectionSerivce {
    * @param status 收藏状态，用于更新或设置收藏记录的状态
    * @returns 返回创建或更新后的收藏记录
    */
-  async createOrUpdate(
+  async upsert(
     userId: number,
     animeId: number,
     status: AnimeCollectionStatus
@@ -95,7 +95,7 @@ export class AnimeCollectionSerivce {
    * @param userId 用户ID，用于指定查询哪个用户的动漫收藏
    * @returns 返回一个Promise，解析为包含用户动漫收藏的数组
    */
-  async getAllWithUser(userId: number) {
+  async getAllByUser(userId: number) {
     const result = await App.instance.prisma.animeCollection.findMany({
       where: {
         userId,
@@ -117,7 +117,7 @@ export class AnimeCollectionSerivce {
    * @param animeId 动画的ID，用于定位特定动画的收藏
    * @returns 返回一个Promise，解析为包含与指定动画ID相关联的所有收藏的数组
    */
-  async getAllWithAnime(animeId: number) {
+  async getAllByAnime(animeId: number) {
     const result = await App.instance.prisma.animeCollection.findMany({
       where: {
         animeId,
