@@ -13,16 +13,12 @@ import {
   ServiceUnavailableError,
 } from "../../../error/error";
 import { extensionMap } from "../../file/type/type";
-import { LibraryIndexReader } from "../../index/reader";
-import { LibraryIndexUpdater } from "../../index/updater";
-import type { LibraryScraper } from "../../scraper/interface";
-import { scraperFactory } from "../../scraper/interface";
-import type { StorageReader } from "./interface";
+import type { LibraryStorageSystem } from "./interface";
 
 /**
  * Alist 操作器实现
  */
-export class AlistStorageReader implements StorageReader {
+export class AlistStorageSystem implements LibraryStorageSystem {
   library: Library;
 
   constructor(library: Library) {
@@ -189,18 +185,6 @@ export class AlistStorageReader implements StorageReader {
     });
 
     return result;
-  }
-
-  getIndexUpdater(): LibraryIndexUpdater {
-    return new LibraryIndexUpdater(this);
-  }
-
-  getScraper(): LibraryScraper {
-    return scraperFactory(this, App.instance.prisma, App.instance.logger);
-  }
-
-  getIndexReader(): LibraryIndexReader {
-    return new LibraryIndexReader(this);
   }
 
   private getConfig(): AlistLibraryConfig {
