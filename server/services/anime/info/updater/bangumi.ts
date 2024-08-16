@@ -1,5 +1,4 @@
 import { AnimeInfoSource, AnimePlatform, EpisodeType } from "@prisma/client";
-import { remove as removeDiacritics } from "diacritics";
 import moment from "moment";
 import { BangumiAPI } from "~/server/services/api/bangumi";
 import { App } from "~/server/services/app";
@@ -16,50 +15,52 @@ import type { AnimeInfoUpdater } from "./interface";
 export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
   private bangumiAPI = new BangumiAPI();
 
-  async updateRelationAnimes(bangumiId: string): Promise<void> {
-    if (
-      bangumiId === undefined ||
-      Number(bangumiId) <= 0 ||
-      Number.isNaN(Number(bangumiId))
-    ) {
-      return;
+  async updateRelationAnimes(linkId: number): Promise<void> {
+    const siteLink = await App.instance.prisma.animeSiteLink.findUnique({
+      where: {
+        id: linkId,
+      },
+      include: {
+        anime: true,
+      },
+    });
+
+    if (siteLink === null) {
+      throw createError({
+        statusCode: 404,
+        message: "找不到该关联",
+      });
+    }
+    if (siteLink.siteType !== "Bangumi") {
+      throw createError({
+        statusCode: 400,
+        message: "获取关联站点信息时，适配器选用错误",
+      });
     }
 
-    const { animes } = await App.instance.prisma.animeSiteLink.findFirstOrThrow(
-      {
-        where: {
-          siteType: "Bangumi",
-          siteId: bangumiId,
-        },
-        include: {
-          animes: true,
-        },
-      }
+    const bangumiSubject = await this.bangumiAPI.getSubjects(
+      Number(siteLink.siteId)
     );
-
-    const bangumiSubject = await this.bangumiAPI.getSubjects(Number(bangumiId));
 
     const bangumiEpisodes = await this.bangumiAPI.getEpisodes(
-      Number(bangumiId)
+      Number(siteLink.siteId)
     );
 
-    for (const anime of animes) {
-      // TODO: poster 更新
+    // TODO: poster 更新
 
-      // 更新 Anime 主要数据
-      await this.updateAnime(anime.id, bangumiSubject);
+    // 更新 Anime 主要数据
+    await this.updateAnime(siteLink.animeId, bangumiSubject);
 
-      // 删除本番剧现存的 Banugmi 标签
-      await this.updateAnimeTags(anime.id, bangumiSubject);
+    // 删除本番剧现存的 Banugmi 标签
+    await this.updateAnimeTags(siteLink.animeId, bangumiSubject);
 
-      // 更新评分
-      await this.updateRating(anime.id, bangumiSubject);
+    // 更新评分
+    await this.updateRating(siteLink.animeId, bangumiSubject);
 
-      // TODO: episodes 更新
-      await this.updateAnimeEpisodes(anime.id, bangumiEpisodes);
-    }
+    // TODO: episodes 更新
+    await this.updateAnimeEpisodes(siteLink.animeId, bangumiEpisodes);
 
-    await this.saveLastUpdate(bangumiId);
+    await this.changeUpdateTime(siteLink.id);
   }
 
   /**
@@ -126,16 +127,13 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
    * 在数据库里更新 AnimeSiteLink 的 lastUpdate 字段
    * @param animeId
    */
-  private async saveLastUpdate(animeSiteId: string) {
+  private async changeUpdateTime(animeSiteId: number) {
     await App.instance.prisma.animeSiteLink.update({
       where: {
-        siteId_siteType: {
-          siteId: animeSiteId,
-          siteType: "Bangumi",
-        },
+        id: animeSiteId,
       },
       data: {
-        lastUpdate: new Date(),
+        updatedAt: new Date(),
       },
     });
   }
@@ -175,54 +173,51 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
     animeId: number,
     bangumiSubject: BangumiAPISubject
   ) {
-    await App.instance.prisma.animeTag.deleteMany({
-      where: {
-        source: AnimeInfoSource.Bangumi,
-        animeId: animeId,
-      },
+    const currentDate = new Date();
+
+    // 获取新的标签
+    const newTags = bangumiSubject.tags.map((tag) => ({
+      name: tag.name,
+      count: tag.count,
+      source: AnimeInfoSource.Bangumi,
+      lastFoundAt: currentDate,
+      animeId: animeId,
+    }));
+
+    // 获取数据库中现有的标签
+    const existingTags = await App.instance.prisma.animeTag.findMany({
+      where: { animeId, source: AnimeInfoSource.Bangumi },
     });
 
-    let tags = bangumiSubject.tags
-      // 转为数据库格式
-      .map((tag) => {
-        return {
-          name: tag.name,
-          count: tag.count,
-          source: AnimeInfoSource.Bangumi,
-          animeId: animeId,
-        };
+    // 更新或创建标签
+    for (const newTag of newTags) {
+      await App.instance.prisma.animeTag.upsert({
+        where: {
+          name_source_animeId: {
+            name: newTag.name,
+            source: AnimeInfoSource.Bangumi,
+            animeId,
+          },
+        },
+        update: {
+          count: newTag.count,
+          lastFoundAt: currentDate,
+        },
+        create: newTag,
       });
+    }
 
-    // name 去重合并，因为 mysql 重复约束是忽略大小写的.
-    tags.forEach((tag, index, array) => {
-      if (tag.count === -1) return;
-      // 找到相同 name 的 tag
-      const equalsTag = tags.find((tagFind, indexFind) => {
-        if (index === indexFind) return false;
-        if (tagFind.count === -1) return false;
-        if (
-          removeDiacritics(tag.name.toLowerCase()) ===
-          removeDiacritics(tagFind.name.toLowerCase())
-        )
-          return true;
-      });
-
-      if (equalsTag) {
-        // 将后面重复的 count 置为 -1.
-        equalsTag.count = -1;
-        tag.count = tag.count + equalsTag.count;
+    // 删除不再存在的标签
+    const newTagNames = new Set(newTags.map((tag) => tag.name));
+    for (const existingTag of existingTags) {
+      if (!newTagNames.has(existingTag.name)) {
+        await App.instance.prisma.animeTag.delete({
+          where: {
+            id: existingTag.id,
+          },
+        });
       }
-    });
-
-    tags = tags.filter((tag) => {
-      return tag.count !== -1;
-    });
-
-    // 添加新的 Banugmi 标签
-    await App.instance.prisma.animeTag.createMany({
-      data: tags,
-      skipDuplicates: true,
-    });
+    }
 
     App.instance.logger.trace(`从 Bangumi 更新了番剧 ${animeId} 的最新标签.`);
   }
