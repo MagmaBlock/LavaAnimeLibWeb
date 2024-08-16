@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { AlistStorageSystem } from "../services/storage/system/alist";
 
 const prisma = new PrismaClient();
-const storage = await prisma.storage.findFirst({ where: { id: "4AG" } });
+const storage = await prisma.storage.findFirst({ where: { id: "3A_Xinxiang" } });
 if (!storage) {
   throw new Error("未找到存储库");
 }
@@ -21,11 +21,14 @@ console.log(
 );
 
 // console.log(await storageSystem.list("/2024年/1月冬/龙与魔女 #0.8 454887"));
+// console.log(await storageSystem.list("/2024年/1月冬"));
 // console.log(await storageSystem.info("/2024年"));
 
 // await storageSystem.remove("/test2");
 // await storageSystem.remove("/test");
 // await storageSystem.mkdir("/test");
+// await storageSystem.mkdir("/test2");
 // await storageSystem.copy("/test", "/2024年");
-// await storageSystem.move("/test", "/2024年");
+// await storageSystem.move("/test2", "/2024年");
+// await storageSystem.remove("/test");
 // await storageSystem.remove("/test2");

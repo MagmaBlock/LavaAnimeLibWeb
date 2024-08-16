@@ -1,5 +1,5 @@
 import type { FileType, Storage, StorageIndex } from "@prisma/client";
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, type AxiosRequestConfig } from "axios";
 import { posix as pathPosix } from "path";
 import type {
   AlistApiResponse,
@@ -19,265 +19,19 @@ export class AlistStorageSystem implements StorageSystem {
   storage: Storage;
   private alistToken: string;
   private alistTokenExpiresAt: Date; // 48h after get
+  private config: AlistStorageConfig;
 
   constructor(storage: Storage) {
     if (storage.type !== "Alist") {
       throw new Error(
-        "构造 AlistLibrary 时的 Library 对象的 type 应该是 Alist"
+        "AlistStorageSystem 使用的 Storage 对象 type 应该是 Alist"
       );
     }
     this.storage = storage;
     this.alistToken = "";
     this.alistTokenExpiresAt = new Date(0);
+    this.config = this.getConfig();
     this.refreshToken();
-  }
-
-  async copy(path: string, targetFolder: string): Promise<void> {
-    await this.refreshToken();
-    console.log({
-      src_dir: pathPosix.dirname(
-        pathPosix.join(this.getConfig().baseDir, path)
-      ),
-      dst_dir: pathPosix.join(this.getConfig().baseDir, targetFolder),
-      names: [
-        pathPosix.basename(pathPosix.join(this.getConfig().baseDir, path)),
-      ],
-    });
-
-    try {
-      const copy = await axios.post<AlistApiResponse<null>>(
-        "/api/fs/copy",
-        <AlistMoveOrCopyRequest>{
-          src_dir: pathPosix.dirname(
-            pathPosix.join(this.getConfig().baseDir, path)
-          ),
-          dst_dir: pathPosix.join(this.getConfig().baseDir, targetFolder),
-          names: [
-            pathPosix.basename(pathPosix.join(this.getConfig().baseDir, path)),
-          ],
-        },
-        {
-          baseURL: this.getConfig().host,
-          headers: {
-            Authorization: this.alistToken,
-          },
-        }
-      );
-
-      if (copy.data.code !== 200) {
-        throw new Error(`复制文件失败: ${copy.data?.message}`);
-      }
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        throw new Error(`Alist 请求失败: ${error.message}`);
-      }
-      throw error;
-    }
-  }
-  async move(path: string, targetFolder: string): Promise<void> {
-    await this.refreshToken();
-    try {
-      const move = await axios.post<AlistApiResponse<null>>(
-        "/api/fs/move",
-        <AlistMoveOrCopyRequest>{
-          src_dir: pathPosix.dirname(
-            pathPosix.join(this.getConfig().baseDir, path)
-          ),
-          dst_dir: pathPosix.join(this.getConfig().baseDir, targetFolder),
-          names: [
-            pathPosix.basename(pathPosix.join(this.getConfig().baseDir, path)),
-          ],
-        },
-        {
-          baseURL: this.getConfig().host,
-          headers: {
-            Authorization: this.alistToken,
-          },
-        }
-      );
-
-      if (move.data.code !== 200) {
-        throw new Error(`移动文件失败: ${move.data?.message}`);
-      }
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        throw new Error(`Alist 请求失败: ${error.message}`);
-      }
-      throw error;
-    }
-  }
-  async list(path: string): Promise<Partial<StorageIndex>[]> {
-    await this.refreshToken();
-    try {
-      const listGet = await axios.post<AlistApiResponse<AlistListResponse>>(
-        "/api/fs/list",
-        {
-          path: pathPosix.join(this.getConfig().baseDir, path),
-        },
-        {
-          baseURL: this.getConfig().host,
-          headers: {
-            Authorization: this.alistToken,
-          },
-        }
-      );
-
-      if (
-        listGet.data?.code === 200 &&
-        Array.isArray(listGet.data.data?.content)
-      ) {
-        return listGet.data.data.content.map((item) => ({
-          name: item.name,
-          type: this.getFileType(item.name),
-          path: pathPosix.normalize(path),
-          isDirectory: item.is_dir,
-          size: item.size,
-        }));
-      }
-
-      throw new Error("Alist 返回意外结果");
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        throw new Error(`Alist 请求失败: ${error.message}`);
-      }
-      throw error;
-    }
-  }
-
-  async info(path: string): Promise<Partial<StorageIndex>> {
-    await this.refreshToken();
-    try {
-      const getInfo = await axios.post<AlistApiResponse<AlistGetResponse>>(
-        "/api/fs/get",
-        {
-          path: pathPosix.join(this.getConfig().baseDir, path),
-        },
-        {
-          baseURL: this.getConfig().host,
-          headers: {
-            Authorization: this.alistToken,
-          },
-        }
-      );
-
-      if (getInfo.data?.code === 200) {
-        const item = getInfo.data.data;
-        return {
-          name: item.name,
-          type: this.getFileType(item.name),
-          path: pathPosix.dirname(pathPosix.normalize(path)),
-          isDirectory: item.is_dir,
-          size: item.size,
-        };
-      }
-
-      throw new Error("Alist 返回意外结果");
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        throw new Error(`Alist 请求失败: ${error.message}`);
-      }
-      throw error;
-    }
-  }
-
-  async mkdir(path: string): Promise<void> {
-    await this.refreshToken();
-    try {
-      const response = await axios.post<AlistApiResponse<null>>(
-        "/api/fs/mkdir",
-        {
-          path: pathPosix.join(this.getConfig().baseDir, path),
-        },
-        {
-          baseURL: this.getConfig().host,
-          headers: {
-            Authorization: this.alistToken,
-          },
-        }
-      );
-
-      if (response.data?.code !== 200) {
-        throw new Error(`创建文件夹失败: ${response.data?.message}`);
-      }
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        throw new Error(`Alist 请求失败: ${error.message}`);
-      }
-      throw error;
-    }
-  }
-
-  async remove(path: string): Promise<void> {
-    await this.refreshToken();
-    try {
-      const response = await axios.post<AlistApiResponse<null>>(
-        "/api/fs/remove",
-        <AlistRemoveRequest>{
-          names: [pathPosix.basename(path)],
-          dir: pathPosix.dirname(
-            pathPosix.join(this.getConfig().baseDir, path)
-          ),
-        },
-        {
-          baseURL: this.getConfig().host,
-          headers: {
-            Authorization: this.alistToken,
-          },
-        }
-      );
-
-      if (response.data?.code !== 200) {
-        throw new Error(`删除文件/文件夹失败: ${response.data?.message}`);
-      }
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        throw new Error(`Alist 请求失败: ${error.message}`);
-      }
-      throw error;
-    }
-  }
-  readFile(path: string): Promise<Buffer | null> {
-    throw new Error("Method not implemented.");
-  }
-  readFileStream(path: string): Promise<ReadableStream | null> {
-    throw new Error("Method not implemented.");
-  }
-  readFileString(path: string): Promise<string | null> {
-    throw new Error("Method not implemented.");
-  }
-  uploadFromBuffer(path: string, buffer: Buffer): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-  getUploadUrl(path: string): Promise<string | null> {
-    throw new Error("Method not implemented.");
-  }
-  async getDownloadUrl(path: string): Promise<string | null> {
-    try {
-      const getInfo = await axios.post<AlistApiResponse<AlistGetResponse>>(
-        "/api/fs/get",
-        {
-          path: pathPosix.join(this.getConfig().baseDir, path),
-        },
-        {
-          baseURL: this.getConfig().host,
-          headers: {
-            Authorization: this.alistToken,
-          },
-        }
-      );
-
-      if (getInfo.data.code !== 200) {
-        throw new Error(`获取文件信息失败: ${getInfo.data?.message}`);
-      } else {
-        if (getInfo.data.data.raw_url) return getInfo.data.data.raw_url;
-      }
-      return null;
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        throw new Error(`Alist 请求失败: ${error.message}`);
-      }
-      throw error;
-    }
   }
 
   private getConfig(): AlistStorageConfig {
@@ -299,63 +53,167 @@ export class AlistStorageSystem implements StorageSystem {
     if (this.alistTokenExpiresAt > new Date()) return;
 
     try {
-      const token = await axios.post<AlistApiResponse<{ token: string }>>(
+      const response = await axios.post<AlistApiResponse<{ token: string }>>(
         "/api/auth/login",
         {
-          username: this.getConfig().username,
-          password: this.getConfig().password,
+          username: this.config.username,
+          password: this.config.password,
         },
         {
-          baseURL: this.getConfig().host,
+          baseURL: this.config.host,
         }
       );
 
-      if (token.data.code === 200) {
-        this.alistToken = token.data.data.token;
-        this.alistTokenExpiresAt = new Date(Date.now() + 1000 * 60 * 60 * 48);
-        return;
+      if (response.data.code !== 200) {
+        throw new Error(`刷新 token 失败: ${response.data.message}`);
       }
 
-      throw new Error("Alist 返回意外结果");
+      this.alistToken = response.data.data.token;
+      this.alistTokenExpiresAt = new Date(Date.now() + 1000 * 60 * 60 * 48);
     } catch (error) {
-      if (error instanceof AxiosError) {
-        throw new Error(`Alist 请求失败: ${error.message}`);
-      }
-      throw error;
+      this.handleError(error);
     }
   }
 
-  /**
-   * 根据文件名获取文件类型。
-   *
-   * 此方法通过解析文件名的扩展名来确定文件类型。它首先从文件名中提取扩展名，
-   * 然后通过一个预定义的映射表（extensionMap）来查找与扩展名匹配的文件类型。
-   * 如果找不到匹配的类型，则默认返回"Other"。
-   *
-   * @param fileName 文件名，可以包含路径和扩展名。
-   * @returns 文件类型，根据扩展名匹配的结果返回；如果找不到匹配的类型，则返回"Other"。
-   */
+  private async makeRequest<T>(
+    url: string,
+    config: AxiosRequestConfig
+  ): Promise<T> {
+    await this.refreshToken();
+    try {
+      const response = await axios<AlistApiResponse<T>>({
+        ...config,
+        url,
+        baseURL: this.config.host,
+        headers: {
+          ...config.headers,
+          Authorization: this.alistToken,
+        },
+      });
+
+      if (response.data.code !== 200) {
+        throw new Error(`Alist 请求失败: ${response.data.message}`);
+      }
+
+      return response.data.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  private handleError(error: unknown): never {
+    if (error instanceof AxiosError) {
+      throw new Error(`Alist 请求失败: ${error.message}`);
+    }
+    throw error;
+  }
+
+  private getFullPath(path: string): string {
+    return pathPosix.join(this.config.baseDir, path);
+  }
+
+  async copy(path: string, targetFolder: string): Promise<void> {
+    const request: AlistMoveOrCopyRequest = {
+      src_dir: pathPosix.dirname(this.getFullPath(path)),
+      dst_dir: this.getFullPath(targetFolder),
+      names: [pathPosix.basename(this.getFullPath(path))],
+    };
+
+    await this.makeRequest("/api/fs/copy", { method: "POST", data: request });
+  }
+
+  async move(path: string, targetFolder: string): Promise<void> {
+    const request: AlistMoveOrCopyRequest = {
+      src_dir: pathPosix.dirname(this.getFullPath(path)),
+      dst_dir: this.getFullPath(targetFolder),
+      names: [pathPosix.basename(this.getFullPath(path))],
+    };
+
+    await this.makeRequest("/api/fs/move", { method: "POST", data: request });
+  }
+
+  async list(path: string): Promise<Partial<StorageIndex>[]> {
+    const response = await this.makeRequest<AlistListResponse>("/api/fs/list", {
+      method: "POST",
+      data: { path: this.getFullPath(path) },
+    });
+
+    return response.content.map((item) => ({
+      name: item.name,
+      type: this.getFileType(item.name),
+      path: pathPosix.normalize(path),
+      isDirectory: item.is_dir,
+      size: item.size,
+    }));
+  }
+
+  async info(path: string): Promise<Partial<StorageIndex>> {
+    const item = await this.makeRequest<AlistGetResponse>("/api/fs/get", {
+      method: "POST",
+      data: { path: this.getFullPath(path) },
+    });
+
+    return {
+      name: item.name,
+      type: this.getFileType(item.name),
+      path: pathPosix.dirname(pathPosix.normalize(path)),
+      isDirectory: item.is_dir,
+      size: item.size,
+    };
+  }
+
+  async mkdir(path: string): Promise<void> {
+    await this.makeRequest("/api/fs/mkdir", {
+      method: "POST",
+      data: { path: this.getFullPath(path) },
+    });
+  }
+
+  async remove(path: string): Promise<void> {
+    const request: AlistRemoveRequest = {
+      names: [pathPosix.basename(path)],
+      dir: pathPosix.dirname(this.getFullPath(path)),
+    };
+
+    await this.makeRequest("/api/fs/remove", { method: "POST", data: request });
+  }
+
+  async getDownloadUrl(path: string): Promise<string | null> {
+    const info = await this.makeRequest<AlistGetResponse>("/api/fs/get", {
+      method: "POST",
+      data: { path: this.getFullPath(path) },
+    });
+
+    return info.raw_url || null;
+  }
+
   private getFileType(fileName: string): FileType {
-    // 解析文件名获取扩展名
-    let thisExt = pathPosix.parse(fileName).ext;
-
-    // 如果扩展名不为空
-    if (thisExt !== "") {
-      // 去除扩展名前的点号
-      thisExt = thisExt.slice(1);
-
-      // 遍历extensionMap，寻找匹配的扩展名及其对应的文件类型
+    const ext = pathPosix.parse(fileName).ext.slice(1);
+    if (ext) {
       for (const [reg, extType] of extensionMap.entries()) {
-        // 使用正则表达式测试扩展名是否匹配
-        if (reg.test(thisExt)) {
-          // 如果匹配，返回对应的文件类型
+        if (reg.test(ext)) {
           return extType[1];
         }
       }
     }
-
-    // 如果没有找到匹配的扩展名，返回"Other"
     return "Other";
+  }
+
+  // 未实现的方法
+  readFile(path: string): Promise<Buffer | null> {
+    throw new Error("Method not implemented.");
+  }
+  readFileStream(path: string): Promise<ReadableStream | null> {
+    throw new Error("Method not implemented.");
+  }
+  readFileString(path: string): Promise<string | null> {
+    throw new Error("Method not implemented.");
+  }
+  uploadFromBuffer(path: string, buffer: Buffer): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  getUploadUrl(path: string): Promise<string | null> {
+    throw new Error("Method not implemented.");
   }
 
   // /**
