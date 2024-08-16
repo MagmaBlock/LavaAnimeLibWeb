@@ -27,7 +27,7 @@ model Anime {
   region        Region?
 
   tags         AnimeTag[] // 1-n, 此作品的相关标签
-  sites        AnimeSiteLink[] // m-n, 此作品在其他平台的关联
+  sites        AnimeSiteLink[] // 1-n, 此作品在其他平台的关联
   ratings      AnimeRating[] // 1-n, 来自多个平台的评分
   episodes     AnimeEpisode[] // 1-n, 此作品的多个剧集
   files        LibFile[] // 1-n, 此作品在所有节点中的所有文件
@@ -54,26 +54,29 @@ enum Region {
 
 // 描述作品特点和内容的标签
 model AnimeTag {
-  name   String
-  count  Int?
-  source AnimeInfoSource @default(Bangumi)
+  id          Int             @id @default(autoincrement())
+  name        String
+  count       Int?
+  source      AnimeInfoSource @default(Bangumi)
+  lastFoundAt DateTime? // 用于判断来自外部站点的 Tag 是否已经被站点删除
 
   anime   Anime @relation(fields: [animeId], references: [id])
   animeId Int
 
-  @@id([name, source, animeId])
+  @@unique([name, source, animeId])
 }
 
-// 其他站点的作品关联
+// 番剧在其他网站的链接
 model AnimeSiteLink {
-  id         Int             @id @default(autoincrement())
-  siteType   AnimeInfoSource
-  siteId     String
-  lastUpdate DateTime?
+  id        Int             @id @default(autoincrement())
+  siteType  AnimeInfoSource
+  siteId    String
+  updatedAt DateTime?
 
-  animes Anime[]
+  anime   Anime @relation(fields: [animeId], references: [id])
+  animeId Int
 
-  @@unique([siteId, siteType])
+  @@unique([siteType, siteId, animeId])
 }
 
 // 描述评分
@@ -220,7 +223,6 @@ model User {
   inviteBy         InviteCode?       @relation(name: "use")
   viewHistories    ViewHistory[]
 }
-
 
 enum UserRole {
   Default
