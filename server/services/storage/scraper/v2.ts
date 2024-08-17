@@ -97,89 +97,90 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
     if (files.length === 0) return {};
 
     const parsed = this.parseYearTypeAnime(files[0]);
-
-    if (parsed.year === null || parsed.type === null || parsed.title === null) {
-      return {};
-    }
+    if (!parsed.year || !parsed.type || !parsed.title) return {};
 
     // 只挂削未绑定动画的文件
     const noAnimeFiles = files.filter((f) => f.animeId === null);
     if (noAnimeFiles.length === 0) return {};
 
-    // 1: 能够识别出文件的 bgmID
-    if (parsed.bgmID !== null) {
-      const maybeAnime = await this.getAnimesSiteLinkedWithCache(parsed.bgmID);
+    const isSeasonAnime = ["1月冬", "4月春", "7月夏", "10月秋"].includes(
+      parsed.type
+    );
 
-      // A: 如果库内已有该番剧，直接关联此文件
-      if (maybeAnime.length !== 0) {
-        return {
-          connectFiles: {
-            animeId: maybeAnime[0].id,
-            files: noAnimeFiles,
-          },
-        };
-      }
-      // B: 库内没有此番剧，创建
-      else {
-        return {
-          createAnime: {
-            name: parsed.title,
-            bdrip: parsed.bdrip,
-            nsfw: parsed.nsfw,
-            releaseYear: parsed.year,
-            releaseSeason: ["1月冬", "4月春", "7月夏", "10月秋"].includes(
-              parsed.type
-            )
-              ? parsed.type
-              : null,
-            region: ["1月冬", "4月春", "7月夏", "10月秋"].includes(parsed.type)
-              ? "Japan"
-              : null,
-          },
-          connectSites: parsed.bgmID
-            ? {
-                sites: [
-                  {
-                    siteType: "Bangumi",
-                    siteId: parsed.bgmID,
-                  },
-                ],
-              }
-            : undefined,
-          connectFiles: {
-            files: files,
-          },
-        };
-      }
+    const baseAnimeData: Partial<Anime> = {
+      name: parsed.title,
+      bdrip: parsed.bdrip,
+      nsfw: parsed.nsfw,
+      releaseYear: parsed.year,
+      releaseSeason: isSeasonAnime ? parsed.type : null,
+      region: isSeasonAnime ? "Japan" : null,
+    };
+
+    // 处理有 bgmID 的情况
+    if (parsed.bgmID !== null) {
+      return await this.handleWithBgmID(
+        parsed.bgmID,
+        baseAnimeData,
+        noAnimeFiles
+      );
     }
-    // 2: 非 bangumi 的番剧（找不到 bgmId 的）
-    else {
-      // A: 向父级寻找有绑定 anime 属性的文件
-      const maybeAnime = await this.getAnimeBindByParentFolders(files[0]);
-      if (maybeAnime) {
-        return { connectFiles: { animeId: maybeAnime, files: files } };
-      }
-      // B: 创建新 Anime
+
+    // 处理没有 bgmID 的情况
+    return await this.handleWithoutBgmID(files[0], baseAnimeData, files);
+  }
+
+  private async handleWithBgmID(
+    bgmID: string,
+    baseAnimeData: Partial<Anime>,
+    noAnimeFiles: StorageIndex[]
+  ): Promise<StorageScrapeResult> {
+    const maybeAnime = await this.getAnimesSiteLinkedWithCache(bgmID);
+
+    // 库内已有该番剧，直接关联此文件
+    if (maybeAnime.length !== 0) {
       return {
-        createAnime: {
-          name: parsed.title,
-          bdrip: parsed.bdrip,
-          nsfw: parsed.nsfw,
-          releaseYear: parsed.year,
-          releaseSeason: ["1月冬", "4月春", "7月夏", "10月秋"].includes(
-            parsed.type
-          )
-            ? parsed.type
-            : null,
-          region: ["1月冬", "4月春", "7月夏", "10月秋"].includes(parsed.type)
-            ? "Japan"
-            : null,
-        },
         connectFiles: {
-          files: files,
+          animeId: maybeAnime[0].id,
+          files: noAnimeFiles,
         },
       };
     }
+
+    // 库内没有此番剧，创建新番剧
+    return {
+      createAnime: baseAnimeData,
+      connectSites: {
+        sites: [
+          {
+            siteType: "Bangumi",
+            siteId: bgmID,
+          },
+        ],
+      },
+      connectFiles: {
+        files: noAnimeFiles,
+      },
+    };
+  }
+
+  private async handleWithoutBgmID(
+    firstFile: StorageIndex,
+    baseAnimeData: Partial<Anime>,
+    files: StorageIndex[]
+  ): Promise<StorageScrapeResult> {
+    // 向父级寻找有绑定 anime 属性的文件
+    const maybeAnime = await this.getAnimeBindByParentFolders(firstFile);
+    if (maybeAnime) {
+      return { connectFiles: { animeId: maybeAnime, files: files } };
+    }
+
+    // 创建新 Anime
+    return {
+      createAnime: baseAnimeData,
+      connectFiles: {
+        files: files,
+      },
+    };
   }
 
   /**
