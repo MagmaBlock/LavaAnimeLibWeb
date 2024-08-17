@@ -102,57 +102,84 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
       return {};
     }
 
-    // 有 bangumiID 情况
-    if (parsed.bgmID !== null) {
-      const maybeAnime = await this.getBgmLinkedAnimesWithCache(parsed.bgmID);
+    // 只挂削未绑定动画的文件
+    const noAnimeFiles = files.filter((f) => f.animeId === null);
+    if (noAnimeFiles.length === 0) return {};
 
-      // 如果库内已有该番剧，直接关联此文件
+    // 1: 能够识别出文件的 bgmID
+    if (parsed.bgmID !== null) {
+      const maybeAnime = await this.getAnimesSiteLinkedWithCache(parsed.bgmID);
+
+      // A: 如果库内已有该番剧，直接关联此文件
       if (maybeAnime.length !== 0) {
-        // 只连接未关联 Anime 的文件
-        const filesNoAnimeBind = files.filter((f) => f.animeId === null);
-        if (filesNoAnimeBind.length !== 0) {
-          return {
-            connectFiles: {
-              animeId: maybeAnime[0].id,
-              files: filesNoAnimeBind,
-            },
-          };
-        } else {
-          return {};
-        }
+        return {
+          connectFiles: {
+            animeId: maybeAnime[0].id,
+            files: noAnimeFiles,
+          },
+        };
+      }
+      // B: 库内没有此番剧，创建
+      else {
+        return {
+          createAnime: {
+            name: parsed.title,
+            bdrip: parsed.bdrip,
+            nsfw: parsed.nsfw,
+            releaseYear: parsed.year,
+            releaseSeason: ["1月冬", "4月春", "7月夏", "10月秋"].includes(
+              parsed.type
+            )
+              ? parsed.type
+              : null,
+            region: ["1月冬", "4月春", "7月夏", "10月秋"].includes(parsed.type)
+              ? "Japan"
+              : null,
+          },
+          connectSites: parsed.bgmID
+            ? {
+                sites: [
+                  {
+                    siteType: "Bangumi",
+                    siteId: parsed.bgmID,
+                  },
+                ],
+              }
+            : undefined,
+          connectFiles: {
+            files: files,
+          },
+        };
       }
     }
-
-    // 创建新 Anime
-    return {
-      createAnime: {
-        name: parsed.title,
-        bdrip: parsed.bdrip,
-        nsfw: parsed.nsfw,
-        releaseYear: parsed.year,
-        releaseSeason: ["1月冬", "4月春", "7月夏", "10月秋"].includes(
-          parsed.type
-        )
-          ? parsed.type
-          : null,
-        region: ["1月冬", "4月春", "7月夏", "10月秋"].includes(parsed.type)
-          ? "Japan"
-          : null,
-      },
-      connectSites: parsed.bgmID
-        ? {
-            sites: [
-              {
-                siteType: "Bangumi",
-                siteId: parsed.bgmID,
-              },
-            ],
-          }
-        : undefined,
-      connectFiles: {
-        files: files,
-      },
-    };
+    // 2: 非 bangumi 的番剧（找不到 bgmId 的）
+    else {
+      // A: 向父级寻找有绑定 anime 属性的文件
+      const maybeAnime = await this.getAnimeBindByParentFolders(files[0]);
+      if (maybeAnime) {
+        return { connectFiles: { animeId: maybeAnime, files: files } };
+      }
+      // B: 创建新 Anime
+      return {
+        createAnime: {
+          name: parsed.title,
+          bdrip: parsed.bdrip,
+          nsfw: parsed.nsfw,
+          releaseYear: parsed.year,
+          releaseSeason: ["1月冬", "4月春", "7月夏", "10月秋"].includes(
+            parsed.type
+          )
+            ? parsed.type
+            : null,
+          region: ["1月冬", "4月春", "7月夏", "10月秋"].includes(parsed.type)
+            ? "Japan"
+            : null,
+        },
+        connectFiles: {
+          files: files,
+        },
+      };
+    }
   }
 
   /**
@@ -166,9 +193,7 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
   ): Promise<StorageScrapeResult[]> {
     let files: StorageIndex[] = [];
 
-    const childFiles = await this.indexManager.getFilesStartsWith(
-      pathStartsWith
-    );
+    const childFiles = await this.indexManager.getChildFiles(pathStartsWith);
 
     files = files.concat(childFiles);
 
@@ -237,7 +262,7 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
     } {
       let bgmID: string | null = null;
       const maybeBgmID = folderName.match("\\d+$");
-      if (maybeBgmID) {
+      if (maybeBgmID && Number(maybeBgmID[0]) > 0) {
         bgmID = maybeBgmID[0];
       }
 
@@ -262,7 +287,7 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
    * 获取目前已有的动画中，绑定了指定 Bangumi 的动画
    * @param bgmID
    */
-  private async getBgmLinkedAnimesWithCache(bgmID: string): Promise<Anime[]> {
+  private async getAnimesSiteLinkedWithCache(bgmID: string): Promise<Anime[]> {
     const cache = this.bgmToAnimeCache.get(bgmID);
     if (cache) {
       const [cacheTime, animes] = cache;
@@ -284,149 +309,15 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
   }
 
   /**
-   * 传入每个类型下的动画类型，尝试挂削动画
-   * @param year 年份
-   * @param type 类型
-   * @param anime 动画文件夹名
-   * @returns LibraryScrapeResult 时是成功找到并挂削新番剧。null 时是父文件夹不存在或文件夹已经有番剧归属。
+   * 从文件的父文件夹中寻找绑定的 anime
    */
-  private async scrapeFile(file: StorageIndex): Promise<StorageScrapeResult> {
-    const parseFileResult = this.parseYearTypeAnime(file);
-    if (
-      parseFileResult.year === null ||
-      parseFileResult.type === null ||
-      parseFileResult.title === null
-    ) {
-      return {};
-    }
-
-    // 有 bangumiID 情况
-    if (parseFileResult.bgmID !== null) {
-      const maybeAnime = await this.getBgmLinkedAnimesWithCache(
-        parseFileResult.bgmID
-      );
-
-      // 如果库内已有该番剧，直接关联此文件
-      if (maybeAnime.length !== 0) {
-        return {
-          connectFiles: { animeId: maybeAnime[0].id, files: [file] },
-        };
-      }
-      // 如果库内没有该番剧，则直接创建新 Anime
-      else {
-        return {
-          createAnime: {
-            name: parseFileResult.title,
-            bdrip: parseFileResult.bdrip,
-            nsfw: parseFileResult.nsfw,
-            releaseYear: parseFileResult.year,
-            releaseSeason: ["1月冬", "4月春", "7月夏", "10月秋"].includes(
-              parseFileResult.type
-            )
-              ? parseFileResult.type
-              : null,
-            region: ["1月冬", "4月春", "7月夏", "10月秋"].includes(
-              parseFileResult.type
-            )
-              ? "Japan"
-              : null,
-          },
-          connectSites: {
-            sites: [
-              {
-                siteType: "Bangumi",
-                siteId: parseFileResult.bgmID,
-              },
-            ],
-          },
-          connectFiles: {
-            files: [file],
-          },
-        };
-      }
-    }
-    // 无 BangumiID 情况
-    else {
-      return {
-        createAnime: {
-          name: parseFileResult.title,
-          bdrip: parseFileResult.bdrip,
-          nsfw: parseFileResult.nsfw,
-          releaseYear: parseFileResult.year,
-          releaseSeason: ["1月冬", "4月春", "7月夏", "10月秋"].includes(
-            parseFileResult.type
-          )
-            ? parseFileResult.type
-            : null,
-          region: ["1月冬", "4月春", "7月夏", "10月秋"].includes(
-            parseFileResult.type
-          )
-            ? "Japan"
-            : null,
-        },
-        connectFiles: {
-          files: [file],
-        },
-      };
-    }
-  }
-
-  /**
-   * 将当前库中没有归属的文件向父级目录寻找 anime 归属标记
-   * 即向后代染色
-   * @deprecated
-   * @param path
-   */
-  private async markAnimeForBlankFiles(path: string): Promise<void> {
-    const allBlank = await App.instance.prisma.storageIndex.findMany({
-      where: {
-        storageId: this.storage.id,
-        animeId: null,
-        removed: false,
-        path: { startsWith: path },
-      },
-    });
-
-    App.instance.logger.trace(
-      `${path} 下找到了 ${allBlank.length} 个无归属文件(夹), 尝试寻找归属...`
+  private async getAnimeBindByParentFolders(
+    file: StorageIndex
+  ): Promise<number | null> {
+    const parentFolders = await this.indexManager.getParentFolders(file.path);
+    const nearestAnimeFolder = parentFolders.find(
+      (folder) => folder.animeId !== null
     );
-
-    const cache = new Map<string, StorageIndex>();
-
-    // 寻找父文件夹中存在的标记并更新标记
-    const findFatherOrGrandpa = async (file: StorageIndex) => {
-      // 获取父文件夹的信息
-      const parent =
-        cache.get(file.path) ||
-        (await this.indexManager.getFileInfo(file.path));
-      // 处在根目录中的文件无法向上查找
-      if (parent === null) return null;
-      if (parent.animeId) {
-        // 存入缓存并返回
-        cache.set(file.path, parent);
-        return parent.animeId;
-      } else {
-        return await findFatherOrGrandpa(parent);
-      }
-    };
-
-    for (const file of allBlank) {
-      const parentAnimeId = await findFatherOrGrandpa(file);
-      if (parentAnimeId) {
-        App.instance.logger.debug(
-          `${nodePath.join(file.path, file.name)} 找到了归属: ${parentAnimeId}`
-        );
-        await App.instance.prisma.storageIndex.update({
-          where: {
-            id: file.id,
-          },
-          data: {
-            animeId: parentAnimeId,
-          },
-        });
-      } else {
-        // App.instance.logger.trace(`${nodePath.join(file.path, file.name)} 未找到归属.`);
-      }
-    }
+    return nearestAnimeFolder ? nearestAnimeFolder.animeId : null;
   }
 }

@@ -16,7 +16,7 @@ const scraper = new LavaAnimeLibV2Scraper(storage);
 const results = await scraper.scrapeStartsWith("/");
 const newAnimeCount = results.filter((r) => r.createAnime).length;
 
-console.log(results);
+console.log(JSON.stringify(results));
 
 console.log(`挂削了 ${newAnimeCount} 个新 Anime, 耗时 ${Date.now() - start}`);
 
