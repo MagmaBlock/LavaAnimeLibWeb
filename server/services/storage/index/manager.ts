@@ -160,7 +160,7 @@ export class StorageIndexManager {
           },
         });
         App.instance.logger.trace(
-          `${this.storageSystem.storage.id} 删除 ${index.path}${index.name}`
+          `${this.storageSystem.storage.id} 的文件 ${index.path}/${index.name} 因消失已标记为 "removed"`
         );
       }
     }
@@ -174,12 +174,7 @@ export class StorageIndexManager {
     const scannedRecords = new Set<number>();
     await this.scanRecursively(rootPath, scannedRecords);
 
-    const removedCount = await this.markRemovedRecords(
-      rootPath,
-      scannedRecords
-    );
-
-    this.logScanResult(rootPath, scannedRecords.size, removedCount);
+    this.logScanResult(rootPath, scannedRecords.size);
   }
 
   /**
@@ -192,7 +187,7 @@ export class StorageIndexManager {
     scannedRecords: Set<number>
   ) {
     App.instance.logger.trace(
-      `${this.storageSystem.storage.name}(${this.storageSystem.storage.id}) 扫描 ${currentPath}`
+      `${this.storageSystem.storage.id} 扫描 ${currentPath}`
     );
 
     await this.updateIndex(currentPath);
@@ -215,9 +210,10 @@ export class StorageIndexManager {
    * 标记数据库中已删除的记录
    * @param rootPath 根路径
    * @param scannedRecords 已扫描到的记录集合
+   * @deprecated
    * @returns 被标记为删除的记录数量
    */
-  private async markRemovedRecords(
+  private async markIndexsRemoved(
     rootPath: string,
     scannedRecords: Set<number>
   ): Promise<number> {
@@ -240,13 +236,9 @@ export class StorageIndexManager {
    * @param scannedCount 扫描到的记录数量
    * @param removedCount 标记为删除的记录数量
    */
-  private logScanResult(
-    rootPath: string,
-    scannedCount: number,
-    removedCount: number
-  ) {
+  private logScanResult(rootPath: string, scannedCount: number) {
     App.instance.logger.info(
-      `${this.storageSystem.storage.name}(${this.storageSystem.storage.id}) - ${rootPath} 中成功扫描到了 ${scannedCount} 个文件(夹)，已经标记删除了数据库中 ${removedCount} 条本次扫描未扫描到的记录.`
+      `${this.storageSystem.storage.name}(${this.storageSystem.storage.id}) - ${rootPath} 中成功扫描到了 ${scannedCount} 个文件(夹).`
     );
   }
 }
