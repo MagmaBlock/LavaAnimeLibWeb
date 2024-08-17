@@ -1,4 +1,9 @@
-import type { Storage } from "@prisma/client";
+import type {
+  AnimeSiteLink,
+  PrismaClient,
+  Storage,
+  StorageIndex,
+} from "@prisma/client";
 import type { StorageScrapeResult } from "~/server/types/storage/scraper/result";
 import { App } from "../app";
 import { StorageIndexManager } from "./index/manager";
@@ -48,14 +53,20 @@ export class StorageService {
    */
   async applyStorageScraperResult(result: StorageScrapeResult): Promise<void> {
     const prisma = App.instance.prisma;
+    if (result.createAnime && result.updateAnime) {
+      throw new Error(
+        "StorageScrapeResult 中不能同时存在 createAnime 和 updateAnime"
+      );
+    }
+
     if (result.createAnime) {
       if (result.createAnime.name === undefined) {
         throw new Error(
-          "StorageScrapeResult 申请创建 Anime, 但甚至没有提供 name."
+          "StorageScrapeResult 申请创建 Anime, 缺少必选字段 name."
         );
       }
 
-      await prisma.anime.create({
+      const newAnime = await prisma.anime.create({
         data: {
           name: result.createAnime.name,
           originalName: result.createAnime.originalName,
@@ -68,7 +79,99 @@ export class StorageService {
           releaseYear: result.createAnime.releaseYear,
           releaseSeason: result.createAnime.releaseSeason,
           region: result.createAnime.region,
-          
+        },
+      });
+
+      if (result.connectSites) {
+        await createSitesToAnime(
+          result.connectSites.sites,
+          newAnime.id,
+          prisma
+        );
+      }
+
+      if (result.connectFiles) {
+        await connectFilesToAnime(
+          result.connectFiles.files,
+          newAnime.id,
+          prisma
+        );
+      }
+    }
+
+    if (result.updateAnime) {
+      if (result.updateAnime.animeId === undefined) {
+        throw new Error(
+          "StorageScrapeResult 申请更新 Anime, 但没有提供 animeId."
+        );
+      }
+
+      await prisma.anime.update({
+        where: { id: result.updateAnime.animeId },
+        data: result.updateAnime.data,
+      });
+
+      if (result.connectSites) {
+        await createSitesToAnime(
+          result.connectSites.sites,
+          result.updateAnime.animeId,
+          prisma
+        );
+      }
+
+      if (result.connectFiles) {
+        await connectFilesToAnime(
+          result.connectFiles.files,
+          result.updateAnime.animeId,
+          prisma
+        );
+      }
+    }
+
+    async function createSitesToAnime(
+      sites: Partial<AnimeSiteLink>[],
+      animeId: number,
+      prisma: PrismaClient
+    ) {
+      const connectSites = sites.map((s) => {
+        if (s.siteType === undefined || s.siteId === undefined) {
+          throw new Error(
+            "StorageScrapeResult 申请创建 AnimeSiteLink, 但甚至没有提供 siteType 或 siteId."
+          );
+        }
+        return {
+          siteType: s.siteType,
+          siteId: s.siteId,
+        };
+      });
+
+      await prisma.anime.update({
+        where: { id: animeId },
+        data: {
+          sites: {
+            createMany: {
+              data: connectSites,
+            },
+          },
+        },
+      });
+    }
+
+    async function connectFilesToAnime(
+      files: StorageIndex[],
+      animeId: number,
+      prisma: PrismaClient
+    ) {
+      const connectFiles = files.map((f) => {
+        return { id: f.id };
+      });
+
+      await prisma.anime.update({
+        where: { id: animeId },
+        data: {
+          files: {
+            connect: connectFiles,
+          },
         },
       });
     }
