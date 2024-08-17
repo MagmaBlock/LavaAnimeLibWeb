@@ -138,6 +138,8 @@ export class AlistStorageSystem implements StorageSystem {
       data: { path: this.getFullPath(path) },
     });
 
+    if (response.content === null) return [];
+
     return response.content.map((item) => ({
       name: item.name,
       type: this.getFileType(item.name),
