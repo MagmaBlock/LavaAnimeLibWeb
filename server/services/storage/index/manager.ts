@@ -1,10 +1,10 @@
-import { App } from "../../app";
+import type { Storage, StorageIndex } from "@prisma/client";
 import nodePathPosix from "node:path/posix";
-import { StorageService } from "../service";
-import type { StorageSystem } from "../system/interface";
 import pLimit from "p-limit";
 import pathTool from "path/posix";
-import type { Storage, StorageIndex } from "@prisma/client";
+import { App } from "../../app";
+import { StorageService } from "../service";
+import type { StorageSystem } from "../system/interface";
 
 export class StorageIndexManager {
   public storage: Storage;
@@ -38,6 +38,14 @@ export class StorageIndexManager {
   }
 
   /**
+   * 获取文件的完整路径
+   * 本方法只是将传入的文件的 path 和 name 连接
+   */
+  getFilePath(file: StorageIndex): string {
+    return pathTool.join(file.path, file.name);
+  }
+
+  /**
    * 使用绝对路径获取某个文件夹的一层子文件/文件夹
    */
   async getDirContents(path: string): Promise<StorageIndex[]> {
@@ -48,22 +56,6 @@ export class StorageIndexManager {
         storageId: this.storageSystem.storage.id,
         removed: false,
         path,
-      },
-    });
-  }
-
-  /**
-   * 使用绝对路径获取某个文件夹的所有子文件/文件夹
-   * @param path
-   */
-  async getFilesStartsWith(path: string): Promise<StorageIndex[]> {
-    path = nodePathPosix.join(path);
-
-    return await App.instance.prisma.storageIndex.findMany({
-      where: {
-        storageId: this.storageSystem.storage.id,
-        removed: false,
-        path: { startsWith: path },
       },
     });
   }
@@ -82,6 +74,49 @@ export class StorageIndexManager {
         animeId: null,
       },
     });
+  }
+
+  /**
+   * 使用绝对路径获取某个文件夹的所有子文件/文件夹
+   * @param path
+   */
+  async getChildFiles(path: string): Promise<StorageIndex[]> {
+    path = nodePathPosix.join(path);
+
+    return await App.instance.prisma.storageIndex.findMany({
+      where: {
+        storageId: this.storageSystem.storage.id,
+        removed: false,
+        path: { startsWith: path },
+      },
+    });
+  }
+
+  /**
+   * 获取文件的父文件夹
+   *
+   * @returns 如果父文件夹不存在，则返回 null（通常是根目录）
+   */
+  async getParentFolder(path: string): Promise<StorageIndex | null> {
+    const parsePath = nodePathPosix.parse(path);
+    return await this.getFileInfo(parsePath.dir);
+  }
+
+  /**
+   * 获取文件的所有父文件夹
+   *
+   * 此方法递归调用 getParentFolder 直至找不到父文件夹。
+   * @returns 数组索引越大，离当前文件越远
+   */
+  async getParentFolders(path: string): Promise<StorageIndex[]> {
+    const roadMap = [];
+    while (true) {
+      const parentFolder = await this.getParentFolder(path);
+      if (parentFolder === null) break;
+      roadMap.push(parentFolder);
+      path = nodePathPosix.join(parentFolder.path, parentFolder.name);
+    }
+    return roadMap;
   }
 
   /**
@@ -174,7 +209,9 @@ export class StorageIndexManager {
     const scannedRecords = new Set<number>();
     await this.scanRecursively(rootPath, scannedRecords);
 
-    this.logScanResult(rootPath, scannedRecords.size);
+    App.instance.logger.info(
+      `${this.storageSystem.storage.name}(${this.storageSystem.storage.id}) - ${rootPath} 中成功扫描到了 ${scannedRecords.size} 个文件(夹).`
+    );
   }
 
   /**
@@ -228,17 +265,5 @@ export class StorageIndexManager {
     });
 
     return result.count;
-  }
-
-  /**
-   * 记录扫描结果
-   * @param rootPath 根路径
-   * @param scannedCount 扫描到的记录数量
-   * @param removedCount 标记为删除的记录数量
-   */
-  private logScanResult(rootPath: string, scannedCount: number) {
-    App.instance.logger.info(
-      `${this.storageSystem.storage.name}(${this.storageSystem.storage.id}) - ${rootPath} 中成功扫描到了 ${scannedCount} 个文件(夹).`
-    );
   }
 }
