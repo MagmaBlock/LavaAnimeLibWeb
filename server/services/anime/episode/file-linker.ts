@@ -18,16 +18,33 @@ export class AnimeEpisodeFileLinker {
         },
       },
       include: {
-        files: true,
+        files: {
+          include: {
+            episodes: true,
+          },
+        },
       },
     });
 
     const allResult = [];
 
     for (const anime of animes) {
+      // 连接文件
       const result = await this.linkFiles(anime.files);
-
       allResult.push(result);
+
+      // 日志
+      if (result.totalConnectedCount || result.videoEpisodeNotFound.length) {
+        App.instance.logger.trace(
+          `[AnimeEpisodeFileLinker] anime-${anime.id} 成功连接: ${result.totalConnectedCount} 个文件, 未能连接: ${result.videoEpisodeNotFound.length} 个.`
+        );
+        App.instance.logger.debug(
+          "[AnimeEpisodeFileLinker] 未能连接的文件列表:"
+        );
+        App.instance.logger.debug(
+          result.videoEpisodeNotFound.map((file) => file.name).join(", ")
+        );
+      }
     }
     return allResult;
   }
@@ -49,7 +66,11 @@ export class AnimeEpisodeFileLinker {
    * @param files 库文件数组，包含要连接的文件信息
    * @returns 返回一个对象，包含连接的总文件数和未找到匹配剧集的视频文件列表
    */
-  async linkFiles(files: StorageIndex[]): Promise<AnimeEpisodeLinkResult> {
+  async linkFiles(
+    files: (StorageIndex & {
+      episodes: AnimeEpisode[];
+    })[]
+  ): Promise<AnimeEpisodeLinkResult> {
     // 初始化连接结果对象
     let connectResult: AnimeEpisodeLinkResult = {
       totalConnectedCount: 0, // 连接的总文件数
@@ -62,11 +83,12 @@ export class AnimeEpisodeFileLinker {
       if (!file.animeId) continue;
       // 排除目录
       if (file.isDirectory) continue;
-
+      // 排除已被关联集数的文件
+      if (file.episodes.length) continue;
       // 解析文件名以获取剧集信息
       const fileNameParsed = parseFileName(file.name);
 
-      let maybeEpisodes: AnimeEpisode[]; // 可能匹配的剧集列表
+      let maybeEpisodes: AnimeEpisode[] = []; // 可能匹配的剧集列表
       let thisFileEpisodetype: EpisodeType; // 当前文件的剧集类型
 
       // 文件名含集数
@@ -94,8 +116,6 @@ export class AnimeEpisodeFileLinker {
             );
           }
         }
-        // 如果没有找到匹配的剧集，将maybeEpisodes设置为空数组
-        maybeEpisodes = [];
       }
 
       // 如果找到了与此文件相匹配的集数
