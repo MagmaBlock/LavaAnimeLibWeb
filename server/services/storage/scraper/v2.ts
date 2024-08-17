@@ -108,9 +108,18 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
 
       // 如果库内已有该番剧，直接关联此文件
       if (maybeAnime.length !== 0) {
-        return {
-          connectFiles: { animeId: maybeAnime[0].id, files: files },
-        };
+        // 只连接未关联 Anime 的文件
+        const filesNoAnimeBind = files.filter((f) => f.animeId === null);
+        if (filesNoAnimeBind.length !== 0) {
+          return {
+            connectFiles: {
+              animeId: maybeAnime[0].id,
+              files: filesNoAnimeBind,
+            },
+          };
+        } else {
+          return {};
+        }
       }
     }
 
@@ -147,7 +156,7 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
   }
 
   /**
-   * 传入文件 startsWith，将自动寻找路径下的所有文件，并挂削
+   * 传入文件 startsWith，将自动寻找路径下的所有文件，并调用 scrapeFiles 挂削
    *
    * @param pathStartsWith
    * @returns 挂削结果
