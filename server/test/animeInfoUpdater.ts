@@ -5,4 +5,6 @@ const app = new App();
 const prisma = app.prisma;
 
 const animeService = app.services.getService(AnimeService);
-await animeService.updateAllAnimeInfoBefore(new Date());
+await animeService.updateAllAnimeInfoBefore(
+  new Date(Date.now() - 1000 * 60 * 60 * 24)
+);

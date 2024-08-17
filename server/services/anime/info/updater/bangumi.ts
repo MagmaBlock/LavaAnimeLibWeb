@@ -1,4 +1,9 @@
-import { AnimeInfoSource, AnimePlatform, EpisodeType } from "@prisma/client";
+import {
+  AnimeInfoSource,
+  AnimePlatform,
+  EpisodeType,
+  type AnimeSiteLink,
+} from "@prisma/client";
 import moment from "moment";
 import { BangumiAPI } from "~/server/services/api/bangumi";
 import { App } from "~/server/services/app";
@@ -15,52 +20,26 @@ import type { AnimeInfoUpdater } from "./interface";
 export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
   private bangumiAPI = new BangumiAPI();
 
-  async updateRelationAnimes(linkId: number): Promise<void> {
-    const siteLink = await App.instance.prisma.animeSiteLink.findUnique({
-      where: {
-        id: linkId,
-      },
-      include: {
-        anime: true,
-      },
-    });
-
-    if (siteLink === null) {
-      throw createError({
-        statusCode: 404,
-        message: "找不到该关联",
-      });
-    }
+  async updateRelationAnimes(siteLink: AnimeSiteLink): Promise<void> {
+    if (siteLink === null) throw new Error("AnimeSiteLink 为 null");
     if (siteLink.siteType !== "Bangumi") {
-      throw createError({
-        statusCode: 400,
-        message: "获取关联站点信息时，适配器选用错误",
-      });
+      throw new Error("获取关联站点信息时，适配器选用错误");
     }
+    if (Number(siteLink.siteId) <= 0) return;
 
-    const bangumiSubject = await this.bangumiAPI.getSubjects(
-      Number(siteLink.siteId)
-    );
+    const [bangumiSubject, bangumiEpisodes] = await Promise.all([
+      this.bangumiAPI.getSubjects(Number(siteLink.siteId)),
+      this.bangumiAPI.getEpisodes(Number(siteLink.siteId)),
+    ]);
 
-    const bangumiEpisodes = await this.bangumiAPI.getEpisodes(
-      Number(siteLink.siteId)
-    );
-
-    // TODO: poster 更新
-
-    // 更新 Anime 主要数据
-    await this.updateAnime(siteLink.animeId, bangumiSubject);
-
-    // 删除本番剧现存的 Banugmi 标签
-    await this.updateAnimeTags(siteLink.animeId, bangumiSubject);
-
-    // 更新评分
-    await this.updateRating(siteLink.animeId, bangumiSubject);
-
-    // TODO: episodes 更新
-    await this.updateAnimeEpisodes(siteLink.animeId, bangumiEpisodes);
-
-    await this.changeUpdateTime(siteLink.id);
+    await Promise.all([
+      // TODO: poster 更新
+      this.updateAnime(siteLink.animeId, bangumiSubject),
+      this.updateAnimeTags(siteLink.animeId, bangumiSubject),
+      this.updateRating(siteLink.animeId, bangumiSubject),
+      this.updateAnimeEpisodes(siteLink.animeId, bangumiEpisodes),
+      this.changeUpdateTime(siteLink.id),
+    ]);
   }
 
   /**
@@ -73,7 +52,7 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
     bangumiEpisodes: BangumiAPIEpisodes
   ) {
     for (const bangumiEpisode of bangumiEpisodes.data) {
-      const upsert = await App.instance.prisma.animeEpisode.upsert({
+      await App.instance.prisma.animeEpisode.upsert({
         where: {
           animeId_type_episodeDisplay: {
             animeId,
@@ -107,10 +86,10 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
           source: "Bangumi",
         },
       });
-      App.instance.logger.trace(
-        `已从 ${upsert.source} 更新 animeId ${upsert.animeId} 的 ${upsert.type} 集数 ${upsert.episodeDisplay} 数据.`
-      );
     }
+    App.instance.logger.trace(
+      `已从 Bangumi 更新 anime ${animeId} 的 ${bangumiEpisodes.data.length} 个剧集数据.`
+    );
   }
 
   private bangumiEpisodeTypeToDBType(

@@ -11,5 +11,5 @@ if (!storage) {
 }
 
 const indexManager = new StorageIndexManager(storage);
-// await indexManager.scan("/");
+await indexManager.scan("/");
 // console.log(await indexManager.getDirContents("/2024年/7月夏"));

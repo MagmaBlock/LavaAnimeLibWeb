@@ -3,6 +3,7 @@ import pLimit from "p-limit";
 import { App } from "../app";
 import { BangumiAnimeInfoUpdater } from "./info/updater/bangumi";
 import { AnimeEpisodeFileLinker } from "./episode/file-linker";
+import type { AnimeInfoUpdater } from "./info/updater/interface";
 
 /**
  * 用于创建新番和管理番剧文件列表的工具类
@@ -26,19 +27,30 @@ export class AnimeService {
       },
     });
 
+    const updatersCache = new Map<AnimeInfoSource, AnimeInfoUpdater>();
+    const limit = pLimit(4);
+    const tasks = [];
+
     for (const anime of animes) {
       for (const site of anime.sites) {
-        // 对于每一个站点，调用相应的更新器进行信息更新
-        const updater = this.getSiteInfoUpdater(site.siteType);
-        if (!updater) {
-          App.instance.logger.warn(
-            `动画 ${anime.id} ${anime.name} 的关联数据源 ${site.siteType} 没有更新器实现`
-          );
-          continue;
-        }
+        const updater = updatersCache.has(site.siteType)
+          ? updatersCache.get(site.siteType)
+          : this.getSiteInfoUpdater(site.siteType);
 
-        await updater.updateRelationAnimes(site.id);
+        if (!updater) continue;
+
+        tasks.push(limit(() => updater.updateRelationAnimes(site)));
       }
+    }
+
+    const result = await Promise.allSettled(tasks);
+    const errors = result.filter(
+      (r) => r.status === "rejected"
+    ) as PromiseRejectedResult[];
+    if (errors.length) {
+      App.instance.logger.warn(
+        `更新动画关联站点信息时，有 ${errors.length} 个失败.`
+      );
     }
   }
 
@@ -61,13 +73,7 @@ export class AnimeService {
       select: { id: true },
     });
 
-    const limit = pLimit(2);
-
-    await Promise.all(
-      animeNeedToUpdate.map((anime) =>
-        limit(() => this.updateAnimesInfo([anime.id]))
-      )
-    );
+    await this.updateAnimesInfo(animeNeedToUpdate.map((anime) => anime.id));
 
     App.instance.logger.info(
       `更新库内所有番剧的第三方站点资料数据完成. (${before.toLocaleString()} 前)`

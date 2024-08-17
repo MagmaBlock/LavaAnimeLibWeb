@@ -20,10 +20,10 @@ console.log(JSON.stringify(results));
 
 console.log(`挂削了 ${newAnimeCount} 个新 Anime, 耗时 ${Date.now() - start}`);
 
-// for (const result of results) {
-//   await app.services
-//     .getService(StorageService)
-//     .applyStorageScraperResult(result);
-// }
+for (const result of results) {
+  await app.services
+    .getService(StorageService)
+    .applyStorageScraperResult(result);
+}
 
-// console.log("生效完成");
+console.log("生效完成");
