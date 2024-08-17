@@ -11,7 +11,7 @@ export class Log4jsLogger implements Logger {
         stdout: { type: "stdout" },
         file: {
           type: "file",
-          filename: "log/app.log",
+          filename: "logs/server.log",
           maxLogSize: "5m",
           compress: true,
           backups: 10,
