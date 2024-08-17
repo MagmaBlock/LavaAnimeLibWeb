@@ -9,7 +9,7 @@ import type {
   AlistRemoveRequest,
   AlistStorageConfig,
 } from "~/server/types/storage/storage/reader/alist";
-import { extensionMap } from "../file/type/type";
+import { extensionMap } from "../../../types/anime/episode/type";
 import type { StorageSystem } from "./interface";
 
 /**
