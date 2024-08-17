@@ -1,10 +1,9 @@
-import pLimit from "p-limit";
+import type { Anime, Storage, StorageIndex } from "@prisma/client";
 import nodePath from "path/posix";
 import type { StorageScrapeResult } from "~/server/types/storage/scraper/result";
 import { App } from "../../app";
 import { StorageIndexManager } from "../index/manager";
 import type { StorageScraper } from "./interface";
-import type { Anime, Storage, StorageIndex } from "@prisma/client";
 
 /**
  * LavaAnimeLibV2 是番剧库的上一代版本，在本版本中作为一种结构。
@@ -37,7 +36,6 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
   public storage: Storage;
   private indexManager: StorageIndexManager;
   private bgmToAnimeCache: Map<string, [Date, Anime[]]>;
-  
 
   constructor(storage: Storage) {
     this.storage = storage;
@@ -51,11 +49,101 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
    * @returns
    */
   async scrapeFiles(files: StorageIndex[]): Promise<StorageScrapeResult[]> {
-    const limit = pLimit(16);
-    const tasks = files.map((file) => {
-      return limit(() => this.scrapeFile(file));
-    });
-    return Promise.all(tasks);
+    const groupedFiles = this.groupFilesByAnime(files);
+    const results: StorageScrapeResult[] = [];
+
+    for (const [key, group] of groupedFiles) {
+      const result = await this.scrapeFileGroup(group);
+      if (Object.keys(result).length > 0) {
+        results.push(result);
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * 本方法将文件按照动画分组。
+   * 相同的 parseYearTypeAnime 将会被归为一组。
+   * 本方法的诞生是由于本实现类设计时没有考虑好新番入库的情况，
+   * 因此为了避免每份文件都产生一个创建 anime 的请求而生的
+   */
+  private groupFilesByAnime(
+    files: StorageIndex[]
+  ): Map<string, StorageIndex[]> {
+    const groups = new Map<string, StorageIndex[]>();
+
+    for (const file of files) {
+      const parsed = this.parseYearTypeAnime(file);
+      const key = JSON.stringify(parsed);
+
+      if (!groups.has(key)) {
+        groups.set(key, []);
+      }
+      groups.get(key)!.push(file);
+    }
+
+    return groups;
+  }
+
+  /**
+   * 用于挂削一个番剧
+   * @param files 必须是同番剧文件夹下的文件
+   * @returns
+   */
+  private async scrapeFileGroup(
+    files: StorageIndex[]
+  ): Promise<StorageScrapeResult> {
+    if (files.length === 0) return {};
+
+    const parsed = this.parseYearTypeAnime(files[0]);
+
+    if (parsed.year === null || parsed.type === null || parsed.title === null) {
+      return {};
+    }
+
+    // 有 bangumiID 情况
+    if (parsed.bgmID !== null) {
+      const maybeAnime = await this.getBgmLinkedAnimesWithCache(parsed.bgmID);
+
+      // 如果库内已有该番剧，直接关联此文件
+      if (maybeAnime.length !== 0) {
+        return {
+          connectFiles: { animeId: maybeAnime[0].id, files: files },
+        };
+      }
+    }
+
+    // 创建新 Anime
+    return {
+      createAnime: {
+        name: parsed.title,
+        bdrip: parsed.bdrip,
+        nsfw: parsed.nsfw,
+        releaseYear: parsed.year,
+        releaseSeason: ["1月冬", "4月春", "7月夏", "10月秋"].includes(
+          parsed.type
+        )
+          ? parsed.type
+          : null,
+        region: ["1月冬", "4月春", "7月夏", "10月秋"].includes(parsed.type)
+          ? "Japan"
+          : null,
+      },
+      connectSites: parsed.bgmID
+        ? {
+            sites: [
+              {
+                siteType: "Bangumi",
+                siteId: parsed.bgmID,
+              },
+            ],
+          }
+        : undefined,
+      connectFiles: {
+        files: files,
+      },
+    };
   }
 
   /**
@@ -69,9 +157,9 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
   ): Promise<StorageScrapeResult[]> {
     let files: StorageIndex[] = [];
 
-    const childFiles = await App.instance.prisma.storageIndex.findMany({
-      where: { path: { startsWith: pathStartsWith } },
-    });
+    const childFiles = await this.indexManager.getFilesStartsWith(
+      pathStartsWith
+    );
 
     files = files.concat(childFiles);
 
@@ -89,7 +177,7 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
       }
     }
 
-    return this.scrapeFiles(files);
+    return await this.scrapeFiles(files);
   }
 
   /**
@@ -212,7 +300,7 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
       // 如果库内已有该番剧，直接关联此文件
       if (maybeAnime.length !== 0) {
         return {
-          connectFile: { animeId: maybeAnime[0].id, file: file },
+          connectFiles: { animeId: maybeAnime[0].id, files: [file] },
         };
       }
       // 如果库内没有该番剧，则直接创建新 Anime
@@ -234,14 +322,16 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
               ? "Japan"
               : null,
           },
-          connectSite: {
-            site: {
-              siteType: "Bangumi",
-              siteId: parseFileResult.bgmID,
-            },
+          connectSites: {
+            sites: [
+              {
+                siteType: "Bangumi",
+                siteId: parseFileResult.bgmID,
+              },
+            ],
           },
-          connectFile: {
-            file: file,
+          connectFiles: {
+            files: [file],
           },
         };
       }
@@ -265,8 +355,8 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
             ? "Japan"
             : null,
         },
-        connectFile: {
-          file: file,
+        connectFiles: {
+          files: [file],
         },
       };
     }

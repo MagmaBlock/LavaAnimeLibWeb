@@ -9,12 +9,12 @@ export type StorageScrapeResult = {
     animeId: number;
     data: Partial<Anime>;
   };
-  connectSite?: {
+  connectSites?: {
     animeId?: number; // createAnime 时不需指定
-    site: Partial<AnimeSiteLink>;
+    sites: Partial<AnimeSiteLink>[];
   };
-  connectFile?: {
+  connectFiles?: {
     animeId?: number; // createAnime 时不需指定
-    file: StorageIndex;
+    files: StorageIndex[];
   };
 };
