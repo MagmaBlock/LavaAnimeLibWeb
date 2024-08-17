@@ -4,7 +4,7 @@ import { AnimeService } from "./anime/service";
 import { Container } from "./container";
 import type { ServiceContainer } from "./container/interface";
 import { InviteCodeService } from "./invite-code/service";
-import { LibraryService } from "./library/service";
+import { StorageService } from "./storage/service";
 import { Log4jsLogger } from "./logger/log4js";
 import { UserService } from "./user/service";
 
@@ -26,7 +26,7 @@ export class App {
     this.services.registerService(new AnimeService());
     this.services.registerService(new AnimeCollectionSerivce());
     this.services.registerService(new InviteCodeService());
-    this.services.registerService(new LibraryService());
+    this.services.registerService(new StorageService());
     this.services.registerService(new UserService(authSecret));
   }
 }

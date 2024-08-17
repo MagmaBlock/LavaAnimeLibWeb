@@ -1,6 +1,6 @@
-import type { EpisodeConnectResult } from "~/server/types/library/file/episode/connector";
+import type { EpisodeConnectResult } from "~/server/types/storage/file/episode/connector";
 import { App } from "../app";
-import { LibraryFileEpisodeConnector } from "../library/file/episode/connector";
+import { LibraryFileEpisodeConnector } from "../storage/file/episode/connector";
 import type { AnimeInfoSource } from "@prisma/client";
 import { BangumiAnimeInfoUpdater } from "./info/updater/bangumi";
 import pLimit from "p-limit";
