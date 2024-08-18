@@ -25,6 +25,14 @@ export class StorageService {
   }
 
   /**
+   * 获取所有 Storage
+   */
+  async getAllStorage(): Promise<Storage[]> {
+    const storages = await App.instance.prisma.storage.findMany();
+    return storages.filter((s) => s !== null);
+  }
+
+  /**
    * 获取资源库的索引管理器
    */
   getIndexManager(storage: Storage): StorageIndexManager {
@@ -48,14 +56,6 @@ export class StorageService {
   getStorageSystem(storage: Storage): StorageSystem {
     if (storage.type === "Alist") return new AlistStorageSystem(storage);
     throw new Error("不支持的 Storage 类型");
-  }
-
-  /**
-   * 获取所有 Storage
-   */
-  async getAllStorage(): Promise<Storage[]> {
-    const storages = await App.instance.prisma.storage.findMany();
-    return storages.filter((s) => s !== null);
   }
 
   /**

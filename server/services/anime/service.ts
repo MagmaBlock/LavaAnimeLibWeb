@@ -10,27 +10,6 @@ import type { AnimeInfoUpdater } from "./info/updater/interface";
  */
 export class AnimeService {
   /**
-   * 根据 ID 获取动画信息，可包含所有关联的子对象。
-   * @param id 动画的 ID。
-   * @param full 是否包含所有子对象。
-   * @returns 动画信息，如果未找到则返回 null。
-   */
-  async getAnimeById(id: number, full: boolean = false): Promise<Anime | null> {
-    return await App.instance.prisma.anime.findUnique({
-      where: { id },
-      include: {
-        tags: full,
-        sites: full,
-        ratings: full,
-        episodes: full,
-        files: full,
-        userCollects: full,
-        userViews: full,
-      },
-    });
-  }
-
-  /**
    * 使用更新器更新指定动画的信息。
    *
    * 此函数查询指定动画的所有站点信息，并对每个过时的站点调用相应的更新器进行信息更新。
