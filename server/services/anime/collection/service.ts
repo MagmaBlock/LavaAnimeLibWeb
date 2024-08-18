@@ -4,7 +4,7 @@ import { App } from "../../app";
 /**
  * 管理用户的动画追番
  */
-export class AnimeCollectionSerivce {
+export class AnimeCollectionService {
   /**
    * 创建或更新用户的动漫收藏状态
    *

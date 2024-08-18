@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { AnimeCollectionSerivce } from "./anime/collection/service";
+import { AnimeCollectionService } from "./anime/collection/service";
 import { AnimeService } from "./anime/service";
 import { Container } from "./container";
 import type { ServiceContainer } from "./container/interface";
@@ -24,7 +24,7 @@ export class App {
     const authSecret = process.env.AUTH_SECRET ?? Math.random().toString();
 
     this.services.registerService(new AnimeService());
-    this.services.registerService(new AnimeCollectionSerivce());
+    this.services.registerService(new AnimeCollectionService());
     this.services.registerService(new InviteCodeService());
     this.services.registerService(new StorageService());
     this.services.registerService(new UserService(authSecret));
