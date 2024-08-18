@@ -14,6 +14,17 @@ import type { StorageSystem } from "./system/interface";
 
 export class StorageService {
   /**
+   * 获取 Storage 对象
+   * @param storageId Storage 的 id
+   * @returns Storage 对象
+   */
+  async getStorage(storageId: string): Promise<Storage | null> {
+    return await App.instance.prisma.storage.findUnique({
+      where: { id: storageId },
+    });
+  }
+
+  /**
    * 获取资源库的索引管理器
    */
   getIndexManager(storage: Storage): StorageIndexManager {
@@ -175,5 +186,25 @@ export class StorageService {
         },
       });
     }
+  }
+
+  /**
+   * 获取 StorageIndex 对应的文件的临时下载链接
+   * @throws Storage 不存在时掷出
+   * @throws Storage 获取临时下载链接失败时掷出
+   */
+  async getFileTempUrl(file: StorageIndex): Promise<string> {
+    const storage = await this.getStorage(file.storageId);
+    if (storage === null) {
+      throw new Error("Storage 不存在");
+    }
+    const storageSystem = this.getStorageSystem(storage);
+    const indexManager = this.getIndexManager(storage);
+    const filePath = indexManager.getFilePath(file);
+    const url = await storageSystem.getDownloadUrl(filePath);
+    if (url === null) {
+      throw new Error(`获取文件 ${filePath} 的临时下载链接失败`);
+    }
+    return url;
   }
 }

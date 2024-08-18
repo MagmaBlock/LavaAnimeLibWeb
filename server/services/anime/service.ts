@@ -1,4 +1,4 @@
-import type { AnimeInfoSource } from "@prisma/client";
+import type { Anime, AnimeInfoSource } from "@prisma/client";
 import pLimit from "p-limit";
 import { App } from "../app";
 import { BangumiAnimeInfoUpdater } from "./info/updater/bangumi";
@@ -10,10 +10,31 @@ import type { AnimeInfoUpdater } from "./info/updater/interface";
  */
 export class AnimeService {
   /**
-   * 更新指定动画的信息。
+   * 根据 ID 获取动画信息，可包含所有关联的子对象。
+   * @param id 动画的 ID。
+   * @param full 是否包含所有子对象。
+   * @returns 动画信息，如果未找到则返回 null。
+   */
+  async getAnimeById(id: number, full: boolean = false): Promise<Anime | null> {
+    return await App.instance.prisma.anime.findUnique({
+      where: { id },
+      include: {
+        tags: full,
+        sites: full,
+        ratings: full,
+        episodes: full,
+        files: full,
+        userCollects: full,
+        userViews: full,
+      },
+    });
+  }
+
+  /**
+   * 使用更新器更新指定动画的信息。
    *
-   * @param animeId 需要更新的动画ID。
    * 此函数查询指定动画的所有站点信息，并对每个过时的站点调用相应的更新器进行信息更新。
+   * @param animeId 需要更新的动画ID。
    */
   async updateAnimesInfo(animeIds: number[]): Promise<void> {
     const animes = await App.instance.prisma.anime.findMany({
@@ -55,10 +76,10 @@ export class AnimeService {
   }
 
   /**
-   * 更新指定时间点之前的所有动画信息。
+   * 更新上次更新时间点之前的所有动画信息。
    *
-   * @param before 指定的时间点，用于筛选需要更新的动画信息。
    * 此函数查询出所有需要更新的动画，然后调用 updateAnimeInfos 方法进行批量更新。
+   * @param before 指定的时间点，用于筛选需要更新的动画信息。
    */
   async updateAllAnimeInfoBefore(before: Date): Promise<void> {
     // 查询需要更新的动画列表
