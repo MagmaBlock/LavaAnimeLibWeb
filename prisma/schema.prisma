@@ -31,6 +31,7 @@ model Anime {
   files        StorageIndex[] // 1-n, 此作品在所有节点中的所有文件
   userCollects AnimeCollection[]
   userViews    AnimeViewHistory[]
+  pictures     AnimePicture[] // 1-n, 此作品的图片
 }
 
 enum AnimePlatform {
@@ -113,7 +114,8 @@ model AnimeEpisode {
   animeId Int
   source  AnimeInfoSource
 
-  files StorageIndex[] // m-n, 此集数下的所有文件
+  files    StorageIndex[] // m-n, 此集数下的所有文件
+  pictures AnimePicture[] // 1-n, 此集数的图片
 
   @@unique([animeId, type, episodeDisplay]) // 同一个动画的相同类型集数不可重复
 }
@@ -161,12 +163,14 @@ model StorageIndex {
   removed     Boolean  @default(false) // 是否已被删除
   lastFoundAt DateTime @default(now()) // 最后一次找到此文件的时间
 
-  storage      Storage @relation(fields: [storageId], references: [id])
-  storageId    String  @db.VarChar(32)
-  anime        Anime?  @relation(fields: [animeId], references: [id])
-  animeId      Int?
-  uploadedBy   User?   @relation(fields: [uploadedById], references: [id])
-  uploadedById Int?
+  storage        Storage       @relation(fields: [storageId], references: [id])
+  storageId      String        @db.VarChar(32)
+  anime          Anime?        @relation(fields: [animeId], references: [id])
+  animeId        Int?
+  uploadedBy     User?         @relation(fields: [uploadedById], references: [id])
+  uploadedById   Int?
+  animePicture   AnimePicture? @relation(fields: [animePictureId], references: [id])
+  animePictureId Int?
 
   episodes   AnimeEpisode[] // m-n, 一个文件可能对应多个集数 (如一个视频对应 1-3 集的极端情况)
   animeViews AnimeViewHistory[]
@@ -269,4 +273,25 @@ model AnimeViewHistory {
   storageId   String       @db.VarChar(32)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+}
+
+// 描述番剧图片
+model AnimePicture {
+  id        Int            @id @default(autoincrement())
+  url       String? // 图片URL
+  file      StorageIndex[]
+  type      PictureType // 图片类型
+  createdAt DateTime       @default(now())
+
+  anime     Anime         @relation(fields: [animeId], references: [id])
+  animeId   Int
+  episode   AnimeEpisode? @relation(fields: [episodeId], references: [id])
+  episodeId Int?
+}
+
+enum PictureType {
+  Poster
+  Backdrop
+  Episode
+  Other
 }
