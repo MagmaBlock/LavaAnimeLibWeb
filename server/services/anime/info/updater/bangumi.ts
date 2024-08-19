@@ -33,13 +33,39 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
     ]);
 
     await Promise.all([
-      // TODO: poster 更新
+      this.updateAnimePoster(siteLink.animeId, bangumiSubject),
       this.updateAnime(siteLink.animeId, bangumiSubject),
       this.updateAnimeTags(siteLink.animeId, bangumiSubject),
       this.updateRating(siteLink.animeId, bangumiSubject),
       this.updateAnimeEpisodes(siteLink.animeId, bangumiEpisodes),
       this.changeUpdateTime(siteLink.id),
     ]);
+  }
+
+  private async updateAnimePoster(
+    animeId: number,
+    bangumiSubject: BangumiAPISubject
+  ) {
+    const { large, medium, common, small, grid } = bangumiSubject.images;
+    const posterUrl = large ?? medium ?? common ?? small ?? grid;
+    if (posterUrl) {
+      await App.instance.prisma.anime.update({
+        where: { id: animeId },
+        data: {
+          poster: {
+            upsert: {
+              create: {
+                url: posterUrl,
+              },
+              update: {
+                url: posterUrl,
+              },
+            },
+          },
+        },
+      });
+      App.instance.logger.trace(`更新了番剧 ${animeId} 的海报.`);
+    }
   }
 
   /**

@@ -32,6 +32,8 @@
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@pinia/nuxt": "^0.5.2",
     "@prisma/client": "^5.18.0",
+    "@trpc/client": "11.0.0-rc.477",
+    "@trpc/server": "11.0.0-rc.477",
     "@vueuse/core": "^10.11.0",
     "animate.css": "^4.1.1",
     "anime-name-tool": "^1.0.3",

@@ -1,8 +1,8 @@
-import type { Anime, AnimeInfoSource } from "@prisma/client";
+import type { AnimeInfoSource } from "@prisma/client";
 import pLimit from "p-limit";
 import { App } from "../app";
-import { BangumiAnimeInfoUpdater } from "./info/updater/bangumi";
 import { AnimeEpisodeFileLinker } from "./episode/file-linker";
+import { BangumiAnimeInfoUpdater } from "./info/updater/bangumi";
 import type { AnimeInfoUpdater } from "./info/updater/interface";
 
 /**

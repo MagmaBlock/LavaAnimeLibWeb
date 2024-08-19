@@ -20,6 +20,12 @@ importers:
       '@prisma/client':
         specifier: ^5.18.0
         version: 5.18.0(prisma@5.18.0)
+      '@trpc/client':
+        specifier: 11.0.0-rc.477
+        version: 11.0.0-rc.477(@trpc/server@11.0.0-rc.477)
+      '@trpc/server':
+        specifier: 11.0.0-rc.477
+        version: 11.0.0-rc.477
       '@vueuse/core':
         specifier: ^10.11.0
         version: 10.11.0(vue@3.4.35)
@@ -1656,6 +1662,14 @@ packages:
 
   '@tokenizer/token@0.3.0':
     resolution: {integrity: sha512-OvjF+z51L3ov0OyAU0duzsYuvO01PH7x4t6DJx+guahgTnBHkhJdG7soQeTSFLWN3efnHyibZ4Z8l2EuWwJN3A==, tarball: https://registry.npmjs.org/@tokenizer/token/-/token-0.3.0.tgz}
+
+  '@trpc/client@11.0.0-rc.477':
+    resolution: {integrity: sha512-Ah/Er3vxTm2bIEUcIrike7Z/8Yc+DkFveU2ZHQQ0+zY7yxs931438+4OEJuY/Xl/0p5OTDeZTm6HBuZ1REFiyA==, tarball: https://registry.npmjs.org/@trpc/client/-/client-11.0.0-rc.477.tgz}
+    peerDependencies:
+      '@trpc/server': 11.0.0-rc.477+a467f8314
+
+  '@trpc/server@11.0.0-rc.477':
+    resolution: {integrity: sha512-K6zmjRv96fWilqm/ETehEK1DWsy5bSyrs2xbsNzCbjguMgamMhOClRHgYzJcwgLp2kasJ7QgD9YbahOhV1/u1w==, tarball: https://registry.npmjs.org/@trpc/server/-/server-11.0.0-rc.477.tgz}
 
   '@trysound/sax@0.2.0':
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==, tarball: https://registry.npmjs.org/@trysound/sax/-/sax-0.2.0.tgz}
@@ -6745,6 +6759,12 @@ snapshots:
       tailwindcss: 3.4.7
 
   '@tokenizer/token@0.3.0': {}
+
+  '@trpc/client@11.0.0-rc.477(@trpc/server@11.0.0-rc.477)':
+    dependencies:
+      '@trpc/server': 11.0.0-rc.477
+
+  '@trpc/server@11.0.0-rc.477': {}
 
   '@trysound/sax@0.2.0': {}
 

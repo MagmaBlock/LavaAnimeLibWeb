@@ -5,24 +5,10 @@ const page = ref(1);
 
 const animes = ref<any[]>([]);
 
-async function fetchAnimes() {
-  animes.value = await $fetch("/api/v3/anime-index/filter-anime", {
-    method: "GET",
-    params: {
-      releaseYear: currentSelected.years,
-      releaseSeason: currentSelected.sessions,
-      platform: currentSelected.platforms,
-      region: currentSelected.regions,
-      sort: currentSelected.sort,
-      page: page.value,
-    },
-  });
-}
-
 watch(
   currentSelected,
   () => {
-    fetchAnimes();
+    // fetchAnimes();
   },
   { immediate: true }
 );
@@ -48,6 +34,7 @@ watch(
             :bdrip="anime.data.bdrip"
             :nsfw="anime.data.nsfw"
             :views="anime.views"
+            :poster="anime.data.poster.url"
           />
         </AnimeCardContainer>
       </template>
