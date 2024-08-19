@@ -174,6 +174,14 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
       return { connectFiles: { animeId: maybeAnime, files: files } };
     }
 
+    // 寻找其他存储器中是否在同路径下有相同的动画文件夹，且已绑定 anime
+    for (const file of files) {
+      const otherStorageAnime = await this.findAnimeInOtherStorages(file);
+      if (otherStorageAnime) {
+        return { connectFiles: { animeId: otherStorageAnime, files: files } };
+      }
+    }
+
     // 创建新 Anime
     return {
       createAnime: baseAnimeData,
@@ -181,6 +189,33 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
         files: files,
       },
     };
+  }
+
+  private async findAnimeInOtherStorages(
+    file: StorageIndex
+  ): Promise<number | null> {
+    const otherStorages = await App.instance.prisma.storage.findMany({
+      where: {
+        id: { not: file.storageId },
+      },
+    });
+
+    for (const storage of otherStorages) {
+      const samePathFile = await App.instance.prisma.storageIndex.findFirst({
+        where: {
+          storageId: storage.id,
+          path: file.path,
+          name: file.name,
+          animeId: { not: null },
+        },
+      });
+
+      if (samePathFile) {
+        return samePathFile.animeId;
+      }
+    }
+
+    return null;
   }
 
   /**

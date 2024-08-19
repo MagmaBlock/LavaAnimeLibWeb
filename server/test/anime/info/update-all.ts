@@ -1,5 +1,5 @@
-import { AnimeService } from "../services/anime/service";
-import { App } from "../services/app";
+import { AnimeService } from "../../../services/anime/service";
+import { App } from "../../../services/app";
 
 const app = new App();
 const prisma = app.prisma;
