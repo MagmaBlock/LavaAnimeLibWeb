@@ -1,27 +1,31 @@
-<script setup>
-const props = defineProps({
-  anime: { type: Object },
-});
+<script setup lang="ts">
+const props = defineProps<{
+  id: number;
+  name: string;
+  image?: string;
+  views?: number;
+  bdrip?: boolean;
+  nsfw?: boolean;
+  releaseYear?: number;
+  releaseSeason?: string;
+  relation?: string; // 关联作品
+}>();
 
 const showMenu = ref(false);
 
-const handleMenu = (event) => {
+const handleMenu = (event: MouseEvent) => {
   event.preventDefault();
-  if (!showMenu.value) {
-    showMenu.value = true;
-  }
+  showMenu.value = !showMenu.value;
 };
 
-const posterUrl = computed(() => {
-  if (props.anime?.deleted) {
-    return "https://bangumi-app-img.5t5.top/assets/noposter.png";
-  } else {
-    return (
-      props.anime?.images?.poster ??
-      props.anime?.images?.medium ??
-      "https://bangumi-app-img.5t5.top/assets/PosterLoading.jpg"
-    );
-  }
+const posterUrl = computed(
+  () => props.image || "https://bangumi-app-img.5t5.top/assets/noposter.png"
+);
+
+const viewDisplay = computed(() => {
+  if (!props.views) return "0";
+  const views = props.views;
+  return views > 9999 ? `${(views / 10000).toFixed(2)}万` : views.toString();
 });
 </script>
 
@@ -35,7 +39,7 @@ const posterUrl = computed(() => {
 
     <!-- 上半：海报 + 标题 -->
     <div class="relative cursor-pointer overflow-hidden">
-      <NuxtLink :to="{ name: 'anime-la', params: { la: anime?.id } }">
+      <NuxtLink :to="{ name: 'anime-la', params: { la: id } }">
         <!-- 图片容器 -->
         <div class="aspect-w-2 aspect-h-3 overflow-hidden">
           <img :src="posterUrl" class="absolute object-cover" alt="封面图片" />
@@ -44,17 +48,17 @@ const posterUrl = computed(() => {
         <div
           class="absolute inset-x-0 bottom-0 grid h-24 items-end break-all bg-gradient-to-b from-transparent to-black/75 px-3 py-3 text-[13px] text-white font-semibold"
         >
-          <NEllipsis :line-clamp="2" expand-trigger="hover">
-            {{ anime?.title || "..." }}
+          <NEllipsis :line-clamp="2">
+            {{ name || "..." }}
             <!-- Special Tags -->
             <div
-              v-if="anime?.type?.bdrip"
+              v-if="bdrip"
               class="ml-0.5 inline-block rounded px-1.5 text-xs font-medium bg-blue-400 bg-opacity-50 backdrop-blur-sm"
             >
               BD
             </div>
             <div
-              v-if="anime?.type?.nsfw"
+              v-if="nsfw"
               class="ml-0.5 inline-block rounded px-1.5 text-xs font-medium bg-yellow-300 bg-opacity-50 backdrop-blur-sm"
             >
               NSFW
@@ -64,9 +68,9 @@ const posterUrl = computed(() => {
         <!-- 额外 Tag -->
         <span
           class="absolute top-1 right-1 bg-blue-600 backdrop-blur bg-opacity-60 text-white text-xs font-semibold rounded px-1.5 py-0.5"
-          v-if="anime?.relation"
+          v-if="relation"
         >
-          {{ anime.relation }}
+          {{ relation }}
         </span>
       </NuxtLink>
     </div>
@@ -77,18 +81,14 @@ const posterUrl = computed(() => {
         <div class="grid basis-3/4 pl-3">
           <div class="flex place-items-center gap-x-[3px]">
             <Icon name="bi:play-btn" size="15" />
-            <div v-if="anime?.views">
-              {{
-                anime?.views > 9999
-                  ? (anime.views / 10000).toFixed(2) + "万"
-                  : anime?.views
-              }}
+            <div>
+              {{ viewDisplay }}
             </div>
           </div>
         </div>
         <div class="grid basis-1/4 place-items-center">
           <!-- 菜单 -->
-          <ContainerMenuLarge v-model:show="showMenu" v-if="anime?.id">
+          <ContainerMenuLarge v-model:show="showMenu" v-if="id">
             <template #trigger>
               <div
                 class="grid place-items-center cursor-pointer rounded p-1.5 hover:bg-black/20"
@@ -96,7 +96,7 @@ const posterUrl = computed(() => {
                 <Icon name="bi:list" />
               </div>
             </template>
-            <AnimeCardMenu :anime="anime" />
+            <!-- <AnimeCardMenu :anime="anime" /> -->
           </ContainerMenuLarge>
         </div>
       </div>
