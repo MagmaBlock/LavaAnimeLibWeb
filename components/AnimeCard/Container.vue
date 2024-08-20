@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { useElementVisibility } from "@vueuse/core";
-
 const props = defineProps<{
   size: "full" | "large" | "half" | "small" | "alwaysMobile"; // 决定屏幕宽度  目前有 full large half alwaysMobile
   loading?: boolean; // 决定是否显示为加载状态
@@ -23,9 +21,6 @@ const autoGroupClass = computed(() => {
     alwaysMobile: "grid grid-cols-3 gap-3 sm:grid-cols-3",
   }[props.size];
 });
-
-const target = ref<HTMLElement | null>(null);
-const visible = useElementVisibility(target);
 </script>
 
 <template>
@@ -36,7 +31,7 @@ const visible = useElementVisibility(target);
       description="太可惜了，什么也没找到"
       class="py-16"
     />
-    <NSpin v-else :show="visible && loading" class="w-full">
+    <NSpin v-else :show="loading" class="w-full">
       <div :class="autoGroupClass" class="w-full">
         <slot />
       </div>

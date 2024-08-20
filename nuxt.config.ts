@@ -7,8 +7,7 @@ export default defineNuxtConfig({
     "@bg-dev/nuxt-naiveui",
     "@pinia/nuxt",
     "@pinia-plugin-persistedstate/nuxt",
-    "@vite-pwa/nuxt",
-    // "nuxt-icon",
+    "@vueuse/motion/nuxt",
   ],
 
   runtimeConfig: {
@@ -74,41 +73,15 @@ export default defineNuxtConfig({
     shim: false,
   },
 
-  pwa: {
-    registerType: "prompt",
-    includeAssets: ["favicon.ico", "icon.svg", "apple-touch-icon.png"],
-    manifest: {
-      name: "熔岩番剧库",
-      short_name: "熔岩番剧库",
-      description: "熔岩番剧库 LavaAnimeLib",
-      theme_color: "#ffffff",
-      icons: [
-        {
-          src: "pwa-192x192.png",
-          sizes: "192x192",
-          type: "image/png",
-        },
-        {
-          src: "pwa-512x512.png",
-          sizes: "512x512",
-          type: "image/png",
-          purpose: "any maskable",
-        },
-      ],
-    },
-    workbox: {
-      globPatterns: ["**/*.{js,css,ico,png,svg}"],
-    },
-    devOptions: {
-      enabled: false,
-    },
-  },
-
   vite: {
     build: {
       target: ["chrome71"],
       sourcemap: true,
     },
+  },
+
+  build: {
+    transpile: ["trpc-nuxt"],
   },
 
   compatibilityDate: "2024-08-11",

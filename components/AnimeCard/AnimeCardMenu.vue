@@ -1,80 +1,38 @@
 <template>
   <NList clickable hoverable class="sm:w-80 select-none">
     <NListItem class="select-text">
-      <div class="text-base">{{ anime?.title || "..." }}</div>
-      <div class="text-xs">
-        {{ anime?.index?.year }} {{ anime?.index?.type }}
-      </div>
+      <AnimeCardMenuHeadIntro
+        v-if="fetchData.data.value"
+        :releaseYear="fetchData.data.value.releaseYear"
+        :releaseSeason="fetchData.data.value.releaseSeason"
+        :region="fetchData.data.value.region"
+        :platform="fetchData.data.value.platform"
+        :name="fetchData.data.value.name"
+        :originalName="fetchData.data.value.originalName"
+        :bdrip="fetchData.data.value.bdrip"
+        :nsfw="fetchData.data.value.nsfw"
+      />
       <template #suffix>
-        <div
-          v-if="anime.id"
-          @click="router.push({ name: 'anime-la', params: { la: anime.id } })"
-          class="cursor-pointer"
-        >
-          <Icon name="material-symbols:chevron-right" size="20" />
-        </div>
+        <AnimeCardMenuGoButton
+          v-if="id"
+          @click="router.push({ name: 'anime-la', params: { la: id } })"
+        />
       </template>
     </NListItem>
 
-    <!-- -1 未追番 -->
-    <NListItem @click="editFollow(1)" v-if="followInfo.status == -1">
-      <div class="flex gap-x-4 items-center">
-        <Icon name="material-symbols:add" size="20" />
-        添加到追番
-      </div>
-    </NListItem>
-    <!-- 0-2 已追番 -->
-    <NListItem
-      class="text-blue-400"
-      @click="editFollow(undefined, true)"
-      v-else-if="followInfo.status >= 0"
-    >
-      <div class="flex gap-x-4 items-center">
-        <Icon name="material-symbols:remove" size="20" />
-        取消追番
-      </div>
-    </NListItem>
-    <!-- undefined 加载中, -2 错误 -->
-    <NListItem v-else-if="followInfo.status != -2">
-      <NSkeleton text />
+    <NListItem>
+      <AnimeCardMenuRating
+        v-if="fetchData.data.value"
+        v-for="rating in fetchData.data.value.ratings"
+        :score="rating.score"
+        :rank="rating.rank"
+        :count="rating.count"
+        :source="rating.source"
+      />
     </NListItem>
 
-    <NListItem v-if="followInfo.status != -2">
-      <div class="flex gap-x-4 items-center">
-        <Icon name="material-symbols:bookmark-add-outline" size="20" />
-        标记为
-      </div>
-      <template #suffix>
-        <div class="flex flex-nowrap">
-          <NButtonGroup size="tiny">
-            <NButton
-              :type="followInfo?.status == 0 ? 'primary' : 'default'"
-              @click="editFollow(0)"
-              quaternary
-            >
-              想看
-            </NButton>
-            <NButton
-              :type="followInfo?.status == 1 ? 'primary' : 'default'"
-              @click="editFollow(1)"
-              quaternary
-            >
-              在看
-            </NButton>
-            <NButton
-              :type="followInfo?.status == 2 ? 'primary' : 'default'"
-              @click="editFollow(2)"
-              quaternary
-            >
-              看过
-            </NButton>
-          </NButtonGroup>
-        </div>
-      </template>
-    </NListItem>
-
-    <NListItem v-if="anime?.bgmID">
-      <a :href="anime?.images.large" target="_blank">
+    <NListItem v-if="fetchData.data.value?.poster">
+      <a :href="fetchData.data.value?.poster" target="_blank">
         <div class="flex gap-x-4 items-center">
           <Icon name="material-symbols:image-outline" size="20" />
           查看封面大图
@@ -82,8 +40,8 @@
       </a>
     </NListItem>
 
-    <NListItem v-if="anime?.bgmID">
-      <a :href="'https://bgm.tv/subject/' + anime.bgmID" target="_blank">
+    <NListItem v-if="bangumiSite">
+      <a :href="'https://bgm.tv/subject/' + bangumiSite.siteId" target="_blank">
         <div class="flex gap-x-4 items-center">
           <Icon name="material-symbols:link" size="20" />
           去番组计划查看本作品
@@ -93,43 +51,26 @@
   </NList>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const router = useRouter();
 
-const { anime } = defineProps({
-  anime: { type: Object },
+const { id } = defineProps<{
+  id: number;
+}>();
+
+const { $client } = useNuxtApp();
+
+const fetchData = await useAsyncData(
+  "anime-card-menu",
+  () => $client.components.animeCard.menu.query({ id }),
+  { immediate: false }
+);
+
+onMounted(() => {
+  fetchData.execute();
 });
-const followInfo = ref({});
 
-getFollowInfo();
-async function getFollowInfo() {
-  if (anime?.id) {
-    try {
-      let info = await lavaAnimeAPIs.getAnimeFollowInfoAPI(anime?.id);
-      if (info.data.data) {
-        followInfo.value = info.data.data;
-      }
-    } catch (error) {
-      followInfo.value = { status: -2 };
-    }
-  }
-}
-
-async function editFollow(status, remove) {
-  let followedBefore = followInfo.value?.status != -1;
-  try {
-    let result = await lavaAnimeAPIs.editAnimeFollowAPI(
-      anime?.id,
-      status,
-      remove
-    );
-    if (result.data?.code == 200) {
-      if (!followedBefore && !remove)
-        window.$message.success("自己追的番就要好好看完哦^O^");
-      if (remove) window.$message.success("已取消追番");
-    }
-  } catch (error) {}
-
-  getFollowInfo();
-}
+const bangumiSite = computed(() =>
+  fetchData.data.value?.sites.find((site) => site.siteType === "Bangumi")
+);
 </script>

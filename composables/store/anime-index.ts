@@ -1,15 +1,15 @@
 export const useAnimeIndexStore = defineStore("anime-index", () => {
   const currentSelected = ref({
-    years: [] as string[],
-    sessions: [] as string[],
-    platforms: [] as string[],
-    regions: [] as string[],
-    sort: ["view"] as string[],
+    years: null as string | null,
+    sessions: null as string | null,
+    platforms: null as string | null,
+    regions: null as string | null,
+    sort: "view" as string | null,
   });
 
   const updateSelected = (
     type: keyof typeof currentSelected.value,
-    value: string[]
+    value: string | null
   ) => {
     currentSelected.value[type] = value;
   };

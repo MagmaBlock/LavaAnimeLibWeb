@@ -23,15 +23,15 @@ model Anime {
   releaseYear   Int?
   releaseSeason String?
   region        Region?
-  poster        AnimePicture?
 
   tags         AnimeTag[] // 1-n, 此作品的相关标签
   sites        AnimeSiteLink[] // 1-n, 此作品在其他平台的关联
   ratings      AnimeRating[] // 1-n, 来自多个平台的评分
   episodes     AnimeEpisode[] // 1-n, 此作品的多个剧集
   files        StorageIndex[] // 1-n, 此作品在所有节点中的所有文件
-  userCollects AnimeCollection[]
-  userViews    AnimeViewHistory[]
+  userCollects AnimeCollection[] // 1-n, 此作品的收藏记录
+  userViews    AnimeViewHistory[] // 1-n, 此作品的观看记录
+  posters      AnimePicture[] // 1-n, 此作品的封面图
 }
 
 enum AnimePlatform {
@@ -276,14 +276,24 @@ model AnimeViewHistory {
 
 // 描述番剧的图片
 model AnimePicture {
-  id        Int           @id @default(autoincrement())
-  url       String? // 图片URL
-  file      StorageIndex? @relation(fields: [fileId], references: [id])
-  fileId    Int?          @unique
-  createdAt DateTime      @default(now())
+  id        Int               @id @default(autoincrement())
+  url       String?
+  file      StorageIndex?     @relation(fields: [fileId], references: [id])
+  fileId    Int?              @unique
+  type      AnimePictureType?
+  createdAt DateTime          @default(now())
 
-  posterFor   Anime?        @relation(fields: [posterForId], references: [id])
-  posterForId Int?          @unique
-  episode     AnimeEpisode? @relation(fields: [episodeId], references: [id])
-  episodeId   Int?
+  anime     Anime?        @relation(fields: [animeId], references: [id])
+  animeId   Int?
+  episode   AnimeEpisode? @relation(fields: [episodeId], references: [id])
+  episodeId Int?
+
+  @@unique([type, animeId])
+}
+
+enum AnimePictureType {
+  Poster
+  SmallPoster
+  Preview
+  Other
 }

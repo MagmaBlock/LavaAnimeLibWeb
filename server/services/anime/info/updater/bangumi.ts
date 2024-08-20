@@ -46,22 +46,39 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
     animeId: number,
     bangumiSubject: BangumiAPISubject
   ) {
-    const { large, medium, common, small, grid } = bangumiSubject.images;
-    const posterUrl = large ?? medium ?? common ?? small ?? grid;
-    if (posterUrl) {
-      await App.instance.prisma.anime.update({
-        where: { id: animeId },
-        data: {
-          poster: {
-            upsert: {
-              create: {
-                url: posterUrl,
-              },
-              update: {
-                url: posterUrl,
-              },
-            },
+    const images = bangumiSubject.images;
+    if (images) {
+      await App.instance.prisma.animePicture.upsert({
+        where: {
+          type_animeId: {
+            animeId: animeId,
+            type: "Poster",
           },
+        },
+        create: {
+          url: images.large,
+          type: "Poster",
+          animeId: animeId,
+        },
+        update: {
+          url: images.large,
+        },
+      });
+
+      await App.instance.prisma.animePicture.upsert({
+        where: {
+          type_animeId: {
+            animeId: animeId,
+            type: "SmallPoster",
+          },
+        },
+        create: {
+          url: images.common,
+          type: "SmallPoster",
+          animeId: animeId,
+        },
+        update: {
+          url: images.common,
         },
       });
       App.instance.logger.trace(`更新了番剧 ${animeId} 的海报.`);

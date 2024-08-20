@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useImage } from "@vueuse/core";
+
 const props = defineProps<{
   id: number;
   name: string;
@@ -22,6 +24,8 @@ const posterUrl = computed(
   () => props.image || "https://bangumi-app-img.5t5.top/assets/noposter.png"
 );
 
+const { isReady, error } = useImage({ src: posterUrl.value });
+
 const viewDisplay = computed(() => {
   if (!props.views) return "0";
   const views = props.views;
@@ -42,7 +46,12 @@ const viewDisplay = computed(() => {
       <NuxtLink :to="{ name: 'anime-la', params: { la: id } }">
         <!-- 图片容器 -->
         <div class="aspect-w-2 aspect-h-3 overflow-hidden">
-          <img :src="posterUrl" class="absolute object-cover" alt="封面图片" />
+          <img
+            v-if="isReady && !error"
+            :src="posterUrl"
+            class="absolute object-cover"
+            alt="封面图片"
+          />
         </div>
         <!-- 标题 -->
         <div
@@ -96,7 +105,7 @@ const viewDisplay = computed(() => {
                 <Icon name="bi:list" />
               </div>
             </template>
-            <!-- <AnimeCardMenu :anime="anime" /> -->
+            <AnimeCardMenu v-if="id > 0" :id="id" />
           </ContainerMenuLarge>
         </div>
       </div>
