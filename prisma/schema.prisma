@@ -154,22 +154,23 @@ enum StorageScraper {
 
 // 描述一个库中的文件的记录（索引）
 model StorageIndex {
-  id          Int      @id @default(autoincrement())
-  name        String
-  type        FileType @default(Other)
-  path        String   @db.VarChar(512) // 文件所在路径 (不含文件名)
-  isDirectory Boolean  @default(false)
-  size        Float?
-  removed     Boolean  @default(false) // 是否已被删除
-  lastFoundAt DateTime @default(now()) // 最后一次找到此文件的时间
-
+  id           Int           @id @default(autoincrement())
+  name         String
+  type         FileType      @default(Other)
+  path         String        @db.VarChar(512) // 文件所在路径 (不含文件名)
+  isDirectory  Boolean       @default(false)
+  size         Float?
+  removed      Boolean       @default(false) // 是否已被删除
+  lastFoundAt  DateTime      @default(now()) // 最后一次找到此文件的时间
   storage      Storage       @relation(fields: [storageId], references: [id])
   storageId    String        @db.VarChar(32)
   anime        Anime?        @relation(fields: [animeId], references: [id])
   animeId      Int?
-  uploadedBy   User?         @relation(fields: [uploadedById], references: [id])
+  uploadedBy   User?         @relation(name: "uploadedBy", fields: [uploadedById], references: [id])
   uploadedById Int?
   animePicture AnimePicture?
+  avatarFor    User?         @relation(name: "avatar", fields: [avatarForId], references: [id])
+  avatarForId  Int?          @unique
 
   episodes   AnimeEpisode[] // m-n, 一个文件可能对应多个集数 (如一个视频对应 1-3 集的极端情况)
   animeViews AnimeViewHistory[]
@@ -194,28 +195,21 @@ model User {
   name             String             @unique
   password         String
   createdAt        DateTime           @default(now())
-  settings         Json?
+  avatar           StorageIndex?      @relation(name: "avatar")
+  avatarFileId     Int?               @unique
+  avatarUrl        String?
+  settings         String?
   role             UserRole           @default(Default)
-  infomations      UserInfomation[]
   animeCollections AnimeCollection[] // 用户的收藏记录
   inviteCodes      InviteCode[]       @relation(name: "create")
   inviteBy         InviteCode?        @relation(name: "use")
   viewHistories    AnimeViewHistory[]
-  uploadFiles      StorageIndex[]
+  uploadFiles      StorageIndex[]     @relation(name: "uploadedBy")
 }
 
 enum UserRole {
   Default
   Admin
-}
-
-// 用户的其他信息
-model UserInfomation {
-  id     Int     @id @default(autoincrement())
-  avatar String?
-
-  owner   User @relation(fields: [ownerId], references: [id])
-  ownerId Int
 }
 
 // 用户追番记录

@@ -71,15 +71,15 @@
   </n-card>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { refThrottled, useSwipe } from "@vueuse/core";
 
 // 此组件根部第一个 DOM
-const myFollowRef = ref(null);
+const myFollowRef = ref<HTMLElement | null>(null);
 
 // 计算每页的尺寸, 以此让分页在所有尺寸的设备上都是刚好满行
 let pageSize = 6 * 3; // 六行, 每行三个
-function calPageSize() {
+function calPageSize(): void {
   let width = window.innerWidth;
   if (width >= 640) pageSize = 5 * 4; // 五行, 每行四个
   if (width >= 768) pageSize = 4 * 5; // 四行, 每行五个
@@ -91,8 +91,8 @@ calPageSize();
 
 // StatusTab、分页相关数据
 const tabsRef = ref(null);
-const seletedTab = ref(1);
-const followTotals = ref({});
+const followTotals = ref({ "0": 10, "1": 20, "2": 30 });
+const seletedTab = ref<keyof typeof followTotals.value>("1");
 watch(seletedTab, (newTab) => {
   page.value = 1;
   getFollow(newTab, page.value);
@@ -109,48 +109,25 @@ watch(page, (newPage, oldPage) => {
 const loading = ref(false);
 
 // 番剧相关数据
-const thisFollowList = ref([]);
-const animeList = ref([]);
+const animeList = ref([
+  { title: "示例动画1", cover: "/path/to/cover1.jpg" },
+  { title: "示例动画2", cover: "/path/to/cover2.jpg" },
+  { title: "示例动画3", cover: "/path/to/cover3.jpg" },
+]);
 const fetchFailed = ref(false);
 
-async function getFollow(status, page = 1) {
+function getFollow(
+  status: keyof typeof followTotals.value,
+  page: number = 1
+): void {
   loading.value = true;
-  try {
-    let result = await lavaAnimeAPIs.getAnimeFollowListAPI(
-      [status],
-      page,
-      pageSize
-    );
-    if ((result.data.code = 200)) {
-      thisFollowList.value = result.data.data;
-    }
-    if (Array.isArray(thisFollowList.value) && thisFollowList.value.length) {
-      animeList.value = thisFollowList.value.map((follow) => {
-        return follow.anime;
-      });
-    } else {
-      animeList.value = [];
-    }
-  } catch (error) {
-    fetchFailed.value = true;
-  }
+  // 模拟获取数据
   setTimeout(() => {
     loading.value = false;
   }, 300);
 }
 
-async function getFollowTotal() {
-  try {
-    let result = await lavaAnimeAPIs.getAnimeFollowTotalAPI();
-    if ((result.data.code = 200)) {
-      followTotals.value = result.data.data;
-    }
-    nextTick(() => tabsRef.value?.syncBarPosition()); // 更新滚动条的位置
-  } catch (error) {}
-}
-
-async function refresh() {
-  getFollowTotal();
+function refresh(): void {
   getFollow(seletedTab.value, page.value);
 }
 
@@ -173,13 +150,19 @@ watch(isSwiping, () => {
       if (Math.abs(lengthX.value) >= 180) {
         // 从右往左滑
         if (direction.value == "left") {
-          if (seletedTab.value == 2) seletedTab.value = 0;
-          else seletedTab.value++;
+          if (seletedTab.value == "2") seletedTab.value = "0";
+          else
+            seletedTab.value = String(
+              Number(seletedTab.value) + 1
+            ) as keyof typeof followTotals.value;
         }
         // 从左往右滑
         if (direction.value == "right") {
-          if (seletedTab.value == 0) seletedTab.value = 2;
-          else seletedTab.value--;
+          if (seletedTab.value == "0") seletedTab.value = "2";
+          else
+            seletedTab.value = String(
+              Number(seletedTab.value) - 1
+            ) as keyof typeof followTotals.value;
         }
       }
     }
@@ -188,7 +171,6 @@ watch(isSwiping, () => {
 
 // 启动组件
 onMounted(() => {
-  getFollowTotal();
   getFollow(seletedTab.value, page.value);
 });
 </script>

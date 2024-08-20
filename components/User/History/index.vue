@@ -69,18 +69,26 @@
   </NCard>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useScroll } from "@vueuse/core";
 
-const data = ref([]);
+interface HistoryRecord {
+  lastReportTime: string;
+  // 添加其他必要的属性
+}
+
+const data = ref<HistoryRecord[]>([]);
 const showPop = ref(true); // 刚打开界面 50s 内展示提示
 const loading = ref(true);
 
 buildPage();
-async function buildPage() {
-  data.value = [];
+function buildPage(): void {
+  data.value = [
+    { lastReportTime: new Date().toISOString() },
+    { lastReportTime: new Date(Date.now() - 3600000).toISOString() },
+    // 添加更多示例数据
+  ];
   loading.value = true;
-  await getHistory();
   showPop.value = true;
 
   setTimeout(() => {
@@ -94,7 +102,7 @@ async function buildPage() {
 // 横向滚动
 const scroll = ref(null);
 const { x, arrivedState } = useScroll(scroll, { behavior: "smooth" });
-const scrollAction = (direction) => {
+const scrollAction = (direction: "left" | "right"): void => {
   if (direction == "right") {
     x.value = x.value + window.innerWidth * (5 / 7);
   } else if (direction == "left") {
@@ -102,36 +110,18 @@ const scrollAction = (direction) => {
   }
 };
 
-async function getHistory(page, pageSize) {
-  try {
-    let request = await LavaAnimeAPI.post("/v2/anime/history/my", {
-      page,
-      pageSize,
-      withAnimeData: true,
-      latestOnly: true,
-    });
-
-    if (request.data.code == 200) {
-      data.value = request.data.data;
-    }
-  } catch (error) {}
-}
-
 // 如果 1 分钟内有最新的历史记录, 此项为 true
 const justWatched = computed(() => {
   if (data.value?.length > 0) {
     let lastWatchTime = new Date(data.value[0].lastReportTime);
     let now = new Date();
     let timeInterval = now.getTime() - lastWatchTime.getTime();
-    if (timeInterval / 1000 <= 60) {
-      return true;
-    } else {
-      return false;
-    }
+    return timeInterval / 1000 <= 60;
   }
+  return false;
 });
 
 setInterval(() => {
-  if (justWatched.value) getHistory();
+  if (justWatched.value) buildPage();
 }, 8000);
 </script>

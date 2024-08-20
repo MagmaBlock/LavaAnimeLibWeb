@@ -63,7 +63,7 @@ const register = async () => {
         inviteCode: inviteCode.value,
       });
     message.success(resultMessage);
-    localStorage.setItem("token", JSON.stringify(data.token));
+    localStorage.setItem("token", data.token);
     router.push("/user");
   } catch (error) {
     console.error(error);

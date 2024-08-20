@@ -2,11 +2,15 @@ import { router } from "../trpc";
 import { animeCardRouter } from "./components/anime-card";
 import { animeIndexRouter } from "./page/anime-index";
 import { authRouter } from "./page/auth";
+import { userRouter } from "./page/user";
+import { userInfoRouter } from "./page/user-info";
 
 export const appRouter = router({
   pages: router({
     animeIndex: animeIndexRouter,
     auth: authRouter,
+    user: userRouter,
+    userInfo: userInfoRouter,
   }),
   components: router({
     animeCard: animeCardRouter,

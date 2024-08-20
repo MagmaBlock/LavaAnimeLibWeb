@@ -1,39 +1,40 @@
 <template>
   <NCard :bordered="false" embedded>
     <!-- 已登录的情况 -->
-    <div
-      class="flex place-items-center gap-4 h-full"
-      v-if="userStore.userInfo?.id"
-    >
+    <div class="flex place-items-center gap-4 h-full" v-if="userInfo">
       <NAvatar
         class="shrink-0 cursor-pointer"
         round
         :size="72"
-        :src="
-          userStore.userInfo.data?.avatar?.url || '/Transparent_Akkarin.jpg'
-        "
+        :src="userInfo.avatar ?? '/Transparent_Akkarin.jpg'"
+        fallback-src="/Transparent_Akkarin.jpg"
         @click="router.push({ path: '/user/info/avatar' })"
       />
       <div
         class="cursor-pointer"
         @click="router.push({ path: '/user/info/name' })"
       >
-        <div class="text-base font-semibold mb-1">
-          {{ userStore.userInfo.name }}
-        </div>
-        <div class="text-xs opacity-80">{{ userStore.userInfo.email }}</div>
+        <div class="text-base font-semibold mb-1">{{ userInfo.name }}</div>
+        <div class="text-xs opacity-80">{{ userInfo.email }}</div>
       </div>
       <div class="flex-1"></div>
       <div class="grid place-items-center mx-2">
         <!-- 退出登录确认框 -->
-        <NDropdown trigger="hover" :options="logoutMenu" @select="logout">
-          <NButton secondary>
-            <template #icon>
-              <Icon name="material-symbols:exit-to-app" />
-            </template>
-            登出
-          </NButton>
-        </NDropdown>
+        <NPopconfirm
+          @positive-click="handleLogout"
+          positive-text="确认"
+          negative-text="取消"
+        >
+          <template #trigger>
+            <NButton secondary>
+              <template #icon>
+                <Icon name="material-symbols:exit-to-app" />
+              </template>
+              登出
+            </NButton>
+          </template>
+          确定要退出登录吗？
+        </NPopconfirm>
       </div>
     </div>
     <!-- 未登录的情况 -->
@@ -42,7 +43,7 @@
       v-else
       @click="router.push({ path: '/auth/login' })"
     >
-      <NAvatar round :size="72" src="/Transparent_Akkarin.jpg" />
+      <NAvatar round :size="72" src="/default-avatar.jpg" />
       <div>
         <div class="text-base font-semibold mb-1">尚未登录</div>
         <div class="text-xs opacity-80">登录发现更多精彩</div>
@@ -51,33 +52,23 @@
   </NCard>
 </template>
 
-<script setup lang="jsx">
+<script setup lang="ts">
+import { Icon } from "#components";
+import { NPopconfirm, NButton, NAvatar, NCard } from "naive-ui";
+
 const router = useRouter();
+const nuxtApp = useNuxtApp();
 
-const userStore = useUserStore();
-userStore.getUserInfo();
+const { data: userInfo } = await useAsyncData("userInfo", () =>
+  nuxtApp.$client.pages.user.infoCard.query()
+);
 
-const logoutMenu = [
-  {
-    label: "在当前设备上登出",
-    key: false,
-    icon: () => (
-      <Icon name="material-symbols:laptop-windows-outline" size="18" />
-    ),
-  },
-  {
-    label: "在所有设备上登出",
-    key: true,
-    icon: () => <Icon name="material-symbols:devices-other" size="18" />,
-  },
-];
+// 处理登出
+async function handleLogout(): Promise<void> {
+  // 删除 localStorage 中的 token
+  localStorage.removeItem("token");
 
-// 登出
-async function logout(all = false) {
-  let logout = await LavaAnimeAPI.post("/v2/user/logout", { all });
-  if (logout.data.code == 200) {
-    $message.success(logout.data.message);
-    userStore.userInfo = {};
-  }
+  // 跳转到登录页面
+  await router.push("/auth/login");
 }
 </script>

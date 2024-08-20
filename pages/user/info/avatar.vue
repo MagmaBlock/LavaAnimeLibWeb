@@ -1,29 +1,41 @@
 <template>
   <div>
-    <NH2>头像预览</NH2>
-    <NSpace class="mb-4">
-      <NAvatar
-        class="ring-1 ring-gray-200 dark:ring-zinc-700"
-        fallback-src="/Transparent_Akkarin.jpg"
-        :size="128"
-        :src="avatarUrl"
-      />
-      <NAvatar
-        class="ring-1 ring-gray-200 dark:ring-zinc-700"
-        fallback-src="/Transparent_Akkarin.jpg"
-        round
-        :size="108"
-        :src="avatarUrl"
-      />
-      <NAvatar
-        class="ring-1 ring-gray-200 dark:ring-zinc-700"
-        fallback-src="/Transparent_Akkarin.jpg"
-        round
-        :size="72"
-        :src="avatarUrl"
-      />
-      <NButton strong secondary @click="saveAvatar"> 保存 </NButton>
-    </NSpace>
+    <NFlex class="mb-4" :size="[64, 8]">
+      <div>
+        <NH3>当前头像</NH3>
+        <NAvatar
+          class="ring-1 ring-gray-200 dark:ring-zinc-700"
+          fallback-src="/Transparent_Akkarin.jpg"
+          :size="128"
+          :src="currentAvatarUrl"
+        />
+      </div>
+      <div>
+        <NH3>新头像</NH3>
+        <NFlex>
+          <NAvatar
+            class="ring-1 ring-gray-200 dark:ring-zinc-700"
+            fallback-src="/Transparent_Akkarin.jpg"
+            :size="128"
+            :src="previewAvatarUrl"
+          />
+          <NAvatar
+            class="ring-1 ring-gray-200 dark:ring-zinc-700"
+            fallback-src="/Transparent_Akkarin.jpg"
+            round
+            :size="128"
+            :src="previewAvatarUrl"
+          />
+        </NFlex>
+      </div>
+    </NFlex>
+
+    <NButton strong secondary @click="saveAvatar" :loading="isSaving">
+      保存
+    </NButton>
+
+    <NDivider />
+
     <NH3>头像图片链接</NH3>
     <NInput
       v-model:value="newAvatarURL"
@@ -62,15 +74,13 @@
 
 <script setup>
 import gravatar from "gravatar";
+import { useMessage } from "naive-ui";
 
 definePageMeta({
   layout: "user-info",
 });
 
 useHead({ title: "修改头像" });
-
-const userStore = useUserStore();
-userStore.getUserInfo();
 
 const newAvatarURL = ref("");
 const qqNumber = ref("");
@@ -99,6 +109,21 @@ const gravatarHostOptions = ref([
   },
 ]);
 
+const message = useMessage();
+const { $client } = useNuxtApp();
+
+const currentAvatarUrl = ref("");
+const isSaving = ref(false);
+
+onMounted(async () => {
+  try {
+    const result = await $client.pages.userInfo.getAvatar.query();
+    currentAvatarUrl.value = result.avatarUrl || "/Transparent_Akkarin.jpg";
+  } catch (error) {
+    message.error("获取当前头像失败");
+  }
+});
+
 watch(qqNumber, (value) => {
   newAvatarURL.value = `https://q.qlogo.cn/g?b=qq&nk=${value}&s=640`;
 });
@@ -112,14 +137,24 @@ watch(gravatarHost, () => {
 });
 
 async function saveAvatar() {
+  if (!newAvatarURL.value) {
+    message.warning("请先选择或输入新的头像链接");
+    return;
+  }
+
+  isSaving.value = true;
   try {
-    let result = await LavaAnimeAPI.post("/v2/user/info/avatar", {
+    const result = await $client.pages.userInfo.avatar.mutate({
       url: newAvatarURL.value,
     });
-    if (result.data.code == 200) {
-      $message.success(result.data.message);
-    }
-  } catch (error) {}
+    message.success(result.message);
+    currentAvatarUrl.value = result.data.avatarUrl;
+    newAvatarURL.value = "";
+  } catch (error) {
+    message.error("保存头像时发生错误");
+  } finally {
+    isSaving.value = false;
+  }
 }
 
 function generateGravatarUrl() {
@@ -135,11 +170,7 @@ function generateGravatarUrl() {
   }
 }
 
-const avatarUrl = computed(() => {
-  return (
-    newAvatarURL.value ||
-    userStore.userInfo.data?.avatar?.url ||
-    "/Transparent_Akkarin.jpg"
-  );
+const previewAvatarUrl = computed(() => {
+  return newAvatarURL.value || currentAvatarUrl.value;
 });
 </script>

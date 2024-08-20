@@ -2,7 +2,8 @@
   <div>
     <NH2>修改密码</NH2>
     <NAlert title="提示" type="info" class="my-4">
-      请记住您的新密码 {{ newPassword }}, 目前番剧库忘记密码只能人工...
+      请记住您的新密码 <NText code v-if="newPassword">{{ newPassword }}</NText
+      >, 目前番剧库忘记密码只能人工...
     </NAlert>
     <NInputGroup>
       <NInput
@@ -21,20 +22,21 @@ definePageMeta({
 
 useHead({ title: "修改密码" });
 
+const { $client } = useNuxtApp();
 const newPassword = ref("");
-
 const message = useMessage();
 
 async function changePassword() {
+  if (!newPassword.value) return message.warning("请输入新密码");
   try {
-    let query = await LavaAnimeAPI.post("/v2/user/changepassword", {
-      password: newPassword.value,
+    const result = await $client.pages.userInfo.updatePassword.mutate({
+      newPassword: newPassword.value,
     });
-    if (query.data.code == 200) {
-      message.success(query.data.message);
-    }
+    message.success(result.message);
+    newPassword.value = "";
   } catch (error) {
     console.error(error);
+    message.error("更新密码失败");
   }
 }
 </script>

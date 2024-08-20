@@ -8,11 +8,6 @@ export const LavaAnimeAPI = axios.create({
   baseURL: apiBaseUrl,
 });
 
-const goToLogin = useThrottleFn(() => {
-  $message.warning("尚未登录...");
-  useRouter().push({ path: "/auth/login" });
-}, 5000);
-
 // 请求前置 - 增加验证头
 LavaAnimeAPI.interceptors.request.use(function (config) {
   config.headers.Authorization = getToken();
@@ -30,10 +25,6 @@ LavaAnimeAPI.interceptors.response.use(
     // 请求可以在 config 中添加 noCatch 字段禁止错误处理
     if (error?.config?.noCatch) return Promise.reject(error);
     // 未登录处理
-    if (error?.response?.status == 401) {
-      localStorage.removeItem("token");
-      goToLogin();
-    }
     // 网络错误
     else if (error.code == "ERR_NETWORK") {
       console.error(error);
