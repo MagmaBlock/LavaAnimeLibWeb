@@ -1,7 +1,7 @@
 <template>
   <NCard>
     <NH2> 注册新账户 </NH2>
-    <NForm>
+    <NForm @keyup.enter="register">
       <NFormItem show-require-mark label="邮箱">
         <NInput v-model:value="email" type="text" placeholder="邮箱" />
       </NFormItem>
@@ -31,6 +31,8 @@
 </template>
 
 <script setup lang="ts">
+import { TRPCClientError } from "@trpc/client";
+
 definePageMeta({
   layout: "auth",
 });
@@ -44,42 +46,30 @@ const inviteCode = ref("");
 
 const message = useMessage();
 const router = useRouter();
+const { $client } = useNuxtApp();
 
 const register = async () => {
-  try {
-    if (!email.value || !password.value || !name.value || !inviteCode.value) {
-      message.warning("缺少参数, 请补全参数再提交");
-      return;
-    }
+  if (!email.value || !password.value || !name.value || !inviteCode.value) {
+    message.warning("请填写所有必填项");
+    return;
+  }
 
-    let regResult = await LavaAnimeAPI.post("/v2/user/register", {
-      email: email.value,
-      password: password.value,
-      name: name.value,
-      inviteCode: inviteCode.value,
-    });
-    if (regResult.data.code == 200) {
-      // 成功注册
-      message.success(regResult.data.message);
-      // 开始尝试登录
-      let loginResult = await LavaAnimeAPI.post("/v2/user/login", {
-        account: email.value,
+  try {
+    const { message: resultMessage, data } =
+      await $client.pages.auth.register.mutate({
+        email: email.value,
+        name: name.value,
         password: password.value,
+        inviteCode: inviteCode.value,
       });
-      if (loginResult.data.code == 200) {
-        // 成功登录
-        message.success(loginResult.data.message);
-        let token = loginResult.data.data.token;
-        localStorage.setItem("token", JSON.stringify(token));
-        router.push({ path: "/user" });
-      } else {
-        // 注册成功但是登录失败？
-        router.push({ path: "/login" });
-        message.error("注册成功但是登录失败？不管了，先把你传送到登录页");
-      }
-    }
+    message.success(resultMessage);
+    localStorage.setItem("token", JSON.stringify(data.token));
+    router.push("/user");
   } catch (error) {
-    // 失败
+    console.error(error);
+    message.error(
+      error instanceof TRPCClientError ? error.message : "发生意外错误"
+    );
   }
 };
 </script>

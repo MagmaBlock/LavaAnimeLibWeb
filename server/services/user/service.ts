@@ -1,14 +1,13 @@
 import { Prisma, type User } from "@prisma/client";
+import { H3Event } from "h3";
 import type { TokenPayload } from "~/server/types/token";
 import type { LoginSuccessResult } from "~/server/types/user";
 import { App } from "../app";
-import { UserNotFoundError, UserPasswordBadError } from "../error/error";
 import { encryptedPasswordFactory } from "./password/interface";
 import { Sha256Password } from "./password/sha256";
 import type { Token } from "./token/interface";
 import { JwtToken } from "./token/jwt";
 import { UserValidator } from "./validator/user";
-import { H3Event } from "h3";
 
 export class UserService {
   private authentication: Token;
@@ -130,7 +129,7 @@ export class UserService {
     if (user === null) {
       throw createError({
         statusCode: 400,
-        message: "用户名或密码错误",
+        message: "用户不存在",
       });
     }
 
@@ -143,7 +142,7 @@ export class UserService {
     } else {
       throw createError({
         statusCode: 400,
-        message: "用户名或密码错误",
+        message: "密码错误",
       });
     }
   }

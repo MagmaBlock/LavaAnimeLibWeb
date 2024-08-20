@@ -29,47 +29,37 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  layout: "auth",
-});
+import { TRPCClientError } from "@trpc/client";
 
+definePageMeta({ layout: "auth" });
 useHead({ title: "登录" });
 
-import { AxiosError } from "axios";
-
-const account = ref();
-const password = ref();
-
+const account = ref("");
+const password = ref("");
 const message = useMessage();
 const router = useRouter();
+const { $client } = useNuxtApp();
 
 const login = async () => {
   if (!account.value || !password.value) {
-    message.warning("缺少参数, 请补全参数再提交");
+    message.warning("请输入邮箱 / 用户名和密码");
     return;
   }
+
   try {
-    let loginResult = await LavaAnimeAPI.post("/v2/user/login", {
-      account: account.value,
-      password: password.value,
-    });
-    if (loginResult.data.code == 200) {
-      message.success(loginResult.data.message);
-      let token = loginResult.data.data.token;
-      localStorage.setItem("token", JSON.stringify(token));
-      router.push({ path: "/user" });
-    }
+    const { message: resultMessage, data } =
+      await $client.pages.auth.login.mutate({
+        account: account.value,
+        password: password.value,
+      });
+    message.success(resultMessage);
+    localStorage.setItem("token", JSON.stringify(data.token));
+    router.push("/user");
   } catch (error) {
     console.error(error);
-    if (error instanceof AxiosError) {
-      if (error.response?.data?.message) {
-        message.error(error.response?.data?.message);
-      } else if (error.message) {
-        message.error("无法发送网络请求: " + error.message);
-      }
-    } else {
-      message.error("发生意外错误");
-    }
+    message.error(
+      error instanceof TRPCClientError ? error.message : "发生意外错误"
+    );
   }
 };
 </script>
