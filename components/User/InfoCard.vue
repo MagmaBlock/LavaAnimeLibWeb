@@ -43,7 +43,7 @@
       v-else
       @click="router.push({ path: '/auth/login' })"
     >
-      <NAvatar round :size="72" src="/default-avatar.jpg" />
+      <NAvatar round :size="72" src="/Transparent_Akkarin.jpg" />
       <div>
         <div class="text-base font-semibold mb-1">尚未登录</div>
         <div class="text-xs opacity-80">登录发现更多精彩</div>

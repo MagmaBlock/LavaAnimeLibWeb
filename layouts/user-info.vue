@@ -6,7 +6,13 @@
     <ContainerPageLeftMenuRightContent>
       <template #left>
         <NCard :bordered="false" content-style="padding: 0;">
-          <NMenu :options="options" @update:value="handlSelect" />
+          <NMenu
+            :mode="
+              breakpoint.greaterOrEqual('lg').value ? 'vertical' : 'horizontal'
+            "
+            :options="options"
+            @update:value="handlSelect"
+          />
         </NCard>
       </template>
       <template #right>
@@ -18,9 +24,11 @@
   </ContainerPage>
 </template>
 
-<script setup lang="tsx">
+<script setup lang="ts">
+import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 import type { MenuOption } from "naive-ui";
 
+const breakpoint = useBreakpoints(breakpointsTailwind);
 const router = useRouter();
 
 const options: MenuOption[] = [
