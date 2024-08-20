@@ -16,9 +16,7 @@
 <script setup lang="ts">
 const background = useBackgroundStore();
 
-background.setBackground(
-  "https://dogefs.s3.ladydaily.com/~/source/unsplash/photo-1559239115-ce3eb7cb87ea?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&dl=invictus-tailoring-sneaker-socks-5OZgVj0YVwQ-unsplash.jpg&w=1920"
-);
+background.setBackground("/auth/ashim-d-silva-WeYamle9fDM-unsplash.jpg");
 
 onUnmounted(() => {
   background.resetBackground();
