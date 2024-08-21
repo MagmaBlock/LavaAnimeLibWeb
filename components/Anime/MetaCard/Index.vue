@@ -1,5 +1,5 @@
 <template>
-  <NCard size="small" :bordered="false">
+  <NCard size="small" :bordered="false" embedded>
     <template #default>
       <!-- 左右容器 -->
       <NFlex :wrap="false">
@@ -75,12 +75,14 @@
 </template>
 
 <script lang="ts" setup>
-const route = useRoute();
+const props = defineProps<{
+  animeId: number;
+}>();
+
 const { $client } = useNuxtApp();
 
-const animeId = computed(() => Number(route.params.la));
 const { data: animeInfo, status } = await useAsyncData("animeInfo", () =>
-  $client.pages.anime.getAnimeInfo.query({ animeId: animeId.value })
+  $client.pages.anime.getAnimeInfo.query({ animeId: props.animeId })
 );
 
 const getBangumiId = computed(() => {

@@ -7,7 +7,7 @@
       v-if="bgmId"
     >
       <div class="flex place-items-center gap-1">
-        <Icon icon="material-symbols:link-rounded" /> 在番组计划中打开
+        <Icon icon="material-symbols:link-rounded" /> 去番组计划查看
       </div>
     </a>
     <a

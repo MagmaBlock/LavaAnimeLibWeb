@@ -85,6 +85,8 @@ export class AnimeEpisodeFileLinker {
       if (file.isDirectory) continue;
       // 排除已被关联集数的文件
       if (file.episodes.length) continue;
+      // 排除不是视频的文件
+      if (file.type !== "Video") continue;
       // 解析文件名以获取剧集信息
       const fileNameParsed = parseFileName(file.name);
 

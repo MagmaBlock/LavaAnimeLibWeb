@@ -2,6 +2,7 @@ import { z } from "zod";
 import { publicProcedure, router } from "../../trpc";
 import { App } from "~/server/services/app";
 import { StorageService } from "~/server/services/storage/service";
+import { parseFileName } from "anime-name-tool";
 
 const prisma = App.instance.prisma;
 
@@ -75,6 +76,53 @@ export const animeRouter = router({
         sites: animeInfo.sites,
         followCount,
         viewCount,
+      };
+    }),
+
+  getAnimeEpisodes: publicProcedure
+    .input(z.object({ animeId: z.number() }))
+    .query(async ({ input }) => {
+      const { animeId } = input;
+
+      const episodes = await prisma.animeEpisode.findMany({
+        where: { animeId },
+        include: { files: true },
+        orderBy: [{ type: "asc" }, { episodeIndex: "asc" }],
+      });
+
+      return episodes;
+    }),
+
+  getEpisodeDetailAndFiles: publicProcedure
+    .input(z.object({ episodeId: z.number() }))
+    .query(async ({ input }) => {
+      const { episodeId } = input;
+
+      const episode = await prisma.animeEpisode.findUnique({
+        where: { id: episodeId },
+      });
+
+      const files = await prisma.storageIndex.findMany({
+        where: {
+          episodes: {
+            some: {
+              id: episodeId,
+            },
+          },
+        },
+        include: {
+          storage: true,
+        },
+      });
+
+      return {
+        episode: episode,
+        files: files.map((file) => {
+          return {
+            file: file,
+            parseResult: parseFileName(file.name),
+          };
+        }),
       };
     }),
 });

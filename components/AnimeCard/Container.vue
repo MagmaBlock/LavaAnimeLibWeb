@@ -31,7 +31,7 @@ const autoGroupClass = computed(() => {
       description="太可惜了，什么也没找到"
       class="py-16"
     />
-    <NSpin v-else :show="loading" class="w-full">
+    <NSpin v-else :show="loading" :delay="500" class="w-full">
       <div :class="autoGroupClass" class="w-full">
         <slot />
       </div>
