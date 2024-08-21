@@ -1,99 +1,93 @@
 <template>
   <NCard size="small" :bordered="false">
-    <template #header>
-      <!-- 头部面包屑 -->
-      <AnimeMetaCardIndexBreadcrumb
-        :year="store.animeData?.index?.year"
-        :type="store.animeData?.index?.type"
-        :name="store.animeData?.index?.name"
-        @open-admin-tools="() => (store.showAdminTools = true)"
-      />
-    </template>
-    <template #header-extra>
-      <AnimeFollowButton v-if="store.laID" :anime-id="store.laID" />
-    </template>
     <template #default>
       <!-- 左右容器 -->
       <NFlex :wrap="false">
         <!-- 左侧封面图 -->
         <AnimeMetaCardPosterImage
-          :poster-url="store.animeData?.images?.poster"
+          :poster-url="animeInfo?.posterUrl"
+          :loading="status === 'pending'"
           class="hidden sm:block"
         />
         <!-- 纵向容器 -->
-        <NFlex vertical>
+        <NFlex vertical class="flex-1">
           <NFlex :wrap="false" justify="space-between">
             <NFlex vertical>
               <!-- 标题行 -->
               <NFlex :align="'baseline'">
                 <AnimeMetaCardTitle
-                  :title="store.animeData?.title"
-                  :original-title="store.animeData?.name"
-                  :loading="store.state.animeData.isLoading"
+                  :title="animeInfo?.title"
+                  :original-title="animeInfo?.originalTitle"
+                  :loading="status === 'pending'"
                 />
                 <AnimeMetaCardAttributeLabels
-                  :bdrip="store.animeData?.type?.bdrip"
-                  :nsfw="store.animeData?.type?.nsfw"
+                  :bdrip="animeInfo?.bdrip"
+                  :nsfw="animeInfo?.nsfw"
                 />
               </NFlex>
               <!-- 手机端封面图 -->
               <AnimeMetaCardPosterImage
-                :poster-url="store.animeData?.images?.poster"
+                :poster-url="animeInfo?.posterUrl"
                 :mini="true"
                 class="sm:hidden"
               />
               <!-- 基础信息行 -->
               <NFlex vertical size="small">
                 <NFlex class="text-gray-500">
-                  <AnimeMetaCardPlatform
-                    :platform="store.animeData?.platform"
-                  />
-                  <AnimeMetaCardReleaseDate :date="store.animeData?.date" />
+                  <AnimeMetaCardPlatform :platform="animeInfo?.platform" />
+                  <AnimeMetaCardReleaseDate :date="animeInfo?.releaseDate" />
                   <AnimeMetaCardTotalEpisodesCount
-                    :count="store.animeData?.eps"
+                    :count="animeInfo?.totalEpisodes"
                   />
                 </NFlex>
                 <NFlex class="text-gray-500">
-                  <AnimeMetaCardViewCount :views="store.animeData?.views" />
+                  <AnimeMetaCardViewCount :views="animeInfo?.viewCount" />
                   <AnimeMetaCardRating
-                    :rating="store.animeData?.rating?.score"
-                    :rank="store.animeData?.rating?.rank"
+                    :rating="animeInfo?.ratings[0]?.score"
+                    :rank="animeInfo?.ratings[0]?.rank"
                   />
-                  <AnimeMetaCardAnimeID :id="store.animeData?.id" />
+                  <AnimeMetaCardAnimeID :id="animeInfo?.id" />
                 </NFlex>
               </NFlex>
             </NFlex>
+            <!-- 右侧按钮 -->
+            <AnimeFollowButton :anime-id="animeInfo?.id" />
           </NFlex>
 
           <!-- Tags -->
           <AnimeMetaCardTags
-            :tags="store.animeData?.tags"
-            :loading="store.state.animeData.isLoading"
+            :tags="animeInfo?.tags"
+            :loading="status === 'pending'"
+          />
+
+          <AnimeMetaCardIntroduction
+            :content="animeInfo?.summary"
+            :loading="status === 'pending'"
           />
         </NFlex>
       </NFlex>
     </template>
     <template #action>
       <!-- 外部链接 -->
-      <AnimeMetaCardExternalLinks
-        :bgm-id="store.bgmID"
-        :official-website="getWebsite"
-      />
+      <AnimeMetaCardExternalLinks :bgm-id="getBangumiId" />
     </template>
   </NCard>
 </template>
 
 <script lang="ts" setup>
-const store = useAnimeStore();
+const route = useRoute();
+const { $client } = useNuxtApp();
 
-const getWebsite = computed(() => {
-  if (!store.animeData?.infobox) return;
-  let result = store.animeData?.infobox?.find((kv) => {
-    return ["官方网站", "官网", "网站"].includes(kv.key);
-  });
-  if (result?.value) {
-    return result.value;
-  } else return;
+const animeId = computed(() => Number(route.params.la));
+const { data: animeInfo, status } = await useAsyncData("animeInfo", () =>
+  $client.pages.anime.getAnimeInfo.query({ animeId: animeId.value })
+);
+
+const getBangumiId = computed(() => {
+  const bangumiSite = animeInfo.value?.sites?.find(
+    (site) => site.siteType === "Bangumi"
+  );
+  return bangumiSite ? bangumiSite.siteId : null;
 });
 </script>
 

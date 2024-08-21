@@ -9,7 +9,7 @@
     />
     <!-- Loading -->
     <div
-      v-else
+      v-if="loading"
       class="poster-skeleton overflow-hidden rounded-md"
       :class="mini ? 'max-w-24' : 'max-w-32'"
     >
@@ -19,10 +19,11 @@
 </template>
 
 <script lang="ts" setup>
-defineProps({
-  posterUrl: String,
-  mini: Boolean,
-});
+defineProps<{
+  posterUrl?: string | null;
+  loading?: boolean | null;
+  mini?: boolean | null;
+}>();
 </script>
 
 <style scoped>

@@ -1,6 +1,6 @@
 <template>
   <div class="ml-4">
-    <NDropdown trigger="click" :options="menuOptions" @select="handleSelect">
+    <NDropdown trigger="click" :options="menuOptions">
       <div>
         <NButton
           secondary
@@ -13,7 +13,7 @@
               <Icon icon="material-symbols:bookmark-remove" />
             </NIcon>
           </template>
-          {{ store.getColorEgg?.follow.remove ?? "取消" }}
+          {{ "取消" }}
         </NButton>
         <NButton
           secondary
@@ -25,7 +25,7 @@
           <template #icon>
             <NIcon> <Icon icon="material-symbols:bookmark-add" /> </NIcon>
           </template>
-          {{ store.getColorEgg?.follow.add ?? "追番" }}
+          {{ "追番" }}
         </NButton>
       </div>
     </NDropdown>
@@ -39,53 +39,10 @@
 </template>
 
 <script setup lang="ts">
-const store = useAnimeStore();
-
-const { animeId } = defineProps({
-  animeId: { type: [Number], require: true },
+const followInfo: Ref<any> = ref({
+  status: -1,
 });
-
-const followInfo: Ref<any> = ref({});
 const loading = ref(false);
-
-watch(
-  () => animeId,
-  () => {
-    getFollowInfo();
-  },
-  { immediate: true }
-);
-
-async function getFollowInfo() {
-  if (animeId === undefined) return;
-
-  try {
-    let info = await lavaAnimeAPIs.getAnimeFollowInfoAPI(animeId);
-    if (info.data.data) {
-      followInfo.value = info.data.data;
-    }
-  } catch (error) {
-    followInfo.value = { status: -2 };
-  }
-}
-
-async function editFollow(status?: number, remove?: boolean) {
-  if (animeId === undefined) return;
-
-  loading.value = true;
-  try {
-    let result = await lavaAnimeAPIs.editAnimeFollowAPI(
-      animeId,
-      status,
-      remove
-    );
-    if (result.data?.code == 200) {
-      loading.value = false;
-    }
-  } catch (error) {}
-
-  getFollowInfo();
-}
 
 const menuOptions = [
   {
@@ -109,17 +66,4 @@ const menuOptions = [
     key: "2",
   },
 ];
-
-function handleSelect(key: string) {
-  if (["0", "1", "2"].includes(key)) {
-    editFollow(Number(key), false);
-  }
-  if (key == "toggle") {
-    if (followInfo.value.status >= 0) {
-      editFollow(undefined, true);
-    } else {
-      editFollow(1, false);
-    }
-  }
-}
 </script>

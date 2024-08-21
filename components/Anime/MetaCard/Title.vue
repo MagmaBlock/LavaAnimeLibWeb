@@ -11,17 +11,11 @@
 </template>
 
 <script lang="ts" setup>
-defineProps({
-  title: {
-    type: String,
-  },
-  originalTitle: {
-    type: String,
-  },
-  loading: {
-    type: Boolean,
-  },
-});
+defineProps<{
+  title?: string | null | undefined;
+  originalTitle?: string | null | undefined;
+  loading?: boolean | null | undefined;
+}>();
 </script>
 
 <style></style>

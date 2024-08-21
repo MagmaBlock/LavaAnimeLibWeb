@@ -9,15 +9,17 @@
     </template>
     评分数据来自 Bangumi 番组计划
     <br />
-    “#” 代表此番剧在 Bangumi 的全站排名
+    "#" 代表此番剧在 Bangumi 的全站排名
   </NPopover>
 </template>
 
 <script lang="ts" setup>
-defineProps({
-  rating: Number,
-  rank: Number,
-});
+interface Props {
+  rating?: number | null | undefined;
+  rank?: number | null | undefined;
+}
+
+defineProps<Props>();
 </script>
 
 <style></style>

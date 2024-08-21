@@ -25,7 +25,7 @@
 
 <script lang="ts" setup>
 defineProps<{
-  bgmId?: number | null;
+  bgmId?: number | string | null;
   officialWebsite?: string;
 }>();
 </script>

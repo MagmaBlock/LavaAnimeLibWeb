@@ -1,7 +1,7 @@
 <template>
   <NSpace :size="[8, 6]">
     <!-- 正常 -->
-    <template v-if="Array.isArray(tags)">
+    <template v-if="Array.isArray(tags) && tags.length > 0 && !loading">
       <template v-for="(tag, index) in tags" :key="index">
         <NTag
           v-if="index <= tags.length / 3 || showMore"
@@ -30,15 +30,14 @@
 </template>
 
 <script lang="ts" setup>
-defineProps<{
-  tags?: Tag[];
-  loading?: boolean;
-}>();
+import type { AnimeTag } from "@prisma/client";
 
-export type Tag = {
-  name: string;
-  count: number;
-};
+interface Props {
+  tags?: AnimeTag[] | null | undefined;
+  loading?: boolean | null | undefined;
+}
+
+defineProps<Props>();
 
 const showMore = ref(false);
 </script>

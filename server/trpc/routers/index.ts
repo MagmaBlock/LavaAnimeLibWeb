@@ -4,6 +4,7 @@ import { animeIndexRouter } from "./page/anime-index";
 import { authRouter } from "./page/auth";
 import { userRouter } from "./page/user";
 import { userInfoRouter } from "./page/user-info";
+import { animeRouter } from "./page/anime";
 
 export const appRouter = router({
   pages: router({
@@ -11,6 +12,7 @@ export const appRouter = router({
     auth: authRouter,
     user: userRouter,
     userInfo: userInfoRouter,
+    anime: animeRouter,
   }),
   components: router({
     animeCard: animeCardRouter,

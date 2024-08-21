@@ -10,25 +10,25 @@
 </template>
 
 <script lang="ts" setup>
-const props = defineProps({
-  platform: {
-    type: String,
-  },
-});
+interface Props {
+  platform?: string | null;
+}
+
+const props = defineProps<Props>();
 
 const { platform } = toRefs(props);
 const iconName = computed(() => {
-  const platFormType = platform?.value?.toLocaleUpperCase();
-  if (platFormType == "TV") {
+  const platFormType = platform.value?.toLocaleUpperCase();
+  if (platFormType === "TV") {
     return "material-symbols:tv-outline";
   }
-  if (platFormType == "剧场版") {
+  if (platFormType === "剧场版") {
     return "material-symbols:movie-outline";
   }
-  if (platFormType == "OVA" || platFormType == "OAD") {
+  if (platFormType === "OVA" || platFormType === "OAD") {
     return "material-symbols:package-outline-rounded";
   }
-  if (platFormType == "WEB") {
+  if (platFormType === "WEB") {
     return "material-symbols:web";
   }
   return "";
