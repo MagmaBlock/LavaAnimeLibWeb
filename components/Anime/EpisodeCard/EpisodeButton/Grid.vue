@@ -1,7 +1,7 @@
 <template>
   <div
     class="transition relative w-12 h-12 grid content-center select-none"
-    :class="[...activeColorClass, 'rounded-md']"
+    :class="[...buttonColorClass, 'rounded-md']"
   >
     <!-- 集数 -->
     <div class="leading-none text-center text-sm">
@@ -11,7 +11,7 @@
     <div
       v-if="multipleEpisodes"
       class="absolute h-0.5 w-3 mx-auto inset-x-0 bottom-1 rounded"
-      :class="active ? 'bg-zinc-200' : 'bg-zinc-300 dark:bg-zinc-500'"
+      :class="getIndicatorColorClass"
     ></div>
   </div>
 </template>
@@ -23,6 +23,7 @@ const props = defineProps<{
   episodeDisplay: number | string;
   active?: boolean;
   multipleEpisodes?: boolean;
+  notUpdated?: boolean;
 }>();
 
 const formattedEpisodeDisplay = computed(() => {
@@ -32,11 +33,18 @@ const formattedEpisodeDisplay = computed(() => {
   return props.episodeDisplay;
 });
 
-const activeColorClass = computed(() => {
+const buttonColorClass = computed(() => {
   if (props.active) {
     return [
       "bg-blue-600 dark:bg-blue-600 text-white",
       "active:bg-blue-500 dark:active:bg-blue-700",
+    ];
+  } else if (props.notUpdated) {
+    return [
+      "cursor-pointer",
+      "bg-zinc-50 dark:bg-zinc-900 text-zinc-400 dark:text-zinc-600",
+      "hover:bg-zinc-100 dark:hover:bg-zinc-800",
+      "active:bg-zinc-200 dark:active:bg-zinc-900",
     ];
   } else {
     return [
@@ -45,6 +53,16 @@ const activeColorClass = computed(() => {
       "hover:bg-zinc-200 dark:hover:bg-zinc-700",
       "active:bg-zinc-300 dark:active:bg-zinc-800",
     ];
+  }
+});
+
+const getIndicatorColorClass = computed(() => {
+  if (props.active) {
+    return "bg-zinc-200";
+  } else if (props.notUpdated) {
+    return "bg-zinc-300 dark:bg-zinc-700";
+  } else {
+    return "bg-zinc-300 dark:bg-zinc-500";
   }
 });
 </script>

@@ -1,10 +1,7 @@
 <template>
   <NFlex
     :wrap="false"
-    class="rounded-md transition-opacity"
-    :class="{
-      'cursor-pointer active:opacity-75': !active,
-    }"
+    class="cursor-pointer active:opacity-75 rounded-md transition-opacity"
   >
     <NImage
       v-if="poster"
@@ -14,13 +11,16 @@
     />
     <div
       v-else
-      class="rounded-md w-[100px] h-[60px] flex-shrink-0 bg-zinc-800"
+      class="rounded-md w-[100px] h-[60px] flex-shrink-0 bg-zinc-200 dark:bg-zinc-800"
     />
     <NFlex
       vertical
       justify="center"
       :size="0"
-      :class="active ? 'text-blue-500' : ''"
+      :class="[
+        active ? 'text-blue-500' : '',
+        notUpdated ? 'text-zinc-400 dark:text-zinc-600' : '',
+      ]"
     >
       <div class="flex items-center gap-1">
         <Icon
@@ -31,6 +31,7 @@
         第{{ episodeDisplay }}话
       </div>
       <div>{{ name }}</div>
+      <div v-if="notUpdated" class="text-xs text-zinc-500">暂无内容</div>
     </NFlex>
   </NFlex>
 </template>
@@ -41,6 +42,7 @@ defineProps<{
   name?: string | null;
   episodeDisplay: number | string;
   active?: boolean;
+  notUpdated?: boolean;
 }>();
 </script>
 

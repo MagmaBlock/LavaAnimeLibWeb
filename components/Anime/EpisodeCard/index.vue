@@ -27,7 +27,7 @@
             :enter="{ opacity: 1, y: 0 }"
             :duration="300"
           >
-            <div class="flex flex-wrap gap-x-2 gap-y-2">
+            <div class="grid grid-cols-6 gap-2">
               <!-- 网格形式的剧集按钮 -->
               <AnimeEpisodeCardEpisodeButtonGrid
                 v-for="episode in getEpisodesByType(type)"
@@ -36,6 +36,7 @@
                 :active="episode.id === activeEpisodeId"
                 @click="setActiveEpisode(episode.id)"
                 :multipleEpisodes="episode.files.length > 1"
+                :notUpdated="episode.files.length === 0"
               />
             </div>
           </div>
@@ -58,6 +59,7 @@
                 :name="episode.name"
                 :active="episode.id === activeEpisodeId"
                 @click="setActiveEpisode(episode.id)"
+                :notUpdated="episode.files.length === 0"
               />
             </template>
           </NFlex>

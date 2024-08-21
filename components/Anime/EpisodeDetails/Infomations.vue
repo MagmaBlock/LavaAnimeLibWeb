@@ -1,6 +1,6 @@
 <template>
   <NFlex :wrap="false">
-    <NFlex vertical size="small">
+    <NFlex vertical size="small" class="flex-1">
       <NFlex size="small" vertical>
         <div class="font-semibold">ep.{{ episode }} {{ name }}</div>
         <div class="text-xs opacity-75">
