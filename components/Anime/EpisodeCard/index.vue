@@ -1,149 +1,129 @@
 <template>
-  <!-- 主卡片组件，用于显示动画剧集信息 -->
+  <!-- 主卡片组件：显示动画剧集信息 -->
   <NCard embedded :bordered="false" size="small" title="剧集">
-    <!-- 卡片头部额外内容，包含网格/列表视图切换和排序设置 -->
+    <!-- 卡片头部：包含网格/列表视图切换和排序设置 -->
     <template #header-extra>
-      <HeaderSettings
-        :is-grid="settings.isGrid"
-        :sort-asc="settings.sortAsc"
-        @toggle-grid="settings.isGrid = !settings.isGrid"
-        @toggle-sort="settings.sortAsc = !settings.sortAsc"
+      <AnimeEpisodeCardHeaderSettings
+        v-model:is-grid="settings.isGrid"
+        v-model:sort-asc="settings.sortAsc"
       />
     </template>
-    <!-- 使用标签页组件来分类显示不同类型的剧集 -->
-    <NTabs type="segment" size="small" animated>
+    <!-- 标签页组件：分类显示不同类型的剧集 -->
+    <NTabs v-if="store.episodes?.length" type="segment" size="small" animated>
       <NTabPane
         v-for="type in availableEpisodeTypes"
-        :key="type"
-        :name="type"
-        :tab="getTabName(type)"
+        :key="type.value"
+        :name="type.value"
+        :tab="type.label"
       >
         <NScrollbar class="max-h-64">
           <!-- 网格视图 -->
           <div
             v-if="settings.isGrid"
-            v-motion
-            :initial="{ opacity: 0, y: 10 }"
-            :enter="{ opacity: 1, y: 0 }"
-            :duration="300"
+            v-motion="{
+              initial: { opacity: 0, y: 10 },
+              enter: { opacity: 1, y: 0 },
+              duration: 300,
+            }"
           >
             <div class="grid grid-cols-6 gap-2">
               <!-- 网格形式的剧集按钮 -->
               <AnimeEpisodeCardEpisodeButtonGrid
-                v-for="episode in getEpisodesByType(type)"
+                v-for="episode in getSortedEpisodes(type.value)"
                 :key="episode.id"
-                :episodeDisplay="episode.episodeDisplay"
-                :active="episode.id === activeEpisodeId"
-                @click="setActiveEpisode(episode.id)"
-                :multipleEpisodes="episode.files.length > 1"
-                :notUpdated="episode.files.length === 0"
+                v-bind="getEpisodeProps(episode)"
+                @click="store.activeEpisodeId = episode.id"
               />
             </div>
           </div>
           <!-- 列表视图 -->
           <NFlex
-            vertical
             v-else
-            v-motion
-            :initial="{ opacity: 0, y: -10 }"
-            :enter="{ opacity: 1, y: 0 }"
-            :duration="300"
+            vertical
+            v-motion="{
+              initial: { opacity: 0, y: -10 },
+              enter: { opacity: 1, y: 0 },
+              duration: 300,
+            }"
           >
-            <template
-              v-for="episode in getEpisodesByType(type)"
+            <AnimeEpisodeCardEpisodeButtonList
+              v-for="episode in getSortedEpisodes(type.value)"
               :key="episode.id"
-            >
-              <!-- 列表形式的剧集按钮 -->
-              <AnimeEpisodeCardEpisodeButtonList
-                :episodeDisplay="episode.episodeDisplay"
-                :name="episode.name"
-                :active="episode.id === activeEpisodeId"
-                @click="setActiveEpisode(episode.id)"
-                :notUpdated="episode.files.length === 0"
-              />
-            </template>
+              v-bind="getEpisodeProps(episode)"
+              @click="store.activeEpisodeId = episode.id"
+            />
           </NFlex>
         </NScrollbar>
       </NTabPane>
     </NTabs>
+    <NAlert
+      v-if="!hasAnyEpisodeFiles && store.episodeDetailsStatus === 'success'"
+      class="mt-2"
+      type="info"
+    >
+      当前动画未找到任何视频，可能还未更新。
+    </NAlert>
   </NCard>
 </template>
 
 <script lang="ts" setup>
 import type { EpisodeType } from "@prisma/client";
 import { useLocalStorage } from "@vueuse/core";
-import HeaderSettings from "./HeaderSettings.vue";
 
-// 定义组件属性
-const props = defineProps<{
-  animeId: number;
-}>();
+const store = useAnimeStore();
 
-// 定义事件
-const emit = defineEmits<{
-  (e: "episodeChange", episodeId: number | null): void;
-}>();
-
-// 获取 Trpc
-const { $client } = useNuxtApp();
-
-// 使用本地存储保存用户设置
+// 本地存储：保存用户设置
 const settings = useLocalStorage("animeEpisodeCardSettings", {
   isGrid: false,
   sortAsc: true,
 });
 
-// 定义剧集类型
-const episodeTypes: EpisodeType[] = ["Normal", "SP", "OP", "ED", "Other"];
+// 剧集类型及对应标签名称
+const episodeTypes: { value: EpisodeType; label: string }[] = [
+  { value: "Normal", label: "正片" },
+  { value: "SP", label: "SP" },
+  { value: "OP", label: "OP" },
+  { value: "ED", label: "ED" },
+  { value: "Other", label: "其他" },
+];
 
-// 获取标签页名称的函数
-const getTabName = (type: EpisodeType) => {
-  const tabNames = {
-    Normal: "正片",
-    SP: "SP",
-    OP: "OP",
-    ED: "ED",
-    Other: "其他",
-  };
-  return tabNames[type] || type;
-};
-
-// 异步获取动画剧集数据
-const { data: episodes, status } = await useAsyncData("animeEpisodes", () =>
-  $client.pages.anime.getAnimeEpisodes.query({ animeId: props.animeId })
-);
-
-// 当前选中的剧集ID
-const activeEpisodeId = ref<number | null>(null);
-
-// 设置当前选中的剧集
-const setActiveEpisode = (episodeId: number) => {
-  activeEpisodeId.value = episodeId;
-  emit("episodeChange", episodeId);
-};
-
-// 监听 activeEpisodeId 的变化
-watch(activeEpisodeId, (newValue) => {
-  emit("episodeChange", newValue);
-});
-
-// 根据类型获取并排序剧集
-const getEpisodesByType = (type: EpisodeType) => {
-  return (
-    episodes.value
-      ?.filter((episode) => episode.type === type)
-      .sort((a, b) =>
-        settings.value.sortAsc
-          ? a.episodeIndex - b.episodeIndex
-          : b.episodeIndex - a.episodeIndex
-      ) || []
-  );
-};
+// 按类型获取剧集
+const getEpisodesByType = (type: EpisodeType) =>
+  store.episodes?.filter((episode) => episode.type === type) ?? [];
 
 // 计算可用的剧集类型
-const availableEpisodeTypes = computed(() => {
-  return episodeTypes.filter((type) => getEpisodesByType(type).length > 0);
+const availableEpisodeTypes = computed(() =>
+  episodeTypes.filter((type) => getEpisodesByType(type.value).length > 0)
+);
+
+// 获取并排序指定类型的剧集
+const getSortedEpisodes = (type: EpisodeType) => {
+  return getEpisodesByType(type).sort((a, b) => {
+    if (a.episodeIndex !== b.episodeIndex) {
+      return settings.value.sortAsc
+        ? a.episodeIndex - b.episodeIndex
+        : b.episodeIndex - a.episodeIndex;
+    } else {
+      return settings.value.sortAsc
+        ? a.episodeDisplay - b.episodeDisplay
+        : b.episodeDisplay - a.episodeDisplay;
+    }
+  });
+};
+
+// 获取剧集属性
+const getEpisodeProps = (episode: any) => ({
+  episodeDisplay: episode.episodeDisplay,
+  name: episode.name,
+  active: episode.id === store.activeEpisodeId,
+  multipleEpisodes: episode.files.length > 1,
+  notUpdated: episode.files.length === 0,
 });
+
+// 检查是否所有剧集都没有视频文件
+const hasAnyEpisodeFiles = computed(
+  () => store.episodes?.some((episode) => episode.files.length > 0) ?? false
+);
 </script>
 
 <style></style>

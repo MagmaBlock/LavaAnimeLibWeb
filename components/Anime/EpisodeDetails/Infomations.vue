@@ -2,7 +2,7 @@
   <NFlex :wrap="false">
     <NFlex vertical size="small" class="flex-1">
       <NFlex size="small" vertical>
-        <div class="font-semibold">ep.{{ episode }} {{ name }}</div>
+        <div class="font-semibold">第{{ episode }}话 {{ name }}</div>
         <div class="text-xs opacity-75">
           <span v-if="airDate"> 首播: {{ airDate }} </span>
           <span v-if="formatDuration"> 时长: {{ formatDuration }} </span>

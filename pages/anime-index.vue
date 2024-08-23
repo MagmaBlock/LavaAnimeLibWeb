@@ -91,7 +91,9 @@ const breakpoints = useBreakpoints(breakpointsTailwind);
           class="my-16"
           v-if="fetchAnimes.data.value && fetchAnimes.data.value.length === 0"
         />
-        <NBackTop :bottom="breakpoints.greaterOrEqual('lg').value ? undefined : 100" />
+        <NBackTop
+          :bottom="breakpoints.greaterOrEqual('lg').value ? undefined : 100"
+        />
       </template>
       <!-- 扩展页尾 -->
       <template #foot>

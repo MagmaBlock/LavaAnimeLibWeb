@@ -1,6 +1,6 @@
 <template>
   <NButtonGroup>
-    <NButton secondary size="small" @click="$emit('toggleGrid')">
+    <NButton secondary size="small" @click="toggleGrid">
       <template #icon>
         <NIcon>
           <Icon
@@ -14,7 +14,7 @@
       </template>
       {{ isGrid ? "网格" : "列表" }}
     </NButton>
-    <NButton secondary size="small" @click="$emit('toggleSort')">
+    <NButton secondary size="small" @click="toggleSort">
       <template #icon>
         <NIcon>
           <Icon
@@ -32,15 +32,23 @@
 </template>
 
 <script lang="ts" setup>
-defineProps<{
+const props = defineProps<{
   isGrid: boolean;
   sortAsc: boolean;
 }>();
 
-defineEmits<{
-  (e: "toggleGrid"): void;
-  (e: "toggleSort"): void;
+const emit = defineEmits<{
+  (e: "update:isGrid", value: boolean): void;
+  (e: "update:sortAsc", value: boolean): void;
 }>();
+
+const toggleGrid = () => {
+  emit("update:isGrid", !props.isGrid);
+};
+
+const toggleSort = () => {
+  emit("update:sortAsc", !props.sortAsc);
+};
 </script>
 
 <style scoped></style>

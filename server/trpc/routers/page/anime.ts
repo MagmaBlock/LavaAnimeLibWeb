@@ -125,4 +125,27 @@ export const animeRouter = router({
         }),
       };
     }),
+
+  getFileTempUrl: publicProcedure
+    .input(z.object({ fileId: z.number() }))
+    .query(async ({ input }) => {
+      const { fileId } = input;
+
+      const file = await prisma.storageIndex.findUnique({
+        where: { id: fileId },
+      });
+
+      if (!file) {
+        throw new Error("文件不存在");
+      }
+
+      const storageService = App.instance.services.getService(StorageService);
+
+      try {
+        const tempUrl = await storageService.getFileTempUrl(file);
+        return { tempUrl };
+      } catch (error) {
+        throw new Error("获取临时文件URL失败");
+      }
+    }),
 });

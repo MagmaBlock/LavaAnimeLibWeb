@@ -1,23 +1,23 @@
 <template>
   <NCard size="small" :bordered="false">
     <NFlex :align="'center'">
-      <AnimeMetaCardAnimeID :id="store.laID" />
+      <AnimeMetaCardAnimeID :id="store.animeId" />
       <NDivider vertical />
       <NuxtLink
         :to="{
           name: 'anime-la',
-          params: { la: store.laID - 1 },
+          params: { la: store.animeId - 1 },
         }"
       >
-        <NButton size="small" secondary> Next </NButton>
+        <NButton size="small" secondary> Previous </NButton>
       </NuxtLink>
       <NuxtLink
         :to="{
           name: 'anime-la',
-          params: { la: store.laID + 1 },
+          params: { la: store.animeId + 1 },
         }"
       >
-        <NButton size="small" secondary> Previous </NButton>
+        <NButton size="small" secondary> Next </NButton>
       </NuxtLink>
       <NuxtLink
         :to="{
@@ -33,5 +33,4 @@
 
 <script setup>
 const store = useAnimeStore();
-const route = useRoute();
 </script>

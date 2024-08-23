@@ -15,7 +15,7 @@
         {{ tag }}
       </NTag>
       <!-- 标题 -->
-      <span v-if="title">{{ title }}</span>
+      <div v-if="title" class="whitespace-pre">{{ title }}</div>
       <!-- 字幕 -->
       <NTag
         v-if="subtitles"
@@ -46,20 +46,15 @@
         {{ tag }}
       </NTag>
       <!-- 格式 -->
-      <NTag
-        v-if="extension"
-        class="bg-gray-400 dark:bg-zinc-700 text-white font-medium"
-        size="small"
-        :bordered="false"
-      >
+      <NTag v-if="extension" size="small" :bordered="false">
         {{ extension }}
       </NTag>
     </div>
 
     <!-- 文件名 -->
-    <span v-if="fileName" class="text-xs opacity-75 leading-none">{{
-      fileName
-    }}</span>
+    <span v-if="fileName" class="text-xs opacity-75 leading-none">
+      {{ fileName }}
+    </span>
   </div>
 </template>
 
@@ -74,12 +69,4 @@ defineProps<{
   fileName?: string;
   active?: boolean;
 }>();
-
-const tagType = {
-  group: "info",
-  source: "success",
-  quality: "",
-  language: "info",
-  other: "warning",
-};
 </script>

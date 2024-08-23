@@ -6,17 +6,21 @@
         poster="https://placehold.co/300x200?text=Demo"
       />
 
-      <NSpin :show="status === 'pending'" :delay="500">
+      <NSpin :show="store.episodeDetailsStatus === 'pending'" :delay="500">
         <NFlex vertical>
-          <template
-            v-if="status === 'success'"
-            v-for="file in processedFiles"
-            :key="file.file.id"
-          >
-            <AnimeEpisodeDetailsFileDisplay v-bind="file" />
-          </template>
+          <NScrollbar x-scrollable>
+            <NFlex>
+              <template
+                v-if="store.episodeDetailsStatus === 'success'"
+                v-for="file in processedFiles"
+                :key="file.file.id"
+              >
+                <AnimeEpisodeDetailsFileDisplay v-bind="file" />
+              </template>
+            </NFlex>
+          </NScrollbar>
           <NSkeleton
-            v-if="status === 'pending'"
+            v-if="store.episodeDetailsStatus === 'pending'"
             size="small"
             :sharp="false"
             :repeat="2"
@@ -28,32 +32,11 @@
 </template>
 
 <script lang="ts" setup>
-const props = defineProps<{
-  episodeId: number;
-}>();
-
-const { $client } = useNuxtApp();
-
-const { data, status, execute } = await useAsyncData(
-  "anime-episode-details",
-  () =>
-    $client.pages.anime.getEpisodeDetailAndFiles.query({
-      episodeId: props.episodeId,
-    }),
-  { watch: [() => props.episodeId] }
-);
-
-// 监听 props.episodeId 的变化
-watch(
-  () => props.episodeId,
-  () => {
-    execute();
-  }
-);
+const store = useAnimeStore();
 
 // 计算当前选中剧集的详细信息
 const episodeDetails = computed(() => {
-  const activeEpisode = data.value?.episode;
+  const activeEpisode = store.episodeDetails?.episode;
 
   return {
     episode: activeEpisode?.episodeIndex ?? 0,
@@ -65,8 +48,8 @@ const episodeDetails = computed(() => {
 });
 
 const processedFiles = computed(() => {
-  if (!data.value) return [];
-  return data.value.files
+  if (!store.episodeDetails) return [];
+  return store.episodeDetails.files
     .map((file) => ({
       file: file.file,
       groups: file.parseResult.group.map((g) => g.parsedName ?? g.name),

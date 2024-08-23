@@ -1,7 +1,7 @@
 <template>
   <NSpace :size="[8, 6]">
     <!-- 正常 -->
-    <template v-if="Array.isArray(tags) && tags.length > 0 && !loading">
+    <template v-if="Array.isArray(tags) && tags.length > 0">
       <template v-for="(tag, index) in tags" :key="index">
         <NTag
           v-if="index <= tags.length / 3 || showMore"
@@ -22,10 +22,6 @@
         {{ showMore ? "收起" : "展开" }}
       </NTag>
     </template>
-    <!-- 骨架 -->
-    <template v-for="a in 20" v-if="loading">
-      <NSkeleton :width="80 - 50 * Math.random()" :height="22" />
-    </template>
   </NSpace>
 </template>
 
@@ -34,7 +30,6 @@ import type { AnimeTag } from "@prisma/client";
 
 interface Props {
   tags?: AnimeTag[] | null | undefined;
-  loading?: boolean | null | undefined;
 }
 
 defineProps<Props>();

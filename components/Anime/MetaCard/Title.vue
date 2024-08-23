@@ -2,7 +2,6 @@
   <NSpace :align="'baseline'">
     <div class="text-lg font-semibold">
       <p v-if="title">{{ title }}</p>
-      <NSkeleton v-if="loading" :width="128" />
     </div>
     <div class="text-sm font-semibold text-gray-500" v-if="originalTitle">
       <p>{{ originalTitle }}</p>
@@ -14,7 +13,6 @@
 defineProps<{
   title?: string | null | undefined;
   originalTitle?: string | null | undefined;
-  loading?: boolean | null | undefined;
 }>();
 </script>
 
