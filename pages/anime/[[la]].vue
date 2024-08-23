@@ -4,11 +4,14 @@
       <AnimeDevTool class="mb-4" />
     </DevOnly>
     <div
-      class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start"
+      class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start"
       v-if="store.animeId"
     >
-      <div class="col-span-1 md:col-span-2 flex flex-col gap-4">
-        <AnimeMetaCard :animeId="store.animeId" />
+      <div class="col-span-1 lg:col-span-2 flex flex-col gap-4">
+        <div>
+          <AnimeMetaCard v-if="breakpoint.greaterOrEqual('md').value" />
+          <AnimeMetaCardMini v-else />
+        </div>
         <AnimeEpisodeDetails
           v-if="store.activeEpisodeId"
           :key="store.activeEpisodeId"
@@ -19,7 +22,7 @@
           :episode-id="store.activeEpisodeId"
         />
       </div>
-      <div class="col-span-1 md:col-span-1 flex flex-col gap-4">
+      <div class="col-span-1 lg:col-span-1 flex flex-col gap-4">
         <AnimeEpisodeCard />
       </div>
     </div>
@@ -34,10 +37,12 @@
 </template>
 
 <script setup lang="ts">
+import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 import { z } from "zod";
 
 const route = useRoute();
 const store = useAnimeStore();
+const breakpoint = useBreakpoints(breakpointsTailwind);
 
 onMounted(() => {
   const maybeAnimeId = z

@@ -36,13 +36,28 @@ export const useAnimeStore = defineStore("anime", () => {
     { immediate: false, lazy: true }
   );
 
+  // 获取动画信息
+  const {
+    data: animeInfo,
+    execute: animeInfoExecute,
+    status: animeInfoStatus,
+    clear: animeInfoClear,
+    error: animeInfoError,
+  } = useAsyncData(
+    "animeInfo",
+    () => $client.pages.anime.getAnimeInfo.query({ animeId: animeId.value! }),
+    { immediate: false, lazy: true }
+  );
+
   // animeId 变化时重新获取所有信息并清空现有信息
   watch(animeId, () => {
     if (animeId.value !== null) {
       activeEpisodeId.value = null;
       episodesClear();
       episodeDetailsClear();
+      animeInfoClear();
       episodesExecute();
+      animeInfoExecute();
     }
   });
 
@@ -63,5 +78,9 @@ export const useAnimeStore = defineStore("anime", () => {
     episodeDetails,
     episodeDetailsExecute,
     episodeDetailsStatus,
+    animeInfo,
+    animeInfoExecute,
+    animeInfoStatus,
+    animeInfoError,
   };
 });

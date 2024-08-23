@@ -4,14 +4,14 @@
       size="small"
       :bordered="false"
       embedded
-      v-if="animeInfo && status === 'success'"
+      v-if="store.animeInfo && store.animeInfoStatus === 'success'"
     >
       <template #default>
         <!-- 左右容器 -->
         <NFlex :wrap="false">
           <!-- 左侧封面图 -->
           <AnimeMetaCardPosterImage
-            :poster-url="animeInfo?.posterUrl"
+            :poster-url="store.animeInfo?.posterUrl"
             class="hidden sm:block"
           />
           <!-- 纵向容器 -->
@@ -21,48 +21,54 @@
                 <!-- 标题行 -->
                 <NFlex :align="'baseline'">
                   <AnimeMetaCardTitle
-                    :title="animeInfo?.title"
-                    :original-title="animeInfo?.originalTitle"
+                    :title="store.animeInfo?.title"
+                    :original-title="store.animeInfo?.originalTitle"
                   />
                   <AnimeMetaCardAttributeLabels
-                    :bdrip="animeInfo?.bdrip"
-                    :nsfw="animeInfo?.nsfw"
+                    :bdrip="store.animeInfo?.bdrip"
+                    :nsfw="store.animeInfo?.nsfw"
                   />
                 </NFlex>
                 <!-- 手机端封面图 -->
                 <AnimeMetaCardPosterImage
-                  :poster-url="animeInfo?.posterUrl"
+                  :poster-url="store.animeInfo?.posterUrl"
                   :mini="true"
                   class="sm:hidden"
                 />
                 <!-- 基础信息行 -->
                 <NFlex vertical size="small">
                   <NFlex class="text-gray-500">
-                    <AnimeMetaCardPlatform :platform="animeInfo?.platform" />
-                    <AnimeMetaCardReleaseDate :date="animeInfo?.releaseDate" />
+                    <AnimeMetaCardPlatform
+                      :platform="store.animeInfo?.platform"
+                    />
+                    <AnimeMetaCardReleaseDate
+                      :date="store.animeInfo?.releaseDate"
+                    />
                     <AnimeMetaCardTotalEpisodesCount
-                      :count="animeInfo?.totalEpisodes"
+                      :count="store.animeInfo?.totalEpisodes"
                     />
                   </NFlex>
                   <NFlex class="text-gray-500">
-                    <AnimeMetaCardViewCount :views="animeInfo?.viewCount" />
-                    <AnimeMetaCardRating
-                      :rating="animeInfo?.ratings[0]?.score"
-                      :rank="animeInfo?.ratings[0]?.rank"
+                    <AnimeMetaCardViewCount
+                      :views="store.animeInfo?.viewCount"
                     />
-                    <AnimeMetaCardAnimeID :id="animeInfo?.id" />
+                    <AnimeMetaCardRating
+                      :rating="store.animeInfo?.ratings[0]?.score"
+                      :rank="store.animeInfo?.ratings[0]?.rank"
+                    />
+                    <AnimeMetaCardAnimeID :id="store.animeInfo?.id" />
                   </NFlex>
                 </NFlex>
               </NFlex>
               <!-- 右侧按钮 -->
-              <AnimeFollowButton :anime-id="animeInfo?.id" />
+              <AnimeFollowButton :anime-id="store.animeInfo?.id" />
             </NFlex>
 
             <!-- Tags -->
-            <AnimeMetaCardTags :tags="animeInfo?.tags" />
+            <AnimeMetaCardTags :tags="store.animeInfo?.tags" />
 
             <!-- 简介 -->
-            <AnimeMetaCardIntroduction :content="animeInfo?.summary" />
+            <AnimeMetaCardIntroduction :content="store.animeInfo?.summary" />
           </NFlex>
         </NFlex>
       </template>
@@ -75,7 +81,7 @@
       size="small"
       :bordered="false"
       embedded
-      v-else-if="status === 'pending'"
+      v-else-if="store.animeInfoStatus === 'pending'"
     >
       <NFlex :warp="false">
         <NSkeleton
@@ -96,12 +102,12 @@
       size="small"
       :bordered="false"
       embedded
-      v-else-if="status === 'error'"
+      v-else-if="store.animeInfoStatus === 'error'"
     >
       <NResult
         status="warning"
         title="发生错误"
-        :description="`获取动画信息失败：${error?.message}`"
+        :description="`获取动画信息失败：${store.animeInfoError?.message}`"
         class="my-8"
       />
     </NCard>
@@ -109,34 +115,14 @@
 </template>
 
 <script lang="ts" setup>
-const props = defineProps<{
-  animeId: number;
-}>();
-
-const { $client } = useNuxtApp();
-
-const {
-  data: animeInfo,
-  status,
-  execute,
-  error,
-} = await useAsyncData("animeInfo", () =>
-  $client.pages.anime.getAnimeInfo.query({ animeId: props.animeId })
-);
+const store = useAnimeStore();
 
 const getBangumiId = computed(() => {
-  const bangumiSite = animeInfo.value?.sites?.find(
+  const bangumiSite = store.animeInfo?.sites?.find(
     (site) => site.siteType === "Bangumi"
   );
   return bangumiSite ? bangumiSite.siteId : null;
 });
-
-watch(
-  () => props.animeId,
-  () => {
-    execute();
-  }
-);
 </script>
 
 <style></style>
