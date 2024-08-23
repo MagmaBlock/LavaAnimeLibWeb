@@ -190,10 +190,10 @@ export class AlistStorageSystem implements StorageSystem {
   }
 
   private getFileType(fileName: string): FileType {
-    const ext = pathPosix.parse(fileName).ext.slice(1);
+    const ext = pathPosix.parse(fileName).ext.slice(1).toLowerCase();
     if (ext) {
       for (const [reg, extType] of extensionMap.entries()) {
-        if (reg.test(ext)) {
+        if (ext.match(reg)) {
           return extType[1];
         }
       }

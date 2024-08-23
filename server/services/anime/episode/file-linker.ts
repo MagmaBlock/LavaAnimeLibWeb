@@ -38,12 +38,6 @@ export class AnimeEpisodeFileLinker {
         App.instance.logger.trace(
           `[AnimeEpisodeFileLinker] anime-${anime.id} 成功连接: ${result.totalConnectedCount} 个文件, 未能连接: ${result.videoEpisodeNotFound.length} 个.`
         );
-        App.instance.logger.debug(
-          "[AnimeEpisodeFileLinker] 未能连接的文件列表:"
-        );
-        App.instance.logger.debug(
-          result.videoEpisodeNotFound.map((file) => file.name).join(", ")
-        );
       }
     }
     return allResult;
