@@ -49,28 +49,26 @@ const episodeDetails = computed(() => {
 
 const processedFiles = computed(() => {
   if (!store.episodeDetails) return [];
-  return store.episodeDetails.files
-    .map((file) => ({
-      file: file.file,
-      groups: file.parseResult.group.map((g) => g.parsedName ?? g.name),
-      title: file.parseResult.title,
-      subtitles: file.parseResult.subtitle.language
-        .map((l) => l.toString())
-        .concat(file.parseResult.subtitle.subtitleFeatures),
-      sources: file.parseResult.source.broadcastChannel.concat(
-        file.parseResult.source.mediaType
-      ),
-      quality: [
-        file.parseResult.quality.audioCodec,
-        file.parseResult.quality.color,
-        file.parseResult.quality.fps,
-        file.parseResult.quality.resolution,
-        file.parseResult.quality.videoCodec,
-      ].filter((q) => q !== null),
-      extension: file.parseResult.extension.parsedName,
-      fileName: file.file.name,
-    }))
-    .sort((a, b) => a.file.name.localeCompare(b.file.name));
+  return store.episodeDetails.files.map((file) => ({
+    file: file.file,
+    groups: file.parseResult.group.map((g) => g.parsedName ?? g.name),
+    title: file.parseResult.title,
+    subtitles: file.parseResult.subtitle.language
+      .map((l) => l.toString())
+      .concat(file.parseResult.subtitle.subtitleFeatures),
+    sources: file.parseResult.source.broadcastChannel.concat(
+      file.parseResult.source.mediaType
+    ),
+    quality: [
+      file.parseResult.quality.audioCodec,
+      file.parseResult.quality.color,
+      file.parseResult.quality.fps,
+      file.parseResult.quality.resolution,
+      file.parseResult.quality.videoCodec,
+    ].filter((q) => q !== null),
+    extension: file.parseResult.extension.parsedName,
+    fileName: file.file.name,
+  }));
 });
 </script>
 

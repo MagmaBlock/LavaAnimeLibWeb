@@ -113,6 +113,9 @@ export const animeRouter = router({
         include: {
           storage: true,
         },
+        orderBy: {
+          size: "desc",
+        },
       });
 
       return {
