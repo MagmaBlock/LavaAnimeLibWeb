@@ -1,10 +1,13 @@
 import { refThrottled } from "@vueuse/core";
 
+// 定义动画存储
 export const useAnimeStore = defineStore("anime", () => {
   // 从路由参数获取动画ID
   const animeId = ref<number | null>(null);
   // 当前活跃的剧集ID
   const activeEpisodeId = ref<number | null>(null);
+  // 当前活跃的镜像组名称
+  const activeMirrorGroupName = ref<string | null>(null);
   // 当前活跃的文件ID
   const activeFileId = ref<number | null>(null);
   // 当前活跃的存储器ID
@@ -28,10 +31,10 @@ export const useAnimeStore = defineStore("anime", () => {
 
   // 获取动画的所有剧集
   const {
-    data: episodes,
-    execute: episodesExecute,
-    status: episodesStatus,
-    clear: episodesClear,
+    data: mainData,
+    execute: mainDataExecute,
+    status: mainDataStatus,
+    clear: mainDataClear,
   } = useAsyncData(
     "animeEpisodes",
     () =>
@@ -56,9 +59,9 @@ export const useAnimeStore = defineStore("anime", () => {
 
   // 计算当前活跃的剧集
   const activeEpisode = computed(() => {
-    if (!episodes.value) return null;
+    if (!mainData.value) return null;
     return (
-      episodes.value.episodes.find(
+      mainData.value.episodes.find(
         (episode) => episode.episode.id === activeEpisodeId.value
       ) || null
     );
@@ -66,41 +69,75 @@ export const useAnimeStore = defineStore("anime", () => {
 
   // 计算当前活跃的镜像组
   const activeMirrorGroup = computed(() => {
-    if (!activeEpisode.value) return null;
+    if (!mainData.value) return null;
     return (
-      activeEpisode.value.mirrorGroups.find((group) =>
-        group.group.some((file) => file.id === activeFileId.value)
+      mainData.value.mirrorGroups.find(
+        (group) => group.fileName === activeMirrorGroupName.value
       ) || null
     );
   });
 
   // 监听animeId的变化，重新获取所有信息并清空现有信息
-  watch(refThrottled(animeId, 1000), () => {
+  watch(refThrottled(animeId, 1000), async () => {
     if (animeId.value !== null) {
       activeEpisodeId.value = null;
       activeFileId.value = null;
-      episodesClear();
+      activeMirrorGroupName.value = null;
+      activeStorageId.value = null;
+      mainDataClear();
       animeInfoClear();
 
-      episodesExecute();
-      animeInfoExecute();
-    }
-  });
+      await Promise.all([mainDataExecute(), animeInfoExecute()]);
 
-  // 当剧集数据被获取时，自动选中推荐的剧集
-  watch(refThrottled(episodes, 1000), (newEpisodes) => {
-    if (newEpisodes) {
-      activeEpisodeId.value = newEpisodes.recommendedEpisodeId;
+      // 自动选择推荐的剧集
+      if (mainData.value) {
+        const recommendedEpisode = mainData.value.episodes.find(
+          (ep) => ep.recommended
+        );
+        if (recommendedEpisode) {
+          activeEpisodeId.value = recommendedEpisode.episode.id;
+        }
+      }
     }
   });
 
   // 当剧集被选中时，自动选中合适的文件
   watch(refThrottled(activeEpisodeId, 1000), (newEpisodeId) => {
-    if (newEpisodeId) {
-      if (activeEpisode.value?.recommendedMirrorGroup) {
-        // TODO: 如果当前有选中的 storage，则优先选择该 storage 的文件
-        activeFileId.value =
-          activeEpisode.value.recommendedMirrorGroup.files[0].id;
+    if (playerStore.artPlayer) playerStore.artPlayer.pause();
+    if (newEpisodeId && activeEpisode.value) {
+      const recommendedMirrorGroupName =
+        activeEpisode.value.recommendedMirrorGroupName;
+      if (recommendedMirrorGroupName) {
+        activeMirrorGroupName.value = recommendedMirrorGroupName;
+      }
+    }
+  });
+
+  // 监听 activeMirrorGroupName 的变化，自动选择合适的文件
+  watch(refThrottled(activeMirrorGroupName, 1000), (newMirrorGroupName) => {
+    if (newMirrorGroupName && activeMirrorGroup.value) {
+      const availableFiles = activeMirrorGroup.value.fileIds.filter(
+        (fileId) => {
+          const file = mainData.value?.files.find((f) => f.id === fileId);
+          return (
+            file &&
+            (!activeStorageId.value || file.storageId === activeStorageId.value)
+          );
+        }
+      );
+
+      if (availableFiles.length > 0) {
+        activeFileId.value = availableFiles[0];
+      }
+    } else if (newMirrorGroupName === null && mainData.value) {
+      // 如果 activeMirrorGroupName 是 null，自动选择第一个文件
+      const firstFile = mainData.value.files[0];
+      if (firstFile) {
+        activeFileId.value = firstFile.id;
+        activeMirrorGroupName.value =
+          mainData.value.mirrorGroups.find((group) =>
+            group.fileIds.includes(firstFile.id)
+          )?.fileName || null;
       }
     }
   });
@@ -122,12 +159,15 @@ export const useAnimeStore = defineStore("anime", () => {
 
   // 监听 activeStorageId 的变化，自动选中对应存储器合适的文件
   watch(refThrottled(activeStorageId, 1000), (newStorageId) => {
-    if (newStorageId) {
-      const mirrorGroupFileThisStorage = activeMirrorGroup.value?.group.find(
-        (file) => file.storageId === newStorageId
+    if (newStorageId && activeMirrorGroup.value) {
+      const fileIdInThisStorage = activeMirrorGroup.value.fileIds.find(
+        (fileId) =>
+          mainData.value?.files.find(
+            (file) => file.id === fileId && file.storageId === newStorageId
+          )
       );
-      if (mirrorGroupFileThisStorage) {
-        activeFileId.value = mirrorGroupFileThisStorage.id;
+      if (fileIdInThisStorage) {
+        activeFileId.value = fileIdInThisStorage;
       }
     }
   });
@@ -137,15 +177,16 @@ export const useAnimeStore = defineStore("anime", () => {
     activeEpisodeId,
     activeFileId,
     activeStorageId,
+    activeMirrorGroupName,
     animeInfo,
     animeInfoExecute,
     animeInfoStatus,
     animeInfoError,
     animeInfoClear,
-    episodes,
-    episodesExecute,
-    episodesStatus,
-    episodesClear,
+    mainData,
+    mainDataExecute,
+    mainDataStatus,
+    mainDataClear,
     activeEpisode,
     activeMirrorGroup,
     fileTempUrls,

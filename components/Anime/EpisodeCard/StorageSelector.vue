@@ -44,8 +44,8 @@ const storagesOptions = computed(() => {
     ?.map((storage) => ({
       label: storage.name,
       value: storage.id,
-      disabled: !animeStore.activeMirrorGroup?.group.find(
-        (file) => file.storageId === storage.id
+      disabled: !animeStore.activeMirrorGroup?.availableStorageIds.includes(
+        storage.id
       ),
     }))
     .concat([

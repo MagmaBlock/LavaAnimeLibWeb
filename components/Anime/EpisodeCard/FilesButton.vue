@@ -29,16 +29,16 @@ const buttonDisplay = computed(
     icon?: string;
     loading?: boolean;
   } => {
-    if (store.episodesStatus === "pending") {
+    if (store.mainDataStatus === "pending") {
       return {
         text: "正在获取剧集列表",
         loading: true,
       };
     }
-    if (store.episodesStatus === "error") {
+    if (store.mainDataStatus === "error") {
       return { text: "获取剧集列表失败", icon: "material-symbols:error" };
     }
-    if (store.episodesStatus === "success") {
+    if (store.mainDataStatus === "success") {
       if (store.fileTempUrlsStatus === "pending") {
         return {
           text: "正在获取视频播放地址",
@@ -66,9 +66,12 @@ const buttonDisplay = computed(
 );
 
 // 获取镜像组数量
-const mirrorGroupCount = computed(
-  () => store.activeEpisode?.mirrorGroups.length ?? 0
-);
+const mirrorGroupCount = computed(() => {
+  const activeEpisode = store.mainData?.episodes.find(
+    (ep) => ep.episode.id === store.activeEpisodeId
+  );
+  return activeEpisode?.mirrorGroupNames.length ?? 0;
+});
 </script>
 
 <style></style>

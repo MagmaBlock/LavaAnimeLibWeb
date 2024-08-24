@@ -30,7 +30,7 @@
         />
         第{{ episodeDisplay }}话
       </div>
-      <div>{{ name }}</div>
+      <NEllipsis class="text-[13px]" :line-clamp="2">{{ name }}</NEllipsis>
       <div v-if="notUpdated" class="text-xs text-zinc-500">暂无内容</div>
     </NFlex>
   </NFlex>

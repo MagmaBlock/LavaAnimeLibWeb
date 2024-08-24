@@ -116,7 +116,7 @@ export const animeRouter = router({
 
       // 处理每个剧集的镜像组信息
       const episodesWithMirrorGroups = await Promise.all(
-        episodes.map(async (episode) => {
+        episodes.map(async (episode, index) => {
           // 获取剧集的镜像组
           let mirrorGroups = await animeFileService.getAnimeEpisodeMirrorGroups(
             episode.id
@@ -146,35 +146,47 @@ export const animeRouter = router({
             });
 
           // 处理推荐的镜像组
-          let recommendedMirrorGroup = null;
+          let recommendedMirrorGroupName = null;
           if (videoGroups.length > 0) {
             const bestVideoGroup = videoGroups[0];
-            const selectedFiles = bestVideoGroup.slice(0, 3);
-
-            recommendedMirrorGroup = {
-              files: selectedFiles.map((file) => ({ id: file.id })),
-            };
+            recommendedMirrorGroupName = bestVideoGroup[0].name;
           }
 
           // 返回处理后的剧集信息
           return {
             episode,
-            mirrorGroups: mirrorGroups.map((group) => ({
-              group,
-              parseResult: parseFileName(group[0].name),
-            })),
-            recommendedMirrorGroup,
+            mirrorGroupNames: mirrorGroups.map((group) => group[0].name),
+            recommendedMirrorGroupName,
+            recommended: index === 0, // 只推荐第一个剧集
           };
         })
       );
 
-      // 选择推荐的剧集ID
-      const recommendedEpisodeId = episodes.length > 0 ? episodes[0].id : null;
+      // 处理所有唯一文件 (MirrorGroup) 列表
+      const allMirrorGroups = await animeFileService.getAnimeMirrorGroups(
+        animeId
+      );
+      const mirrorGroups = allMirrorGroups.map((group) => ({
+        fileName: group[0].name,
+        fileIds: group.map((file) => file.id),
+        availableStorageIds: Array.from(
+          new Set(group.map((file) => file.storageId))
+        ).filter(
+          (storageId) => !anime.nsfw || !noNSFWStorageIds.includes(storageId)
+        ),
+        parseResult: parseFileName(group[0].name),
+      }));
+
+      // 获取所有文件列表
+      const files = await prisma.storageIndex.findMany({
+        where: { animeId },
+      });
 
       // 返回最终结果
       return {
         episodes: episodesWithMirrorGroups,
-        recommendedEpisodeId,
+        mirrorGroups,
+        files,
       };
     }),
 
@@ -242,20 +254,25 @@ export const animeRouter = router({
 export type TrpcPageAnimeMainData = {
   episodes: {
     episode: AnimeEpisode;
-    // 剧集的所有唯一文件列表
+    // 剧集的所有 MirrorGroup
     // 正常依据视频的质量、字幕组、以及更容易在浏览器中播放来排序
-    mirrorGroups: {
-      group: StorageIndex[]; // 文件在多个节点的镜像
-      parseResult: any; // 文件名解析结果
-    }[];
-    // 推荐前端在当前集数下自动选择的 mirrorGroup
-    // 如果用户此前看过此剧集，则优先推荐用户之前观看的 mirrorGroup
-    recommendedMirrorGroup: {
-      files: {
-        id: number;
-      }[]; // 返回文件在多个节点的镜像文件 id 供前端选择
-    } | null;
+    mirrorGroupNames: string[]; // 这里的数字是 MirrorGroup 的 ID
+    // 推荐的 MirrorGroup
+    recommendedMirrorGroupName: string | null;
+    // 是否推荐前端自动选择
+    recommended: boolean;
   }[];
-  // 推荐前端自动选择的集数
-  recommendedEpisodeId: number | null;
+  // 本动画所有唯一文件 (MirrorGroup) 列表
+  mirrorGroups: {
+    // 文件名, 由于 mirrorGroup 是虚拟的，所以这里用文件名来标识
+    fileName: string;
+    // 本 MirrorGroup 包含的文件
+    fileIds: number[]; // 这里的数字是 StorageIndex 的 ID
+    // 本 MirrorGroup 可用的 Storage 列表
+    availableStorageIds: string[];
+    // 文件名解析结果
+    parseResult: any;
+  }[];
+  // 本动画所有文件列表
+  files: StorageIndex[];
 };

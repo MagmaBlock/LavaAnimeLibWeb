@@ -10,7 +10,7 @@
     </template>
     <!-- 标签页组件：分类显示不同类型的剧集 -->
     <NTabs
-      v-if="store.episodes?.episodes.length"
+      v-if="store.mainData?.episodes.length"
       type="segment"
       size="small"
       animated
@@ -36,11 +36,11 @@
               <AnimeEpisodeCardEpisodeButtonGrid
                 v-for="episode in getSortedEpisodes(type.value)"
                 :key="episode.episode.id"
-                :episode-display="episode.episode.episodeDisplay"
+                :episode-display="episode.episode.episodeIndex"
                 :name="episode.episode.name"
                 :active="episode.episode.id === store.activeEpisodeId"
-                :multiple-episodes="episode.mirrorGroups.length > 1"
-                :not-updated="episode.mirrorGroups.length === 0"
+                :multiple-episodes="episode.mirrorGroupNames.length > 1"
+                :not-updated="episode.mirrorGroupNames.length === 0"
                 @click="store.activeEpisodeId = episode.episode.id"
               />
             </div>
@@ -58,11 +58,11 @@
             <AnimeEpisodeCardEpisodeButtonList
               v-for="episode in getSortedEpisodes(type.value)"
               :key="episode.episode.id"
-              :episode-display="episode.episode.episodeDisplay"
+              :episode-display="episode.episode.episodeIndex"
               :name="episode.episode.name"
               :active="episode.episode.id === store.activeEpisodeId"
-              :multiple-episodes="episode.mirrorGroups.length > 1"
-              :not-updated="episode.mirrorGroups.length === 0"
+              :multiple-episodes="episode.mirrorGroupNames.length > 1"
+              :not-updated="episode.mirrorGroupNames.length === 0"
               @click="store.activeEpisodeId = episode.episode.id"
             />
           </NFlex>
@@ -70,7 +70,7 @@
       </NTabPane>
     </NTabs>
     <NAlert
-      v-if="!hasAnyEpisodeFiles && store.episodesStatus === 'success'"
+      v-if="!hasAnyEpisodeFiles && store.mainDataStatus === 'success'"
       class="mt-2"
       type="info"
     >
@@ -83,7 +83,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { EpisodeType } from "@prisma/client";
+import type { AnimeEpisode } from "@prisma/client";
 import { useLocalStorage } from "@vueuse/core";
 
 const store = useAnimeStore();
@@ -95,7 +95,7 @@ const settings = useLocalStorage("animeEpisodeCardSettings", {
 });
 
 // 剧集类型及对应标签名称
-const episodeTypes: { value: EpisodeType; label: string }[] = [
+const episodeTypes: { value: AnimeEpisode["type"]; label: string }[] = [
   { value: "Normal", label: "正片" },
   { value: "SP", label: "SP" },
   { value: "OP", label: "OP" },
@@ -104,10 +104,9 @@ const episodeTypes: { value: EpisodeType; label: string }[] = [
 ];
 
 // 按类型获取剧集
-const getEpisodesByType = (type: EpisodeType) =>
-  store.episodes?.episodes?.filter(
-    (episode) => episode.episode.type === type
-  ) ?? [];
+const getEpisodesByType = (type: AnimeEpisode["type"]) =>
+  store.mainData?.episodes.filter((episode) => episode.episode.type === type) ??
+  [];
 
 // 计算可用的剧集类型
 const availableEpisodeTypes = computed(() =>
@@ -115,7 +114,7 @@ const availableEpisodeTypes = computed(() =>
 );
 
 // 获取并排序指定类型的剧集
-const getSortedEpisodes = (type: EpisodeType) => {
+const getSortedEpisodes = (type: AnimeEpisode["type"]) => {
   return getEpisodesByType(type).sort((a, b) => {
     if (a.episode.episodeIndex !== b.episode.episodeIndex) {
       return settings.value.sortAsc
@@ -123,8 +122,8 @@ const getSortedEpisodes = (type: EpisodeType) => {
         : b.episode.episodeIndex - a.episode.episodeIndex;
     } else {
       return settings.value.sortAsc
-        ? a.episode.episodeDisplay - b.episode.episodeDisplay
-        : b.episode.episodeDisplay - a.episode.episodeDisplay;
+        ? (a.episode.episodeIndex ?? 0) - (b.episode.episodeIndex ?? 0)
+        : (b.episode.episodeIndex ?? 0) - (a.episode.episodeIndex ?? 0);
     }
   });
 };
@@ -132,8 +131,8 @@ const getSortedEpisodes = (type: EpisodeType) => {
 // 检查是否所有剧集都没有视频文件
 const hasAnyEpisodeFiles = computed(
   () =>
-    store.episodes?.episodes?.some(
-      (episode) => episode.mirrorGroups.length > 0
+    store.mainData?.episodes.some(
+      (episode) => episode.mirrorGroupNames.length > 0
     ) ?? false
 );
 </script>

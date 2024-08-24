@@ -25,6 +25,7 @@
           :duration="300"
           :episode-id="store.activeEpisodeId"
         />
+        <AnimeOtherFileCard />
       </div>
     </div>
     <NResult
