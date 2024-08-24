@@ -7,6 +7,7 @@ import { InviteCodeService } from "./invite-code/service";
 import { StorageService } from "./storage/service";
 import { Log4jsLogger } from "./logger/log4js";
 import { UserService } from "./user/service";
+import { AnimeFileService } from "./anime/file/service";
 
 export class App {
   public static instance: App;
@@ -25,6 +26,7 @@ export class App {
 
     this.services.registerService(new AnimeService());
     this.services.registerService(new AnimeCollectionService());
+    this.services.registerService(new AnimeFileService());
     this.services.registerService(new InviteCodeService());
     this.services.registerService(new StorageService());
     this.services.registerService(new UserService(authSecret));

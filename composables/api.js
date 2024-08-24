@@ -8,51 +8,6 @@ export const LavaAnimeAPI = axios.create({
   baseURL: apiBaseUrl,
 });
 
-// 请求前置 - 增加验证头
-LavaAnimeAPI.interceptors.request.use(function (config) {
-  config.headers.Authorization = getToken();
-  return config;
-});
-
-// 请求响应处理
-LavaAnimeAPI.interceptors.response.use(
-  // 2xx
-  function (response) {
-    return response;
-  },
-  // !2xx
-  function (error) {
-    // 请求可以在 config 中添加 noCatch 字段禁止错误处理
-    if (error?.config?.noCatch) return Promise.reject(error);
-    // 未登录处理
-    // 网络错误
-    else if (error.code == "ERR_NETWORK") {
-      console.error(error);
-      $message.error("无法连接到服务器");
-    }
-    // 含有错误信息的服务端响应
-    else if (error?.response?.data.message) {
-      $message.error(error.response.data.message);
-    }
-    // 其他错误处理
-    else {
-      console.error("后端请求错误", error);
-    }
-    return Promise.reject(error);
-  }
-);
-
-// 获取当前 Token
-export function getToken() {
-  let token = localStorage.getItem("token");
-  if (!token) return;
-  token = JSON.parse(token);
-  if (new Date(token.expirationTime) > new Date()) {
-    // 未过期
-    return token.value;
-  }
-}
-
 class LavaAnimeAPIs {
   /**
    * 获取追番列表

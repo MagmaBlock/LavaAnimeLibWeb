@@ -1,17 +1,21 @@
 <template>
   <ContainerPageMobileFull>
     <DevOnly>
-      <AnimeDevTool class="mb-4" />
+      <AnimeDevTool class="mb-0 lg:mb-4" />
     </DevOnly>
     <div
-      class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start"
+      class="grid grid-cols-1 lg:grid-cols-3 gap-0 md:gap-4 items-start"
       v-if="store.animeId"
     >
-      <div class="col-span-1 lg:col-span-2 flex flex-col gap-4">
+      <div class="col-span-1 lg:col-span-2 flex flex-col gap-0 md:gap-4">
+        <AnimePlayerVideoPlayer />
         <div>
           <AnimeMetaCard v-if="breakpoint.greaterOrEqual('md').value" />
           <AnimeMetaCardMini v-else />
         </div>
+      </div>
+      <div class="col-span-1 lg:col-span-1 flex flex-col gap-0 md:gap-4">
+        <AnimeEpisodeCard />
         <AnimeEpisodeDetails
           v-if="store.activeEpisodeId"
           :key="store.activeEpisodeId"
@@ -21,9 +25,6 @@
           :duration="300"
           :episode-id="store.activeEpisodeId"
         />
-      </div>
-      <div class="col-span-1 lg:col-span-1 flex flex-col gap-4">
-        <AnimeEpisodeCard />
       </div>
     </div>
     <NResult

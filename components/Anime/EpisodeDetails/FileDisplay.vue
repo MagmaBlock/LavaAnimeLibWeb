@@ -1,7 +1,7 @@
 <template>
   <div
-    class="cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-800 active:scale-95 rounded-lg transition"
-    :class="active ? 'border-2 border-blue-500' : ''"
+    class="cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-800 active:scale-95 border-2 p-1 rounded-lg transition"
+    :class="active ? 'border-blue-500' : 'border-transparent'"
   >
     <div class="flex flex-wrap gap-1">
       <!-- 发布组 -->

@@ -9,7 +9,12 @@
       />
     </template>
     <!-- 标签页组件：分类显示不同类型的剧集 -->
-    <NTabs v-if="store.episodes?.length" type="segment" size="small" animated>
+    <NTabs
+      v-if="store.episodes?.episodes.length"
+      type="segment"
+      size="small"
+      animated
+    >
       <NTabPane
         v-for="type in availableEpisodeTypes"
         :key="type.value"
@@ -30,9 +35,13 @@
               <!-- 网格形式的剧集按钮 -->
               <AnimeEpisodeCardEpisodeButtonGrid
                 v-for="episode in getSortedEpisodes(type.value)"
-                :key="episode.id"
-                v-bind="getEpisodeProps(episode)"
-                @click="store.activeEpisodeId = episode.id"
+                :key="episode.episode.id"
+                :episode-display="episode.episode.episodeDisplay"
+                :name="episode.episode.name"
+                :active="episode.episode.id === store.activeEpisodeId"
+                :multiple-episodes="episode.mirrorGroups.length > 1"
+                :not-updated="episode.mirrorGroups.length === 0"
+                @click="store.activeEpisodeId = episode.episode.id"
               />
             </div>
           </div>
@@ -48,21 +57,28 @@
           >
             <AnimeEpisodeCardEpisodeButtonList
               v-for="episode in getSortedEpisodes(type.value)"
-              :key="episode.id"
-              v-bind="getEpisodeProps(episode)"
-              @click="store.activeEpisodeId = episode.id"
+              :key="episode.episode.id"
+              :episode-display="episode.episode.episodeDisplay"
+              :name="episode.episode.name"
+              :active="episode.episode.id === store.activeEpisodeId"
+              :multiple-episodes="episode.mirrorGroups.length > 1"
+              :not-updated="episode.mirrorGroups.length === 0"
+              @click="store.activeEpisodeId = episode.episode.id"
             />
           </NFlex>
         </NScrollbar>
       </NTabPane>
     </NTabs>
     <NAlert
-      v-if="!hasAnyEpisodeFiles && store.episodeDetailsStatus === 'success'"
+      v-if="!hasAnyEpisodeFiles && store.episodesStatus === 'success'"
       class="mt-2"
       type="info"
     >
       当前动画未找到任何视频，可能还未更新。
     </NAlert>
+    <template #action>
+      <AnimeEpisodeCardFilesButton />
+    </template>
   </NCard>
 </template>
 
@@ -89,7 +105,9 @@ const episodeTypes: { value: EpisodeType; label: string }[] = [
 
 // 按类型获取剧集
 const getEpisodesByType = (type: EpisodeType) =>
-  store.episodes?.filter((episode) => episode.type === type) ?? [];
+  store.episodes?.episodes?.filter(
+    (episode) => episode.episode.type === type
+  ) ?? [];
 
 // 计算可用的剧集类型
 const availableEpisodeTypes = computed(() =>
@@ -99,30 +117,24 @@ const availableEpisodeTypes = computed(() =>
 // 获取并排序指定类型的剧集
 const getSortedEpisodes = (type: EpisodeType) => {
   return getEpisodesByType(type).sort((a, b) => {
-    if (a.episodeIndex !== b.episodeIndex) {
+    if (a.episode.episodeIndex !== b.episode.episodeIndex) {
       return settings.value.sortAsc
-        ? a.episodeIndex - b.episodeIndex
-        : b.episodeIndex - a.episodeIndex;
+        ? a.episode.episodeIndex - b.episode.episodeIndex
+        : b.episode.episodeIndex - a.episode.episodeIndex;
     } else {
       return settings.value.sortAsc
-        ? a.episodeDisplay - b.episodeDisplay
-        : b.episodeDisplay - a.episodeDisplay;
+        ? a.episode.episodeDisplay - b.episode.episodeDisplay
+        : b.episode.episodeDisplay - a.episode.episodeDisplay;
     }
   });
 };
 
-// 获取剧集属性
-const getEpisodeProps = (episode: any) => ({
-  episodeDisplay: episode.episodeDisplay,
-  name: episode.name,
-  active: episode.id === store.activeEpisodeId,
-  multipleEpisodes: episode.files.length > 1,
-  notUpdated: episode.files.length === 0,
-});
-
 // 检查是否所有剧集都没有视频文件
 const hasAnyEpisodeFiles = computed(
-  () => store.episodes?.some((episode) => episode.files.length > 0) ?? false
+  () =>
+    store.episodes?.episodes?.some(
+      (episode) => episode.mirrorGroups.length > 0
+    ) ?? false
 );
 </script>
 

@@ -8,6 +8,17 @@ export class AnimeEpisodeFileLinker {
   private readonly prisma = App.instance.prisma;
 
   /**
+   * 将所有 Anime 的文件与 AnimeEpisode 关联。
+   */
+  async linkAllAnimeFiles() {
+    const allAnimeIds = await this.prisma.anime.findMany({
+      select: { id: true },
+    });
+
+    await this.linkAnimeFiles(allAnimeIds.map((anime) => anime.id));
+  }
+
+  /**
    * 传入 animeId，将自动对其已有文件进行 AnimeEpisode 关联。
    */
   async linkAnimeFiles(animeIds: number[]): Promise<AnimeEpisodeLinkResult[]> {
@@ -41,17 +52,6 @@ export class AnimeEpisodeFileLinker {
       }
     }
     return allResult;
-  }
-
-  /**
-   * 将所有 Anime 的文件与 AnimeEpisode 关联。
-   */
-  async linkAllAnimeFiles() {
-    const allAnimeIds = await this.prisma.anime.findMany({
-      select: { id: true },
-    });
-
-    await this.linkAnimeFiles(allAnimeIds.map((anime) => anime.id));
   }
 
   /**

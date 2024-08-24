@@ -39,7 +39,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
+
 // 受控模式需要的 props 和 emits
 const props = defineProps(["show"]);
 const emits = defineEmits(["update:show"]);
@@ -54,12 +56,12 @@ const showMe = computed({
     showLocal.value = value; // 非受控模式
   },
 });
-const isWide = window.innerWidth >= 640 ? true : false;
+const isWide = useBreakpoints(breakpointsTailwind).greaterOrEqual("md");
 
-const trigger = ref(null);
-const clickOutside = (event) => {
+const trigger: Ref<HTMLElement | null> = ref(null);
+const clickOutside = (event: MouseEvent) => {
   // 避免在点击 trigger 时触发
-  if (trigger.value.contains(event.target)) return;
+  if (trigger.value?.contains(event.target as Node)) return;
   showMe.value = false;
 };
 </script>
