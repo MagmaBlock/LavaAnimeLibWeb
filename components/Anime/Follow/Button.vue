@@ -1,69 +1,110 @@
 <template>
-  <div class="ml-4">
-    <NDropdown trigger="click" :options="menuOptions">
-      <div>
-        <NButton
-          secondary
-          size="small"
-          v-if="followInfo.status >= 0"
-          :loading="loading"
-        >
-          <template #icon>
-            <NIcon>
-              <Icon icon="material-symbols:bookmark-remove" />
-            </NIcon>
-          </template>
-          {{ "取消" }}
-        </NButton>
-        <NButton
-          secondary
-          type="primary"
-          size="small"
-          v-if="followInfo.status === -1"
-          :loading="loading"
-        >
-          <template #icon>
-            <NIcon> <Icon icon="material-symbols:bookmark-add" /> </NIcon>
-          </template>
-          {{ "追番" }}
-        </NButton>
-      </div>
-    </NDropdown>
-    <NSkeleton
-      :width="72"
-      :sharp="false"
+  <NDropdown trigger="click" :options="menuOptions" @select="handleSelect">
+    <NButton
+      secondary
       size="small"
-      v-if="Object.keys(followInfo).length === 0"
-    />
-  </div>
+      v-if="followInfo?.status"
+      :loading="followInfoStatus === 'pending' || isToggling"
+    >
+      <template #icon>
+        <NIcon>
+          <Icon icon="material-symbols:bookmark-remove" />
+        </NIcon>
+      </template>
+      {{ "取消" }}
+    </NButton>
+    <NButton
+      secondary
+      type="primary"
+      size="small"
+      v-else
+      :loading="followInfoStatus === 'pending' || isToggling"
+    >
+      <template #icon>
+        <NIcon> <Icon icon="material-symbols:bookmark-add" /> </NIcon>
+      </template>
+      {{ "追番" }}
+    </NButton>
+  </NDropdown>
 </template>
 
 <script setup lang="ts">
-const followInfo: Ref<any> = ref({
-  status: -1,
-});
-const loading = ref(false);
+const props = defineProps<{
+  animeId: number;
+}>();
 
-const menuOptions = [
+const { $client } = useNuxtApp();
+
+const {
+  data: followInfo,
+  execute: fetchFollowInfo,
+  status: followInfoStatus,
+} = useAsyncData(
+  () =>
+    $client.pages.anime.getUserAnimeCollectionStatus.query({
+      animeId: props.animeId,
+    }),
+  { immediate: false, lazy: true }
+);
+
+const isToggling = ref(false);
+
+const toggleFollowStatus = async (
+  status?: "Plan" | "Watching" | "Finished"
+) => {
+  isToggling.value = true;
+  try {
+    await $client.pages.anime.toggleUserAnimeCollectionStatus.mutate({
+      animeId: props.animeId,
+      status: status,
+    });
+    await fetchFollowInfo();
+  } catch (error) {
+    console.error("更新追番状态失败:", error);
+  } finally {
+    isToggling.value = false;
+  }
+};
+
+const menuOptions = computed(() => [
   {
-    label: () => (followInfo.value?.status >= 0 ? "取消追番" : "添加追番"),
-    key: "toggle",
+    label: "设置为 想看",
+    key: "Plan",
+    disabled: followInfo.value?.status === "Plan",
+  },
+  {
+    label: "设置为 在看",
+    key: "Watching",
+    disabled: followInfo.value?.status === "Watching",
+  },
+  {
+    label: "设置为 看过",
+    key: "Finished",
+    disabled: followInfo.value?.status === "Finished",
   },
   {
     type: "divider",
     key: "d1",
   },
   {
-    label: "设置为 想看",
-    key: "0",
+    label: "取消追番",
+    key: "toggle",
+    disabled: !followInfo.value?.status,
   },
-  {
-    label: "设置为 在看",
-    key: "1",
-  },
-  {
-    label: "设置为 看过",
-    key: "2",
-  },
-];
+]);
+
+const handleSelect = async (key: string) => {
+  if (key === "toggle") {
+    await toggleFollowStatus();
+  } else {
+    await toggleFollowStatus(key as "Plan" | "Watching" | "Finished");
+  }
+};
+
+watch(
+  () => props.animeId,
+  () => fetchFollowInfo()
+);
+
+onMounted(() => fetchFollowInfo());
 </script>

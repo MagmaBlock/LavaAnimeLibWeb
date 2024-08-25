@@ -1,17 +1,19 @@
 import { AnimeEpisode, StorageIndex } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { parseFileName } from "anime-name-tool";
 import { z } from "zod";
 import { AnimeFileService } from "~/server/services/anime/file/service";
 import { App } from "~/server/services/app";
 import { StorageService } from "~/server/services/storage/service";
-import { publicProcedure, router } from "../../trpc";
+import { protectedProcedure, router } from "../../trpc";
+import { AnimeCollectionService } from "~/server/services/anime/collection/service";
 
 const prisma = App.instance.prisma;
 
 export const animeRouter = router({
-  getAnimeInfo: publicProcedure
+  getAnimeInfo: protectedProcedure
     .input(z.object({ animeId: z.number() }))
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       const { animeId } = input;
 
       const animeInfo = await prisma.anime.findUnique({
@@ -30,7 +32,7 @@ export const animeRouter = router({
       });
 
       if (!animeInfo) {
-        throw new Error("动画不存在");
+        throw new TRPCError({ code: "NOT_FOUND", message: "动画不存在" });
       }
 
       // 获取追番数量
@@ -82,7 +84,7 @@ export const animeRouter = router({
     }),
 
   // 获取动画的所有剧集信息
-  getAnimeMainData: publicProcedure
+  getAnimeMainData: protectedProcedure
     .input(z.object({ animeId: z.number() }))
     .query(async ({ input }): Promise<TrpcPageAnimeMainData> => {
       const { animeId } = input;
@@ -98,7 +100,7 @@ export const animeRouter = router({
       });
 
       if (!anime) {
-        throw new Error("动画不存在");
+        throw new TRPCError({ code: "NOT_FOUND", message: "动画不存在" });
       }
 
       // 获取所有 noNSFW 为 true 的存储
@@ -191,7 +193,7 @@ export const animeRouter = router({
     }),
 
   // 获取文件的临时下载链接
-  getFileTempUrls: publicProcedure
+  getFileTempUrls: protectedProcedure
     .input(z.object({ fileIds: z.array(z.number()) }))
     .query(
       async ({
@@ -236,7 +238,7 @@ export const animeRouter = router({
     ),
 
   // 获取 Storage 信息
-  getStorageInfomations: publicProcedure.query(async () => {
+  getStorageInfomations: protectedProcedure.query(async () => {
     const storages = await prisma.storage.findMany();
     return storages.map((storage) => ({
       id: storage.id,
@@ -248,6 +250,47 @@ export const animeRouter = router({
       bindScraper: storage.bindScraper,
     }));
   }),
+
+  // 获取用户追番的情况
+  getUserAnimeCollectionStatus: protectedProcedure
+    .input(z.object({ animeId: z.number() }))
+    .query(async ({ input, ctx }) => {
+      const { animeId } = input;
+      const userId = ctx.user.id;
+
+      const animeCollectionService = App.instance.services.getService(
+        AnimeCollectionService
+      );
+      const animeCollection =
+        await animeCollectionService.getUserAnimeCollectionStatus(
+          userId,
+          animeId
+        );
+
+      return animeCollection;
+    }),
+
+  // 修改用户追番的状态
+  toggleUserAnimeCollectionStatus: protectedProcedure
+    .input(
+      z.object({
+        animeId: z.number(),
+        status: z.enum(["Plan", "Watching", "Finished"]).optional(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { animeId, status } = input;
+      const userId = ctx.user.id;
+
+      const animeCollectionService = App.instance.services.getService(
+        AnimeCollectionService
+      );
+      await animeCollectionService.toggleUserAnimeCollectionStatus(
+        userId,
+        animeId,
+        status
+      );
+    }),
 });
 
 // 定义返回类型
