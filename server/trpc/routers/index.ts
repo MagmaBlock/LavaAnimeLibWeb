@@ -1,10 +1,10 @@
 import { router } from "../trpc";
 import { animeCardRouter } from "./components/anime-card";
+import { animeRouter } from "./page/anime";
 import { animeIndexRouter } from "./page/anime-index";
 import { authRouter } from "./page/auth";
 import { userRouter } from "./page/user";
 import { userInfoRouter } from "./page/user-info";
-import { animeRouter } from "./page/anime";
 
 export const appRouter = router({
   pages: router({
