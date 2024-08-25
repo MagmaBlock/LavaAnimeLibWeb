@@ -1,5 +1,5 @@
 <template>
-  <NList hoverable clickable class="sm:w-80 select-none">
+  <NList hoverable clickable class="select-none">
     <NListItem>
       <NFlex justify="space-between" :align="'center'">
         <AnimeCardMenuHeadIntro

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useImage } from "@vueuse/core";
+import { breakpointsTailwind, useBreakpoints, useImage } from "@vueuse/core";
 
 const props = defineProps<{
   id: number;
@@ -31,6 +31,8 @@ const viewDisplay = computed(() => {
   const views = props.views;
   return views > 9999 ? `${(views / 10000).toFixed(2)}万` : views.toString();
 });
+
+const isWide = useBreakpoints(breakpointsTailwind).greater("md");
 </script>
 
 <template>
@@ -97,16 +99,23 @@ const viewDisplay = computed(() => {
         </div>
         <div class="grid basis-1/4 place-items-center">
           <!-- 菜单 -->
-          <ContainerMenuLarge v-model:show="showMenu" v-if="id">
-            <template #trigger>
-              <div
-                class="grid place-items-center cursor-pointer rounded p-1.5 hover:bg-black/20"
-              >
-                <Icon name="bi:list" />
-              </div>
-            </template>
-            <AnimeCardMenu v-if="id > 0" :id="id" />
-          </ContainerMenuLarge>
+          <div
+            v-if="id"
+            class="grid place-items-center cursor-pointer rounded p-1.5 hover:bg-black/20"
+            @click="showMenu = true"
+          >
+            <Icon name="bi:list" />
+          </div>
+          <NDrawer
+            v-model:show="showMenu"
+            :placement="isWide ? 'right' : 'bottom'"
+            default-width="30%"
+            default-height="50%"
+            resizable
+            :auto-focus="false"
+          >
+            <AnimeCardMenu :id="id" class="px-4" />
+          </NDrawer>
         </div>
       </div>
     </div>
