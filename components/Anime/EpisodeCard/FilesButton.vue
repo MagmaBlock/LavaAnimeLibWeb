@@ -1,26 +1,38 @@
 <template>
-  <ContainerMenuLarge>
-    <template #trigger>
-      <NButton
-        secondary
-        size="small"
-        class="w-full"
-        @click="showDrawer = true"
-        :loading="buttonDisplay.loading"
-      >
-        <template #icon v-if="buttonDisplay.icon">
-          <NIcon><Icon :name="buttonDisplay.icon" /></NIcon>
-        </template>
-        {{ buttonDisplay.text }}
-      </NButton>
-    </template>
-    <AnimeEpisodeCardStorageSelector />
-    <AnimeEpisodeCardFileListMenu />
-  </ContainerMenuLarge>
+  <div>
+    <NButton
+      secondary
+      size="small"
+      class="w-full"
+      @click="showDrawer = true"
+      :loading="buttonDisplay.loading"
+    >
+      <template #icon v-if="buttonDisplay.icon">
+        <NIcon><Icon :name="buttonDisplay.icon" /></NIcon>
+      </template>
+      {{ buttonDisplay.text }}
+    </NButton>
+    <NDrawer
+      v-model:show="showDrawer"
+      :placement="isWide ? 'right' : 'bottom'"
+      default-width="50%"
+      default-height="75%"
+      resizable
+      :auto-focus="false"
+    >
+      <NDrawerContent title="存储节点和视频列表" closable>
+        <AnimeEpisodeCardStorageSelector />
+        <AnimeEpisodeCardFileListMenu />
+      </NDrawerContent>
+    </NDrawer>
+  </div>
 </template>
 
 <script lang="ts" setup>
+import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
+
 const store = useAnimeStore();
+const isWide = useBreakpoints(breakpointsTailwind).greater("md");
 const showDrawer = ref(false);
 
 const buttonDisplay = computed(

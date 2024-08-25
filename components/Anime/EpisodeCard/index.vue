@@ -45,37 +45,47 @@
               />
             </div>
           </div>
-          <!-- 列表视图 -->
-          <NFlex
-            v-else
-            vertical
-            v-motion="{
-              initial: { opacity: 0, y: -10 },
-              enter: { opacity: 1, y: 0 },
-              duration: 300,
-            }"
-          >
-            <AnimeEpisodeCardEpisodeButtonList
-              v-for="episode in getSortedEpisodes(type.value)"
-              :key="episode.episode.id"
-              :episode-display="episode.episode.episodeIndex"
-              :name="episode.episode.name"
-              :active="episode.episode.id === store.activeEpisodeId"
-              :multiple-episodes="episode.mirrorGroupNames.length > 1"
-              :not-updated="episode.mirrorGroupNames.length === 0"
-              @click="store.activeEpisodeId = episode.episode.id"
-            />
-          </NFlex>
+          <!-- 桌面端纵向列表视图 -->
+          <div v-if="!settings.isGrid && !isMobile">
+            <NFlex
+              vertical
+              v-motion="{
+                initial: { opacity: 0, y: -10 },
+                enter: { opacity: 1, y: 0 },
+                duration: 300,
+              }"
+            >
+              <AnimeEpisodeCardEpisodeButtonList
+                v-for="episode in getSortedEpisodes(type.value)"
+                :key="episode.episode.id"
+                :episode-display="episode.episode.episodeIndex"
+                :name="episode.episode.name"
+                :active="episode.episode.id === store.activeEpisodeId"
+                :multiple-episodes="episode.mirrorGroupNames.length > 1"
+                :not-updated="episode.mirrorGroupNames.length === 0"
+                @click="store.activeEpisodeId = episode.episode.id"
+              />
+            </NFlex>
+          </div>
+          <!-- 手机端横向列表视图 -->
+          <div v-if="!settings.isGrid && isMobile">
+            <NScrollbar x-scrollable>
+              <div class="flex flex-nowrap gap-2">
+                <AnimeEpisodeCardEpisodeButtonMobile
+                  v-for="episode in getSortedEpisodes(type.value)"
+                  :key="episode.episode.id"
+                  :episode-display="episode.episode.episodeIndex"
+                  :name="episode.episode.name"
+                  :active="episode.episode.id === store.activeEpisodeId"
+                  :not-updated="episode.mirrorGroupNames.length === 0"
+                  @click="store.activeEpisodeId = episode.episode.id"
+                />
+              </div>
+            </NScrollbar>
+          </div>
         </NScrollbar>
       </NTabPane>
     </NTabs>
-    <NAlert
-      v-if="!hasAnyEpisodeFiles && store.mainDataStatus === 'success'"
-      class="mt-2"
-      type="info"
-    >
-      当前动画未找到任何视频，可能还未更新。
-    </NAlert>
     <template #action>
       <AnimeEpisodeCardFilesButton />
     </template>
@@ -84,9 +94,14 @@
 
 <script lang="ts" setup>
 import type { AnimeEpisode } from "@prisma/client";
-import { useLocalStorage } from "@vueuse/core";
+import {
+  breakpointsTailwind,
+  useBreakpoints,
+  useLocalStorage,
+} from "@vueuse/core";
 
 const store = useAnimeStore();
+const isMobile = useBreakpoints(breakpointsTailwind).smaller("lg");
 
 // 本地存储：保存用户设置
 const settings = useLocalStorage("animeEpisodeCardSettings", {
