@@ -10,7 +10,10 @@
       <div class="col-span-1 lg:col-span-2 flex flex-col gap-0 md:gap-4">
         <AnimePlayerVideoPlayer />
         <div>
-          <AnimeMetaCard v-if="breakpoint.greaterOrEqual('md').value" />
+          <AnimeMetaCard
+            v-if="breakpoint.greaterOrEqual('md').value"
+            embedded
+          />
           <AnimeMetaCardMini v-else />
         </div>
       </div>

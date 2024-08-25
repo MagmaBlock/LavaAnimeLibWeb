@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NCard size="small" :bordered="false">
+    <NCard size="small" :bordered="false" embedded>
       <NFlex vertical>
         <!-- 标题和追番 -->
         <NFlex justify="space-between" :wrap="false">
@@ -33,7 +33,7 @@
       v-model:show="showDrawer"
       placement="bottom"
       :auto-focus="false"
-      :default-height="400"
+      :default-height="600"
       resizable
     >
       <NDrawerContent

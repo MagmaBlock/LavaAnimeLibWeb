@@ -3,7 +3,7 @@
     <NCard
       size="small"
       :bordered="false"
-      embedded
+      :embedded="embedded"
       v-if="store.animeInfo && store.animeInfoStatus === 'success'"
     >
       <template #default>
@@ -72,7 +72,7 @@
           </NFlex>
         </NFlex>
       </template>
-      <template #action>
+      <template #action v-if="store.animeInfo?.sites?.length > 0">
         <!-- 外部链接 -->
         <AnimeMetaCardExternalLinks :bgm-id="getBangumiId" />
       </template>
@@ -80,7 +80,7 @@
     <NCard
       size="small"
       :bordered="false"
-      embedded
+      :embedded="embedded"
       v-else-if="store.animeInfoStatus === 'pending'"
     >
       <NFlex :warp="false">
@@ -101,7 +101,7 @@
     <NCard
       size="small"
       :bordered="false"
-      embedded
+      :embedded="embedded"
       v-else-if="store.animeInfoStatus === 'error'"
     >
       <NResult
@@ -115,6 +115,10 @@
 </template>
 
 <script lang="ts" setup>
+defineProps<{
+  embedded?: boolean;
+}>();
+
 const store = useAnimeStore();
 
 const getBangumiId = computed(() => {
