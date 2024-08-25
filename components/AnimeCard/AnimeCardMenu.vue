@@ -1,23 +1,23 @@
 <template>
-  <NList clickable hoverable class="sm:w-80 select-none">
-    <NListItem class="select-text">
-      <AnimeCardMenuHeadIntro
-        v-if="fetchData.data.value"
-        :releaseYear="fetchData.data.value.releaseYear"
-        :releaseSeason="fetchData.data.value.releaseSeason"
-        :region="fetchData.data.value.region"
-        :platform="fetchData.data.value.platform"
-        :name="fetchData.data.value.name"
-        :originalName="fetchData.data.value.originalName"
-        :bdrip="fetchData.data.value.bdrip"
-        :nsfw="fetchData.data.value.nsfw"
-      />
-      <template #suffix>
+  <NList hoverable clickable class="sm:w-80 select-none">
+    <NListItem>
+      <NFlex justify="space-between" :align="'center'">
+        <AnimeCardMenuHeadIntro
+          v-if="fetchData.data.value"
+          :releaseYear="fetchData.data.value.releaseYear"
+          :releaseSeason="fetchData.data.value.releaseSeason"
+          :region="fetchData.data.value.region"
+          :platform="fetchData.data.value.platform"
+          :name="fetchData.data.value.name"
+          :originalName="fetchData.data.value.originalName"
+          :bdrip="fetchData.data.value.bdrip"
+          :nsfw="fetchData.data.value.nsfw"
+        />
         <AnimeCardMenuGoButton
           v-if="id"
           @click="router.push({ name: 'anime-la', params: { la: id } })"
         />
-      </template>
+      </NFlex>
     </NListItem>
 
     <NListItem>
@@ -31,19 +31,33 @@
       />
     </NListItem>
 
-    <NListItem v-if="fetchData.data.value?.poster">
-      <a :href="fetchData.data.value?.poster" target="_blank">
-        <div class="flex gap-x-4 items-center">
-          <Icon name="material-symbols:image-outline" size="20" />
+    <NListItem>
+      <AnimeCardMenuCollection :animeId="id" />
+    </NListItem>
+
+    <NListItem>
+      <a
+        v-if="fetchData.data.value?.poster"
+        :href="fetchData.data.value?.poster"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div class="flex items-center gap-4">
+          <Icon name="material-symbols:image-outline" size="24" />
           查看封面大图
         </div>
       </a>
     </NListItem>
 
-    <NListItem v-if="bangumiSite">
-      <a :href="'https://bgm.tv/subject/' + bangumiSite.siteId" target="_blank">
-        <div class="flex gap-x-4 items-center">
-          <Icon name="material-symbols:link" size="20" />
+    <NListItem>
+      <a
+        v-if="bangumiSite"
+        :href="'https://bgm.tv/subject/' + bangumiSite.siteId"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div class="flex items-center gap-4">
+          <Icon name="material-symbols:link" size="24" />
           去番组计划查看本作品
         </div>
       </a>

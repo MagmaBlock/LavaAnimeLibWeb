@@ -1,20 +1,16 @@
 <template>
   <div>
-    <div class="text-xs mb-1">
-      {{ platform }}
-      {{ region }}
-      {{ releaseYear }}
-      {{ releaseSeason }}
+    <div class="flex items-center gap-1" v-if="name">
+      <div class="text-lg">
+        {{ name }}
+      </div>
+      <NTag v-if="bdrip" :bordered="false" type="info" size="tiny"> BD </NTag>
+      <NTag v-if="nsfw" :bordered="false" type="warning" size="tiny">
+        NSFW
+      </NTag>
     </div>
-    <div class="text-base" v-if="name">
-      {{ name }}
-    </div>
-    <div class="text-xs opacity-75" v-if="originalName">
+    <div class="text-sm opacity-75" v-if="originalName">
       {{ originalName }}
-    </div>
-    <div class="my-1 space-x-1">
-      <NTag v-if="bdrip" type="info" size="small"> BDRip </NTag>
-      <NTag v-if="nsfw" type="warning" size="small"> NSFW </NTag>
     </div>
   </div>
 </template>
