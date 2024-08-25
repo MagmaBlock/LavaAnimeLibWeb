@@ -1,19 +1,21 @@
 <template>
-  <div class="flex overflow-x-scroll md:flex-wrap gap-2">
-    <AnimeIndexFilterControlCheckableButton
-      v-if="showNoneSelectedButton"
-      :title="noneSelectedButtonText ?? '全部'"
-      :checked="selected.length === 0"
-      @click="handleClearClick"
-    />
-    <AnimeIndexFilterControlCheckableButton
-      v-for="item in items"
-      :key="item.value"
-      :title="item.label || item.value"
-      :checked="selected.includes(item.value)"
-      @click="handleClick(item.value)"
-    />
-  </div>
+  <NScrollbar x-scrollable>
+    <div class="flex md:flex-wrap gap-2">
+      <AnimeIndexFilterControlCheckableButton
+        v-if="showNoneSelectedButton"
+        :title="noneSelectedButtonText ?? '全部'"
+        :checked="selected.length === 0"
+        @click="handleClearClick"
+      />
+      <AnimeIndexFilterControlCheckableButton
+        v-for="item in items"
+        :key="item.value"
+        :title="item.label || item.value"
+        :checked="selected.includes(item.value)"
+        @click="handleClick(item.value)"
+      />
+    </div>
+  </NScrollbar>
 </template>
 
 <script lang="ts" setup>
