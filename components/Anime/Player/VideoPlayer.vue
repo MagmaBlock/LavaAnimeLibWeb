@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative w-full aspect-w-16 aspect-h-9 bg-black rounded-md overflow-hidden select-none"
+    class="relative w-full aspect-w-16 aspect-h-9 bg-black sm:rounded-md overflow-hidden select-none"
   >
     <div class="absolute top-0 w-full h-full" v-show="store.artPlayer">
       <div id="artplayer-app" class="w-full h-full"></div>

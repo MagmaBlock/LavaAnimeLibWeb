@@ -67,7 +67,7 @@ export default defineNuxtConfig({
     },
   },
 
-  css: ["~/assets/css/scrollbar.css", "~/assets/css/transition.css"],
+  css: ["~/assets/css/transition.css"],
 
   typescript: {
     shim: false,
