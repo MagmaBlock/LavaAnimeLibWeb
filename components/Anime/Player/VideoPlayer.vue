@@ -6,7 +6,7 @@
       <div id="artplayer-app" class="w-full h-full"></div>
     </div>
     <div
-      class="w-full h-full bg-black grid place-items-center"
+      class="w-full h-full bg-black text-white grid place-items-center"
       v-if="!store.artPlayer"
     >
       请选择一个可以播放的视频
