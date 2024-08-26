@@ -114,8 +114,9 @@ model AnimeEpisode {
   animeId Int
   source  AnimeInfoSource
 
-  files    StorageIndex[] // m-n, 此集数下的所有文件
-  pictures AnimePicture[] // 1-n, 此集数的图片
+  files     StorageIndex[] // m-n, 此集数下的所有文件
+  pictures  AnimePicture[] // 1-n, 此集数的图片
+  userViews AnimeViewHistory[]
 
   @@unique([animeId, type, episodeDisplay]) // 同一个动画的相同类型集数不可重复
 }
@@ -130,16 +131,15 @@ enum EpisodeType {
 
 // 描述用于存储番剧视频或用户上传文件的存储器
 model Storage {
-  id          String             @id @db.VarChar(32)
+  id          String          @id @db.VarChar(32)
   name        String
   description String?
   type        StorageType
   config      String? // 存储器实现用于保存链接信息的字段
-  noNSFW      Boolean            @default(false)
-  noDownload  Boolean            @default(false)
+  noNSFW      Boolean         @default(false)
+  noDownload  Boolean         @default(false)
   bindScraper StorageScraper?
   files       StorageIndex[]
-  animeViews  AnimeViewHistory[]
 }
 
 // 存储器类型
@@ -250,22 +250,25 @@ model Setting {
   updatedAt DateTime @updatedAt
 }
 
+// 用户观看番剧的历史记录
 model AnimeViewHistory {
-  id          Int          @id @default(autoincrement())
-  user        User         @relation(fields: [userId], references: [id])
+  id          String        @id @default(uuid())
+  user        User          @relation(fields: [userId], references: [id])
   userId      Int
-  anime       Anime        @relation(fields: [animeId], references: [id])
+  anime       Anime         @relation(fields: [animeId], references: [id])
   animeId     Int
-  file        StorageIndex @relation(fields: [libFileId], references: [id])
-  libFileId   Int
+  episode     AnimeEpisode? @relation(fields: [episodeId], references: [id])
+  episodeId   Int?
+  file        StorageIndex  @relation(fields: [fileId], references: [id])
+  fileId      Int
   currentTime Int?
   totalTime   Int?
   userIP      String?
   watchMethod String?
-  storage     Storage      @relation(fields: [storageId], references: [id])
-  storageId   String       @db.VarChar(32)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@unique([userId, animeId, fileId])
 }
 
 // 描述番剧的图片
