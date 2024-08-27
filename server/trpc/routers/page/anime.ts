@@ -10,6 +10,18 @@ import { AnimeCollectionService } from "~/server/services/anime/collection/servi
 
 const prisma = App.instance.prisma;
 
+// 定义判断视频是否已看完的常量
+const COMPLETION_THRESHOLD = 0.95;
+
+// 判断视频是否已看完的函数
+const isVideoCompleted = (
+  currentTime: number | null,
+  totalTime: number | null
+): boolean => {
+  if (!currentTime || !totalTime) return false;
+  return currentTime / totalTime >= COMPLETION_THRESHOLD;
+};
+
 export const animeRouter = router({
   getAnimeInfo: protectedProcedure
     .input(z.object({ animeId: z.number() }))
@@ -86,8 +98,9 @@ export const animeRouter = router({
   // 获取动画的所有剧集信息
   getAnimeMainData: protectedProcedure
     .input(z.object({ animeId: z.number() }))
-    .query(async ({ input }): Promise<TrpcPageAnimeMainData> => {
+    .query(async ({ input, ctx }): Promise<TrpcPageAnimeMainData> => {
       const { animeId } = input;
+      const userId = ctx.user.id;
 
       // 获取所需的服务实例
       const animeFileService =
@@ -116,9 +129,25 @@ export const animeRouter = router({
         orderBy: [{ type: "asc" }, { episodeIndex: "asc" }],
       });
 
+      // 获取用户最近观看的剧集
+      const latestViewHistory = await prisma.animeViewHistory.findFirst({
+        where: {
+          animeId,
+          userId,
+          episodeId: { not: null },
+        },
+        orderBy: { updatedAt: "desc" },
+        select: {
+          episodeId: true,
+          fileId: true,
+          currentTime: true,
+          totalTime: true,
+        },
+      });
+
       // 处理每个剧集的镜像组信息
       const episodesWithMirrorGroups = await Promise.all(
-        episodes.map(async (episode, index) => {
+        episodes.map(async (episode) => {
           // 获取剧集的镜像组
           let mirrorGroups = await animeFileService.getAnimeEpisodeMirrorGroups(
             episode.id
@@ -150,8 +179,23 @@ export const animeRouter = router({
           // 处理推荐的镜像组
           let recommendedMirrorGroupName = null;
           if (videoGroups.length > 0) {
-            const bestVideoGroup = videoGroups[0];
-            recommendedMirrorGroupName = bestVideoGroup[0].name;
+            if (
+              latestViewHistory &&
+              latestViewHistory.episodeId === episode.id
+            ) {
+              // 如果用户之前观看过这个剧集，优先推荐最后一次播放的文件
+              const lastPlayedFile = videoGroups.find((group) =>
+                group.some((file) => file.id === latestViewHistory.fileId)
+              );
+              if (lastPlayedFile) {
+                recommendedMirrorGroupName = lastPlayedFile[0].name;
+              }
+            }
+
+            // 如果没有找到最后播放的文件，或者用户没有观看记录，则使用最佳视频组
+            if (!recommendedMirrorGroupName) {
+              recommendedMirrorGroupName = videoGroups[0][0].name;
+            }
           }
 
           // 返回处理后的剧集信息
@@ -159,10 +203,38 @@ export const animeRouter = router({
             episode,
             mirrorGroupNames: mirrorGroups.map((group) => group[0].name),
             recommendedMirrorGroupName,
-            recommended: index === 0, // 只推荐第一个剧集
+            recommended: false, // 初始化为 false，稍后会更新
           };
         })
       );
+
+      // 找到最近观看的剧集，并判断是否已看完
+      let lastWatchedIndex = -1;
+      if (latestViewHistory) {
+        lastWatchedIndex = episodesWithMirrorGroups.findIndex(
+          (e) => e.episode.id === latestViewHistory.episodeId
+        );
+        const isCompleted = isVideoCompleted(
+          latestViewHistory.currentTime,
+          latestViewHistory.totalTime
+        );
+
+        // 如果已看完，推荐下一集（如果存在）
+        if (
+          isCompleted &&
+          lastWatchedIndex < episodesWithMirrorGroups.length - 1
+        ) {
+          lastWatchedIndex++;
+        }
+      }
+
+      // 如果找到了最近观看的剧集，将其标记为推荐
+      if (lastWatchedIndex !== -1) {
+        episodesWithMirrorGroups[lastWatchedIndex].recommended = true;
+      } else {
+        // 如果没有观看记录，将第一个剧集标记为推荐
+        episodesWithMirrorGroups[0].recommended = true;
+      }
 
       // 处理所有唯一文件 (MirrorGroup) 列表
       const allMirrorGroups = await animeFileService.getAnimeMirrorGroups(
@@ -291,6 +363,154 @@ export const animeRouter = router({
         status
       );
     }),
+
+  // 记录用户观看历史
+  recordUserViewHistory: protectedProcedure
+    .input(
+      z.object({
+        animeId: z.number(),
+        episodeId: z.number().optional(),
+        fileId: z.number(),
+        currentTime: z.number().optional(),
+        totalTime: z.number().optional(),
+        userIP: z.string().optional(),
+        watchMethod: z.string().optional(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const {
+        animeId,
+        episodeId,
+        fileId,
+        currentTime,
+        totalTime,
+        userIP,
+        watchMethod,
+      } = input;
+      const userId = ctx.user.id;
+      const file = await prisma.storageIndex.findUnique({
+        where: { id: fileId },
+      });
+      if (!file) return;
+
+      await prisma.animeViewHistory.upsert({
+        where: {
+          userId_animeId_fileName: {
+            userId,
+            animeId,
+            fileName: file.name,
+          },
+        },
+        update: {
+          fileId,
+          episodeId,
+          currentTime,
+          totalTime,
+          userIP,
+          watchMethod,
+        },
+        create: {
+          userId,
+          animeId,
+          fileName: file.name,
+          episodeId,
+          fileId,
+          currentTime,
+          totalTime,
+          userIP,
+          watchMethod,
+        },
+      });
+    }),
+
+  // 获取视频播放进度
+  getVideoPlayProgress: protectedProcedure
+    .input(
+      z.object({
+        animeId: z.number(),
+        episodeId: z.number().optional(),
+        fileId: z.number(),
+      })
+    )
+    .query(
+      async ({
+        input,
+        ctx,
+      }): Promise<{
+        currentTime: number;
+        foundBy: "file" | "episode";
+        completed: boolean;
+      } | null> => {
+        const { animeId, episodeId, fileId } = input;
+        const userId = ctx.user.id;
+
+        const file = await prisma.storageIndex.findUnique({
+          where: { id: fileId },
+        });
+
+        if (!file) return null;
+
+        // 1. 尝试通过 userId, animeId, fileName 查找
+        const uniqueHistory = await prisma.animeViewHistory.findUnique({
+          where: {
+            userId_animeId_fileName: {
+              userId,
+              animeId,
+              fileName: file.name,
+            },
+          },
+          select: {
+            currentTime: true,
+            totalTime: true,
+          },
+        });
+
+        if (uniqueHistory && uniqueHistory.currentTime) {
+          const completed = isVideoCompleted(
+            uniqueHistory.currentTime,
+            uniqueHistory.totalTime
+          );
+          return {
+            currentTime: uniqueHistory.currentTime,
+            foundBy: "file",
+            completed,
+          };
+        }
+
+        // 2. 如果还没找到，且提供了 episodeId，则查找同一集的最后观看记录
+        if (episodeId) {
+          const episodeRecord = await prisma.animeViewHistory.findFirst({
+            where: {
+              userId,
+              animeId,
+              episodeId,
+            },
+            select: {
+              currentTime: true,
+              totalTime: true,
+            },
+            orderBy: {
+              updatedAt: "desc",
+            },
+          });
+
+          if (episodeRecord && episodeRecord.currentTime) {
+            const completed = isVideoCompleted(
+              episodeRecord.currentTime,
+              episodeRecord.totalTime
+            );
+            return {
+              currentTime: episodeRecord.currentTime,
+              foundBy: "episode",
+              completed,
+            };
+          }
+        }
+
+        // 如果都没找到，返回 null
+        return null;
+      }
+    ),
 });
 
 // 定义返回类型

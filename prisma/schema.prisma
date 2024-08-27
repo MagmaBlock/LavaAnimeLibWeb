@@ -257,10 +257,11 @@ model AnimeViewHistory {
   userId      Int
   anime       Anime         @relation(fields: [animeId], references: [id])
   animeId     Int
+  fileName    String // 历史记录更关心播放的文件，而 StorageIndex 有节点之分
   episode     AnimeEpisode? @relation(fields: [episodeId], references: [id])
   episodeId   Int?
-  file        StorageIndex  @relation(fields: [fileId], references: [id])
-  fileId      Int
+  file        StorageIndex? @relation(fields: [fileId], references: [id])
+  fileId      Int?
   currentTime Int?
   totalTime   Int?
   userIP      String?
@@ -268,7 +269,7 @@ model AnimeViewHistory {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
-  @@unique([userId, animeId, fileId])
+  @@unique([userId, animeId, fileName]) // 用户观看同一个番剧的同一个文件，即使播放节点可能不同
 }
 
 // 描述番剧的图片

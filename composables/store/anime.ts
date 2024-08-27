@@ -15,6 +15,32 @@ export const useAnimeStore = defineStore("anime", () => {
 
   const { $client } = useNuxtApp();
   const playerStore = useAnimeVideoPlayerStore();
+  const viewHistoryStore = useAnimeViewHistoryStore();
+  viewHistoryStore.enableHistoryReport = true;
+  viewHistoryStore.enableResumeHistory = true;
+
+  const build = async () => {
+    if (animeId.value !== null) {
+      activeEpisodeId.value = null;
+      activeFileId.value = null;
+      activeMirrorGroupName.value = null;
+      activeStorageId.value = null;
+      mainDataClear();
+      animeInfoClear();
+
+      await Promise.all([mainDataExecute(), animeInfoExecute()]);
+
+      // 自动选择推荐的剧集
+      if (mainData.value) {
+        const recommendedEpisode = mainData.value.episodes.find(
+          (ep) => ep.recommended
+        );
+        if (recommendedEpisode) {
+          activeEpisodeId.value = recommendedEpisode.episode.id;
+        }
+      }
+    }
+  };
 
   // 获取动画信息
   const {
@@ -24,19 +50,17 @@ export const useAnimeStore = defineStore("anime", () => {
     clear: animeInfoClear,
     error: animeInfoError,
   } = useAsyncData(
-    "animeInfo",
     () => $client.pages.anime.getAnimeInfo.query({ animeId: animeId.value! }),
     { immediate: false, lazy: true } // 不立即执行，懒加载
   );
 
-  // 获取动画的所有剧集
+  // 获取动画的主要数据
   const {
     data: mainData,
     execute: mainDataExecute,
     status: mainDataStatus,
     clear: mainDataClear,
   } = useAsyncData(
-    "animeEpisodes",
     () =>
       $client.pages.anime.getAnimeMainData.query({ animeId: animeId.value! }),
     { immediate: false, lazy: true } // 不立即执行，懒加载
@@ -49,7 +73,6 @@ export const useAnimeStore = defineStore("anime", () => {
     status: fileTempUrlsStatus,
     error: fileTempUrlsError,
   } = useAsyncData(
-    "fileTempUrls",
     () =>
       $client.pages.anime.getFileTempUrls.query({
         fileIds: [activeFileId.value!],
@@ -79,26 +102,7 @@ export const useAnimeStore = defineStore("anime", () => {
 
   // 监听animeId的变化，重新获取所有信息并清空现有信息
   watch(refThrottled(animeId, 1000), async () => {
-    if (animeId.value !== null) {
-      activeEpisodeId.value = null;
-      activeFileId.value = null;
-      activeMirrorGroupName.value = null;
-      activeStorageId.value = null;
-      mainDataClear();
-      animeInfoClear();
-
-      await Promise.all([mainDataExecute(), animeInfoExecute()]);
-
-      // 自动选择推荐的剧集
-      if (mainData.value) {
-        const recommendedEpisode = mainData.value.episodes.find(
-          (ep) => ep.recommended
-        );
-        if (recommendedEpisode) {
-          activeEpisodeId.value = recommendedEpisode.episode.id;
-        }
-      }
-    }
+    if (animeId.value) await build();
   });
 
   // 当剧集被选中时，自动选中合适的文件
@@ -172,26 +176,47 @@ export const useAnimeStore = defineStore("anime", () => {
     }
   });
 
+  // 尝试寻找是否有下一集
+  const findNextEpisode = () => {
+    if (!mainData.value || !activeEpisodeId.value) return null;
+    const currentIndex = mainData.value.episodes.findIndex(
+      (ep) => ep.episode.id === activeEpisodeId.value
+    );
+    if (currentIndex === -1 || currentIndex === mainData.value.episodes.length - 1) {
+      return null;
+    }
+    return mainData.value.episodes[currentIndex + 1];
+  };
+
+  // 切换到下一集
+  const switchToNextEpisode = () => {
+    const nextEpisode = findNextEpisode();
+    if (nextEpisode) {
+      activeEpisodeId.value = nextEpisode.episode.id;
+      return true;
+    }
+    return false;
+  };
+
   return {
+    build,
     animeId,
     activeEpisodeId,
     activeFileId,
     activeStorageId,
     activeMirrorGroupName,
     animeInfo,
-    animeInfoExecute,
     animeInfoStatus,
     animeInfoError,
-    animeInfoClear,
     mainData,
-    mainDataExecute,
     mainDataStatus,
-    mainDataClear,
     activeEpisode,
     activeMirrorGroup,
     fileTempUrls,
     fileTempUrlsExecute,
     fileTempUrlsStatus,
     fileTempUrlsError,
+    findNextEpisode,
+    switchToNextEpisode,
   };
 });

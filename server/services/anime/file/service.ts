@@ -132,4 +132,31 @@ export class AnimeFileService {
     // 直接返回 Map 的值，避免额外的 Object.values 调用
     return Array.from(groupedFiles.values());
   }
+
+  /**
+   * 根据文件ID获取其所属的MirrorGroup
+   *
+   * @param fileId 要查找的文件ID
+   * @returns 包含该文件的MirrorGroup，如果未找到则返回null
+   */
+  async getMirrorGroupByFileId(fileId: number): Promise<StorageIndex[] | null> {
+    // 获取文件信息
+    const file = await this.prisma.storageIndex.findUnique({
+      where: { id: fileId },
+    });
+
+    if (!file || !file.animeId) {
+      return null;
+    }
+
+    // 获取该动画的所有MirrorGroups
+    const mirrorGroups = await this.getAnimeMirrorGroups(file.animeId);
+
+    // 查找包含该文件的MirrorGroup
+    const targetGroup = mirrorGroups.find((group) =>
+      group.some((groupFile) => groupFile.id === fileId)
+    );
+
+    return targetGroup || null;
+  }
 }
