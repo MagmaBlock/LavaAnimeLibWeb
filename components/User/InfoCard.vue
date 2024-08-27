@@ -53,7 +53,6 @@
 </template>
 
 <script setup lang="ts">
-import { Icon } from "#components";
 import { NPopconfirm, NButton, NAvatar, NCard } from "naive-ui";
 
 const router = useRouter();

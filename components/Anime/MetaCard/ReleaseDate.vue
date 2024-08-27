@@ -1,6 +1,6 @@
 <template>
   <div class="flex place-items-center gap-1">
-    <Icon icon="material-symbols:calendar-month" />
+    <Icon name="material-symbols:calendar-month" />
     <div v-if="date">{{ formatDate(date) }}</div>
     <div v-else>未知时间</div>
     开始放送

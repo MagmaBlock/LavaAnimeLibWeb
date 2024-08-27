@@ -2,13 +2,12 @@
   <NCard title="观看历史" :bordered="false" embedded>
     <!-- 按钮 -->
     <template #header-extra>
-      <NSpace>
+      <NButtonGroup>
         <NButton
           secondary
-          round
           size="small"
           @click="refresh()"
-          :disabled="status === 'pending'"
+          :loading="status === 'pending'"
         >
           <template #icon>
             <Icon
@@ -16,15 +15,15 @@
               :class="status === 'pending' ? 'animate-spin' : ''"
             />
           </template>
+          刷新
         </NButton>
-        <RouterLink to="/user/history">
-          <NButton secondary round size="small">
-            <template #icon>
-              <Icon name="material-symbols:chevron-right" />
-            </template>
-          </NButton>
-        </RouterLink>
-      </NSpace>
+        <NButton secondary size="small" @click="router.push('/user/history')">
+          <template #icon>
+            <Icon name="material-symbols:chevron-right" />
+          </template>
+          详情
+        </NButton>
+      </NButtonGroup>
     </template>
     <!-- 正常数据 -->
     <div v-if="data && data.length && status === 'success'" key="normal-data">
@@ -60,6 +59,7 @@
 import { NScrollbar } from "naive-ui";
 
 const { $client } = useNuxtApp();
+const router = useRouter();
 
 const { data, refresh, status } = await useAsyncData(
   "recentHistory",

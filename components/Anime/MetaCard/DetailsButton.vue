@@ -1,6 +1,6 @@
 <template>
   <div class="text-gray-500 flex place-items-center gap-1 text-xs">
-    详情 <Icon icon="material-symbols:chevron-right-rounded" />
+    详情 <Icon name="material-symbols:chevron-right-rounded" />
   </div>
 </template>
 

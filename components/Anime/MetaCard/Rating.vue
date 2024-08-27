@@ -2,7 +2,7 @@
   <NPopover v-if="rating">
     <template #trigger>
       <div class="flex place-items-center gap-1 cursor-help">
-        <Icon icon="material-symbols:star-rounded" />
+        <Icon name="material-symbols:star-rounded" />
         <div>{{ rating }} 分</div>
         <div v-if="rank">#{{ rank }}</div>
       </div>

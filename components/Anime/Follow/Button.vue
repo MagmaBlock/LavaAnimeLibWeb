@@ -8,7 +8,7 @@
     >
       <template #icon>
         <NIcon>
-          <Icon icon="material-symbols:bookmark-remove" />
+          <Icon name="material-symbols:bookmark-remove" />
         </NIcon>
       </template>
       {{ "取消" }}
@@ -21,7 +21,7 @@
       :loading="followInfoStatus === 'pending' || isToggling"
     >
       <template #icon>
-        <NIcon> <Icon icon="material-symbols:bookmark-add" /> </NIcon>
+        <NIcon> <Icon name="material-symbols:bookmark-add" /> </NIcon>
       </template>
       {{ "追番" }}
     </NButton>

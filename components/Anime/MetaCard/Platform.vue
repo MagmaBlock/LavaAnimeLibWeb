@@ -1,7 +1,7 @@
 <template>
   <div class="flex place-items-center gap-1">
     <Icon :name="iconName" v-if="iconName" />
-    <Icon icon="material-symbols:export-notes-outline-rounded" v-else />
+    <Icon name="material-symbols:export-notes-outline-rounded" v-else />
     <div v-if="platform">
       {{ platform }}
     </div>

@@ -4,7 +4,7 @@
       <template #icon>
         <NIcon>
           <Icon
-            :icon="
+            :name="
               isGrid
                 ? 'material-symbols:grid-view-rounded'
                 : 'material-symbols:view-list'
@@ -18,7 +18,7 @@
       <template #icon>
         <NIcon>
           <Icon
-            :icon="
+            :name="
               sortAsc
                 ? 'material-symbols:arrow-upward-rounded'
                 : 'material-symbols:arrow-downward-rounded'

@@ -7,7 +7,7 @@
       v-if="bgmId"
     >
       <div class="flex place-items-center gap-1">
-        <Icon icon="material-symbols:link-rounded" /> 去番组计划查看
+        <Icon name="material-symbols:link-rounded" /> 去番组计划查看
       </div>
     </a>
     <a
@@ -17,7 +17,7 @@
       v-if="officialWebsite"
     >
       <div class="flex place-items-center gap-1">
-        <Icon icon="material-symbols:link-rounded" /> 作品官网
+        <Icon name="material-symbols:link-rounded" /> 作品官网
       </div>
     </a>
   </NFlex>

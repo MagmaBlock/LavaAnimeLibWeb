@@ -16,6 +16,7 @@
   "devDependencies": {
     "@iconify/vue": "^4.1.2",
     "@nuxt/devtools": "latest",
+    "@nuxt/icon": "^1.5.0",
     "@pinia-plugin-persistedstate/nuxt": "^1.2.1",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/typography": "^0.5.13",
@@ -58,5 +59,6 @@
     "ua-parser-js": "^1.0.38",
     "vue3-lazyload": "^0.3.8",
     "zod": "^3.23.8"
-  }
+  },
+  "packageManager": "pnpm@9.6.0+sha512.38dc6fba8dba35b39340b9700112c2fe1e12f10b17134715a4aa98ccf7bb035e76fd981cf0bb384dfa98f8d6af5481c2bef2f4266a24bfa20c34eb7147ce0b5e"
 }
