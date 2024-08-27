@@ -53,7 +53,7 @@ enum Region {
 
 // 描述作品特点和内容的标签
 model AnimeTag {
-  id          Int             @id @default(autoincrement())
+  id          String          @id @default(uuid())
   name        String
   count       Int?
   source      AnimeInfoSource @default(Bangumi)
@@ -214,7 +214,7 @@ enum UserRole {
 
 // 用户追番记录
 model AnimeCollection {
-  id        Int                   @id @default(autoincrement())
+  id        String                @id @default(uuid())
   user      User                  @relation(fields: [userId], references: [id])
   userId    Int
   anime     Anime                 @relation(fields: [animeId], references: [id])
@@ -245,7 +245,7 @@ model InviteCode {
 
 model Setting {
   key       String   @id
-  value     Json
+  value     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
