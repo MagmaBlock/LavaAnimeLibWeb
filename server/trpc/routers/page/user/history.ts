@@ -4,6 +4,7 @@ import { StorageService } from "~/server/services/storage/service";
 import { protectedProcedure, router } from "../../../trpc";
 import moment from "moment";
 import { EpisodeType } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 
 interface HistoryItem {
   id: string;
@@ -51,6 +52,7 @@ export const historyRouter = router({
         await App.instance.prisma.animeViewHistory.findMany({
           where: {
             userId: user.id,
+            removed: false,
           },
           orderBy: {
             updatedAt: "desc",
@@ -133,5 +135,32 @@ export const historyRouter = router({
         totalCount,
         pageCount: Math.ceil(totalCount / input.pageSize),
       };
+    }),
+
+  removeHistory: protectedProcedure
+    .input(z.object({ historyId: z.string().uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      const { user } = ctx;
+      const { historyId } = input;
+
+      const updatedHistory =
+        await App.instance.prisma.animeViewHistory.updateMany({
+          where: {
+            id: historyId,
+            userId: user.id,
+          },
+          data: {
+            removed: true,
+          },
+        });
+
+      if (updatedHistory.count === 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "未找到指定的观看历史记录",
+        });
+      }
+
+      return { success: true, message: "观看历史记录已成功删除" };
     }),
 });

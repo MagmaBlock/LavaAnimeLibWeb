@@ -36,6 +36,7 @@ export const userRouter = router({
     const recentHistory = await App.instance.prisma.animeViewHistory.findMany({
       where: {
         userId: user.id,
+        removed: false,
       },
       orderBy: {
         updatedAt: "desc",
