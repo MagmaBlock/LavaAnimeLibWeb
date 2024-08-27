@@ -2,8 +2,8 @@
   <RouterLink
     :to="{
       name: 'anime-la',
-      params: { la: record.animeID },
-      query: { episode: record.episode ?? undefined },
+      params: { la: animeId },
+      query: { episode: episodeDisplay ?? undefined },
     }"
   >
     <div
@@ -11,10 +11,10 @@
     >
       <div class="col-span-3">
         <div class="relative w-full rounded-md overflow-hidden">
-          <div class="aspect-w-16 aspect-h-9">
+          <div class="aspect-w-16 aspect-h-10">
             <img
-              v-if="record?.animeData?.images?.poster"
-              :src="record?.animeData?.images?.poster"
+              v-if="imageUrl"
+              :src="imageUrl"
               class="absolute object-cover"
               alt="记录封面"
             />
@@ -24,15 +24,14 @@
             ></div>
           </div>
           <div
+            v-if="currentTime && totalTime"
             class="absolute inset-x-0 bottom-0 h-8 break-all bg-gradient-to-b from-transparent to-black/75 text-white px-4"
-            v-if="getPercent"
           >
             <!-- 观看进度条 -->
             <div class="absolute inset-x-0 bottom-2 px-1.5">
               <div class="relative">
                 <div class="text-xs font-semibold mb-0.5 w-full text-right">
-                  {{ getMins(record?.currentTime) }} /
-                  {{ getMins(record?.totalTime) }}
+                  {{ getMins(currentTime) }} / {{ getMins(totalTime) }}
                 </div>
                 <div
                   class="absolute bg-white/90 rounded h-[3px]"
@@ -49,19 +48,23 @@
       <!-- right -->
       <div class="col-span-4 flex flex-col">
         <div class="truncate">
-          {{ record?.animeData?.title }}
+          {{ name }}
         </div>
         <!-- Flex 空白占位 -->
         <div class="flex-1"></div>
         <div class="text-xs opacity-80">
           <div>
-            {{ record.episode ? `看到第 ${record.episode} 话` : "看到" }}
-            <span v-if="record?.currentTime && record?.totalTime">
-              {{ getPercent }}%
-            </span>
+            {{
+              episodeDisplay
+                ? `看到${
+                    episodeType !== "Normal" ? episodeType : ""
+                  }第 ${episodeDisplay} 话`
+                : "看到"
+            }}
+            <span v-if="currentTime && totalTime"> {{ getPercent }}% </span>
           </div>
-          <div v-if="record.watchMethod !== 'WebPlayer'">
-            通过 {{ record.watchMethod }}
+          <div v-if="watchMethod && watchMethod !== 'web'">
+            通过 {{ watchMethod }}
           </div>
           <div>{{ getTimeInfo }}</div>
         </div>
@@ -70,37 +73,39 @@
   </RouterLink>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import moment from "moment";
 import "moment/dist/locale/zh-cn";
 
-const props = defineProps({
-  record: {
-    type: Object,
-  },
-});
-const { record } = toRefs(props);
+interface Props {
+  animeId?: number;
+  imageUrl?: string | null;
+  name: string;
+  episodeType?: "Normal" | "SP" | "OP" | "ED" | "Other" | null;
+  episodeDisplay?: number | null;
+  currentTime?: number | null;
+  totalTime?: number | null;
+  watchMethod?: string | null;
+  updatedAt: Date;
+}
+
+const props = defineProps<Props>();
 
 const getPercent = computed(() => {
-  if (!record.value.currentTime || !record.value.totalTime) return null;
-  return Math.round((record.value.currentTime / record.value.totalTime) * 100);
+  if (!props.currentTime || !props.totalTime) return null;
+  return Math.round((props.currentTime / props.totalTime) * 100);
 });
 
-/**
- * 根据秒计算分秒
- * @param {Number} seconds
- * @returns {String}
- */
-const getMins = (seconds) => {
+const getMins = (seconds: number): string => {
   const min = Math.floor(seconds / 60);
-  const sec = ~~(seconds % 60);
-  const pad = (number) => {
+  const sec = Math.floor(seconds % 60);
+  const pad = (number: number): string => {
     return number.toString().padStart(2, "0");
   };
   return `${pad(min)}:${pad(sec)}`;
 };
 
 const getTimeInfo = computed(() => {
-  return moment(record.value.lastReportTime).locale("zh-cn").calendar();
+  return moment(props.updatedAt).locale("zh-cn").calendar();
 });
 </script>
