@@ -266,6 +266,7 @@ model AnimeViewHistory {
   totalTime   Int?
   userIP      String?
   watchMethod String?
+  removed     Boolean       @default(false)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
