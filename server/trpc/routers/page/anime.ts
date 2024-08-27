@@ -408,6 +408,7 @@ export const animeRouter = router({
           totalTime,
           userIP,
           watchMethod,
+          removed: false,
         },
         create: {
           userId,
