@@ -52,13 +52,26 @@ export default {
           link: "https://arthals.ink/",
         },
         {
+          name: "若葉",
+          support: "其他",
+          message: "提供数年期的域名赞助",
+          link: "https://loliloli.moe/",
+        },
+        {
           name: "czy0729",
           support: "￥367.98",
           message: "(包含非番剧库赞助)",
           link: "https://github.com/czy0729",
         },
+        {
+          name: "纯之",
+          support: "其他",
+          message: "提供 Google Drive 相关节点支持",
+          link: "https://moe.tips/",
+        },
         { name: "小林", support: "￥300.00" },
-        { name: "Longtianmu", support: "￥240" },
+        { name: "Longtianmu", support: "￥240.00" },
+        { name: "Lozyue", support: "￥168.00" },
         {
           name: "M***h",
           support: "￥66.60",
@@ -72,22 +85,10 @@ export default {
           support: "￥66.00",
         },
         {
-          name: "纯之",
-          support: "其他",
-          message: "提供部分网页和视频的加速服务节点",
-          link: "https://moe.tips/",
-        },
-        {
           name: "林恩 Lynn.",
           support: "其他",
           message: "提供（CloudFlare自选）视频加速节点",
           link: "https://blog.lynn6.cn/",
-        },
-        {
-          name: "若葉",
-          support: "其他",
-          message: "提供域名赞助",
-          link: "https://loliloli.moe/",
         },
         {
           name: "Ender_DeerOVO",
