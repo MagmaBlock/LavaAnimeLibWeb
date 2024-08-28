@@ -34,8 +34,8 @@ interface HistoryResponse {
   pageCount: number;
 }
 
-export const historyRouter = router({
-  getDetailedHistory: protectedProcedure
+export const animeViewHistoryRouter = router({
+  getGroupedHistory: protectedProcedure
     .input(
       z.object({
         page: z.number().int().positive().default(1),
@@ -77,6 +77,7 @@ export const historyRouter = router({
       const totalCount = await App.instance.prisma.animeViewHistory.count({
         where: {
           userId: user.id,
+          removed: false,
         },
       });
 

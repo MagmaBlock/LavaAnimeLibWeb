@@ -6,7 +6,7 @@
         <UserFunctionsCard />
       </div>
       <div class="grid grid-cols-1 gap-2 sm:gap-4">
-        <UserHistory />
+        <AnimeViewHistoryCard :isFullView="false" />
         <UserFollow />
         <VideoTogetherMenu />
         <AdminNav :withCard="true" />
