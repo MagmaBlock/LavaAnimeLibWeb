@@ -1,7 +1,7 @@
 <template>
   <ContainerPage>
     <template #head>
-      <NavBarTopNav title="更新日志"></NavBarTopNav>
+      <NavBarTopNav title="更新日志" blur/>
     </template>
     <div class="text-lg font-medium">熔岩番剧库 最近更新日志</div>
     <div class="opacity-75">LavaAnimeLib 相关项目 GitHub 提交记录</div>

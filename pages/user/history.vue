@@ -1,7 +1,7 @@
 <template>
   <ContainerPageMobileFull>
     <template #head>
-      <NavBarTopNav />
+      <NavBarTopNav blur />
     </template>
     <AnimeViewHistoryCard :isFullView="true" />
     <NBackTop :bottom="120" />

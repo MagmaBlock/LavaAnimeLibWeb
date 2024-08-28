@@ -1,7 +1,7 @@
 <template>
   <ContainerPage>
     <template #head>
-      <NavBarTopNav title="帮助"></NavBarTopNav>
+      <NavBarTopNav title="帮助" blur />
     </template>
     <ContainerPageLeftMenuRightContent>
       <template #left>
