@@ -13,7 +13,7 @@
     </NLayoutSider>
     <NLayout>
       <NLayoutHeader>
-        <NavBarTopNav />
+        <NavBarTopNav title="后台管理" />
         <AdminMenu
           v-if="!breakpoint.greaterOrEqual('lg').value"
           mode="horizontal"
