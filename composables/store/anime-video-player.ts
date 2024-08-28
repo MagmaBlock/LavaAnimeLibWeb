@@ -71,7 +71,7 @@ export const useAnimeVideoPlayerStore = defineStore(
       if (!artPlayer.value) return;
       artPlayer.value.on("ready", () => {
         if (!artPlayer.value) return;
-        const count = usePageLifeCycle().getClickCount();
+        const count = usePageLifeCycleStore().clickCount;
         if (count > 0) {
           artPlayer.value.muted = false;
           artPlayer.value.play();

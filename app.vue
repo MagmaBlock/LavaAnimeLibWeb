@@ -37,8 +37,9 @@ dayjs.updateLocale("zh-cn", {
   },
 });
 
-usePageLifeCycle().setPageMount();
+const pageLifeCycleStore = usePageLifeCycleStore();
+pageLifeCycleStore.mountTime = new Date();
 window.addEventListener("click", () => {
-  usePageLifeCycle().addClickCount();
+  pageLifeCycleStore.clickCount++;
 });
 </script>
