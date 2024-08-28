@@ -89,4 +89,29 @@ export class AnimeCollectionService {
       });
     }
   }
+
+  /**
+   * 获取用户的动画收藏列表
+   * @param userId 用户ID
+   * @param status 收藏状态
+   * @returns 返回用户的动画收藏列表，如果没有找到则返回空数组
+   */
+  async getUserAnimeCollections(
+    userId: number,
+    status: AnimeCollectionStatus
+  ): Promise<AnimeCollection[]> {
+    // 使用Prisma查询用户的动画收藏
+    const collections = await App.instance.prisma.animeCollection.findMany({
+      where: {
+        userId: userId,
+        status: status,
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
+
+    // 返回查询结果
+    return collections;
+  }
 }

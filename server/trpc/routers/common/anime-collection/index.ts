@@ -41,4 +41,26 @@ export const animeCollectionRouter = router({
         status
       );
     }),
+
+  // 获取用户追番列表
+  getUserAnimeCollections: protectedProcedure
+    .input(
+      z.object({
+        status: z.enum(["Plan", "Watching", "Finished"]),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const { status } = input;
+      const userId = ctx.user.id;
+
+      const animeCollectionService = App.instance.services.getService(
+        AnimeCollectionService
+      );
+      const collections = await animeCollectionService.getUserAnimeCollections(
+        userId,
+        status
+      );
+
+      return collections;
+    }),
 });
