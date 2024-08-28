@@ -1,7 +1,7 @@
-import { z } from "zod";
 import { AnimePlatform, Region } from "@prisma/client";
+import { z } from "zod";
+import { AnimePictureSerivce } from "~/server/services/anime/picture/serivce";
 import { App } from "~/server/services/app";
-import { StorageService } from "~/server/services/storage/service";
 import { publicProcedure, router } from "../../trpc";
 
 export const animeIndexRouter = router({
@@ -94,33 +94,14 @@ export const animeIndexRouter = router({
         skip: skip,
         include: {
           userViews: true,
-          posters: {
-            include: {
-              file: true,
-            },
-          },
         },
       });
 
-      const storageService = App.instance.services.getService(StorageService);
+      const animePictureService =
+        App.instance.services.getService(AnimePictureSerivce);
 
       return Promise.all(
         animes.map(async (anime) => {
-          const smallPosterOrPoster =
-            anime.posters.find((poster) => poster.type === "SmallPoster") ??
-            anime.posters.find((poster) => poster.type === "Poster");
-
-          let posterUrl = smallPosterOrPoster?.url;
-          if (!posterUrl && smallPosterOrPoster?.file) {
-            try {
-              posterUrl = await storageService.getFileTempUrl(
-                smallPosterOrPoster.file
-              );
-            } catch {
-              posterUrl = null;
-            }
-          }
-
           return {
             id: anime.id,
             name: anime.name,
@@ -131,7 +112,7 @@ export const animeIndexRouter = router({
             releaseYear: anime.releaseYear,
             releaseSeason: anime.releaseSeason,
             region: anime.region,
-            poster: posterUrl,
+            poster: await animePictureService.getAnimePoster(anime.id, true),
             views: anime.userViews.length,
           };
         })

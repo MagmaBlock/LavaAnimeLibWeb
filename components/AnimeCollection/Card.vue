@@ -3,56 +3,52 @@
     <template #header-extra>
       <NButton
         secondary
-        round
         size="small"
-        @click="refresh"
-        :disabled="loading"
+        @click="collections.execute()"
+        :loading="collections.status.value === 'pending'"
       >
         <template #icon>
-          <Icon
-            name="material-symbols:refresh"
-            :class="loading ? 'animate-spin' : ''"
-          />
+          <Icon name="material-symbols:refresh" />
         </template>
+        刷新
       </NButton>
     </template>
-    <NTabs
-      type="segment"
-      v-model:value="selectedTab"
-      :default-value="'Finished'"
-      class="max-w-md mb-4"
-      ref="tabsRef"
-    >
+    <NTabs type="segment" v-model:value="selectedTab" class="max-w-xl mb-4">
       <NTab name="Plan">
         想看
-        <span class="ml-1" v-if="followTotals['Plan']">
-          ({{ followTotals["Plan"] }})
+        <span class="ml-1" v-if="collectionsCount.data.value">
+          ({{ collectionsCount.data.value["Plan"] }})
         </span>
       </NTab>
       <NTab name="Watching">
         在看
-        <span class="ml-1" v-if="followTotals['Watching']">
-          ({{ followTotals["Watching"] }})
+        <span class="ml-1" v-if="collectionsCount.data.value">
+          ({{ collectionsCount.data.value["Watching"] }})
         </span>
       </NTab>
       <NTab name="Finished">
         看过
-        <span class="ml-1" v-if="followTotals['Finished']">
-          ({{ followTotals["Finished"] }})
+        <span class="ml-1" v-if="collectionsCount.data.value">
+          ({{ collectionsCount.data.value["Finished"] }})
         </span>
       </NTab>
     </NTabs>
-    <div class="overflow-clip">
-      <ContainerAnimeCard
-        v-if="!fetchFailed"
-        :animes="animeList"
+    <div ref="containerRef">
+      <AnimeCardContainer
         size="full"
-        :loading="loading"
-        :style="{
-          transform: translateVar,
-        }"
-        class="transition-transform duration-500 ease-out"
-      />
+        v-if="collections.data.value?.items?.length"
+      >
+        <AnimeCard
+          v-for="anime in collections.data.value.items"
+          :key="anime.collection.id"
+          :id="anime.anime.id"
+          :name="anime.anime.name"
+          :bdrip="anime.anime.bdrip"
+          :nsfw="anime.anime.nsfw"
+          :views="anime.anime.views"
+          :image="anime.anime.poster ?? undefined"
+        />
+      </AnimeCardContainer>
       <NResult
         v-else
         class="my-8"
@@ -63,112 +59,87 @@
     </div>
     <template #action>
       <NPagination
-        v-if="totalPages > 1"
+        v-if="collections.data.value && collections.data.value.totalPages > 1"
         v-model:page="page"
-        :page-count="totalPages"
+        :page-count="collections.data.value.totalPages"
       />
     </template>
   </NCard>
 </template>
 
 <script lang="ts" setup>
-import type { AnimeCollection } from "@prisma/client";
-import { refThrottled, useSwipe } from "@vueuse/core";
+import { breakpointsTailwind, useBreakpoints, useSwipe } from "@vueuse/core";
 
 const { $client } = useNuxtApp();
 
-const myFollowRef = ref<HTMLElement | null>(null);
-
-let pageSize = 6 * 3;
-function calPageSize(): void {
-  let width = window.innerWidth;
-  if (width >= 640) pageSize = 5 * 4;
-  if (width >= 768) pageSize = 4 * 5;
-  if (width >= 1024) pageSize = 3 * 7;
-  if (width >= 1280) pageSize = 3 * 8;
-  if (width >= 1536) pageSize = 2 * 10;
-}
-calPageSize();
-
-const tabsRef = ref(null);
-const followTotals = ref({ Plan: 0, Watching: 0, Finished: 0 });
+// 当前选中的标签
 const selectedTab = ref<"Plan" | "Watching" | "Finished">("Watching");
-watch(selectedTab, (newTab) => {
+watch(selectedTab, () => {
   page.value = 1;
-  getFollow(newTab);
+  collections.execute();
 });
 
+// 当前页码
 const page = ref(1);
-const totalPages = computed(() => {
-  return Math.ceil(followTotals.value[selectedTab.value] / pageSize);
+watch(page, () => collections.execute());
+// 界面尺寸，为了美观，在手机上三行，在电脑上二行
+const pageSize = computed(() => {
+  const breakpoint = useBreakpoints(breakpointsTailwind);
+  if (breakpoint.greater("2xl").value) return 2 * 10;
+  if (breakpoint.greater("xl").value) return 2 * 8;
+  if (breakpoint.greater("lg").value) return 2 * 7;
+  if (breakpoint.greater("md").value) return 3 * 5;
+  if (breakpoint.greater("sm").value) return 3 * 4;
+  return 3 * 3;
 });
-watch(page, (newPage, oldPage) => {
-  if (newPage !== oldPage) getFollow(selectedTab.value);
+watch(pageSize, () => {
+  page.value = 1;
+  collections.execute();
 });
 
-const loading = ref(false);
-const animeList = ref<AnimeCollection[]>([]);
-const fetchFailed = ref(false);
-
-async function getFollow(
-  status: "Plan" | "Watching" | "Finished"
-): Promise<void> {
-  loading.value = true;
-  try {
-    const result =
-      await $client.common.animeCollection.getUserAnimeCollections.query({
-        status,
-      });
-    animeList.value = result;
-    followTotals.value[status] = result.length;
-    fetchFailed.value = false;
-  } catch (error) {
-    console.error("获取追番列表失败:", error);
-    fetchFailed.value = true;
-  } finally {
-    loading.value = false;
+// 数据
+const collections = useAsyncData(
+  () =>
+    $client.common.animeCollection.getUserAnimeCollections.query({
+      status: selectedTab.value,
+      page: page.value,
+      pageSize: pageSize.value,
+    }),
+  {
+    lazy: true,
   }
-}
-
-function refresh(): void {
-  getFollow(selectedTab.value);
-}
-
-const { isSwiping, direction, lengthX } = useSwipe(myFollowRef);
-const translateVar = refThrottled(
-  computed(() => {
-    if (isSwiping.value && ["left", "right"].includes(direction.value)) {
-      return `translateX(${-lengthX.value}px)`;
-    } else return "";
-  }),
-  50
 );
 
-watch(isSwiping, () => {
-  if (isSwiping.value == false) {
-    if (["left", "right"].includes(direction.value)) {
-      if (Math.abs(lengthX.value) >= 180) {
-        const tabOrder = ["Plan", "Watching", "Finished"];
-        const currentIndex = tabOrder.indexOf(selectedTab.value);
-        if (direction.value == "left") {
-          selectedTab.value = tabOrder[(currentIndex + 1) % 3] as
-            | "Plan"
-            | "Watching"
-            | "Finished";
-        }
-        if (direction.value == "right") {
-          selectedTab.value = tabOrder[(currentIndex - 1 + 3) % 3] as
-            | "Plan"
-            | "Watching"
-            | "Finished";
-        }
-      }
-    }
+// 获取追番总数
+const collectionsCount = useAsyncData(
+  () => $client.common.animeCollection.getUserAnimeCollectionCounts.query(),
+  {
+    lazy: true,
   }
-});
+);
 
-onMounted(() => {
-  getFollow(selectedTab.value);
+// 滑动
+const containerRef = ref<HTMLElement | null>(null);
+
+const { direction } = useSwipe(containerRef, {
+  threshold: 50,
+  onSwipeEnd(e) {
+    const tabs: ("Plan" | "Watching" | "Finished")[] = [
+      "Plan",
+      "Watching",
+      "Finished",
+    ];
+    const currentIndex = tabs.indexOf(selectedTab.value);
+    if (direction.value === "left") {
+      // 切换下一个 tab
+      const nextIndex = (currentIndex + 1) % tabs.length;
+      selectedTab.value = tabs[nextIndex];
+    } else if (direction.value === "right") {
+      // 切换上一个 tab
+      const prevIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+      selectedTab.value = tabs[prevIndex];
+    }
+  },
 });
 </script>
 

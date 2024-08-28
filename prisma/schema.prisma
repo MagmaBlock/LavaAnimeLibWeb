@@ -275,7 +275,7 @@ model AnimeViewHistory {
 
 // 描述番剧的图片
 model AnimePicture {
-  id        Int               @id @default(autoincrement())
+  id        String            @id @default(uuid())
   url       String?
   file      StorageIndex?     @relation(fields: [fileId], references: [id])
   fileId    Int?              @unique

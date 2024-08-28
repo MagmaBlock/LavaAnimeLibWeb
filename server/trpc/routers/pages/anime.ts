@@ -3,10 +3,10 @@ import { TRPCError } from "@trpc/server";
 import { parseFileName } from "anime-name-tool";
 import { z } from "zod";
 import { AnimeFileService } from "~/server/services/anime/file/service";
+import { AnimePictureSerivce } from "~/server/services/anime/picture/serivce";
 import { App } from "~/server/services/app";
 import { StorageService } from "~/server/services/storage/service";
 import { protectedProcedure, router } from "../../trpc";
-import { AnimeCollectionService } from "~/server/services/anime/collection/service";
 
 const prisma = App.instance.prisma;
 
@@ -57,22 +57,10 @@ export const animeRouter = router({
         where: { animeId },
       });
 
-      const storageService = App.instance.services.getService(StorageService);
+      const animePictureService =
+        App.instance.services.getService(AnimePictureSerivce);
 
-      const smallPosterOrPoster =
-        animeInfo.posters.find((poster) => poster.type === "SmallPoster") ??
-        animeInfo.posters.find((poster) => poster.type === "Poster");
-
-      let posterUrl = smallPosterOrPoster?.url;
-      if (!posterUrl && smallPosterOrPoster?.file) {
-        try {
-          posterUrl = await storageService.getFileTempUrl(
-            smallPosterOrPoster.file
-          );
-        } catch {
-          posterUrl = null;
-        }
-      }
+      const posterUrl = await animePictureService.getAnimePoster(animeId, true);
 
       return {
         id: animeInfo.id,

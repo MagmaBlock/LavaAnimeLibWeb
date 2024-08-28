@@ -1,10 +1,10 @@
-import { z } from "zod";
-import { App } from "~/server/services/app";
-import { StorageService } from "~/server/services/storage/service";
-import { protectedProcedure, router } from "../../../trpc";
-import moment from "moment";
 import { EpisodeType } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
+import moment from "moment";
+import { z } from "zod";
+import { AnimePictureSerivce } from "~/server/services/anime/picture/serivce";
+import { App } from "~/server/services/app";
+import { protectedProcedure, router } from "../../../trpc";
 
 interface HistoryItem {
   id: string;
@@ -44,7 +44,8 @@ export const animeViewHistoryRouter = router({
     )
     .query(async ({ ctx, input }): Promise<HistoryResponse> => {
       const user = ctx.user;
-      const storageService = App.instance.services.getService(StorageService);
+      const animePictureService =
+        App.instance.services.getService(AnimePictureSerivce);
 
       const skip = (input.page - 1) * input.pageSize;
 
@@ -85,18 +86,10 @@ export const animeViewHistoryRouter = router({
         detailedHistory.map(async (history) => {
           const date = moment(history.updatedAt).format("YYYY-MM-DD");
 
-          const smallPosterOrPoster =
-            history.anime.posters.find(
-              (poster) => poster.type === "SmallPoster"
-            ) ??
-            history.anime.posters.find((poster) => poster.type === "Poster");
-
-          let posterUrl: string | null = smallPosterOrPoster?.url ?? null;
-          if (!posterUrl && smallPosterOrPoster?.file) {
-            posterUrl = await storageService.getFileTempUrl(
-              smallPosterOrPoster.file
-            );
-          }
+          const posterUrl = await animePictureService.getAnimePoster(
+            history.animeId,
+            true
+          );
 
           return {
             date,

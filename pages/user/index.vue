@@ -7,7 +7,6 @@
       </div>
       <div class="grid grid-cols-1 gap-2 sm:gap-4">
         <AnimeViewHistoryCard :isFullView="false" />
-        <UserFollow />
         <AnimeCollectionCard />
         <VideoTogetherMenu />
         <AdminNav :withCard="true" />
