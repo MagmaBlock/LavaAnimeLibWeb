@@ -41,7 +41,7 @@ const {
   status: followInfoStatus,
 } = useAsyncData(
   () =>
-    $client.pages.anime.getUserAnimeCollectionStatus.query({
+    $client.common.animeCollection.getUserAnimeCollectionStatus.query({
       animeId: props.animeId,
     }),
   { immediate: false, lazy: true }
@@ -54,10 +54,12 @@ const toggleFollowStatus = async (
 ) => {
   isToggling.value = true;
   try {
-    await $client.pages.anime.toggleUserAnimeCollectionStatus.mutate({
-      animeId: props.animeId,
-      status: status,
-    });
+    await $client.common.animeCollection.toggleUserAnimeCollectionStatus.mutate(
+      {
+        animeId: props.animeId,
+        status: status,
+      }
+    );
     await fetchFollowInfo();
   } catch (error) {
     console.error("更新追番状态失败:", error);

@@ -29,7 +29,7 @@ const {
   status: followInfoStatus,
 } = useAsyncData(
   () =>
-    $client.components.animeCard.getUserAnimeCollectionStatus.query({
+    $client.common.animeCollection.getUserAnimeCollectionStatus.query({
       animeId: props.animeId,
     }),
   { immediate: false, lazy: true }
@@ -46,10 +46,12 @@ const toggleFollowStatus = async (
   status?: "NoCollection" | "Plan" | "Watching" | "Finished"
 ) => {
   try {
-    await $client.components.animeCard.toggleUserAnimeCollectionStatus.mutate({
-      animeId: props.animeId,
-      status: status === "NoCollection" ? undefined : status,
-    });
+    await $client.common.animeCollection.toggleUserAnimeCollectionStatus.mutate(
+      {
+        animeId: props.animeId,
+        status: status === "NoCollection" ? undefined : status,
+      }
+    );
     await fetchFollowInfo();
     message.success("更新成功");
   } catch (error) {

@@ -1,4 +1,5 @@
 import { router } from "../trpc";
+import { animeCollectionRouter } from "./common/anime-collection";
 import { animeViewHistoryRouter } from "./common/anime-view-history";
 import { animeCardRouter } from "./components/anime-card";
 import { animeRouter } from "./pages/anime";
@@ -20,6 +21,7 @@ export const appRouter = router({
   }),
   common: router({
     animeViewHistory: animeViewHistoryRouter,
+    animeCollection: animeCollectionRouter,
   }),
 });
 

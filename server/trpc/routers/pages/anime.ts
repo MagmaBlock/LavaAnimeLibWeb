@@ -323,47 +323,6 @@ export const animeRouter = router({
     }));
   }),
 
-  // 获取用户追番的情况
-  getUserAnimeCollectionStatus: protectedProcedure
-    .input(z.object({ animeId: z.number() }))
-    .query(async ({ input, ctx }) => {
-      const { animeId } = input;
-      const userId = ctx.user.id;
-
-      const animeCollectionService = App.instance.services.getService(
-        AnimeCollectionService
-      );
-      const animeCollection =
-        await animeCollectionService.getUserAnimeCollectionStatus(
-          userId,
-          animeId
-        );
-
-      return animeCollection;
-    }),
-
-  // 修改用户追番的状态
-  toggleUserAnimeCollectionStatus: protectedProcedure
-    .input(
-      z.object({
-        animeId: z.number(),
-        status: z.enum(["Plan", "Watching", "Finished"]).optional(),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const { animeId, status } = input;
-      const userId = ctx.user.id;
-
-      const animeCollectionService = App.instance.services.getService(
-        AnimeCollectionService
-      );
-      await animeCollectionService.toggleUserAnimeCollectionStatus(
-        userId,
-        animeId,
-        status
-      );
-    }),
-
   // 记录用户观看历史
   recordUserViewHistory: protectedProcedure
     .input(
