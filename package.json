@@ -43,7 +43,6 @@
     "artplayer": "^5.1.6",
     "axios": "^1.7.3",
     "can-autoplay": "^3.0.2",
-    "dayjs": "^1.11.12",
     "diacritics": "^1.3.0",
     "dotenv": "^16.4.5",
     "file-type": "^19.4.0",
