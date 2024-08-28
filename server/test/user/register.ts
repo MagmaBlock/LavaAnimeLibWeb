@@ -6,7 +6,7 @@ const app = new App();
 
 const newInviteCode = await app.services
   .getService(InviteCodeService)
-  .create("HELLOWORLD");
+  .create({ code: "HELLOWORLD" });
 
 const newUser = await app.services
   .getService(UserService)

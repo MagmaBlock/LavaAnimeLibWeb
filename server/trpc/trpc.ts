@@ -29,6 +29,15 @@ const requireAuth = middleware(({ ctx, next }) => {
   return next({ ctx: { ...ctx, user: ctx.user } });
 });
 
+// 管理员鉴权中间件
+const requireAdmin = middleware(({ ctx, next }) => {
+  if (!ctx.user || ctx.user.role !== "Admin") {
+    throw new TRPCError({ code: "FORBIDDEN", message: "需要管理员权限" });
+  }
+  return next({ ctx: { ...ctx, user: ctx.user } });
+});
+
 // 导出公共和受保护的程序
 export const publicProcedure = t.procedure;
 export const protectedProcedure = publicProcedure.use(requireAuth);
+export const adminProcedure = protectedProcedure.use(requireAdmin);
