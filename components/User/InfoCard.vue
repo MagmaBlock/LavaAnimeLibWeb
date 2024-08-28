@@ -8,11 +8,11 @@
         :size="72"
         :src="userInfo.avatar ?? '/Transparent_Akkarin.jpg'"
         fallback-src="/Transparent_Akkarin.jpg"
-        @click="router.push({ path: '/user/info/avatar' })"
+        @click="router.push({ path: '/user/setting/avatar' })"
       />
       <div
         class="cursor-pointer"
-        @click="router.push({ path: '/user/info/name' })"
+        @click="router.push({ path: '/user/setting/name' })"
       >
         <div class="text-base font-semibold mb-1">{{ userInfo.name }}</div>
         <div class="text-xs opacity-80">{{ userInfo.email }}</div>

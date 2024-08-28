@@ -1,52 +1,35 @@
 <template>
-  <ContainerPage>
-    <template #head>
-      <NavBarTopNav title="个人信息" />
-    </template>
-    <ContainerPageLeftMenuRightContent>
-      <template #left>
-        <NCard :bordered="false" content-style="padding: 0;">
-          <NMenu
-            :mode="
-              breakpoint.greaterOrEqual('lg').value ? 'vertical' : 'horizontal'
-            "
-            :options="options"
-            @update:value="handlSelect"
-          />
-        </NCard>
-      </template>
-      <template #right>
-        <NCard :bordered="false">
-          <NuxtPage></NuxtPage>
-        </NCard>
-      </template>
-    </ContainerPageLeftMenuRightContent>
-  </ContainerPage>
+  <NLayout has-sider position="absolute">
+    <NLayoutSider
+      v-if="breakpoint.greaterOrEqual('lg').value"
+      bordered
+      collapse-mode="width"
+      :collapsed-width="64"
+      :width="240"
+      show-trigger
+      :native-scrollbar="false"
+    >
+      <UserSettingMenu mode="vertical" />
+    </NLayoutSider>
+    <NLayout>
+      <NLayoutHeader>
+        <NavBarTopNav title="用户设置" />
+        <UserSettingMenu
+          v-if="!breakpoint.greaterOrEqual('lg').value"
+          mode="horizontal"
+        />
+      </NLayoutHeader>
+      <NLayoutContent :native-scrollbar="false">
+        <ContainerPage class="pb-56 lg:pb-0">
+          <NuxtPage />
+        </ContainerPage>
+      </NLayoutContent>
+    </NLayout>
+  </NLayout>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
-import type { MenuOption } from "naive-ui";
 
 const breakpoint = useBreakpoints(breakpointsTailwind);
-const router = useRouter();
-
-const options: MenuOption[] = [
-  {
-    label: "修改头像",
-    key: "/user/info/avatar",
-  },
-  {
-    label: "修改用户名",
-    key: "/user/info/name",
-  },
-  {
-    label: "修改密码",
-    key: "/user/info/password",
-  },
-];
-
-const handlSelect = (key: string, item: MenuOption) => {
-  router.replace({ path: key });
-};
 </script>

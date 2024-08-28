@@ -3,7 +3,7 @@
     <!-- Contents -->
     <div class="flex-1 self-center grid grid-cols-4 sm:grid-cols-4 gap-2">
       <!-- 个人设置 -->
-      <UserFunctionsCardBigButton @click="router.push('/user/info/avatar')">
+      <UserFunctionsCardBigButton @click="router.push('/user/setting/avatar')">
         <template #icon="iconProps">
           <Icon name="material-symbols:account-box" :size="iconProps.size" />
         </template>
