@@ -1,6 +1,7 @@
 <template>
   <NLayout has-sider position="absolute">
     <NLayoutSider
+      v-if="breakpoint.greaterOrEqual('lg').value"
       bordered
       collapse-mode="width"
       :collapsed-width="64"
@@ -8,11 +9,15 @@
       show-trigger
       :native-scrollbar="false"
     >
-      <AdminMenu />
+      <AdminMenu mode="vertical" />
     </NLayoutSider>
     <NLayout>
       <NLayoutHeader>
         <NavBarTopNav />
+        <AdminMenu
+          v-if="!breakpoint.greaterOrEqual('lg').value"
+          mode="horizontal"
+        />
       </NLayoutHeader>
       <NLayoutContent :native-scrollbar="false">
         <ContainerPage class="pb-56 lg:pb-0">
@@ -23,4 +28,8 @@
   </NLayout>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
+
+const breakpoint = useBreakpoints(breakpointsTailwind);
+</script>

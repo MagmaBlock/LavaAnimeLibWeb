@@ -5,6 +5,8 @@
     :options="menuOptions"
     :value="activeKey"
     @update:value="handleMenuClick"
+    :mode="mode"
+    responsive
   />
 </template>
 
@@ -12,6 +14,10 @@
 import { Icon } from "#components";
 import { NIcon } from "naive-ui";
 import type { MenuOption } from "naive-ui";
+
+defineProps<{
+  mode?: "vertical" | "horizontal";
+}>();
 
 const route = useRoute();
 const router = useRouter();
