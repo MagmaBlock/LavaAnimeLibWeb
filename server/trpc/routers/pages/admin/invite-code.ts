@@ -2,6 +2,7 @@ import { z } from "zod";
 import { App } from "~/server/services/app";
 import { InviteCodeService } from "~/server/services/invite-code/service";
 import { adminProcedure, router } from "~/server/trpc/trpc";
+import { InviteCode } from "@prisma/client";
 
 const inviteCodeService = App.instance.services.getService(InviteCodeService);
 
@@ -41,33 +42,30 @@ export const inviteCodeRouter = router({
     }),
 
   getInviteCodes: adminProcedure
-    .input(
-      z.object({
-        take: z.number().optional(),
-        skip: z.number().optional(),
-      })
-    )
-    .query(async ({ input }) => {
-      const { take, skip } = input;
+    .input(z.object({}))
+    .query(async (): Promise<InviteCode[]> => {
       return await App.instance.prisma.inviteCode.findMany({
-        take,
-        skip,
         orderBy: { createdAt: "desc" },
-        include: {
-          createdBy: true,
-          usedBy: true,
-        },
       });
     }),
 
-  deleteInviteCodes: adminProcedure
-    .input(z.array(z.string()).default([]))
+  deleteInviteCode: adminProcedure
+    .input(z.string())
     .mutation(async ({ input }) => {
-      if (input.length === 0) {
-        throw new Error("至少需要提供一个邀请码");
+      const inviteCode = await App.instance.prisma.inviteCode.findUnique({
+        where: { code: input },
+      });
+
+      if (!inviteCode) {
+        throw new Error("邀请码不存在");
       }
-      return await App.instance.prisma.inviteCode.deleteMany({
-        where: { code: { in: input } },
+
+      if (inviteCode.usedById !== null) {
+        throw new Error("该邀请码已被使用，无法删除");
+      }
+
+      return await App.instance.prisma.inviteCode.delete({
+        where: { code: input },
       });
     }),
 });

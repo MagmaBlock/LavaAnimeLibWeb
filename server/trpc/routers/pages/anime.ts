@@ -86,7 +86,7 @@ export const animeRouter = router({
   // 获取动画的所有剧集信息
   getAnimeMainData: protectedProcedure
     .input(z.object({ animeId: z.number() }))
-    .query(async ({ input, ctx }): Promise<TrpcPageAnimeMainData> => {
+    .query(async ({ input, ctx }): Promise<TrpcPagesAnimeMainData> => {
       const { animeId } = input;
       const userId = ctx.user.id;
 
@@ -462,7 +462,7 @@ export const animeRouter = router({
 });
 
 // 定义返回类型
-export type TrpcPageAnimeMainData = {
+export type TrpcPagesAnimeMainData = {
   episodes: {
     episode: AnimeEpisode;
     // 剧集的所有 MirrorGroup

@@ -2,6 +2,7 @@ import { router } from "../trpc";
 import { animeCollectionRouter } from "./common/anime-collection";
 import { animeViewHistoryRouter } from "./common/anime-view-history";
 import { animeCardRouter } from "./components/anime-card";
+import { inviteCodeRouter } from "./pages/admin/invite-code";
 import { animeRouter } from "./pages/anime";
 import { animeIndexRouter } from "./pages/anime-index";
 import { authRouter } from "./pages/auth";
@@ -15,6 +16,9 @@ export const appRouter = router({
     user: userRouter,
     userInfo: userInfoRouter,
     anime: animeRouter,
+    admin: router({
+      inviteCode: inviteCodeRouter,
+    }),
   }),
   components: router({
     animeCard: animeCardRouter,

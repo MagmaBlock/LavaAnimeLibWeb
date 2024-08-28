@@ -8,6 +8,7 @@ import { Sha256Password } from "./password/sha256";
 import type { Token } from "./token/interface";
 import { JwtToken } from "./token/jwt";
 import { UserValidator } from "./validator/user";
+import { InviteCodeService } from "../invite-code/service";
 
 export class UserService {
   private authentication: Token;
@@ -47,10 +48,15 @@ export class UserService {
         message: "密码至少包含字母, 且长度为 7-64",
       });
     }
-    if (!inviteCode) {
+
+    // 验证邀请码有效性
+    const inviteCodeService =
+      App.instance.services.getService(InviteCodeService);
+    const isInviteCodeValid = await inviteCodeService.test(inviteCode);
+    if (!isInviteCodeValid) {
       throw createError({
         statusCode: 400,
-        message: "邀请码不存在",
+        message: "邀请码无效或已过期",
       });
     }
 
@@ -64,27 +70,11 @@ export class UserService {
           email,
           name,
           password: encryptedPassword.serialize(),
-          inviteBy: {
-            connect: {
-              code: inviteCode,
-              usedBy: null,
-              OR: [
-                {
-                  expiredAt: {
-                    gt: new Date(),
-                  },
-                },
-                {
-                  expiredAt: null,
-                },
-              ],
-            },
-          },
-        },
-        include: {
-          inviteBy: true,
         },
       });
+
+      // 标记邀请码为已使用
+      await inviteCodeService.use(inviteCode, create.id);
 
       return create;
     } catch (error) {
@@ -102,12 +92,6 @@ export class UserService {
               message: "用户名已被使用",
             });
           }
-        }
-        if (error.code === "P2025") {
-          throw createError({
-            statusCode: 403,
-            message: "邀请码无效",
-          });
         }
       }
       throw error;
