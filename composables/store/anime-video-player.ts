@@ -32,7 +32,6 @@ export const useAnimeVideoPlayerStore = defineStore(
         playsInline: true,
         lang: "zh-cn",
         lock: true,
-        fastForward: true,
         autoOrientation: true,
         airplay: true,
         settings: [
