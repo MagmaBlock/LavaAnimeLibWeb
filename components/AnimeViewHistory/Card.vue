@@ -22,6 +22,8 @@
               v-for="record in historyInDay"
               :key="record.id"
               v-bind="record"
+              :episodeType="record.episode?.type"
+              :episodeDisplay="record.episode?.episodeDisplay"
               :isDeleteMode="isDeleteMode"
               @delete="deleteHistory"
             />
@@ -45,6 +47,8 @@
               v-for="history in flattenHistory(data.history)"
               :key="history.updatedAt.getTime()"
               v-bind="history"
+              :episodeType="history.episode?.type"
+              :episodeDisplay="history.episode?.episodeDisplay"
             />
           </div>
         </NScrollbar>
