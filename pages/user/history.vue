@@ -3,7 +3,7 @@
     <template #head>
       <NavBarTopNav blur />
     </template>
-    <AnimeViewHistoryCard :isFullView="true" />
+    <AnimeViewHistoryCard :fullView="true" />
     <NBackTop :bottom="120" />
   </ContainerPageMobileFull>
 </template>

@@ -3,7 +3,7 @@
     <!-- 头部按钮 -->
     <template #header-extra>
       <AnimeViewHistoryHeaderButtons
-        :isFullView="isFullView"
+        :isFullView="fullView"
         :isDeleteMode="isDeleteMode"
         :status="status"
         @toggleDeleteMode="toggleDeleteMode"
@@ -14,7 +14,7 @@
     <!-- 历史记录内容 -->
     <div v-if="data && Object.keys(data.history).length">
       <!-- 全视图模式 -->
-      <template v-if="isFullView">
+      <template v-if="fullView">
         <div v-for="(historyInDay, date) in data.history" :key="date">
           <NH3 class="text-lg font-semibold mb-4">{{ formatDate(date) }}</NH3>
           <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -40,7 +40,7 @@
       <!-- 简略视图模式 -->
       <template v-else>
         <NScrollbar x-scrollable class="overflow-x-auto">
-          <div class="flex gap-4" style="width: max-content">
+          <div :class="{'flex gap-4': !vertical, 'flex flex-col gap-4': vertical}" :style="vertical ? '' : 'width: max-content'">
             <AnimeViewHistoryRecord
               v-for="history in flattenHistory(data.history)"
               :key="history.updatedAt.getTime()"
@@ -60,7 +60,8 @@
 import moment from "moment";
 
 const props = defineProps<{
-  isFullView?: boolean;
+  fullView?: boolean;
+  vertical?: boolean;
 }>();
 
 const { $client } = useNuxtApp();
@@ -68,7 +69,7 @@ const message = useMessage();
 
 // 状态变量
 const currentPage = ref(1);
-const pageSize = ref(props.isFullView ? 40 : 10);
+const pageSize = ref(props.fullView ? 40 : 10);
 const isDeleteMode = ref(false);
 
 // 获取历史记录数据
