@@ -99,10 +99,10 @@ export const animeViewHistoryRouter = router({
               name: history.anime.name ?? history.anime.originalName,
               episode: history.episode
                 ? {
-                    id: history.episode.id,
-                    type: history.episode.type,
-                    episodeDisplay: history.episode.episodeDisplay,
-                  }
+                  id: history.episode.id,
+                  type: history.episode.type,
+                  episodeDisplay: history.episode.episodeDisplay,
+                }
                 : null,
               currentTime: history.currentTime,
               totalTime: history.totalTime,
