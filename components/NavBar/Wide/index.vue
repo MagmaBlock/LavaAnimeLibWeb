@@ -64,7 +64,7 @@
 
     <!-- 底部按钮 -->
     <div class="py-4 flex justify-center">
-      <NavBarDarkModeBotton />
+      <NavBarWideDarkModeBotton />
     </div>
   </div>
 </template>
