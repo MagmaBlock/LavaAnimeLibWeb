@@ -204,14 +204,19 @@ export class StorageIndexManager {
   /**
    * 对 Library 进行全盘扫描, 数据库中的记录同步删改
    * @param rootPath 根路径
+   * @returns 扫描到的文件(夹)数量
    */
-  public async scan(rootPath: string) {
+  public async scan(rootPath: string): Promise<number> {
     const scannedRecords = new Set<number>();
     await this.scanRecursively(rootPath, scannedRecords);
 
+    const scannedCount = scannedRecords.size;
+
     App.instance.logger.info(
-      `${this.storageSystem.storage.name}(${this.storageSystem.storage.id}) - ${rootPath} 中成功扫描到了 ${scannedRecords.size} 个文件(夹).`
+      `${this.storageSystem.storage.name}(${this.storageSystem.storage.id}) - ${rootPath} 中成功扫描到了 ${scannedCount} 个文件(夹).`
     );
+
+    return scannedCount;
   }
 
   /**

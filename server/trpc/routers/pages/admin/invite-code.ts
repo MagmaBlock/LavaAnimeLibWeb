@@ -6,7 +6,7 @@ import { InviteCode } from "@prisma/client";
 
 const inviteCodeService = App.instance.services.getService(InviteCodeService);
 
-export const inviteCodeRouter = router({
+export const adminInviteCodeRouter = router({
   createInviteCode: adminProcedure
     .input(
       z.object({

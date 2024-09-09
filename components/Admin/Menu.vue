@@ -34,9 +34,14 @@ const menuOptions: MenuOption[] = [
     icon: renderIcon("material-symbols:home"),
   },
   {
-    label: "邀请码管理",
+    label: "邀请码",
     key: "/admin/invite-code",
     icon: renderIcon("material-symbols:bookmark"),
+  },
+  {
+    label: "存储文件索引",
+    key: "/admin/storage/index",
+    icon: renderIcon("material-symbols:folder"),
   },
 ];
 
