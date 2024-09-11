@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, h } from "vue";
+import { ref, computed, h, onMounted } from "vue";
 import {
   NSpace,
   NCard,
@@ -76,7 +76,11 @@ const currentPath = ref("/");
 // 获取存储节点列表
 const fetchStorageList = async () => {
   storageList.value =
-    await $client.pages.admin.storage.index.getStorageList.query();
+    await $client.pages.admin.storage.fileIndex.getStorageList.query();
+  if (storageList.value.length > 0) {
+    selectedStorage.value = storageList.value[0].id;
+    await handleStorageChange(selectedStorage.value);
+  }
 };
 
 // 存储节点选项
@@ -98,7 +102,7 @@ const getDirectoryContents = async (path = "/") => {
   isLoading.value = true;
   try {
     fileList.value =
-      await $client.pages.admin.storage.index.getDirectoryContents.query({
+      await $client.pages.admin.storage.fileIndex.getDirectoryContents.query({
         storageId: selectedStorage.value,
         path,
       });
@@ -145,7 +149,7 @@ const scanPaths = async (paths: string[]) => {
   isLoading.value = true;
   for (const path of paths) {
     try {
-      const result = await $client.pages.admin.storage.index.scan.mutate({
+      const result = await $client.pages.admin.storage.fileIndex.scan.mutate({
         storageId: selectedStorage.value!,
         path,
       });
@@ -235,5 +239,7 @@ const columns: DataTableColumns<StorageIndex> = [
 ];
 
 // 初始化
-fetchStorageList();
+onMounted(() => {
+  fetchStorageList();
+});
 </script>

@@ -39,9 +39,21 @@ const menuOptions: MenuOption[] = [
     icon: renderIcon("material-symbols:bookmark"),
   },
   {
-    label: "存储文件索引",
-    key: "/admin/storage/index",
-    icon: renderIcon("material-symbols:folder"),
+    label: "存储",
+    key: "storage",
+    icon: renderIcon("material-symbols:storage"),
+    children: [
+      {
+        label: "存储器",
+        key: "/admin/storage/manage",
+        icon: renderIcon("material-symbols:settings"),
+      },
+      {
+        label: "文件索引",
+        key: "/admin/storage/file-index",
+        icon: renderIcon("material-symbols:folder"),
+      },
+    ],
   },
 ];
 
