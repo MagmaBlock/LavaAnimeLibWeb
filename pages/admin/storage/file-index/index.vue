@@ -1,5 +1,15 @@
 <template>
   <NSpace vertical>
+    <!-- 文件索引说明 -->
+    <NAlert title="什么是文件索引？" type="info" closable>
+      <div>
+        文件索引是番剧库为提高性能和兼容性而创建的文件列表缓存。读取真实存储节点后，会建立相应的索引。<br />
+        加速访问：通过索引快速获取文件信息，提高性能。<br />
+        抹平差异：统一处理不同存储节点的文件。<br />
+        优化资源：减少对实际文件系统的访问，降低系统负担。
+      </div>
+    </NAlert>
+
     <!-- 存储节点选择 -->
     <NCard title="存储节点选择">
       <NSelect
@@ -17,21 +27,29 @@
           <NButton @click="navigateToParent" :disabled="currentPath === '/'">
             返回上级
           </NButton>
-          <NButton @click="refreshCurrentDirectory" :loading="isLoading">
-            刷新
-          </NButton>
           <NButton
-            @click="scanSelectedPaths"
+            @click="indexSelectedPaths"
             type="primary"
-            :loading="isLoading"
+            :loading="isIndexing"
             :disabled="selectedRows.length === 0"
           >
-            扫描选中路径
+            索引选中目录
           </NButton>
-          <NButton @click="scanAllPaths" type="info" :loading="isLoading">
-            扫描全盘
+          <NButton @click="indexEntireStorage" type="info" :loading="isIndexing">
+            索引整个存储
           </NButton>
         </NSpace>
+        <NBreadcrumb>
+          <NBreadcrumbItem @click="navigateToRoot">根目录</NBreadcrumbItem>
+          <NBreadcrumbItem
+            v-for="(segment, index) in pathSegments"
+            :key="index"
+            @click="navigateToPath(index)"
+          >
+            {{ segment }}
+          </NBreadcrumbItem>
+        </NBreadcrumb>
+
         <NDataTable
           :columns="columns"
           :data="fileList"
@@ -45,19 +63,21 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, h, onMounted } from "vue";
+import { Icon } from "#components";
+import type { Storage, StorageIndex } from "@prisma/client";
+import type { DataTableColumns } from "naive-ui";
 import {
-  NSpace,
-  NCard,
-  NSelect,
+  NBreadcrumb,
+  NBreadcrumbItem,
   NButton,
+  NCard,
   NDataTable,
   NIcon,
+  NSelect,
+  NSpace,
   useMessage,
 } from "naive-ui";
-import type { DataTableColumns } from "naive-ui";
-import type { Storage, StorageIndex } from "@prisma/client";
-import { Icon } from "#components";
+import { computed, h, onMounted, ref } from "vue";
 
 definePageMeta({
   layout: "admin",
@@ -70,8 +90,13 @@ const storageList = ref<Storage[]>([]);
 const selectedStorage = ref<string | null>(null);
 const fileList = ref<StorageIndex[]>([]);
 const selectedRows = ref<StorageIndex[]>([]);
-const isLoading = ref(false);
+const isIndexing = ref(false);
 const currentPath = ref("/");
+
+// 计算当前路径的段
+const pathSegments = computed(() => {
+  return currentPath.value.split("/").filter(Boolean);
+});
 
 // 获取存储节点列表
 const fetchStorageList = async () => {
@@ -99,7 +124,6 @@ const getDirectoryContents = async (path = "/") => {
     message.warning("请先选择存储节点");
     return;
   }
-  isLoading.value = true;
   try {
     fileList.value =
       await $client.pages.admin.storage.fileIndex.getDirectoryContents.query({
@@ -109,8 +133,6 @@ const getDirectoryContents = async (path = "/") => {
     currentPath.value = path;
   } catch (error) {
     message.error(`获取文件索引失败: ${(error as Error).message}`);
-  } finally {
-    isLoading.value = false;
   }
 };
 
@@ -125,28 +147,28 @@ const handleStorageChange = async (value: string | null) => {
   }
 };
 
-// 扫描选中路径
-const scanSelectedPaths = async () => {
+// 索引选中目录
+const indexSelectedPaths = async () => {
   if (!selectedStorage.value) {
     message.warning("请先选择存储节点");
     return;
   }
   const paths = selectedRows.value.map((file) => file.path + "/" + file.name);
-  await scanPaths(paths);
+  await indexPaths(paths);
 };
 
-// 扫描全盘
-const scanAllPaths = async () => {
+// 索引整个存储
+const indexEntireStorage = async () => {
   if (!selectedStorage.value) {
     message.warning("请先选择存储节点");
     return;
   }
-  await scanPaths(["/"]);
+  await indexPaths(["/"]);
 };
 
-// 扫描路径
-const scanPaths = async (paths: string[]) => {
-  isLoading.value = true;
+// 索引路径
+const indexPaths = async (paths: string[]) => {
+  isIndexing.value = true;
   for (const path of paths) {
     try {
       const result = await $client.pages.admin.storage.fileIndex.scan.mutate({
@@ -154,14 +176,14 @@ const scanPaths = async (paths: string[]) => {
         path,
       });
       message.success(
-        `${selectedStorage.value} 的 ${path} 扫描完成，获取到 ${result.scannedCount} 个文件`
+        `${selectedStorage.value} 的 ${path} 索引完成，获取到 ${result.scannedCount} 个文件`
       );
     } catch (error) {
-      message.error(`扫描失败: ${(error as Error).message}`);
+      message.error(`索引失败: ${(error as Error).message}`);
     }
   }
-  await refreshCurrentDirectory();
-  isLoading.value = false;
+  await getDirectoryContents(currentPath.value);
+  isIndexing.value = false;
 };
 
 // 处理选中变化
@@ -169,11 +191,6 @@ const handleCheckedRowKeysChange = (keys: (string | number)[]) => {
   selectedRows.value = fileList.value.filter(
     (file) => keys.includes(file.id) && file.isDirectory
   );
-};
-
-// 刷新当前目录
-const refreshCurrentDirectory = async () => {
-  await getDirectoryContents(currentPath.value);
 };
 
 // 导航到父目录
@@ -187,6 +204,17 @@ const navigateToParent = () => {
 
 // 处理文件夹点击
 const handleFolderClick = (path: string) => {
+  getDirectoryContents(path);
+};
+
+// 导航到根目录
+const navigateToRoot = () => {
+  getDirectoryContents("/");
+};
+
+// 导航到指定路径
+const navigateToPath = (index: number) => {
+  const path = "/" + pathSegments.value.slice(0, index + 1).join("/");
   getDirectoryContents(path);
 };
 
