@@ -11,7 +11,7 @@ import type {
   BangumiAPIEpisode,
   BangumiAPIEpisodes,
   BangumiAPISubject,
-} from "~/server/types/api/bangumi";
+} from "~/server/services/api/types/bangumi";
 import type { AnimeInfoUpdater } from "./interface";
 
 /**

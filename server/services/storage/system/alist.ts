@@ -8,8 +8,8 @@ import type {
   AlistMoveOrCopyRequest,
   AlistRemoveRequest,
   AlistStorageConfig,
-} from "~/server/types/storage/storage/reader/alist";
-import { extensionMap } from "../../../types/anime/episode/type";
+} from "~/server/services/storage/system/types/alist";
+import { extensionMap } from "../types/extension";
 import type { StorageSystem } from "./interface";
 
 /**

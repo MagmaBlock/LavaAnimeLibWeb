@@ -1,6 +1,5 @@
 import type { Anime, Storage, StorageIndex } from "@prisma/client";
-import nodePath from "path/posix";
-import type { StorageScrapeResult } from "~/server/types/storage/scraper/result";
+import type { StorageScrapeResult } from "~/server/services/storage/scraper/types/result";
 import { App } from "../../app";
 import { StorageIndexManager } from "../index/manager";
 import type { StorageScraper } from "./interface";

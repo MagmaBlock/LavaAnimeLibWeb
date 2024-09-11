@@ -2,7 +2,7 @@ import type { AnimeEpisode, EpisodeType, StorageIndex } from "@prisma/client";
 import { parseFileName } from "anime-name-tool";
 import nodePathPosix from "path/posix";
 import { App } from "~/server/services/app";
-import type { AnimeEpisodeLinkResult } from "~/server/types/anime/episode/file-linker";
+import { AnimeEpisodeLinkResult } from "./types";
 
 export class AnimeEpisodeFileLinker {
   private readonly prisma = App.instance.prisma;

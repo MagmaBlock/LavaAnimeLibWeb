@@ -1,14 +1,12 @@
 import { Prisma, type User } from "@prisma/client";
-import { H3Event } from "h3";
-import type { TokenPayload } from "~/server/types/token";
-import type { LoginSuccessResult } from "~/server/types/user";
+import type { TokenPayload } from "~/server/services/user/token/types";
 import { App } from "../app";
+import { InviteCodeService } from "../invite-code/service";
 import { encryptedPasswordFactory } from "./password/interface";
 import { Sha256Password } from "./password/sha256";
 import type { Token } from "./token/interface";
 import { JwtToken } from "./token/jwt";
 import { UserValidator } from "./validator/user";
-import { InviteCodeService } from "../invite-code/service";
 
 export class UserService {
   private authentication: Token;
@@ -104,7 +102,10 @@ export class UserService {
    * @param password 明文密码
    * @returns 返回一个 JWT Token
    */
-  async login(account: string, password: string): Promise<LoginSuccessResult> {
+  async login(account: string, password: string): Promise<{
+    token: string;
+    user: User;
+  }> {
     let user = await App.instance.prisma.user.findFirst({
       where: {
         OR: [{ email: account }, { name: account }],
@@ -119,7 +120,7 @@ export class UserService {
 
     let encryptedPassword = encryptedPasswordFactory(user.password);
     if (encryptedPassword.verify(password)) {
-      return <LoginSuccessResult>{
+      return {
         token: this.signTokenByUserId(user.id),
         user,
       };

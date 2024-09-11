@@ -6,7 +6,7 @@ import type {
   BangumiAPISubjectSubjects,
   BangumiAPIEpisodes,
   BangumiAPIEpisode,
-} from "~/server/types/api/bangumi";
+} from "~/server/services/api/types/bangumi";
 
 /**
  * 对 BangumiAPI 的实现
