@@ -12,7 +12,7 @@ for (const storage of storages) {
   const start = Date.now();
   const storageService = app.services.getService(StorageService);
   const scraper = storageService.getScraper(storage);
-  const results = await scraper.scrapeStartsWith("/");
+  const results = await scraper.scrapeChildFiles("/");
   const newAnimes = results.filter((r) => r.createAnime);
 
   console.log(

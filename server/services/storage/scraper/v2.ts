@@ -223,29 +223,19 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
    * @param pathStartsWith
    * @returns 挂削结果
    */
-  async scrapeStartsWith(
+  async scrapeChildFiles(
     pathStartsWith: string
   ): Promise<StorageScrapeResult[]> {
-    let files: StorageIndex[] = [];
+    let files: StorageIndex[] = [
+      // 所有的子文件/子文件夹
+      ...(await this.indexManager.getChildFiles(pathStartsWith)),
+      // 当前文件夹
+      await this.indexManager.getFileInfo(pathStartsWith),
+    ]
+      // 过滤掉 null
+      .filter((f) => f !== null);
 
-    const childFiles = await this.indexManager.getChildFiles(pathStartsWith);
-
-    files = files.concat(childFiles);
-
-    const pathSplit = pathStartsWith.match(/^(.*)(\/)(.*)$/);
-    if (pathSplit) {
-      const [fullMatch, group1, group2, group3] = pathSplit;
-      const pathFile = await App.instance.prisma.storageIndex.findFirst({
-        where: {
-          path: group1,
-          name: group3,
-        },
-      });
-      if (pathFile) {
-        files.push(pathFile);
-      }
-    }
-
+    // 挂削
     return await this.scrapeFiles(files);
   }
 

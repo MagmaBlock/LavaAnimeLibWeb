@@ -1,5 +1,5 @@
 import type { Storage, StorageIndex } from "@prisma/client";
-import type { StorageScrapeResult } from "~/server/services/storage/scraper/types/result";
+import type { StorageScrapeResult } from "./types/result";
 
 /**
  * 资源库挂削器
@@ -15,7 +15,7 @@ export interface StorageScraper {
    *
    * @param pathStartsWith 挂削开始的路径。此值即使指定，实现类也能够接触文件在存储库的完整路径。
    */
-  scrapeStartsWith(pathStartsWith: string): Promise<StorageScrapeResult[]>;
+  scrapeChildFiles(pathStartsWith: string): Promise<StorageScrapeResult[]>;
 
   /**
    * 对文件进行挂削
