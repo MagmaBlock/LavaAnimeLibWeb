@@ -35,7 +35,11 @@
           >
             索引选中目录
           </NButton>
-          <NButton @click="indexEntireStorage" type="info" :loading="isIndexing">
+          <NButton
+            @click="indexEntireStorage"
+            type="info"
+            :loading="isIndexing"
+          >
             索引整个存储
           </NButton>
         </NSpace>
@@ -153,7 +157,10 @@ const indexSelectedPaths = async () => {
     message.warning("请先选择存储节点");
     return;
   }
-  const paths = selectedRows.value.map((file) => file.path + "/" + file.name);
+  const paths = selectedRows.value.map((file) => {
+    if (file.path === "/") return file.path + file.name;
+    return file.path + "/" + file.name;
+  });
   await indexPaths(paths);
 };
 
