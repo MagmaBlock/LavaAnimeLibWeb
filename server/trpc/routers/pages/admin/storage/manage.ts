@@ -9,7 +9,7 @@ const prisma = App.instance.prisma;
 
 export const adminStorageManagerRouter = router({
   // 获取所有存储器
-  getStorages: publicProcedure.query(async () => {
+  getAllStorage: publicProcedure.query(async () => {
     return await storageService.getAllStorage();
   }),
 

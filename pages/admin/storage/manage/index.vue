@@ -43,7 +43,7 @@ const storageList = ref<Storage[]>([]);
 
 const fetchStorageList = async () => {
   storageList.value =
-    await $client.pages.admin.storage.manager.getStorages.query();
+    await $client.pages.admin.storage.manager.getAllStorage.query();
 };
 
 const handleDelete = async (id: string) => {

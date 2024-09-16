@@ -20,7 +20,7 @@ export const adminStorageIndexRouter = router({
     }),
 
   // 获取指定路径下的文件索引
-  getDirectoryContents: publicProcedure
+  getDirContents: publicProcedure
     .input(z.object({ path: z.string(), storageId: z.string() }))
     .query(async ({ input }) => {
       const storage = await storageService.getStorage(input.storageId);
@@ -32,7 +32,7 @@ export const adminStorageIndexRouter = router({
     }),
 
   // 获取存储器列表
-  getStorageList: publicProcedure.query(async () => {
+  getAllStorage: publicProcedure.query(async () => {
     return await storageService.getAllStorage();
   }),
 });

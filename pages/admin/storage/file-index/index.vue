@@ -105,7 +105,7 @@ const pathSegments = computed(() => {
 // 获取存储节点列表
 const fetchStorageList = async () => {
   storageList.value =
-    await $client.pages.admin.storage.fileIndex.getStorageList.query();
+    await $client.pages.admin.storage.fileIndex.getAllStorage.query();
   if (storageList.value.length > 0) {
     selectedStorage.value = storageList.value[0].id;
     await handleStorageChange(selectedStorage.value);
@@ -130,7 +130,7 @@ const getDirectoryContents = async (path = "/") => {
   }
   try {
     fileList.value =
-      await $client.pages.admin.storage.fileIndex.getDirectoryContents.query({
+      await $client.pages.admin.storage.fileIndex.getDirContents.query({
         storageId: selectedStorage.value,
         path,
       });
