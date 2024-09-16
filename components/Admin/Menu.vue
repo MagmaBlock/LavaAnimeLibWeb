@@ -53,6 +53,11 @@ const menuOptions: MenuOption[] = [
         key: "/admin/storage/file-index",
         icon: renderIcon("material-symbols:folder"),
       },
+      {
+        label: "挂削",
+        key: "/admin/storage/scrape",
+        icon: renderIcon("material-symbols:download"),
+      },
     ],
   },
 ];
