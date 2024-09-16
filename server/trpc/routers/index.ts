@@ -10,6 +10,8 @@ import { authRouter } from "./pages/auth";
 import { userRouter } from "./pages/user";
 import { userInfoRouter } from "./pages/user-info";
 import { adminStorageManagerRouter } from "./pages/admin/storage/manage";
+import { adminStorageScrapeRouter } from "./pages/admin/storage/scrape";
+import { adminStoragePathSelectorRouter } from "./components/admin/storage/path-selector";
 
 export const appRouter = router({
   pages: router({
@@ -22,12 +24,18 @@ export const appRouter = router({
       inviteCode: adminInviteCodeRouter,
       storage: router({
         fileIndex: adminStorageFileIndexRouter,
-        manager: adminStorageManagerRouter
+        manager: adminStorageManagerRouter,
+        scrape: adminStorageScrapeRouter,
       })
     }),
   }),
   components: router({
     animeCard: animeCardRouter,
+    admin: router({
+      storage: router({
+        pathSelector: adminStoragePathSelectorRouter,
+      }),
+    }),
   }),
   common: router({
     animeViewHistory: animeViewHistoryRouter,
