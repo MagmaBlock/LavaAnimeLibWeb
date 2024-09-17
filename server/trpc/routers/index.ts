@@ -12,7 +12,7 @@ import { userInfoRouter } from "./pages/user-info";
 import { adminStorageManagerRouter } from "./pages/admin/storage/manage";
 import { adminStorageScrapeRouter } from "./pages/admin/storage/scrape";
 import { adminStoragePathSelectorRouter } from "./components/admin/storage/path-selector";
-
+import { adminAnimeManageRouter } from "./pages/admin/anime/manage";
 export const appRouter = router({
   pages: router({
     animeIndex: animeIndexRouter,
@@ -21,6 +21,9 @@ export const appRouter = router({
     userInfo: userInfoRouter,
     anime: animeRouter,
     admin: router({
+      anime: router({
+        manage: adminAnimeManageRouter,
+      }),
       inviteCode: adminInviteCodeRouter,
       storage: router({
         fileIndex: adminStorageFileIndexRouter,

@@ -34,13 +34,20 @@ const menuOptions: MenuOption[] = [
     icon: renderIcon("material-symbols:home"),
   },
   {
-    label: "邀请码",
-    key: "/admin/invite-code",
-    icon: renderIcon("material-symbols:bookmark"),
+    label: "番剧",
+    key: "/admin/anime",
+    icon: renderIcon("material-symbols:movie"),
+    children: [
+      {
+        label: "管理",
+        key: "/admin/anime/manage",
+        icon: renderIcon("material-symbols:list-alt"),
+      },
+    ],
   },
   {
     label: "存储",
-    key: "storage",
+    key: "/admin/storage",
     icon: renderIcon("material-symbols:storage"),
     children: [
       {
@@ -59,6 +66,11 @@ const menuOptions: MenuOption[] = [
         icon: renderIcon("material-symbols:download"),
       },
     ],
+  },
+  {
+    label: "邀请码",
+    key: "/admin/invite-code",
+    icon: renderIcon("material-symbols:bookmark"),
   },
 ];
 
