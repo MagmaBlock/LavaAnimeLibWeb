@@ -176,14 +176,19 @@ const indexEntireStorage = async () => {
 // 索引路径
 const indexPaths = async (paths: string[]) => {
   isIndexing.value = true;
+  const storageId = selectedStorage.value;
+  if (!storageId) {
+    message.warning("请先选择存储节点");
+    return;
+  }
   for (const path of paths) {
     try {
       const result = await $client.pages.admin.storage.fileIndex.scan.mutate({
-        storageId: selectedStorage.value!,
+        storageId: storageId,
         path,
       });
       message.success(
-        `${selectedStorage.value} 的 ${path} 索引完成，获取到 ${result.scannedCount} 个文件`
+        `${storageId} 的 ${path} 索引完成，获取到 ${result.scannedCount} 个文件`
       );
     } catch (error) {
       message.error(`索引失败: ${(error as Error).message}`);
