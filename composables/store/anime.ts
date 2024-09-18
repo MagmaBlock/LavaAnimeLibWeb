@@ -39,6 +39,9 @@ export const useAnimeStore = defineStore("anime", () => {
           activeEpisodeId.value = recommendedEpisode.episode.id;
         }
       }
+
+      // 尝试更新动画信息
+      tryUpdateAnimeInfo();
     }
   };
 
@@ -182,7 +185,10 @@ export const useAnimeStore = defineStore("anime", () => {
     const currentIndex = mainData.value.episodes.findIndex(
       (ep) => ep.episode.id === activeEpisodeId.value
     );
-    if (currentIndex === -1 || currentIndex === mainData.value.episodes.length - 1) {
+    if (
+      currentIndex === -1 ||
+      currentIndex === mainData.value.episodes.length - 1
+    ) {
       return null;
     }
     return mainData.value.episodes[currentIndex + 1];
@@ -198,8 +204,17 @@ export const useAnimeStore = defineStore("anime", () => {
     return false;
   };
 
+  // 尝试更新动画信息
+  const tryUpdateAnimeInfo = async () => {
+    if (!animeId.value) return;
+    const { isUpdated } = await $client.pages.anime.tryUpdateAnimeInfo.mutate({
+      animeId: animeId.value,
+    });
+
+    if (isUpdated) await Promise.all([mainDataExecute(), animeInfoExecute()]);
+  };
+
   return {
-    build,
     animeId,
     activeEpisodeId,
     activeFileId,

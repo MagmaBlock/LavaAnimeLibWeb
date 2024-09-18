@@ -2,11 +2,14 @@ import { AnimeEpisode, StorageIndex } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { parseFileName } from "anime-name-tool";
 import { z } from "zod";
+import { AnimeEpisodeFileLinker } from "~/server/services/anime/episode/file-linker";
 import { AnimeFileService } from "~/server/services/anime/file/service";
 import { AnimePictureSerivce } from "~/server/services/anime/picture/serivce";
 import { App } from "~/server/services/app";
 import { StorageService } from "~/server/services/storage/service";
 import { protectedProcedure, router } from "../../trpc";
+import { AnimeService } from "~/server/services/anime/service";
+import moment from "moment";
 
 const prisma = App.instance.prisma;
 
@@ -23,6 +26,7 @@ const isVideoCompleted = (
 };
 
 export const animeRouter = router({
+  // 获取动画的资料信息
   getAnimeInfo: protectedProcedure
     .input(z.object({ animeId: z.number() }))
     .query(async ({ input, ctx }) => {
@@ -90,11 +94,7 @@ export const animeRouter = router({
       const { animeId } = input;
       const userId = ctx.user.id;
 
-      // 获取所需的服务实例
-      const animeFileService =
-        App.instance.services.getService(AnimeFileService);
-
-      // 获取当前动画的 nsfw 状态
+      // 获取当前动画的 nsfw 状态，以及判断动画是否存在
       const anime = await prisma.anime.findUnique({
         where: { id: animeId },
         select: { nsfw: true },
@@ -103,6 +103,14 @@ export const animeRouter = router({
       if (!anime) {
         throw new TRPCError({ code: "NOT_FOUND", message: "动画不存在" });
       }
+
+      // 获取所需的服务实例
+      const animeFileService =
+        App.instance.services.getService(AnimeFileService);
+
+      // 将番剧的文件与剧集进行自动关联
+      const animeEpisodeFileLinker = new AnimeEpisodeFileLinker();
+      await animeEpisodeFileLinker.linkAnimeFiles([animeId]);
 
       // 获取所有 noNSFW 为 true 的存储
       const noNSFWStorages = await prisma.storage.findMany({
@@ -459,6 +467,19 @@ export const animeRouter = router({
         return null;
       }
     ),
+
+  // 让服务端判断动画信息是否需要更新。此接口返回信息是否已被更新，如果有，前端需要再次刷新 getAnimeInfo 和 getAnimeMainData
+  tryUpdateAnimeInfo: protectedProcedure
+    .input(z.object({ animeId: z.number() }))
+    .mutation(async ({ input }) => {
+      const { animeId } = input;
+      const animeService = App.instance.services.getService(AnimeService);
+      const isUpdated = await animeService.updateAnimeInfoBefore(
+        animeId,
+        moment().subtract(3, "days").toDate()
+      );
+      return { isUpdated };
+    }),
 });
 
 // 定义返回类型
