@@ -9,18 +9,27 @@
       show-trigger
       :native-scrollbar="false"
     >
+      <NavBarTopNav
+        title="管理控制台"
+        custom-back
+        @back="router.push('/user')"
+      />
       <AdminMenu mode="vertical" />
     </NLayoutSider>
     <NLayout>
-      <NLayoutHeader>
-        <NavBarTopNav title="后台管理" />
-        <AdminMenu
-          v-if="!breakpoint.greaterOrEqual('lg').value"
-          mode="horizontal"
+      <NLayoutHeader
+        v-if="!breakpoint.greaterOrEqual('lg').value"
+        class="sticky top-0 z-10"
+      >
+        <NavBarTopNav
+          title="管理控制台"
+          custom-back
+          @back="router.push('/user')"
         />
+        <AdminMenu mode="horizontal" />
       </NLayoutHeader>
       <NLayoutContent :native-scrollbar="false">
-        <ContainerPage class="pb-56 lg:pb-0">
+        <ContainerPage>
           <NuxtPage />
         </ContainerPage>
       </NLayoutContent>
@@ -31,5 +40,6 @@
 <script lang="ts" setup>
 import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 
+const router = useRouter();
 const breakpoint = useBreakpoints(breakpointsTailwind);
 </script>

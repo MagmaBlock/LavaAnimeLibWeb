@@ -9,18 +9,23 @@
       show-trigger
       :native-scrollbar="false"
     >
+      <NavBarTopNav title="用户设置" custom-back @back="router.push('/user')" />
       <UserSettingMenu mode="vertical" />
     </NLayoutSider>
     <NLayout>
-      <NLayoutHeader>
-        <NavBarTopNav title="用户设置" />
-        <UserSettingMenu
-          v-if="!breakpoint.greaterOrEqual('lg').value"
-          mode="horizontal"
+      <NLayoutHeader
+        v-if="!breakpoint.greaterOrEqual('lg').value"
+        class="sticky top-0 z-10"
+      >
+        <NavBarTopNav
+          title="用户设置"
+          custom-back
+          @back="router.push('/user')"
         />
+        <UserSettingMenu mode="horizontal" />
       </NLayoutHeader>
       <NLayoutContent :native-scrollbar="false">
-        <ContainerPage class="pb-56 lg:pb-0">
+        <ContainerPage>
           <NuxtPage />
         </ContainerPage>
       </NLayoutContent>
@@ -31,5 +36,6 @@
 <script lang="ts" setup>
 import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 
+const router = useRouter();
 const breakpoint = useBreakpoints(breakpointsTailwind);
 </script>
