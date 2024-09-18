@@ -41,7 +41,7 @@ const isWide = useBreakpoints(breakpointsTailwind).greater("md");
     class="relative box-content overflow-hidden select-none rounded-md transition ease-out border-2 border-white/0 hover:border-2 hover:border-blue-600 hover:lg:brightness-90"
     @contextmenu="handleMenu"
   >
-    <div class="absolute h-full w-full bg-gray-100 dark:bg-gray-500"></div>
+    <div class="absolute h-full w-full bg-gray-200 dark:bg-zinc-700"></div>
 
     <!-- 上半：海报 + 标题 -->
     <div class="relative cursor-pointer overflow-hidden">
@@ -87,37 +87,34 @@ const isWide = useBreakpoints(breakpointsTailwind).greater("md");
     </div>
 
     <!-- 信息区 -->
-    <div class="relative h-8 dark:bg-zinc-700">
-      <div class="flex h-full">
-        <div class="grid basis-3/4 pl-3">
-          <div class="flex place-items-center gap-x-[3px]">
-            <Icon name="bi:play-btn" size="15" />
-            <div>
-              {{ viewDisplay }}
-            </div>
-          </div>
-        </div>
-        <div class="grid basis-1/4 place-items-center">
-          <!-- 菜单 -->
-          <div
-            v-if="id"
-            class="grid place-items-center cursor-pointer rounded p-1.5 hover:bg-black/20"
-            @click="showMenu = true"
-          >
-            <Icon name="bi:list" />
-          </div>
-          <NDrawer
-            v-model:show="showMenu"
-            :placement="isWide ? 'right' : 'bottom'"
-            default-width="30%"
-            default-height="50%"
-            resizable
-            :auto-focus="false"
-          >
-            <AnimeCardMenu :id="id" class="px-4" />
-          </NDrawer>
-        </div>
-      </div>
-    </div>
+    <NFlex class="relative h-8 px-1" align="center" justify="space-between">
+      <!-- 播放量 -->
+      <NTag size="small" :bordered="false" :color="{ color: '#00000000' }">
+        <template #icon>
+          <NIcon>
+            <Icon name="material-symbols:play-circle" />
+          </NIcon>
+        </template>
+        {{ viewDisplay }}
+      </NTag>
+      <!-- 菜单 -->
+      <NButton v-if="id" @click="showMenu = true" size="tiny" quaternary>
+        <template #icon>
+          <NIcon>
+            <Icon name="material-symbols:menu" />
+          </NIcon>
+        </template>
+      </NButton>
+      <NDrawer
+        v-model:show="showMenu"
+        :placement="isWide ? 'right' : 'bottom'"
+        default-width="30%"
+        default-height="50%"
+        resizable
+        :auto-focus="false"
+      >
+        <AnimeCardMenu :id="id" class="px-4" />
+      </NDrawer>
+    </NFlex>
   </div>
 </template>
