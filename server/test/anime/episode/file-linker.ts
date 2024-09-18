@@ -1,4 +1,4 @@
-import { AnimeService } from "~/server/services/anime/service";
+import { AnimeEpisodeFileLinker } from "~/server/services/anime/episode/file-linker";
 import { App } from "~/server/services/app";
 
 const app = new App();
@@ -22,9 +22,7 @@ const app = new App();
 //   });
 // }
 
-const as = app.services.getService(AnimeService);
-const linker = as.getAnimeEpisodeFileLinker();
-
+const linker = new AnimeEpisodeFileLinker();
 await linker.linkAllAnimeFiles();
 
 console.log("好了");

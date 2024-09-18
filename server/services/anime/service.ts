@@ -1,19 +1,21 @@
 import type { AnimeInfoSource } from "@prisma/client";
 import pLimit from "p-limit";
 import { App } from "../app";
-import { AnimeEpisodeFileLinker } from "./episode/file-linker";
 import { BangumiAnimeInfoUpdater } from "./info/updater/bangumi";
-import type { AnimeInfoUpdater } from "./info/updater/interface";
 
 /**
  * 用于创建新番和管理番剧文件列表的工具类
  */
 export class AnimeService {
   /**
-   * 使用更新器更新指定动画的信息。
+   * 更新指定动画的信息。
    *
-   * 此函数查询指定动画的所有站点信息，并对每个过时的站点调用相应的更新器进行信息更新。
-   * @param animeId 需要更新的动画ID。
+   * @param animeIds 需要更新的动画ID数组。
+   * @description
+   * 1. 查询指定动画的所有站点信息
+   * 2. 对每个站点调用相应的更新器进行信息更新
+   * 3. 使用并发限制控制同时进行的更新任务数
+   * 4. 记录更新过程中的错误
    */
   async updateAnimesInfo(animeIds: number[]): Promise<void> {
     const animes = await App.instance.prisma.anime.findMany({
@@ -27,23 +29,21 @@ export class AnimeService {
       },
     });
 
-    const updatersCache = new Map<AnimeInfoSource, AnimeInfoUpdater>();
     const limit = pLimit(4);
     const tasks = [];
 
     for (const anime of animes) {
       for (const site of anime.sites) {
-        const updater = updatersCache.has(site.siteType)
-          ? updatersCache.get(site.siteType)
-          : this.getSiteInfoUpdater(site.siteType);
-
+        const updater = this.getSiteInfoUpdater(site.siteType);
         if (!updater) continue;
 
-        tasks.push(limit(() => updater.updateRelationAnimes(site)));
+        tasks.push(limit(() => updater.updateAnimeInfo(site)));
       }
     }
 
     const result = await Promise.allSettled(tasks);
+
+    // 寻找更新过程中的错误
     const errors = result.filter(
       (r) => r.status === "rejected"
     ) as PromiseRejectedResult[];
@@ -81,6 +81,41 @@ export class AnimeService {
   }
 
   /**
+   * 更新指定动画的信息，如果该动画的最后更新时间早于指定时间。
+   *
+   * @param animeId 需要更新的动画ID
+   * @param before 指定的时间点，用于判断是否需要更新
+   * @returns 如果动画有信息被更新，返回true；否则返回false
+   */
+  async updateAnimeInfoBefore(animeId: number, before: Date): Promise<boolean> {
+    const anime = await App.instance.prisma.anime.findUnique({
+      where: { id: animeId },
+      include: { sites: true },
+    });
+
+    if (!anime) throw new Error(`动画 ${animeId} 不存在`);
+
+    const sitesToUpdate = anime.sites.filter(
+      (site) => !site.updatedAt || site.updatedAt <= before
+    );
+
+    if (sitesToUpdate.length === 0) return false;
+
+    for (const site of sitesToUpdate) {
+      const updater = this.getSiteInfoUpdater(site.siteType);
+      if (!updater) continue;
+
+      await updater.updateAnimeInfo(site);
+      await App.instance.prisma.animeSiteLink.update({
+        where: { id: site.id },
+        data: { updatedAt: new Date() },
+      });
+    }
+
+    return true;
+  }
+
+  /**
    * 根据网站类型获取对应的动画信息更新器。
    *
    * @param siteType 动画信息来源的网站类型。
@@ -88,12 +123,5 @@ export class AnimeService {
    */
   getSiteInfoUpdater(siteType: AnimeInfoSource) {
     if (siteType === "Bangumi") return new BangumiAnimeInfoUpdater();
-  }
-
-  /**
-   * 获取用于连接文件与 AnimeEpisode 的工具类。
-   */
-  getAnimeEpisodeFileLinker() {
-    return new AnimeEpisodeFileLinker();
   }
 }
