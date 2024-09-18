@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="navBarRef"
     class="flex flex-nowrap h-12 z-10 select-none overflow-hidden"
     :class="
       blur
@@ -8,18 +9,21 @@
     "
   >
     <div
-      class="grid place-items-center w-12 hover:bg-zinc-200 active:opacity-50 dark:hover:bg-zinc-800 transition"
+      class="grid place-items-center hover:bg-zinc-200 active:opacity-50 dark:hover:bg-zinc-800 transition"
+      :class="{ 'w-full': width < 128, 'w-12': width >= 128 }"
       @click="handleBack"
     >
       <Icon name="material-symbols:chevron-left" size="24"></Icon>
     </div>
-    <div class="grid place-items-center px-2 text-base">
+    <div v-if="width >= 128" class="grid place-items-center px-2 text-base">
       {{ title ?? "返回" }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useElementSize } from "@vueuse/core";
+
 const emit = defineEmits<{
   (e: "back"): void;
 }>();
@@ -31,6 +35,9 @@ const props = defineProps<{
 }>();
 
 const router = useRouter();
+
+const navBarRef = ref(null);
+const { width } = useElementSize(navBarRef);
 
 const handleBack = () => {
   if (props.customBack) {
