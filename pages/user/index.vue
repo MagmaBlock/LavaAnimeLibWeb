@@ -9,7 +9,6 @@
         <AnimeViewHistoryCard :isFullView="false" />
         <AnimeCollectionCard />
         <VideoTogetherMenu />
-        <AdminNav :withCard="true" />
       </div>
     </div>
   </ContainerPageMobileFull>
