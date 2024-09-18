@@ -57,7 +57,6 @@ onMounted(() => {
     .safeParse(Number(route.params.la));
   if (maybeAnimeId.success) {
     store.animeId = maybeAnimeId.data;
-    store.build();
   }
 });
 </script>
