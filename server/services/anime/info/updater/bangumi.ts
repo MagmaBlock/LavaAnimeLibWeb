@@ -20,7 +20,7 @@ import type { AnimeInfoUpdater } from "./interface";
 export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
   private bangumiAPI = new BangumiAPI();
 
-  async updateRelationAnimes(siteLink: AnimeSiteLink): Promise<void> {
+  async updateAnimeInfo(siteLink: AnimeSiteLink): Promise<void> {
     if (siteLink === null) throw new Error("AnimeSiteLink 为 null");
     if (siteLink.siteType !== "Bangumi") {
       throw new Error("获取关联站点信息时，适配器选用错误");

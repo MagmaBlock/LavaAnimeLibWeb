@@ -9,5 +9,5 @@ export interface AnimeInfoUpdater {
    * 获取此站点中的数据信息，并更新到库内所属动画
    * @param animeSiteLink AnimeSiteLink 的记录
    */
-  updateRelationAnimes(animeSiteLink: AnimeSiteLink): Promise<void>;
+  updateAnimeInfo(animeSiteLink: AnimeSiteLink): Promise<void>;
 }
