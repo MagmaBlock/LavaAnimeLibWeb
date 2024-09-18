@@ -1,7 +1,11 @@
 <template>
   <div
-    class="grid place-items-center w-11 h-11 rounded-lg transition text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800 active:scale-95 active:opacity-75 select-none"
-    :class="{ 'bg-zinc-200 dark:bg-zinc-800': active }"
+    class="grid place-items-center w-11 h-11 rounded-lg transition hover:bg-zinc-200 dark:hover:bg-zinc-800 active:scale-95 active:opacity-75 select-none"
+    :class="
+      active
+        ? 'text-blue-600 dark:text-blue-500'
+        : 'text-zinc-500 dark:text-zinc-400'
+    "
   >
     <NTooltip v-if="name" trigger="hover" placement="right">
       <template #trigger>

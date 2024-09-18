@@ -1,20 +1,40 @@
 <template>
-  <div class="fixed bottom-6 px-4 z-50 w-full">
-    <div
-      class="w-full py-2 px-2 place-self-center grid grid-cols-4 bg-white dark:bg-zinc-800 border dark:border-zinc-700 bg-opacity-80 dark:bg-opacity-75 backdrop-blur-lg backdrop-brightness-90 dark:backdrop-brightness-75 shadow-md rounded-md select-none"
-    >
-      <NavBarMobileIcon name="index" title="主页">
-        <Icon name="fluent:home-24-regular" />
+  <div
+    class="w-full p-2 grid grid-cols-4 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-700 select-none"
+    @contextmenu.prevent
+    @dragstart.prevent
+  >
+    <NuxtLink to="/">
+      <NavBarMobileIcon name="主页" :active="route.name === 'index'">
+        <template #icon>
+          <Icon name="material-symbols:explore" />
+        </template>
       </NavBarMobileIcon>
-      <NavBarMobileIcon name="search-value" title="搜索">
-        <Icon name="fluent:search-24-regular" />
+    </NuxtLink>
+    <NuxtLink to="/search">
+      <NavBarMobileIcon name="搜索" :active="route.name === 'search-value'">
+        <template #icon>
+          <Icon name="material-symbols:feature-search" />
+        </template>
       </NavBarMobileIcon>
-      <NavBarMobileIcon name="anime-index" title="索引">
-        <Icon name="fluent:collections-24-regular" />
+    </NuxtLink>
+    <NuxtLink to="/anime-index">
+      <NavBarMobileIcon name="索引" :active="route.name === 'anime-index'">
+        <template #icon>
+          <Icon name="material-symbols:library-books" />
+        </template>
       </NavBarMobileIcon>
-      <NavBarMobileIcon name="user" title="我的">
-        <Icon name="fluent:library-24-regular" />
+    </NuxtLink>
+    <NuxtLink to="/user">
+      <NavBarMobileIcon name="我的" :active="route.name === 'user'">
+        <template #icon>
+          <Icon name="material-symbols:account-box" />
+        </template>
       </NavBarMobileIcon>
-    </div>
+    </NuxtLink>
   </div>
 </template>
+
+<script lang="ts" setup>
+const route = useRoute();
+</script>

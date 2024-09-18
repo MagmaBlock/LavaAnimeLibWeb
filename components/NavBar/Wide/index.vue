@@ -1,5 +1,9 @@
 <template>
-  <div class="w-16 h-full bg-zinc-50 dark:bg-zinc-900 py-8 flex flex-col">
+  <div
+    class="w-16 h-full bg-zinc-50 dark:bg-zinc-900 py-8 flex flex-col"
+    @contextmenu.prevent
+    @dragstart.prevent
+  >
     <NScrollbar class="flex-grow">
       <NFlex vertical :align="'center'" size="large">
         <!-- Logo -->
@@ -18,28 +22,28 @@
           <NuxtLink to="/">
             <NavBarWideIcon name="主页" :active="route.name === 'index'">
               <template #icon>
-                <Icon name="fluent:home-24-regular" />
+                <Icon name="material-symbols:explore" />
               </template>
             </NavBarWideIcon>
           </NuxtLink>
           <NuxtLink to="/search">
             <NavBarWideIcon name="搜索" :active="route.name === 'search-value'">
               <template #icon>
-                <Icon name="fluent:search-24-regular" />
+                <Icon name="material-symbols:feature-search" />
               </template>
             </NavBarWideIcon>
           </NuxtLink>
           <NuxtLink to="/anime-index">
             <NavBarWideIcon name="索引" :active="route.name === 'anime-index'">
               <template #icon>
-                <Icon name="fluent:collections-24-regular" />
+                <Icon name="material-symbols:library-books" />
               </template>
             </NavBarWideIcon>
           </NuxtLink>
           <NuxtLink to="/user">
             <NavBarWideIcon name="我的" :active="route.name === 'user'">
               <template #icon>
-                <Icon name="fluent:library-24-regular" />
+                <Icon name="material-symbols:account-box" />
               </template>
             </NavBarWideIcon>
           </NuxtLink>
@@ -50,7 +54,7 @@
             <NuxtLink to="/user/history">
               <NavBarWideIcon :active="route.name === 'user-history'">
                 <template #icon>
-                  <Icon name="fluent:history-24-regular" />
+                  <Icon name="material-symbols:view-timeline" />
                 </template>
               </NavBarWideIcon>
             </NuxtLink>

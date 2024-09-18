@@ -7,8 +7,8 @@
       <Icon
         :name="
           settings.darkMode.enable
-            ? 'fluent:weather-moon-24-regular'
-            : 'fluent:weather-sunny-24-regular'
+            ? 'material-symbols:dark-mode'
+            : 'material-symbols:light-mode'
         "
       />
     </template>
