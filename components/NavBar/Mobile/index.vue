@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full p-2 grid grid-cols-4 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-700 select-none"
+    class="w-full h-14 grid grid-cols-4 place-items-center bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-700 select-none"
     @contextmenu.prevent
     @dragstart.prevent
   >
