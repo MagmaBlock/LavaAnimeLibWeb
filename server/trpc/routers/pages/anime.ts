@@ -10,6 +10,7 @@ import { StorageService } from "~/server/services/storage/service";
 import { protectedProcedure, router } from "../../trpc";
 import { AnimeService } from "~/server/services/anime/service";
 import moment from "moment";
+import { SimilarFiles } from "~/server/services/anime/file/types/similar-files";
 
 const prisma = App.instance.prisma;
 
@@ -142,39 +143,39 @@ export const animeRouter = router({
 
         // 筛选并排序视频组
         const videoGroups = similarFiles
-          .filter((group) => group.some((file) => file.type === "Video"))
+          .filter((group) => group.files.some((file) => file.type === "Video"))
           .sort((a, b) => {
-            const aIsMkv = a[0].name.toLowerCase().endsWith(".mkv");
-            const bIsMkv = b[0].name.toLowerCase().endsWith(".mkv");
+            const aIsMkv = a.files[0].name.toLowerCase().endsWith(".mkv");
+            const bIsMkv = b.files[0].name.toLowerCase().endsWith(".mkv");
             if (aIsMkv !== bIsMkv) {
               return aIsMkv ? 1 : -1;
             }
-            return (b[0].size ?? 0) - (a[0].size ?? 0);
+            return (b.files[0].size ?? 0) - (a.files[0].size ?? 0);
           });
 
         // 处理推荐的镜像组
-        let recommendedMirrorGroupName = null;
+        let recommendedSimilarFilesId = null;
         if (videoGroups.length > 0) {
           if (latestViewHistory && latestViewHistory.episodeId === episode.id) {
             // 如果用户之前观看过这个剧集，优先推荐最后一次播放的文件
             const lastPlayedFile = videoGroups.find((group) =>
-              group.some((file) => file.id === latestViewHistory.fileId)
+              group.files.some((file) => file.id === latestViewHistory.fileId)
             );
             if (lastPlayedFile) {
-              recommendedMirrorGroupName = lastPlayedFile[0].name;
+              recommendedSimilarFilesId = lastPlayedFile.uniqueId;
             }
           }
 
           // 如果没有找到最后播放的文件，或者用户没有观看记录，则使用最佳视频组
-          if (!recommendedMirrorGroupName) {
-            recommendedMirrorGroupName = videoGroups[0][0].name;
+          if (!recommendedSimilarFilesId) {
+            recommendedSimilarFilesId = videoGroups[0].uniqueId;
           }
         }
 
         // 返回处理后的剧集信息
         return {
-          mirrorGroupNames: similarFiles.map((group) => group[0].name),
-          recommendedMirrorGroupName,
+          similarFilesIds: similarFiles.map((group) => group.uniqueId),
+          recommendedSimilarFilesId,
           recommended: false, // 初始化为 false，稍后会更新
         };
       }
@@ -218,15 +219,7 @@ export const animeRouter = router({
       }
 
       // 处理所有唯一文件 (MirrorGroup) 列表
-      const allMirrorGroups = await animeFileService.getAnimeFiles(animeId);
-      const mirrorGroups = allMirrorGroups.map((group) => ({
-        fileName: group[0].name,
-        fileIds: group.map((file) => file.id),
-        availableStorageIds: Array.from(
-          new Set(group.map((file) => file.storageId))
-        ),
-        parseResult: parseFileName(group[0].name),
-      }));
+      const similarFiles = await animeFileService.getAnimeFiles(animeId);
 
       // 获取所有文件列表
       // TODO: NSFW filter
@@ -237,7 +230,7 @@ export const animeRouter = router({
       // 返回最终结果
       return {
         episodes: episodesWithFileNames,
-        mirrorGroups,
+        similarFiles,
         files,
       };
     }),
@@ -468,25 +461,15 @@ export const animeRouter = router({
 export type TrpcPagesAnimeMainData = {
   episodes: {
     episode: AnimeEpisode;
-    // 剧集的所有 MirrorGroup
-    // 正常依据视频的质量、字幕组、以及更容易在浏览器中播放来排序
-    mirrorGroupNames: string[]; // 这里的数字是 MirrorGroup 的 ID
-    // 推荐的 MirrorGroup
-    recommendedMirrorGroupName: string | null;
+    // 此剧集的所有 SimilarFiles, 前端应该根据这些 ID 去下面找
+    similarFilesIds: string[];
+    // 此集数下，推荐前端自动选择的文件
+    recommendedSimilarFilesId: string | null;
     // 是否推荐前端自动选择
     recommended: boolean;
   }[];
-  // 本动画所有唯一文件 (MirrorGroup) 列表
-  mirrorGroups: {
-    // 文件名, 由于 mirrorGroup 是虚拟的，所以这里用文件名来标识
-    fileName: string;
-    // 本 MirrorGroup 包含的文件
-    fileIds: number[]; // 这里的数字是 StorageIndex 的 ID
-    // 本 MirrorGroup 可用的 Storage 列表
-    availableStorageIds: string[];
-    // 文件名解析结果
-    parseResult: any;
-  }[];
+  // 本动画所有唯一文件 (SimilarFiles) 列表
+  similarFiles: SimilarFiles[];
   // 本动画所有文件列表
   files: StorageIndex[];
 };

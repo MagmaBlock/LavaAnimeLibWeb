@@ -39,8 +39,8 @@
                 :episode-display="episode.episode.episodeIndex"
                 :name="episode.episode.name"
                 :active="episode.episode.id === store.activeEpisodeId"
-                :multiple-episodes="episode.mirrorGroupNames.length > 1"
-                :not-updated="episode.mirrorGroupNames.length === 0"
+                :multiple-episodes="episode.similarFilesIds.length > 1"
+                :not-updated="episode.similarFilesIds.length === 0"
                 @click="store.activeEpisodeId = episode.episode.id"
               />
             </div>
@@ -61,8 +61,8 @@
                 :episode-display="episode.episode.episodeIndex"
                 :name="episode.episode.name"
                 :active="episode.episode.id === store.activeEpisodeId"
-                :multiple-episodes="episode.mirrorGroupNames.length > 1"
-                :not-updated="episode.mirrorGroupNames.length === 0"
+                :multiple-episodes="episode.similarFilesIds.length > 1"
+                :not-updated="episode.similarFilesIds.length === 0"
                 @click="store.activeEpisodeId = episode.episode.id"
               />
             </NFlex>
@@ -77,7 +77,7 @@
                   :episode-display="episode.episode.episodeIndex"
                   :name="episode.episode.name"
                   :active="episode.episode.id === store.activeEpisodeId"
-                  :not-updated="episode.mirrorGroupNames.length === 0"
+                  :not-updated="episode.similarFilesIds.length === 0"
                   @click="store.activeEpisodeId = episode.episode.id"
                 />
               </div>
@@ -147,9 +147,17 @@ const getSortedEpisodes = (type: AnimeEpisode["type"]) => {
 const hasAnyEpisodeFiles = computed(
   () =>
     store.mainData?.episodes.some(
-      (episode) => episode.mirrorGroupNames.length > 0
+      (episode) => episode.similarFilesIds.length > 0
     ) ?? false
 );
+
+// 获取可用的存储器ID列表
+const getAvailableStorageIds = (similarFilesId: string) => {
+  const similarFiles = store.mainData?.similarFiles.find(
+    (sf) => sf.uniqueId === similarFilesId
+  );
+  return similarFiles ? similarFiles.files.map((file) => file.storageId) : [];
+};
 </script>
 
 <style></style>

@@ -40,13 +40,14 @@ const storages = await useAsyncData(
 );
 
 const storagesOptions = computed(() => {
+  const availableStorageIds =
+    animeStore.activeSimilarFiles?.files.map((file) => file.storageId) || [];
+
   return <SelectOption[]>storages.data.value
     ?.map((storage) => ({
       label: storage.name,
       value: storage.id,
-      disabled: !animeStore.activeMirrorGroup?.availableStorageIds.includes(
-        storage.id
-      ),
+      disabled: !availableStorageIds.includes(storage.id),
     }))
     .concat([
       {

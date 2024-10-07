@@ -3,7 +3,7 @@
     :bordered="false"
     size="small"
     title="附件"
-    v-if="mirrorGroupsNoEpisodeBind && mirrorGroupsNoEpisodeBind.length > 0"
+    v-if="similarFilesNoEpisodeBind && similarFilesNoEpisodeBind.length > 0"
   >
     <NTabs type="segment" size="small" animated>
       <NTabPane
@@ -15,72 +15,94 @@
         <NScrollbar class="max-h-64">
           <NFlex vertical>
             <NPopover
-              v-for="mirrorGroup in getFilesByType(type.value)"
-              :key="mirrorGroup.fileIds[0]"
+              v-for="similarFiles in getFilesByType(type.value)"
+              :key="similarFiles.uniqueId"
               trigger="hover"
               v-if="!isAudioOrVideo(type.value)"
             >
               <template #trigger>
                 <AnimeEpisodeDetailsFileDisplay
                   class="w-full"
-                  :groups="mirrorGroup.parseResult.group.map((g: any) => g?.parsedName ?? g?.name) ?? []"
-                  :title="mirrorGroup.parseResult.title ?? ''"
+                  :groups="
+                    parseFileName(similarFiles.fileName).group.map(
+                      (g) => g.parsedName ?? g.name
+                    )
+                  "
+                  :title="parseFileName(similarFiles.fileName).title"
                   :subtitles="
-                    mirrorGroup.parseResult.subtitle.language
-                      .map((l: any) => l.toString())
-                      .concat(mirrorGroup.parseResult.subtitle.subtitleFeatures ?? []) ?? []
+                    parseFileName(similarFiles.fileName)
+                      .subtitle.language.map((l) => l.toString())
+                      .concat(
+                        parseFileName(similarFiles.fileName).subtitle
+                          .subtitleFeatures
+                      )
                   "
                   :sources="
-                    (
-                      mirrorGroup.parseResult.source.broadcastChannel ?? []
-                    ).concat(mirrorGroup.parseResult.source.mediaType ?? [])
+                    parseFileName(
+                      similarFiles.fileName
+                    ).source.broadcastChannel.concat(
+                      parseFileName(similarFiles.fileName).source.mediaType
+                    )
                   "
                   :quality="
                     [
-                      mirrorGroup.parseResult.quality.audioCodec,
-                      mirrorGroup.parseResult.quality.color,
-                      mirrorGroup.parseResult.quality.fps,
-                      mirrorGroup.parseResult.quality.resolution,
-                      mirrorGroup.parseResult.quality.videoCodec,
-                    ].filter((q: any) => q !== null)
+                      parseFileName(similarFiles.fileName).quality.audioCodec,
+                      parseFileName(similarFiles.fileName).quality.color,
+                      parseFileName(similarFiles.fileName).quality.fps,
+                      parseFileName(similarFiles.fileName).quality.resolution,
+                      parseFileName(similarFiles.fileName).quality.videoCodec,
+                    ].filter((q) => q !== null)
                   "
-                  :extension="mirrorGroup.parseResult.extension.parsedName"
-                  :fileName="mirrorGroup.fileName"
-                  @click="downloadFile(mirrorGroup)"
+                  :extension="
+                    parseFileName(similarFiles.fileName).extension.parsedName
+                  "
+                  :fileName="similarFiles.fileName"
+                  @click="downloadFile(similarFiles)"
                 />
               </template>
-              点击下载，文件大小：{{ getFileSize(mirrorGroup) }}
+              点击下载，文件大小：{{ getFileSize(similarFiles) }}
             </NPopover>
             <AnimeEpisodeDetailsFileDisplay
               v-else
-              v-for="mirrorGroup in getFilesByType(type.value)"
+              v-for="similarFiles in getFilesByType(type.value)"
               class="w-full"
-              :key="mirrorGroup.fileName"
-              :groups="mirrorGroup.parseResult.group.map((g: any) => g?.parsedName ?? g?.name) ?? []"
-              :title="mirrorGroup.parseResult.title ?? ''"
+              :key="`${type.value}-${similarFiles.uniqueId}`"
+              :groups="
+                parseFileName(similarFiles.fileName).group.map(
+                  (g) => g.parsedName ?? g.name
+                )
+              "
+              :title="parseFileName(similarFiles.fileName).title ?? ''"
               :subtitles="
-                mirrorGroup.parseResult.subtitle.language
-                  .map((l: any) => l.toString())
-                  .concat(mirrorGroup.parseResult.subtitle.subtitleFeatures ?? []) ?? []
+                parseFileName(similarFiles.fileName)
+                  .subtitle.language.map((l) => l.toString())
+                  .concat(
+                    parseFileName(similarFiles.fileName).subtitle
+                      .subtitleFeatures
+                  )
               "
               :sources="
-                (mirrorGroup.parseResult.source.broadcastChannel ?? []).concat(
-                  mirrorGroup.parseResult.source.mediaType ?? []
+                parseFileName(
+                  similarFiles.fileName
+                ).source.broadcastChannel.concat(
+                  parseFileName(similarFiles.fileName).source.mediaType
                 )
               "
               :quality="
                 [
-                  mirrorGroup.parseResult.quality.audioCodec,
-                  mirrorGroup.parseResult.quality.color,
-                  mirrorGroup.parseResult.quality.fps,
-                  mirrorGroup.parseResult.quality.resolution,
-                  mirrorGroup.parseResult.quality.videoCodec,
-                ].filter((q: any) => q !== null)
+                  parseFileName(similarFiles.fileName).quality.audioCodec,
+                  parseFileName(similarFiles.fileName).quality.color,
+                  parseFileName(similarFiles.fileName).quality.fps,
+                  parseFileName(similarFiles.fileName).quality.resolution,
+                  parseFileName(similarFiles.fileName).quality.videoCodec,
+                ].filter((q) => q !== null)
               "
-              :extension="mirrorGroup.parseResult.extension.parsedName"
-              :fileName="mirrorGroup.fileName"
-              :active="store.activeMirrorGroupName === mirrorGroup.fileName"
-              @click="setActiveMirrorGroupName(mirrorGroup.fileName)"
+              :extension="
+                parseFileName(similarFiles.fileName).extension.parsedName
+              "
+              :fileName="similarFiles.fileName"
+              :active="store.activeSimilarFilesId === similarFiles.uniqueId"
+              @click="setActiveSimilarFilesId(similarFiles.uniqueId)"
             />
           </NFlex>
         </NScrollbar>
@@ -97,6 +119,8 @@
 
 <script lang="ts" setup>
 import { FileType } from "@prisma/client";
+import { parseFileName } from "anime-name-tool";
+import type { SimilarFiles } from "~/server/services/anime/file/types/similar-files";
 
 const store = useAnimeStore();
 const { $client } = useNuxtApp();
@@ -113,22 +137,22 @@ const fileTypes: { value: FileType; label: string }[] = [
   { value: FileType.Other, label: "其他" },
 ];
 
-// 没有绑定到剧集的 MirrorGroup 文件
-const mirrorGroupsNoEpisodeBind = computed(() => {
-  // 过滤掉有剧集绑定的 MirrorGroup
-  return store.mainData?.mirrorGroups.filter((mirrorGroup) => {
-    // 寻找当前 MirrorGroup 是否在任何一个剧集的 mirrorGroupNames 中
+// 没有绑定到剧集的 SimilarFiles
+const similarFilesNoEpisodeBind = computed(() => {
+  // 过滤掉有剧集绑定的 SimilarFiles
+  return store.mainData?.similarFiles.filter((similarFiles) => {
+    // 寻找当前 SimilarFiles 是否在任何一个剧集的 similarFilesIds 中
     return !store.mainData?.episodes.find((episode) =>
-      episode.mirrorGroupNames.includes(mirrorGroup.fileName)
+      episode.similarFilesIds.includes(similarFiles.uniqueId)
     );
   });
 });
 
 // 按类型获取文件
 const getFilesByType = (type: FileType) =>
-  mirrorGroupsNoEpisodeBind.value?.filter((mirrorGroup) => {
+  similarFilesNoEpisodeBind.value?.filter((similarFiles) => {
     const file = store.mainData?.files.find(
-      (f) => f.id === mirrorGroup.fileIds[0]
+      (f) => f.id === similarFiles.files[0]?.id
     );
     return file?.type === type;
   }) ?? [];
@@ -138,8 +162,8 @@ const availableFileTypes = computed(() =>
   fileTypes.filter((type) => getFilesByType(type.value).length > 0)
 );
 
-const setActiveMirrorGroupName = (groupName: string) => {
-  store.activeMirrorGroupName = groupName;
+const setActiveSimilarFilesId = (uniqueId: string) => {
+  store.activeSimilarFilesId = uniqueId;
   store.activeEpisodeId = null;
 };
 
@@ -147,16 +171,19 @@ const isAudioOrVideo = (type: FileType) => {
   return type === FileType.Audio || type === FileType.Video;
 };
 
-const getFileSize = (mirrorGroup: any) => {
-  const file = store.mainData?.files.find(
-    (f) => f.id === mirrorGroup.fileIds[0]
-  );
-  return file?.size ? `${(file.size / (1024 * 1024)).toFixed(2)}MB` : "未知";
+const getFileSize = (similarFiles: SimilarFiles) => {
+  return similarFiles.size
+    ? `${(similarFiles.size / (1024 * 1024)).toFixed(2)}MB`
+    : "未知";
 };
 
-const downloadFile = async (mirrorGroup: any) => {
+const downloadFile = async (similarFiles: SimilarFiles) => {
   try {
-    const fileId = mirrorGroup.fileIds[0];
+    const fileId = similarFiles.files[0]?.id;
+    if (!fileId) {
+      console.error("无法获取文件ID");
+      return;
+    }
     const response = await $client.pages.anime.getFileTempUrls.query({
       fileIds: [fileId],
     });

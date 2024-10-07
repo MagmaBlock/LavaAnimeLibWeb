@@ -1,5 +1,7 @@
 import type { StorageIndex } from "@prisma/client";
 import { App } from "../../app";
+import { hash, objectHash } from "ohash";
+import { SimilarFiles } from "./types/similar-files";
 
 /**
  * 本类主要管理动画的文件服务，减轻前端在处理动画文件时的压力
@@ -10,13 +12,11 @@ export class AnimeFileService {
   /**
    * 获取指定 AnimeEpisode 的 SimilarFiles
    *
-   * 本方法返回一个二维数组，每个子数组包含来自不同存储器的相同文件
+   * 本方法返回一个 SimilarFiles 数组，每个 SimilarFiles 包含来自不同存储器的相同文件
    * @param animeEpisodeId 要获取的 AnimeEpisode 的 ID
-   * @returns 归类后的文件列表，每个子数组包含来自不同存储器的相同文件
+   * @returns 归类后的文件列表，每个 SimilarFiles 包含来自不同存储器的相同文件
    */
-  async getAnimeEpisodeFiles(
-    animeEpisodeId: number
-  ): Promise<StorageIndex[][]> {
+  async getAnimeEpisodeFiles(animeEpisodeId: number): Promise<SimilarFiles[]> {
     // 查询指定的 AnimeEpisode，同时获取相关联的文件和动画信息
     // 1. 获取 AnimeEpisode 本身的信息
     // 2. 包含与该 AnimeEpisode 直接关联的文件（files）
@@ -79,7 +79,7 @@ export class AnimeFileService {
 
     // 过滤掉全部未关联的组
     return groupedResult.filter((group) =>
-      group.some((file) => linkedFileIds.has(file.id))
+      group.files.some((file) => linkedFileIds.has(file.id))
     );
   }
 
@@ -88,9 +88,9 @@ export class AnimeFileService {
    * 附件文件指的是未被关联到剧集的文件
    *
    * @param animeId
-   * @returns 归类后的文件列表，每个子数组包含来自不同存储器的 SimilarFiles
+   * @returns 归类后的文件列表，每个 SimilarFiles 包含来自不同存储器的相同文件
    */
-  async getAnimeAttachmentFiles(animeId: number): Promise<StorageIndex[][]> {
+  async getAnimeAttachmentFiles(animeId: number): Promise<SimilarFiles[]> {
     const unlinkedFiles = await this.prisma.storageIndex.findMany({
       where: {
         animeId: animeId,
@@ -109,9 +109,9 @@ export class AnimeFileService {
    * 获取指定 Anime 的 SimilarFiles
    *
    * @param animeId 要获取的 Anime 的 ID
-   * @returns SimilarFiles 归类后的文件列表，每个子数组包含来自不同存储器的相同文件
+   * @returns SimilarFiles 归类后的文件列表，每个 SimilarFiles 包含来自不同存储器的相同文件
    */
-  async getAnimeFiles(animeId: number): Promise<StorageIndex[][]> {
+  async getAnimeFiles(animeId: number): Promise<SimilarFiles[]> {
     const anime = await this.prisma.anime.findUnique({
       where: { id: animeId },
       select: { nsfw: true },
@@ -132,27 +132,33 @@ export class AnimeFileService {
   }
 
   /**
-   * 将文件整理为 SimilarFiles
+   * 将文件整理为 SimilarFiles[]
    *
    * 本方法传入多个 StorageIndex，
-   * 然后将同 Anime、同名、同大小的文件视作相同文件，并在同一个数组中返回
-   * @param files 要归类的文件数组
-   * @returns 归类后的文件列表，每个子数组包含被视为相同的文件
+   * 然后将 animeId、name、size 相同的文件视作相同文件，并在同一个 SimilarFiles 中返回
+   * @param files 要归类的文件
+   * @returns 归类后的文件列表，每个 SimilarFiles 包含被视为相同的文件
    */
-  groupSimilarFiles(files: StorageIndex[]): StorageIndex[][] {
-    // 使用 Map 代替对象，提高性能
-    const groupedFiles = new Map<string, StorageIndex[]>();
+  groupSimilarFiles(files: StorageIndex[]): SimilarFiles[] {
+    const result: SimilarFiles[] = [];
+    files.forEach((file) => {
+      const id = this.getUniqueId(file);
+      const similarFile = result.find((item) => item.uniqueId === id);
 
-    for (const file of files) {
-      const key = `${file.animeId}_${file.name}_${file.size}`;
-      if (!groupedFiles.has(key)) {
-        groupedFiles.set(key, []);
+      if (similarFile) {
+        similarFile.files.push(file);
+      } else {
+        result.push({
+          uniqueId: id,
+          animeId: file.animeId,
+          fileName: file.name,
+          size: file.size,
+          files: [file],
+        });
       }
-      groupedFiles.get(key)!.push(file);
-    }
+    });
 
-    // 直接返回 Map 的值，避免额外的 Object.values 调用
-    return Array.from(groupedFiles.values());
+    return result;
   }
 
   /**
@@ -161,7 +167,7 @@ export class AnimeFileService {
    * @param fileId 要查找的文件ID
    * @returns 包含该文件的SimilarFiles，如果未找到则返回null
    */
-  async getSimilarFiles(fileId: number): Promise<StorageIndex[] | null> {
+  async getSimilarFiles(fileId: number): Promise<SimilarFiles | null> {
     // 获取文件信息
     const file = await this.prisma.storageIndex.findUnique({
       where: { id: fileId },
@@ -176,9 +182,20 @@ export class AnimeFileService {
 
     // 查找包含该文件的 SimilarFiles
     const targetGroup = similarFiles.find((group) =>
-      group.some((groupFile) => groupFile.id === fileId)
+      group.files.some((groupFile) => groupFile.id === fileId)
     );
 
     return targetGroup || null;
+  }
+
+  /**
+   * 传入一个文件，将通过 animeId、name、size 返回一个唯一的十位 ID
+   *
+   * 被认为相似的文件，此方法将返回相同的结果
+   */
+  getUniqueId(storageIndex: StorageIndex) {
+    return hash(
+      objectHash([storageIndex.animeId, storageIndex.name, storageIndex.size])
+    );
   }
 }

@@ -60,13 +60,13 @@ const buttonDisplay = computed(
       if (store.fileTempUrlsStatus === "error") {
         return { text: "获取视频播放地址失败", icon: "material-symbols:error" };
       }
-      if (mirrorGroupCount.value > 0) {
+      if (similarFilesCount.value > 0) {
         return {
-          text: `当前剧集有 ${mirrorGroupCount.value} 个视频`,
+          text: `当前剧集有 ${similarFilesCount.value} 个视频`,
           icon: "material-symbols:folder-open-rounded",
         };
       }
-      if (mirrorGroupCount.value === 0) {
+      if (similarFilesCount.value === 0) {
         return {
           text: "当前剧集没有视频",
           icon: "material-symbols:error",
@@ -77,12 +77,12 @@ const buttonDisplay = computed(
   }
 );
 
-// 获取镜像组数量
-const mirrorGroupCount = computed(() => {
+// 获取相似文件组数量
+const similarFilesCount = computed(() => {
   const activeEpisode = store.mainData?.episodes.find(
     (ep) => ep.episode.id === store.activeEpisodeId
   );
-  return activeEpisode?.mirrorGroupNames.length ?? 0;
+  return activeEpisode?.similarFilesIds.length ?? 0;
 });
 </script>
 

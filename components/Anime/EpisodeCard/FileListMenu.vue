@@ -1,42 +1,38 @@
 <template>
   <NCard :bordered="false" size="small" title="本章节的视频列表">
     <NFlex vertical>
-      <template v-if="store.activeEpisode?.mirrorGroupNames">
+      <template v-if="store.activeEpisode?.similarFilesIds">
         <AnimeEpisodeDetailsFileDisplay
-          v-for="groupName in store.activeEpisode.mirrorGroupNames"
+          v-for="similarFiles in activeEpisodeFiles"
           class="w-full"
-          :key="groupName"
-          :groups="getMirrorGroupByName(groupName)?.parseResult.group.map((g: any) => g?.parsedName ?? g?.name) ?? []"
-          :title="getMirrorGroupByName(groupName)?.parseResult.title ?? ''"
+          :key="similarFiles.uniqueId"
+          :groups="parseFileName(similarFiles.fileName).group.map((g: any) => g?.parsedName ?? g?.name) ?? []"
+          :title="parseFileName(similarFiles.fileName).title ?? ''"
           :subtitles="
-            getMirrorGroupByName(groupName)?.parseResult.subtitle.language
+            parseFileName(similarFiles.fileName).subtitle.language
               .map((l: any) => l.toString())
-              .concat(getMirrorGroupByName(groupName)?.parseResult.subtitle.subtitleFeatures ?? []) ?? []
+              .concat(parseFileName(similarFiles.fileName).subtitle.subtitleFeatures ?? []) ?? []
           "
           :sources="
             (
-              getMirrorGroupByName(groupName)?.parseResult.source
-                .broadcastChannel ?? []
+              parseFileName(similarFiles.fileName).source.broadcastChannel ?? []
             ).concat(
-              getMirrorGroupByName(groupName)?.parseResult.source.mediaType ??
-                []
+              parseFileName(similarFiles.fileName).source.mediaType ?? []
             )
           "
           :quality="
             [
-              getMirrorGroupByName(groupName)?.parseResult.quality.audioCodec,
-              getMirrorGroupByName(groupName)?.parseResult.quality.color,
-              getMirrorGroupByName(groupName)?.parseResult.quality.fps,
-              getMirrorGroupByName(groupName)?.parseResult.quality.resolution,
-              getMirrorGroupByName(groupName)?.parseResult.quality.videoCodec,
-            ].filter((q: any) => q !== null)
+              parseFileName(similarFiles.fileName).quality.audioCodec,
+              parseFileName(similarFiles.fileName).quality.color,
+              parseFileName(similarFiles.fileName).quality.fps,
+              parseFileName(similarFiles.fileName).quality.resolution,
+              parseFileName(similarFiles.fileName).quality.videoCodec,
+            ].filter((q) => q !== null)
           "
-          :extension="
-            getMirrorGroupByName(groupName)?.parseResult.extension.parsedName
-          "
-          :fileName="groupName"
-          :active="store.activeMirrorGroupName === groupName"
-          @click="setActiveMirrorGroupName(groupName)"
+          :extension="parseFileName(similarFiles.fileName).extension.parsedName"
+          :fileName="similarFiles.fileName"
+          :active="store.activeSimilarFilesId === similarFiles.uniqueId"
+          @click="setActiveSimilarFilesId(similarFiles.uniqueId)"
         />
       </template>
     </NFlex>
@@ -50,16 +46,28 @@
 </template>
 
 <script lang="ts" setup>
+import { parseFileName } from "anime-name-tool";
+import type { SimilarFiles } from "~/server/services/anime/file/types/similar-files";
+
 const store = useAnimeStore();
 
-const getMirrorGroupByName = (groupName: string) => {
-  return store.mainData?.mirrorGroups?.find(
-    (group) => group.fileName === groupName
+const activeEpisodeFiles = computed<SimilarFiles[]>(() => {
+  const ids = store.activeEpisode?.similarFilesIds ?? [];
+  return ids
+    .map((id) => getSimilarFilesById(id))
+    .filter((sf) => sf !== undefined);
+});
+
+const getSimilarFilesById = (
+  similarFilesId: string
+): SimilarFiles | undefined => {
+  return store.mainData?.similarFiles.find(
+    (sf) => sf.uniqueId === similarFilesId
   );
 };
 
-const setActiveMirrorGroupName = (groupName: string) => {
-  store.activeMirrorGroupName = groupName;
+const setActiveSimilarFilesId = (similarFilesId: string) => {
+  store.activeSimilarFilesId = similarFilesId;
 };
 </script>
 

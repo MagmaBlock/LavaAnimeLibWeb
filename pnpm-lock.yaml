@@ -36,8 +36,8 @@ importers:
         specifier: ^4.1.1
         version: 4.1.1
       anime-name-tool:
-        specifier: ^1.0.4
-        version: 1.0.4
+        specifier: ^1.0.5
+        version: 1.0.5
       artplayer:
         specifier: ^5.1.6
         version: 5.1.6
@@ -71,6 +71,9 @@ importers:
       ofetch:
         specifier: ^1.3.4
         version: 1.3.4
+      ohash:
+        specifier: ^1.1.4
+        version: 1.1.4
       p-limit:
         specifier: ^6.1.0
         version: 6.1.0
@@ -1462,8 +1465,8 @@ packages:
   animate.css@4.1.1:
     resolution: {integrity: sha512-+mRmCTv6SbCmtYJCN4faJMNFVNN5EuCTTprDTAo7YzIGji2KADmakjVA3+8mVDkZ2Bf09vayB35lSQIex2+QaQ==, tarball: https://registry.npmjs.org/animate.css/-/animate.css-4.1.1.tgz}
 
-  anime-name-tool@1.0.4:
-    resolution: {integrity: sha512-EDn1PSjnkFc8SqGTN+zr8u1Ef5ZSX+TZzgila9TzR3aBmWl27I3wlHn4tENVKg3DZ5L3oEr/zHedq0En7f18oQ==, tarball: https://registry.npmjs.org/anime-name-tool/-/anime-name-tool-1.0.4.tgz}
+  anime-name-tool@1.0.5:
+    resolution: {integrity: sha512-9DdQUdZCIpio5N+hk+ELE4yl6CGe3kuxIACjYgCVor3pFDuYweg0AihykeE14499vVSoYYhI6iXhDqQoVCzc0w==, tarball: https://registry.npmjs.org/anime-name-tool/-/anime-name-tool-1.0.5.tgz}
 
   ansi-colors@4.1.3:
     resolution: {integrity: sha512-/6w/C21Pm1A7aZitlI5Ni/2J6FFQN8i1Cvz3kHABAAbw93v/NlvKdVOqz7CCWz/3iv/JplRSEEZ83XION15ovw==, tarball: https://registry.npmjs.org/ansi-colors/-/ansi-colors-4.1.3.tgz}
@@ -2983,9 +2986,6 @@ packages:
 
   ofetch@1.3.4:
     resolution: {integrity: sha512-KLIET85ik3vhEfS+3fDlc/BAZiAp+43QEC/yCo5zkNoY2YaKvNkOaFr/6wCFgFH1kuYQM5pMNi0Tg8koiIemtw==, tarball: https://registry.npmjs.org/ofetch/-/ofetch-1.3.4.tgz}
-
-  ohash@1.1.3:
-    resolution: {integrity: sha512-zuHHiGTYTA1sYJ/wZN+t5HKZaH23i4yI1HMwbuXm24Nid7Dv0KcuRlKoNKS9UNfAVSBlnGLcuQrnOKWOZoEGaw==, tarball: https://registry.npmjs.org/ohash/-/ohash-1.1.3.tgz}
 
   ohash@1.1.4:
     resolution: {integrity: sha512-FlDryZAahJmEF3VR3w1KogSEdWX3WhA5GPakFx4J81kEAiHyLMpdLLElS8n8dfNadMgAne/MywcvmogzscVt4g==, tarball: https://registry.npmjs.org/ohash/-/ohash-1.1.4.tgz}
@@ -5202,7 +5202,7 @@ snapshots:
       knitwork: 1.1.0
       magic-string: 0.30.11
       mlly: 1.7.1
-      ohash: 1.1.3
+      ohash: 1.1.4
       pathe: 1.1.2
       perfect-debounce: 1.0.0
       pkg-types: 1.1.3
@@ -5818,11 +5818,12 @@ snapshots:
 
   animate.css@4.1.1: {}
 
-  anime-name-tool@1.0.4:
+  anime-name-tool@1.0.5:
     dependencies:
       aniep: 0.6.0
       chinese-parseint2: 2.0.6
       lodash: 4.17.21
+      pathe: 1.1.2
 
   ansi-colors@4.1.3: {}
 
@@ -6001,7 +6002,7 @@ snapshots:
       giget: 1.2.3
       jiti: 1.21.6
       mlly: 1.7.1
-      ohash: 1.1.3
+      ohash: 1.1.4
       pathe: 1.1.2
       perfect-debounce: 1.0.0
       pkg-types: 1.1.3
@@ -6675,7 +6676,7 @@ snapshots:
       defu: 6.1.4
       node-fetch-native: 1.6.4
       nypm: 0.3.9
-      ohash: 1.1.3
+      ohash: 1.1.4
       pathe: 1.1.2
       tar: 6.2.1
 
@@ -6761,7 +6762,7 @@ snapshots:
       defu: 6.1.4
       destr: 2.0.3
       iron-webcrypto: 1.2.1
-      ohash: 1.1.3
+      ohash: 1.1.4
       radix3: 1.1.2
       ufo: 1.5.4
       uncrypto: 0.1.3
@@ -7322,7 +7323,7 @@ snapshots:
       mri: 1.2.0
       node-fetch-native: 1.6.4
       ofetch: 1.3.4
-      ohash: 1.1.3
+      ohash: 1.1.4
       openapi-typescript: 6.7.6
       pathe: 1.1.2
       perfect-debounce: 1.0.0
@@ -7449,7 +7450,7 @@ snapshots:
       nuxi: 3.12.0
       nypm: 0.3.9
       ofetch: 1.3.4
-      ohash: 1.1.3
+      ohash: 1.1.4
       pathe: 1.1.2
       perfect-debounce: 1.0.0
       pkg-types: 1.1.3
@@ -7545,8 +7546,6 @@ snapshots:
       destr: 2.0.3
       node-fetch-native: 1.6.4
       ufo: 1.5.4
-
-  ohash@1.1.3: {}
 
   ohash@1.1.4: {}
 
@@ -8383,7 +8382,7 @@ snapshots:
       '@trpc/server': 10.45.2
       h3: 1.12.0
       ofetch: 1.3.4
-      ohash: 1.1.3
+      ohash: 1.1.4
     transitivePeerDependencies:
       - uWebSockets.js
 
