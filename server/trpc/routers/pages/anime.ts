@@ -112,13 +112,6 @@ export const animeRouter = router({
       const animeEpisodeFileLinker = new AnimeEpisodeFileLinker();
       await animeEpisodeFileLinker.linkAnimeFiles([animeId]);
 
-      // 获取所有 noNSFW 为 true 的存储
-      const noNSFWStorages = await prisma.storage.findMany({
-        where: { noNSFW: true },
-        select: { id: true },
-      });
-      const noNSFWStorageIds = noNSFWStorages.map((storage) => storage.id);
-
       // 从数据库获取所有剧集
       const episodes = await prisma.animeEpisode.findMany({
         where: { animeId },
@@ -141,65 +134,57 @@ export const animeRouter = router({
         },
       });
 
+      async function getEpisodeSimilarFiles(episode: AnimeEpisode) {
+        // 获取剧集的 SimilarFiles
+        let similarFiles = await animeFileService.getAnimeEpisodeFiles(
+          episode.id
+        );
+
+        // 筛选并排序视频组
+        const videoGroups = similarFiles
+          .filter((group) => group.some((file) => file.type === "Video"))
+          .sort((a, b) => {
+            const aIsMkv = a[0].name.toLowerCase().endsWith(".mkv");
+            const bIsMkv = b[0].name.toLowerCase().endsWith(".mkv");
+            if (aIsMkv !== bIsMkv) {
+              return aIsMkv ? 1 : -1;
+            }
+            return (b[0].size ?? 0) - (a[0].size ?? 0);
+          });
+
+        // 处理推荐的镜像组
+        let recommendedMirrorGroupName = null;
+        if (videoGroups.length > 0) {
+          if (latestViewHistory && latestViewHistory.episodeId === episode.id) {
+            // 如果用户之前观看过这个剧集，优先推荐最后一次播放的文件
+            const lastPlayedFile = videoGroups.find((group) =>
+              group.some((file) => file.id === latestViewHistory.fileId)
+            );
+            if (lastPlayedFile) {
+              recommendedMirrorGroupName = lastPlayedFile[0].name;
+            }
+          }
+
+          // 如果没有找到最后播放的文件，或者用户没有观看记录，则使用最佳视频组
+          if (!recommendedMirrorGroupName) {
+            recommendedMirrorGroupName = videoGroups[0][0].name;
+          }
+        }
+
+        // 返回处理后的剧集信息
+        return {
+          mirrorGroupNames: similarFiles.map((group) => group[0].name),
+          recommendedMirrorGroupName,
+          recommended: false, // 初始化为 false，稍后会更新
+        };
+      }
+
       // 处理每个剧集的镜像组信息
-      const episodesWithMirrorGroups = await Promise.all(
+      const episodesWithFileNames = await Promise.all(
         episodes.map(async (episode) => {
-          // 获取剧集的镜像组
-          let mirrorGroups = await animeFileService.getAnimeEpisodeMirrorGroups(
-            episode.id
-          );
-
-          // 如果动画是 nsfw，过滤掉 noNSFW 存储的文件
-          if (anime.nsfw) {
-            mirrorGroups = mirrorGroups
-              .map((group) =>
-                group.filter(
-                  (file) => !noNSFWStorageIds.includes(file.storageId)
-                )
-              )
-              .filter((group) => group.length > 0);
-          }
-
-          // 筛选并排序视频组
-          const videoGroups = mirrorGroups
-            .filter((group) => group.some((file) => file.type === "Video"))
-            .sort((a, b) => {
-              const aIsMkv = a[0].name.toLowerCase().endsWith(".mkv");
-              const bIsMkv = b[0].name.toLowerCase().endsWith(".mkv");
-              if (aIsMkv !== bIsMkv) {
-                return aIsMkv ? 1 : -1;
-              }
-              return (b[0].size ?? 0) - (a[0].size ?? 0);
-            });
-
-          // 处理推荐的镜像组
-          let recommendedMirrorGroupName = null;
-          if (videoGroups.length > 0) {
-            if (
-              latestViewHistory &&
-              latestViewHistory.episodeId === episode.id
-            ) {
-              // 如果用户之前观看过这个剧集，优先推荐最后一次播放的文件
-              const lastPlayedFile = videoGroups.find((group) =>
-                group.some((file) => file.id === latestViewHistory.fileId)
-              );
-              if (lastPlayedFile) {
-                recommendedMirrorGroupName = lastPlayedFile[0].name;
-              }
-            }
-
-            // 如果没有找到最后播放的文件，或者用户没有观看记录，则使用最佳视频组
-            if (!recommendedMirrorGroupName) {
-              recommendedMirrorGroupName = videoGroups[0][0].name;
-            }
-          }
-
-          // 返回处理后的剧集信息
           return {
             episode,
-            mirrorGroupNames: mirrorGroups.map((group) => group[0].name),
-            recommendedMirrorGroupName,
-            recommended: false, // 初始化为 false，稍后会更新
+            ...(await getEpisodeSimilarFiles(episode)),
           };
         })
       );
@@ -207,7 +192,7 @@ export const animeRouter = router({
       // 找到最近观看的剧集，并判断是否已看完
       let lastWatchedIndex = -1;
       if (latestViewHistory) {
-        lastWatchedIndex = episodesWithMirrorGroups.findIndex(
+        lastWatchedIndex = episodesWithFileNames.findIndex(
           (e) => e.episode.id === latestViewHistory.episodeId
         );
         const isCompleted = isVideoCompleted(
@@ -218,7 +203,7 @@ export const animeRouter = router({
         // 如果已看完，推荐下一集（如果存在）
         if (
           isCompleted &&
-          lastWatchedIndex < episodesWithMirrorGroups.length - 1
+          lastWatchedIndex < episodesWithFileNames.length - 1
         ) {
           lastWatchedIndex++;
         }
@@ -226,35 +211,32 @@ export const animeRouter = router({
 
       // 如果找到了最近观看的剧集，将其标记为推荐
       if (lastWatchedIndex !== -1) {
-        episodesWithMirrorGroups[lastWatchedIndex].recommended = true;
+        episodesWithFileNames[lastWatchedIndex].recommended = true;
       } else {
         // 如果没有观看记录，将第一个剧集标记为推荐
-        episodesWithMirrorGroups[0].recommended = true;
+        episodesWithFileNames[0].recommended = true;
       }
 
       // 处理所有唯一文件 (MirrorGroup) 列表
-      const allMirrorGroups = await animeFileService.getAnimeMirrorGroups(
-        animeId
-      );
+      const allMirrorGroups = await animeFileService.getAnimeFiles(animeId);
       const mirrorGroups = allMirrorGroups.map((group) => ({
         fileName: group[0].name,
         fileIds: group.map((file) => file.id),
         availableStorageIds: Array.from(
           new Set(group.map((file) => file.storageId))
-        ).filter(
-          (storageId) => !anime.nsfw || !noNSFWStorageIds.includes(storageId)
         ),
         parseResult: parseFileName(group[0].name),
       }));
 
       // 获取所有文件列表
+      // TODO: NSFW filter
       const files = await prisma.storageIndex.findMany({
-        where: { animeId },
+        where: { animeId, removed: false },
       });
 
       // 返回最终结果
       return {
-        episodes: episodesWithMirrorGroups,
+        episodes: episodesWithFileNames,
         mirrorGroups,
         files,
       };

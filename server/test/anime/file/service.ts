@@ -11,13 +11,13 @@ async function testAnimeFileService() {
     console.log("测试 getGroupedAnimeEpisodeFiles 方法:");
     const episodeId = 1; // 假设存在的 AnimeEpisode ID
     const groupedEpisodeFiles =
-      await animeFileService.getAnimeEpisodeMirrorGroups(episodeId);
+      await animeFileService.getAnimeEpisodeFiles(episodeId);
     console.log("分组后的剧集文件:", groupedEpisodeFiles);
 
     // 测试 getGroupedAnimeFiles 方法
     console.log("\n测试 getGroupedAnimeFiles 方法:");
     const animeId = 1; // 假设存在的 Anime ID
-    const groupedAnimeFiles = await animeFileService.getAnimeMirrorGroups(
+    const groupedAnimeFiles = await animeFileService.getAnimeFiles(
       animeId
     );
     console.log("分组后的动画文件:", groupedAnimeFiles);
