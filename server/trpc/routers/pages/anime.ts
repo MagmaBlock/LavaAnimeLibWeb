@@ -215,7 +215,9 @@ export const animeRouter = router({
         episodesWithFileNames[lastWatchedIndex].recommended = true;
       } else {
         // 如果没有观看记录，将第一个剧集标记为推荐
-        episodesWithFileNames[0].recommended = true;
+        if (episodesWithFileNames.length > 0) {
+          episodesWithFileNames[0].recommended = true;
+        }
       }
 
       // 处理所有唯一文件 (MirrorGroup) 列表
@@ -299,7 +301,7 @@ export const animeRouter = router({
     .input(
       z.object({
         animeId: z.number(),
-        episodeId: z.number().optional(),
+        episodeId: z.number().optional().nullish(),
         fileId: z.number(),
         currentTime: z.number().optional(),
         totalTime: z.number().optional(),
@@ -359,7 +361,7 @@ export const animeRouter = router({
     .input(
       z.object({
         animeId: z.number(),
-        episodeId: z.number().optional(),
+        episodeId: z.number().optional().nullish(),
         fileId: z.number(),
       })
     )
