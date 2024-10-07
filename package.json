@@ -39,7 +39,7 @@
     "@vueuse/core": "^10.11.0",
     "@vueuse/motion": "^2.2.3",
     "animate.css": "^4.1.1",
-    "anime-name-tool": "^1.0.3",
+    "anime-name-tool": "^1.0.4",
     "artplayer": "^5.1.6",
     "axios": "^1.7.3",
     "can-autoplay": "^3.0.2",
