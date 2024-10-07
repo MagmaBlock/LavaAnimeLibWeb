@@ -1,6 +1,6 @@
 <template>
   <div
-    class="transition relative w-12 h-12 grid content-center select-none"
+    class="transition relative h-12 grid content-center select-none"
     :class="[...buttonColorClass, 'rounded-md']"
   >
     <!-- 集数 -->
