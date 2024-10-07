@@ -21,7 +21,7 @@
       :auto-focus="false"
     >
       <NDrawerContent title="存储节点和视频列表" closable>
-        <AnimeEpisodeCardStorageSelector />
+        <AnimeStorageSelector />
         <AnimeEpisodeCardFileListMenu />
       </NDrawerContent>
     </NDrawer>
