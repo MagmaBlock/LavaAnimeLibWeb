@@ -34,7 +34,7 @@ const stateClassNames = computed(() => {
     // 禁用状态样式
     props.disable
       ? "opacity-50 brightness-75 cursor-not-allowed"
-      : "hover:brightness-110 hover:active:brightness-95",
+      : "hover:brightness-95 active:brightness-90",
   ];
 });
 </script>

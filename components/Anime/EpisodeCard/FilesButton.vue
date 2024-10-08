@@ -15,14 +15,14 @@
     <NDrawer
       v-model:show="showDrawer"
       :placement="isWide ? 'right' : 'bottom'"
-      default-width="50%"
+      default-width="40%"
       default-height="75%"
       resizable
       :auto-focus="false"
     >
-      <NDrawerContent title="存储节点和视频列表" closable>
+      <NDrawerContent title="存储节点与视频源选择" closable>
         <AnimeStorageSelector />
-        <AnimeEpisodeCardFileListMenu />
+        <AnimeEpisodeCardFileListMenu class="mt-4" />
       </NDrawerContent>
     </NDrawer>
   </div>

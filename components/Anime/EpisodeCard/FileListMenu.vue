@@ -1,6 +1,14 @@
 <template>
-  <NCard :bordered="false" size="small" title="本章节的视频列表">
+  <div>
+    <div class="text-base mb-4">
+      {{
+        store.activeEpisodeId
+          ? `当前章节下的文件（${activeEpisodeFileCount} 个）`
+          : "正在播放的文件"
+      }}
+    </div>
     <NFlex vertical>
+      <!-- 如果当前有选中的剧集，则展示剧集的文件列表 -->
       <template v-if="store.activeEpisode?.similarFilesIds">
         <AnimeEpisodeDetailsFileDisplay
           v-for="similarFiles in activeEpisodeFiles"
@@ -35,14 +43,53 @@
           @click="setActiveSimilarFilesId(similarFiles.uniqueId)"
         />
       </template>
+      <!-- 如果当前没有选中的剧集，但是仍有选中的附件文件，则展示附件文件的文件列表 -->
+      <template v-else-if="store.activeFileId">
+        <AnimeEpisodeDetailsFileDisplay
+          class="w-full"
+          v-if="activeFile"
+          :groups="
+            parseFileName(activeFile.fileName).group.map(
+              (g) => g?.parsedName ?? g?.name
+            )
+          "
+          :title="parseFileName(activeFile.fileName).title ?? ''"
+          :subtitles="
+            parseFileName(activeFile.fileName)
+              .subtitle.language.map((l) => l.toString())
+              .concat(
+                parseFileName(activeFile.fileName).subtitle.subtitleFeatures
+              )
+          "
+          :sources="
+            parseFileName(activeFile.fileName).source.broadcastChannel.concat(
+              parseFileName(activeFile.fileName).source.mediaType
+            )
+          "
+          :quality="
+            [
+              parseFileName(activeFile.fileName).quality.audioCodec,
+              parseFileName(activeFile.fileName).quality.color,
+              parseFileName(activeFile.fileName).quality.fps,
+              parseFileName(activeFile.fileName).quality.resolution,
+              parseFileName(activeFile.fileName).quality.videoCodec,
+            ].filter((q) => q !== null)
+          "
+          :extension="parseFileName(activeFile.fileName).extension.parsedName"
+          :fileName="activeFile.fileName"
+          :active="store.activeSimilarFilesId === activeFile.uniqueId"
+          @click="setActiveSimilarFilesId(activeFile.uniqueId)"
+        />
+      </template>
+      <!-- Loading -->
+      <NSkeleton
+        v-if="store.mainDataStatus === 'pending'"
+        size="small"
+        :sharp="false"
+        :repeat="2"
+      />
     </NFlex>
-    <NSkeleton
-      v-if="store.mainDataStatus === 'pending'"
-      size="small"
-      :sharp="false"
-      :repeat="2"
-    />
-  </NCard>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -56,6 +103,19 @@ const activeEpisodeFiles = computed<SimilarFiles[]>(() => {
   return ids
     .map((id) => getSimilarFilesById(id))
     .filter((sf) => sf !== undefined);
+});
+
+const activeFile = computed<SimilarFiles | undefined>(() => {
+  return store.mainData?.similarFiles.find((sf) => {
+    return sf.files.find((f) => f.id === store.activeFileId);
+  });
+});
+
+const activeEpisodeFileCount = computed(() => {
+  const activeEpisode = store.mainData?.episodes.find(
+    (ep) => ep.episode.id === store.activeEpisodeId
+  );
+  return activeEpisode?.similarFilesIds.length ?? 0;
 });
 
 const getSimilarFilesById = (
