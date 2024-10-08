@@ -118,7 +118,7 @@
 </template>
 
 <script lang="ts" setup>
-import { FileType } from "@prisma/client";
+import type { FileType } from "@prisma/client";
 import { parseFileName } from "anime-name-tool";
 import type { SimilarFiles } from "~/server/services/anime/file/types/similar-files";
 
@@ -127,14 +127,14 @@ const { $client } = useNuxtApp();
 
 // 文件类型及对应标签名称
 const fileTypes: { value: FileType; label: string }[] = [
-  { value: FileType.Video, label: "视频" },
-  { value: FileType.Audio, label: "音频" },
-  { value: FileType.Image, label: "图片" },
-  { value: FileType.Document, label: "文档" },
-  { value: FileType.Subtitle, label: "字幕" },
-  { value: FileType.Archive, label: "压缩包" },
-  { value: FileType.Seed, label: "种子" },
-  { value: FileType.Other, label: "其他" },
+  { value: "Video", label: "视频" },
+  { value: "Audio", label: "音频" },
+  { value: "Image", label: "图片" },
+  { value: "Document", label: "文档" },
+  { value: "Subtitle", label: "字幕" },
+  { value: "Archive", label: "压缩包" },
+  { value: "Seed", label: "种子" },
+  { value: "Other", label: "其他" },
 ];
 
 // 没有绑定到剧集的 SimilarFiles
@@ -168,7 +168,7 @@ const setActiveSimilarFilesId = (uniqueId: string) => {
 };
 
 const isAudioOrVideo = (type: FileType) => {
-  return type === FileType.Audio || type === FileType.Video;
+  return type === "Audio" || type === "Video";
 };
 
 const getFileSize = (similarFiles: SimilarFiles) => {
