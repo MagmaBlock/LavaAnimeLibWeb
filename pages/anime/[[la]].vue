@@ -47,6 +47,7 @@ import { z } from "zod";
 
 const route = useRoute();
 const store = useAnimeStore();
+const background = useBackgroundStore();
 const breakpoint = useBreakpoints(breakpointsTailwind);
 
 onMounted(() => {
@@ -58,5 +59,23 @@ onMounted(() => {
   if (maybeAnimeId.success) {
     store.animeId = maybeAnimeId.data;
   }
+});
+
+watch(
+  () => store.animeInfo?.posterUrl,
+  (newVal) => {
+    if (newVal) {
+      background.setBackground(
+        newVal,
+        "transition duration-500 blur-3xl opacity-50 hidden sm:block"
+      );
+    } else {
+      background.resetBackground();
+    }
+  }
+);
+
+onUnmounted(() => {
+  background.resetBackground();
 });
 </script>
