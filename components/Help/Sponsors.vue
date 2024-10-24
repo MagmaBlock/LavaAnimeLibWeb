@@ -69,6 +69,12 @@ export default {
           message: "提供 Google Drive 相关节点支持",
           link: "https://moe.tips/",
         },
+        {
+          name: "晓空",
+          support: "其他",
+          message: "自24年10月起提供本地节点香港线路支持",
+          link: "https://moeworld.tech/",
+        },
         { name: "小林", support: "￥300.00" },
         { name: "Longtianmu", support: "￥240.00" },
         { name: "Lozyue", support: "￥168.00" },
