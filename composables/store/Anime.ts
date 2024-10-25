@@ -121,16 +121,24 @@ export const useAnimeStore = defineStore("anime", {
       }
       // 对集数进行排序
       result.sort((a, b) => {
-        const aEp = new String(a.episode);
-        const bEp = new String(b.episode);
-        const aEpNumberString = aEp.match(/\d+/)?.[0];
-        const bEpNumberString = bEp.match(/\d+/)?.[0];
-        if (aEpNumberString && bEpNumberString) {
-          const aNum = Number(aEpNumberString);
-          const bNum = Number(bEpNumberString);
-          return aNum - bNum;
+        const aEp = String(a.episode);
+        const bEp = String(b.episode);
+
+        // 将集数拆分为整数部分和小数部分
+        const [aInt, aFrac = "0"] = aEp.split(".");
+        const [bInt, bFrac = "0"] = bEp.split(".");
+
+        // 比较整数部分
+        const aIntNum = parseInt(aInt);
+        const bIntNum = parseInt(bInt);
+        if (aIntNum !== bIntNum) {
+          return aIntNum - bIntNum;
         }
-        return aEp.length - bEp.length;
+
+        // 如果整数部分相同，比较小数部分
+        const aFracNum = parseInt(aFrac);
+        const bFracNum = parseInt(bFrac);
+        return aFracNum - bFracNum;
       });
 
       if (!state.ascOrder) result.reverse();
@@ -472,7 +480,7 @@ export const useAnimeStore = defineStore("anime", {
         }
       } catch (error) {
         console.error(error);
-        // 获取播放历史失败 使用默认打开界面的情况
+        // 获取播放历史失败 ��用默认打开界面的情况
         this.firstThisAnime();
       }
     },
