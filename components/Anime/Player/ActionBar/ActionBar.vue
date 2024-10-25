@@ -1,6 +1,6 @@
 <template>
   <NCollapseTransition :show="store.activeFile?.url !== undefined">
-    <NCard size="small" :bordered="false" class="select-none overflow-hidden">
+    <AnimeCardBasic>
       <!-- 浏览器无法播放部分视频的警告 -->
       <AnimeNoBrowserNotice v-if="store.isNoBrowser" class="mb-2" />
       <!-- 操作栏部分 -->
@@ -61,7 +61,7 @@
           </div>
         </NCard>
       </NModal>
-    </NCard>
+    </AnimeCardBasic>
   </NCollapseTransition>
 </template>
 

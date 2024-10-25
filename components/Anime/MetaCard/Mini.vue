@@ -1,5 +1,5 @@
 <template>
-  <NCard size="small" :bordered="false">
+  <AnimeCardBasic>
     <NFlex vertical>
       <!-- 标题和追番 -->
       <NFlex justify="space-between" :wrap="false">
@@ -26,7 +26,7 @@
         </NFlex>
       </NFlex>
     </NFlex>
-  </NCard>
+  </AnimeCardBasic>
 </template>
 
 <script lang="ts" setup>
