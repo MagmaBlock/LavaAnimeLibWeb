@@ -156,17 +156,6 @@ const isMobileOpenDetails = ref(false);
         <AnimePlayerEmpty v-if="!store.showArtPlayer" />
       </div>
 
-      <NCard
-        size="small"
-        content-style="padding: 0;"
-        :bordered="false"
-        class="overflow-clip sm:rounded-t-md"
-      >
-        <NTabs type="line" :tabs-padding="20">
-          <NTab name="anime" @click="currentMobilePage = 'anime'"> 番剧 </NTab>
-        </NTabs>
-      </NCard>
-
       <!-- 番剧卡-->
       <AnimeMetaCardMini @open-details="isMobileOpenDetails = true" />
       <NDrawer
