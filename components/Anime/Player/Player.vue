@@ -51,6 +51,17 @@ onMounted(() => {
           return nextState;
         },
       },
+      {
+        html: "显示软字幕",
+        tooltip: "打开",
+        switch: true,
+        onSwitch: function (item) {
+          const nextState = !item.switch;
+          artInstance.subtitle.show = nextState;
+          item.tooltip = nextState ? "打开" : "关闭";
+          return nextState;
+        },
+      },
     ],
     controls: [
       {
@@ -99,7 +110,10 @@ onMounted(() => {
       console.log("找到字幕", subtitles);
 
       if (subtitles.length) {
+        artInstance.subtitle.show = true;
         artInstance.subtitle.url = subtitles[0].url;
+      } else {
+        artInstance.subtitle.show = false;
       }
 
       if (newFile?.parseResult?.extensionName?.type == "music") {
