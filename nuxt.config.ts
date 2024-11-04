@@ -31,6 +31,12 @@ export default defineNuxtConfig({
         {
           name: "theme-color",
           content: "#ffffff",
+          media: "(prefers-color-scheme: light)",
+        },
+        {
+          name: "theme-color",
+          content: "#101014",
+          media: "(prefers-color-scheme: dark)",
         },
       ],
       link: [
@@ -69,21 +75,56 @@ export default defineNuxtConfig({
     registerType: "prompt",
     includeAssets: ["favicon.ico", "icon.svg", "apple-touch-icon.png"],
     manifest: {
-      name: "熔岩番剧库",
+      name: "熔岩番剧库 LavaAnimeLib",
       short_name: "熔岩番剧库",
-      description: "熔岩番剧库 LavaAnimeLib",
-      theme_color: "#ffffff",
-      icons: [
+      description: "您可将番剧库添加为 PWA 应用，可获得更佳体验（无需下载）",
+      background_color: "#FFFFFF",
+      theme_color: "#FFFFFF",
+      lang: "zh-CN",
+      start_url: "/",
+      display: "standalone",
+      display_override: ["standalone", "fullscreen"],
+      shortcuts: [
         {
-          src: "pwa-192x192.png",
-          sizes: "192x192",
-          type: "image/png",
+          name: "番剧索引",
+          description: "寻找历年番剧",
+          url: "/anime-index",
         },
         {
-          src: "pwa-512x512.png",
+          name: "搜索番剧",
+          description: "在番剧库内搜索",
+          url: "/search",
+        },
+        {
+          name: "我的",
+          description: "查看个人历史和追番",
+          url: "/user",
+        },
+      ],
+      icons: [
+        {
+          src: "/pwa-192x192.png",
+          sizes: "192x192",
+          type: "image/png",
+          purpose: "any",
+        },
+        {
+          src: "/pwa-512x512.png",
           sizes: "512x512",
           type: "image/png",
-          purpose: "any maskable",
+          purpose: "any",
+        },
+        {
+          src: "/pwa-maskable-192x192.png",
+          sizes: "192x192",
+          type: "image/png",
+          purpose: "maskable",
+        },
+        {
+          src: "/pwa-maskable-512x512.png",
+          sizes: "512x512",
+          type: "image/png",
+          purpose: "maskable",
         },
       ],
     },
