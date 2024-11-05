@@ -7,7 +7,9 @@
     "dev": "nuxt dev --host",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare && pnpm run db:generate",
+    "db:generate": "prisma generate",
+    "db:studio": "prisma studio"
   },
   "description": "Nuxt Vue3 Single page application for LavaAnimeLib.",
   "prettier": {
