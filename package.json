@@ -26,7 +26,7 @@
     "@types/ua-parser-js": "^0.7.39",
     "gravatar": "^1.8.2",
     "nuxt": "^3.12.4",
-    "prisma": "^5.18.0",
+    "prisma": "^5.21.1",
     "tsx": "^4.17.0",
     "typescript": "^5.5.4",
     "vue": "^3.4.35"
@@ -35,7 +35,7 @@
     "@bg-dev/nuxt-naiveui": "^1.14.0",
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@pinia/nuxt": "^0.5.2",
-    "@prisma/client": "^5.18.0",
+    "@prisma/client": "^5.21.1",
     "@trpc/client": "10.45.2",
     "@trpc/server": "10.45.2",
     "@vueuse/core": "^10.11.0",
