@@ -12,6 +12,7 @@
 <script setup>
 import Artplayer from "artplayer";
 import { useLocalStorage, useThrottleFn } from "@vueuse/core";
+import artplayerPluginLibass from "artplayer-plugin-libass";
 
 const store = useAnimeStore();
 const message = useMessage();
@@ -75,6 +76,16 @@ onMounted(() => {
           if (newEp) store.changeEpisode(newEp);
         }, 1000),
       },
+    ],
+    plugins: [
+      artplayerPluginLibass({
+        debug: true,
+        workerUrl:
+          "https://unpkg.com/libass-wasm@4.1.0/dist/js/subtitles-octopus-worker.js",
+        wasmUrl:
+          "https://unpkg.com/libass-wasm@4.1.0/dist/js/subtitles-octopus-worker.wasm",
+        fallbackFont: "/player/SourceHanSansCN-Bold.woff2",
+      }),
     ],
   };
 
