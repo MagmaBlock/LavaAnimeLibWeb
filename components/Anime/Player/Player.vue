@@ -11,6 +11,7 @@
 
 <script setup>
 import Artplayer from "artplayer";
+import ASS from "assjs";
 import { useLocalStorage, useThrottleFn } from "@vueuse/core";
 
 const store = useAnimeStore();
@@ -18,6 +19,8 @@ const message = useMessage();
 const refreshPlayer = inject("refreshPlayer");
 
 const rememberRate = useLocalStorage("rememberRate", false);
+
+let subtitleInstance = null;
 
 onMounted(() => {
   const options = {
@@ -57,7 +60,14 @@ onMounted(() => {
         switch: true,
         onSwitch: function (item) {
           const nextState = !item.switch;
-          artInstance.subtitle.show = nextState;
+          // artInstance.subtitle.show = nextState;
+          if (subtitleInstance) {
+            if (nextState) {
+              subtitleInstance.show();
+            } else {
+              subtitleInstance.hide();
+            }
+          }
           item.tooltip = nextState ? "打开" : "关闭";
           return nextState;
         },
@@ -111,9 +121,31 @@ onMounted(() => {
 
       if (subtitles.length) {
         artInstance.subtitle.show = true;
-        artInstance.subtitle.url = subtitles[0].url;
+        // artInstance.subtitle.url = subtitles[0].url;
+
+        const content = await fetch(subtitles[0].url).then((res) => res.text());
+        const assContent = subtitles[0].name.match(/.srt$/i)
+          ? srtToAss(content)
+          : content;
+
+        if (subtitleInstance) {
+          subtitleInstance.destroy();
+        }
+        subtitleInstance = new ASS(assContent, artInstance.video, {
+          container: document.querySelector(
+            "#artContainer > .art-video-player"
+          ),
+          resampling: "video_height",
+        });
+
+        message.success(
+          "成功载入软字幕！若出现双重字幕，可在播放设置中关闭软字幕"
+        );
       } else {
-        artInstance.subtitle.show = false;
+        // artInstance.subtitle.show = false;
+        if (subtitleInstance) {
+          subtitleInstance.destroy();
+        }
       }
 
       if (newFile?.parseResult?.extensionName?.type == "music") {
@@ -232,5 +264,10 @@ onMounted(() => {
 .art-mobile > .art-bottom > .art-controls {
   padding-right: 10px !important;
   padding-left: 10px !important;
+}
+
+/* 软字幕需要有 z-index 才不会被 ArtPlayer 覆盖 */
+.ASS-box {
+  z-index: 20;
 }
 </style>
