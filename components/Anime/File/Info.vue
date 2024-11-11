@@ -22,8 +22,9 @@
         class="mx-0.5 my-0.5 inline-flex bg-gray-400 dark:bg-zinc-700 text-white font-medium"
         size="small"
         :bordered="false"
+        v-if="video.parseResult.extensionName?.result"
       >
-        {{ video.parseResult.extensionName.result }}
+        {{ video.parseResult.extensionName?.result }}
       </NTag>
     </div>
   </div>
