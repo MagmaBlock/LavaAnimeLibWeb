@@ -95,12 +95,12 @@ onMounted(() => {
 
       // 寻找并生效字幕
       let subtitles = store.fileData.fileList.filter((file) => {
-        if (file?.parseResult?.extensionName.type == "subtitle") {
+        if (file?.parseResult?.extensionName?.type == "subtitle") {
           if (
             file?.parseResult?.episode ==
-              store.activeFile?.parseResult.episode ||
+              store.activeFile?.parseResult?.episode ||
             file.name.startsWith(
-              store.activeFile.parseResult.extensionName.trueName
+              store.activeFile.parseResult?.extensionName?.trueName
             )
           ) {
             return true;
@@ -139,7 +139,7 @@ onMounted(() => {
   const reportPlaying = () => {
     if (
       !store.artInstance?.duration ||
-      store.activeFile?.parseResult?.extensionName.type != "video"
+      store.activeFile?.parseResult?.extensionName?.type != "video"
     )
       return;
     store.reportView(true, "WebPlayer");

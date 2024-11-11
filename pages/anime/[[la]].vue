@@ -72,7 +72,7 @@ useHead({
       store.animeData?.title &&
       store.activeFile?.parseResult?.episode
     ) {
-      return `${store.animeData?.title} 第${store.activeFile.parseResult.episode}话`;
+      return `${store.animeData?.title} 第${store.activeFile.parseResult?.episode}话`;
     }
   }),
 });

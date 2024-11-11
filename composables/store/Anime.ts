@@ -113,7 +113,7 @@ export const useAnimeStore = defineStore("anime", {
           );
           // 当 Array.find 找不到时, 它将返回 undefined
           if (thisEpObj === undefined) {
-            result.push({ episode: file.parseResult.episode, list: [file] });
+            result.push({ episode: file.parseResult?.episode, list: [file] });
           } else {
             thisEpObj.list.push(file); // 此处 thisEpObj 是指向 result 中对象的引用
           }
@@ -343,7 +343,7 @@ export const useAnimeStore = defineStore("anime", {
             return (
               file?.parseResult?.episode == newEpisode &&
               file?.parseResult?.extensionName?.type == "video" &&
-              (findBetter ? file?.parseResult.noBrowser === false : true) // 优先找浏览器兼容
+              (findBetter ? file?.parseResult?.noBrowser === false : true) // 优先找浏览器兼容
             );
           });
         };
@@ -499,7 +499,7 @@ export const useAnimeStore = defineStore("anime", {
           this.fileData.fileList.find((file) => {
             return (
               file?.type == "file" &&
-              file?.parseResult?.extensionName.type == "video"
+              file?.parseResult?.extensionName?.type == "video"
             );
           })?.url
         );

@@ -5,7 +5,7 @@
   >
     <div v-if="video.type == 'file'" class="cursor-pointer">
       <!-- 普通标签 -->
-      <span v-for="tag in video.parseResult.tagedName" class="inline-flex">
+      <span v-for="tag in video.parseResult?.tagedName" class="inline-flex">
         <span v-if="typeof tag == 'string'" class="mx-0.5">{{ tag }}</span>
         <NTag
           v-else-if="typeof tag == 'object'"
@@ -22,9 +22,9 @@
         class="mx-0.5 my-0.5 inline-flex bg-gray-400 dark:bg-zinc-700 text-white font-medium"
         size="small"
         :bordered="false"
-        v-if="video.parseResult.extensionName?.result"
+        v-if="video.parseResult?.extensionName?.result"
       >
-        {{ video.parseResult.extensionName?.result }}
+        {{ video.parseResult?.extensionName?.result }}
       </NTag>
     </div>
   </div>
