@@ -137,6 +137,8 @@ const isMobileOpenDetails = ref(false);
       <!-- 右视图 占一列 -->
       <NFlex vertical :size="16" class="col-span-1">
         <AnimeDriveSelector />
+        <!-- 番剧公告（V2）临时 -->
+        <AnimeNotice />
         <AnimeFileList />
         <AnimeFileErrorDisplay />
         <!-- 关联作品 -->
@@ -156,6 +158,8 @@ const isMobileOpenDetails = ref(false);
         <AnimePlayerEmpty v-if="!store.showArtPlayer" />
       </div>
 
+      <!-- 番剧公告（V2）临时 -->
+      <AnimeNotice />
       <!-- 番剧卡-->
       <AnimeMetaCardMini @open-details="isMobileOpenDetails = true" />
       <NDrawer
