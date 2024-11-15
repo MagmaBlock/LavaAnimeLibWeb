@@ -176,10 +176,11 @@ export function srtToAss(srt: string) {
 
   /*
       替换全角空格
+      2024年11月15日调整：已禁用，因为效果不好
   */
-  for (let i in newSubtitleArray) {
-    newSubtitleArray[i].text = newSubtitleArray[i].text.replace(/ /g, "　");
-  }
+  // for (let i in newSubtitleArray) {
+  //   newSubtitleArray[i].text = newSubtitleArray[i].text.replace(/ /g, "　");
+  // }
 
   /*
       如果开启了引号替换，则执行此函数替换引号
