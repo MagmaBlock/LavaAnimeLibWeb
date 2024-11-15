@@ -17,6 +17,7 @@ import { useLocalStorage, useThrottleFn } from "@vueuse/core";
 const store = useAnimeStore();
 const message = useMessage();
 const refreshPlayer = inject("refreshPlayer");
+const route = useRoute();
 
 const rememberRate = useLocalStorage("rememberRate", false);
 
@@ -172,8 +173,14 @@ onMounted(() => {
     if (
       !store.artInstance?.duration ||
       store.activeFile?.parseResult?.extensionName?.type != "video"
-    )
+    ) {
       return;
+    }
+    if (route.query?.noReport) {
+      console.log("由于路由含 noReport 参数，不会进行播放历史上报");
+      return;
+    }
+
     store.reportView(true, "WebPlayer");
   };
 
