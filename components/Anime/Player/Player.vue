@@ -139,7 +139,7 @@ onMounted(() => {
         });
 
         message.success(
-          "成功载入软字幕！若出现双重字幕，可在播放设置中关闭软字幕"
+          "当前视频为软字幕，若显示不正常可暂停一次。字幕可在播放设置中关闭。"
         );
       } else {
         // artInstance.subtitle.show = false;
