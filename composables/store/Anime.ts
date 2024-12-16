@@ -54,6 +54,7 @@ export const useAnimeStore = defineStore("anime", {
           },
         },
       ],
+      isFileBrowserOpen: false,
     };
   },
   getters: {

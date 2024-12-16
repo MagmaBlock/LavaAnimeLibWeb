@@ -114,6 +114,15 @@ const isMobileOpenDetails = ref(false);
     </DevOnly>
     <!-- (模态框等) DOM 位置无关组件 -->
     <AnimeAdminTool />
+    <!-- 文件浏览器模态框 -->
+    <NModal
+      v-model:show="store.isFileBrowserOpen"
+      preset="card"
+      title="链接复制工具"
+      style="max-width: 1024px"
+    >
+      <AnimeFileBrowser />
+    </NModal>
     <!-- PC 端主视图，Grid 布局，仅在 lg 以上可用 -->
     <div
       class="grid grid-cols-3 gap-6 w-full"

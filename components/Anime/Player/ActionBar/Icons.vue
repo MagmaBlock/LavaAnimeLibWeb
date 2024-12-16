@@ -26,6 +26,18 @@
   >
     缓存
   </AnimePlayerActionBarIcon>
+  <!-- 缓存 -->
+  <AnimePlayerActionBarIcon
+    @click="
+      () => {
+        handleButtonClick('Download');
+        store.isFileBrowserOpen = true;
+      }
+    "
+  >
+    批量缓存
+  </AnimePlayerActionBarIcon>
+
   <!-- "显示全部" 未打开前的显示位置 -->
   <slot name="showAll"></slot>
   <!-- 弹弹Play -->
