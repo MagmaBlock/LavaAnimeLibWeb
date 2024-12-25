@@ -218,16 +218,16 @@ export const useAnimeStore = defineStore("anime", {
   actions: {
     /**
      * 初始化界面, 自动获取所有数据
-     * @param {Number} laID
-     * @param {String} forceEpisode 可选, 指定要初始播放的集数
+     * @param laID
+     * @param forceEpisode 可选, 指定要初始播放的集数
      * @returns {Promise}
      */
-    async buildPage(laID, forceEpisode) {
+    async buildPage(laID: string, forceEpisode: string | null) {
       this.laID = parseInt(laID);
       this.getAnimeData(laID);
       (async () => {
         await this.getDriveData();
-        await this.getFileData(this.laID, this.activeDrive.id);
+        await this.getFileData(this.laID, this.activeDrive?.id); // 使用可选链操作符，防止 this.activeDrive 为 null 或 undefined
         // 如果 URL 指定了本次播放的集数
         if (forceEpisode) {
           try {
