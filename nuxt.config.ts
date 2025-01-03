@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   ],
   runtimeConfig: {
     public: {
-      apiBaseUrl: "https://anime-api.5t5.top",
+      apiBaseUrl: process.env.SERVER_BASE_URL,
     },
   },
   ssr: false,
