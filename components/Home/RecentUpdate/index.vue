@@ -1,9 +1,9 @@
 <template>
   <NCard title="近期更新" embedded :bordered="false">
     <template #header-extra>
-      <NFlex class="cursor-pointer" @click="messageSkiped = !messageSkiped">
-        <NSwitch :value="messageSkiped" />
-        显示重复集数
+      <NFlex class="cursor-pointer" @click="ignoreDuplicate = !ignoreDuplicate">
+        <NSwitch :value="ignoreDuplicate" />
+        忽略重复集数
       </NFlex>
     </template>
     <div
@@ -125,7 +125,7 @@ import "moment/dist/locale/zh-cn";
 const message = useMessage();
 
 const data = ref([]);
-const messageSkiped = ref(false);
+const ignoreDuplicate = ref(true);
 const loading = ref(true);
 
 const getTimeInfo = (dateTime) => {
@@ -134,7 +134,7 @@ const getTimeInfo = (dateTime) => {
 
 getRecentUpdates();
 
-watch(messageSkiped, () => {
+watch(ignoreDuplicate, () => {
   getRecentUpdates();
 });
 
@@ -144,7 +144,7 @@ async function getRecentUpdates() {
     let result = await LavaAnimeAPI.get("/v2/anime/recent-update/get", {
       params: {
         take: 36,
-        messageSkiped: messageSkiped.value,
+        ignoreDuplicate: ignoreDuplicate.value,
       },
     });
 
