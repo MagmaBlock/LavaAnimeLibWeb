@@ -82,17 +82,13 @@ export const useAnimeStore = defineStore("anime", {
       if (state.driveData === null) return null;
       // 开启了记住选择 返回曾经的选择
       if (state.myDrive.rememberMyChoice && state.myDrive.selectedDrive) {
-        const selectedDrive = state.driveData.list.find((drive) => {
+        return state.driveData.list.find((drive) => {
           return state.myDrive.selectedDrive == drive.id;
         });
-        if (selectedDrive) {
-          return selectedDrive;
-        } else {
-          // 如果记忆中的存储节点id在当前已不存在，使用默认存储节点
-          return state.driveData.list.find((drive) => {
-            return state.driveData?.default == drive.id;
-          });
-        }
+      } else if (state.myDrive.selectedDrive) {
+        return state.driveData.list.find((drive) => {
+          return state.myDrive.selectedDrive == drive.id;
+        });
       } else {
         // 返回默认
         return state.driveData.list.find((drive) => {
@@ -272,7 +268,7 @@ export const useAnimeStore = defineStore("anime", {
         errorMessage: null,
       };
       this.driveData = {
-        default: '',
+        default: "",
         list: [],
       };
       try {
