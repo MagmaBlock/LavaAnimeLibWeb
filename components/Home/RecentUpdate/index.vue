@@ -54,7 +54,7 @@
               <!-- title -->
               <div>
                 <!-- 正常标题 -->
-                <NEllipsis :line-clamp="1" v-if="record.anime">
+                <NEllipsis :line-clamp="2" v-if="record.anime">
                   {{ record.anime.title }}
                 </NEllipsis>
                 <!-- 无 anime 标题 (文件夹名) -->
