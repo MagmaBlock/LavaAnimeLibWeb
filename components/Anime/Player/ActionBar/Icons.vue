@@ -115,9 +115,9 @@
     icon="/PlayersIcon/mpv.svg"
     :href="getUrl().mpv"
     @click="handleButtonClick('mpv')"
-    v-if="props.allos"
+    v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS/i) || props.allos"
   >
-    MPV (暂未实现...)
+    MPV
   </AnimePlayerActionBarIcon>
 </template>
 
@@ -153,7 +153,7 @@ const getUrl = () => {
     potplayer: `potplayer://${store.activeFile?.url}`,
     vlc: `vlc://${store.activeFile?.url}`,
     iina: `iina://weblink?url=${store.activeFile?.url}`,
-    mpv: `mpv://weblink?url=${encodeURIComponent(store.activeFile?.url)}`,
+    mpv: `intent:${store.activeFile?.url}#Intent;package=is.xyz.mpv;end`,
     nPlayer: `nplayer-${store.activeFile?.url}`,
     mxPlayer: `intent:${store.activeFile?.url}#Intent;package=com.mxtech.videoplayer.ad;S.title=${store.activeFile?.name};end`,
     mxPlayerPro: `intent:${store.activeFile?.url}#Intent;package=com.mxtech.videoplayer.pro;S.title=${store.activeFile?.name};end`,
