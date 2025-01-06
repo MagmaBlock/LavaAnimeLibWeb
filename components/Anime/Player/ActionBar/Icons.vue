@@ -67,6 +67,15 @@
   >
     PotPlayer
   </AnimePlayerActionBarIcon>
+  <!-- MPV -->
+  <AnimePlayerActionBarIcon
+    icon="/PlayersIcon/mpv.svg"
+    :href="getUrl().mpv"
+    @click="handleButtonClick('mpv')"
+    v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS/i) || props.allos"
+  >
+    MPV
+  </AnimePlayerActionBarIcon>
   <!-- VLC -->
   <AnimePlayerActionBarIcon
     icon="/PlayersIcon/vlc.svg"
@@ -109,15 +118,6 @@
     v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS/i) || props.allos"
   >
     MXPlayer
-  </AnimePlayerActionBarIcon>
-  <!-- MPV -->
-  <AnimePlayerActionBarIcon
-    icon="/PlayersIcon/mpv.svg"
-    :href="getUrl().mpv"
-    @click="handleButtonClick('mpv')"
-    v-if="ua.os.name.match(/Android|Android-x86|HarmonyOS/i) || props.allos"
-  >
-    MPV
   </AnimePlayerActionBarIcon>
 </template>
 
