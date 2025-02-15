@@ -55,9 +55,10 @@
         </NSpace>
         <NCollapseTransition :show="settings.darkMode.autoMode == 'system'">
           <div class="px-5 pb-2 text-xs text-gray-400">
-            若您正在使用部分<strong>手机</strong>国产浏览器，<strong>此功能可能无法使用</strong>。<br />
-            手机端目前确定支持: Chrome、Edge、FireFox、Via、X浏览器、Safari。<br />
-            夸克、360、QQ浏览器等已确定无法支持。
+            需要浏览器支持，番剧库才能获取到您系统的深色模式设定。<br />
+            桌面端大部分浏览器均已支持此功能。<br />
+            手机端 Chrome、Edge、FireFox、Via、X浏览器、Safari、360极速浏览器等支持此功能。<br />
+            部分手机浏览器可能将深色模式适配与夜间模式合并，需要打开夜间模式。
           </div>
         </NCollapseTransition>
         <!-- 跟随的时间设置面版 -->
