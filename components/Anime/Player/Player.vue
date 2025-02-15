@@ -63,7 +63,7 @@ const toggleSubtitles = async (show) => {
         }
       }
     });
-    
+
     if (subtitles.length) {
       await createSubtitles(subtitles[0]);
     }
@@ -173,6 +173,9 @@ onMounted(() => {
       });
       console.log("找到字幕", subtitles);
 
+      // 先清理旧字幕
+      disposeSubtitles();
+
       if (subtitles.length) {
         artInstance.subtitle.show = true;
         // artInstance.subtitle.url = subtitles[0].url;
@@ -234,7 +237,15 @@ onMounted(() => {
       } else {
         artInstance.muted = true;
         artInstance.play();
-        message.info("已为您静音开播, 可手动解除静音");
+
+        message.create("浏览器限制自动播放静音，关闭此消息恢复", {
+          type: "info",
+          closable: true,
+          duration: 10000,
+          onClose: () => {
+            artInstance.muted = false;
+          },
+        });
       }
     }, 200);
   });
