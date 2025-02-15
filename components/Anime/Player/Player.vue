@@ -11,7 +11,7 @@
 
 <script setup>
 import Artplayer from "artplayer";
-import ASS from "assjs";
+import SubtitlesOctopus from "libass-wasm/dist/js/subtitles-octopus.js";
 import { useLocalStorage, useThrottleFn } from "@vueuse/core";
 
 const store = useAnimeStore();
@@ -63,10 +63,9 @@ onMounted(() => {
           const nextState = !item.switch;
           // artInstance.subtitle.show = nextState;
           if (subtitleInstance) {
-            if (nextState) {
-              subtitleInstance.show();
-            } else {
-              subtitleInstance.hide();
+            const canvas = document.querySelector("#artContainer canvas");
+            if (canvas) {
+              canvas.style.display = nextState ? "block" : "none";
             }
           }
           item.tooltip = nextState ? "打开" : "关闭";
@@ -130,13 +129,25 @@ onMounted(() => {
           : content;
 
         if (subtitleInstance) {
-          subtitleInstance.destroy();
+          subtitleInstance.dispose();
+          subtitleInstance = null;
         }
-        subtitleInstance = new ASS(assContent, artInstance.video, {
-          container: document.querySelector(
-            "#artContainer > .art-video-player"
-          ),
-          resampling: "video_height",
+        subtitleInstance = new SubtitlesOctopus({
+          video: artInstance.video,
+          subContent: assContent,
+          workerUrl: "/libass-wasm/subtitles-octopus-worker.js",
+          fallbackFont: "/libass-wasm/default.woff2",
+          canvasStyle: {
+            willReadFrequently: true,
+          },
+          width: 1280,
+          height: 720,
+          debug: true,
+          targetFps: 24,
+          renderMode: "wasm-blend",
+          onError: function (error) {
+            console.error("Subtitle Error:", error);
+          },
         });
 
         message.success(
@@ -145,7 +156,8 @@ onMounted(() => {
       } else {
         // artInstance.subtitle.show = false;
         if (subtitleInstance) {
-          subtitleInstance.destroy();
+          subtitleInstance.dispose();
+          subtitleInstance = null;
         }
       }
 
@@ -273,8 +285,9 @@ onMounted(() => {
   padding-left: 10px !important;
 }
 
-/* 软字幕需要有 z-index 才不会被 ArtPlayer 覆盖 */
-.ASS-box {
+/* 字幕画布样式 */
+#artContainer canvas {
   z-index: 20;
+  pointer-events: none;
 }
 </style>

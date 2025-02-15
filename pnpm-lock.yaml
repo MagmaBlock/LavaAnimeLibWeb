@@ -41,6 +41,9 @@ importers:
       github-markdown-css:
         specifier: ^5.5.1
         version: 5.5.1
+      libass-wasm:
+        specifier: ^4.1.0
+        version: 4.1.0
       marked:
         specifier: ^9.1.6
         version: 9.1.6
@@ -3239,6 +3242,9 @@ packages:
   leven@3.1.0:
     resolution: {integrity: sha512-qsda+H8jTaUaN/x5vzW2rzc+8Rw4TAQ/4KjB46IwK5VH+IlVeeeje/EoZRpiXvIqjFgK84QffqPztGI3VBLG1A==, tarball: https://registry.npmjs.org/leven/-/leven-3.1.0.tgz}
     engines: {node: '>=6'}
+
+  libass-wasm@4.1.0:
+    resolution: {integrity: sha512-+RbYT/uuI6VHExCmGyUuMg3A2gQOaCRTzSn8GGDSf3q4cEoUNiINd9u4RGfZXA1UKafW+Hv8bmcKIX4FKbSh0Q==, tarball: https://registry.npmjs.org/libass-wasm/-/libass-wasm-4.1.0.tgz}
 
   lilconfig@2.1.0:
     resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}
@@ -8902,6 +8908,8 @@ snapshots:
       readable-stream: 2.3.8
 
   leven@3.1.0: {}
+
+  libass-wasm@4.1.0: {}
 
   lilconfig@2.1.0: {}
 
