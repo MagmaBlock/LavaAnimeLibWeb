@@ -12,7 +12,7 @@
 <script setup>
 import Artplayer from "artplayer";
 import SubtitlesOctopus from "libass-wasm/dist/js/subtitles-octopus.js";
-import { useLocalStorage, useThrottleFn } from "@vueuse/core";
+import { useLocalStorage, useThrottleFn, watchDebounced } from "@vueuse/core";
 
 const store = useAnimeStore();
 const message = useMessage();
@@ -146,7 +146,7 @@ onMounted(() => {
   store.artInstance = artInstance;
 
   // 监听文件变化情况
-  watch(
+  watchDebounced(
     () => store.activeFile,
     async (newFile) => {
       if (!newFile?.url) return;
@@ -191,7 +191,7 @@ onMounted(() => {
         message.info(`正在播放音乐 ${newFile?.name}`);
       }
     },
-    { immediate: true }
+    { immediate: true, debounce: 500 }
   );
 
   // 播放器出错损坏处理
