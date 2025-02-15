@@ -23,6 +23,66 @@ const rememberRate = useLocalStorage("rememberRate", false);
 
 let subtitleInstance = null;
 
+const createSubtitles = async (subtitleFile) => {
+  const content = await fetch(subtitleFile.url).then((res) => res.text());
+  const assContent = subtitleFile.name.match(/.srt$/i)
+    ? srtToAss(content)
+    : content;
+
+  subtitleInstance = new SubtitlesOctopus({
+    video: store.artInstance.video,
+    subContent: assContent,
+    workerUrl: "/libass-wasm/subtitles-octopus-worker.js",
+    fallbackFont: "/libass-wasm/default.woff2",
+    canvasStyle: {
+      willReadFrequently: true,
+    },
+    width: 1280,
+    height: 720,
+    debug: true,
+    targetFps: 24,
+    renderMode: "wasm-blend",
+    onError: function (error) {
+      console.error("Subtitle Error:", error);
+    },
+  });
+};
+
+const toggleSubtitles = async (show) => {
+  if (show) {
+    const subtitles = store.fileData.fileList.filter((file) => {
+      if (file?.parseResult?.extensionName?.type == "subtitle") {
+        if (
+          file?.parseResult?.episode ==
+            store.activeFile?.parseResult?.episode ||
+          file.name.startsWith(
+            store.activeFile.parseResult?.extensionName?.trueName
+          )
+        ) {
+          return true;
+        }
+      }
+    });
+    
+    if (subtitles.length) {
+      await createSubtitles(subtitles[0]);
+    }
+  } else {
+    disposeSubtitles();
+  }
+};
+
+const disposeSubtitles = () => {
+  if (subtitleInstance) {
+    subtitleInstance.dispose();
+    subtitleInstance = null;
+    const canvas = document.querySelector("#artContainer canvas");
+    if (canvas) {
+      canvas.style.display = "none";
+    }
+  }
+};
+
 onMounted(() => {
   const options = {
     autoMini: true,
@@ -61,13 +121,7 @@ onMounted(() => {
         switch: true,
         onSwitch: function (item) {
           const nextState = !item.switch;
-          // artInstance.subtitle.show = nextState;
-          if (subtitleInstance) {
-            const canvas = document.querySelector("#artContainer canvas");
-            if (canvas) {
-              canvas.style.display = nextState ? "block" : "none";
-            }
-          }
+          toggleSubtitles(nextState);
           item.tooltip = nextState ? "打开" : "关闭";
           return nextState;
         },
@@ -122,43 +176,12 @@ onMounted(() => {
       if (subtitles.length) {
         artInstance.subtitle.show = true;
         // artInstance.subtitle.url = subtitles[0].url;
-
-        const content = await fetch(subtitles[0].url).then((res) => res.text());
-        const assContent = subtitles[0].name.match(/.srt$/i)
-          ? srtToAss(content)
-          : content;
-
-        if (subtitleInstance) {
-          subtitleInstance.dispose();
-          subtitleInstance = null;
-        }
-        subtitleInstance = new SubtitlesOctopus({
-          video: artInstance.video,
-          subContent: assContent,
-          workerUrl: "/libass-wasm/subtitles-octopus-worker.js",
-          fallbackFont: "/libass-wasm/default.woff2",
-          canvasStyle: {
-            willReadFrequently: true,
-          },
-          width: 1280,
-          height: 720,
-          debug: true,
-          targetFps: 24,
-          renderMode: "wasm-blend",
-          onError: function (error) {
-            console.error("Subtitle Error:", error);
-          },
-        });
-
+        await createSubtitles(subtitles[0]);
         message.success(
-          "当前视频为软字幕，若显示不正常可暂停一次。字幕可在播放设置中关闭。"
+          "已载入一个软字幕！如果您发现字幕重复可在设置中关闭软字幕"
         );
       } else {
-        // artInstance.subtitle.show = false;
-        if (subtitleInstance) {
-          subtitleInstance.dispose();
-          subtitleInstance = null;
-        }
+        await toggleSubtitles(false);
       }
 
       if (newFile?.parseResult?.extensionName?.type == "music") {
