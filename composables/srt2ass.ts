@@ -27,6 +27,29 @@ export function srtToAss(srt: string) {
       let lines = parsedSrt[i].text.split("\n"); // 拆分srt字幕
       log(`[拆分多行][${i}] ${JSON.stringify(lines)}`);
 
+      // 新增：合并中文台词的两行
+      for (let j = 0; j < lines.length - 1; j++) {
+        // 检查当前行和下一行是否包含中文标点符号
+        const chinesePunctuation = /[，。！？；：、（）《》【】“”‘’]/;
+        const currentLineEndsWithPunctuation = chinesePunctuation.test(
+          lines[j].slice(-1)
+        );
+        const nextLineStartsWithPunctuation = chinesePunctuation.test(
+          lines[j + 1].charAt(0)
+        );
+
+        if (
+          lines[j].match(/[\u4e00-\u9fff]/) && // 当前行包含汉字
+          lines[j + 1].match(/[\u4e00-\u9fff]/) && // 下一行也包含汉字
+          !currentLineEndsWithPunctuation && // 当前行不以中文标点结尾
+          !nextLineStartsWithPunctuation // 下一行不以中文标点开头
+        ) {
+          lines[j] = lines[j] + "　" + lines[j + 1]; // 用全角空格连接
+          lines.splice(j + 1, 1); // 删除下一行
+          j--; // 调整索引
+        }
+      }
+
       for (let j = 0; j < lines.length; j++) {
         // 循环拆开后的每一行
         if (
