@@ -45,5 +45,11 @@
     "srt-parser-2": "^1.2.3",
     "ua-parser-js": "^1.0.37",
     "vue3-lazyload": "^0.3.8"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "vue-demi"
+    ]
   }
 }
