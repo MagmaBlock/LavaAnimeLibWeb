@@ -339,8 +339,7 @@ export const useAnimeStore = defineStore("anime", {
       let result = state.fileData.fileList.filter((file) => {
         return (
           file.type == "file" &&
-          file.parseResult?.extensionName?.type &&
-          ["video", "music"].includes(file.parseResult.extensionName.type)
+          !["video", "music"].includes(file.parseResult.extensionName.type)
         );
       });
       if (!state.ascOrder) result.reverse();
