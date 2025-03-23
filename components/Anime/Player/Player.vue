@@ -136,7 +136,12 @@ onMounted(() => {
         tooltip: "下一话",
         click: useThrottleFn(function () {
           const newEp = store.findNextEpisode();
-          if (newEp) store.changeEpisode(newEp);
+          console.log("切换集数:", newEp);
+          if (newEp) {
+            store.changeEpisode(newEp).catch((err) => {
+              console.error("切换集数失败:", err);
+            });
+          }
         }, 1000),
       },
     ],
