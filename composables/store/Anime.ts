@@ -154,11 +154,6 @@ export type DriveData = {
   }[];
 };
 
-// 临时类型定义
-declare const LavaAnimeAPI: any;
-declare const getToken: () => string;
-const apiBaseUrl = process.env.SERVER_BASE_URL;
-
 declare global {
   interface Window {
     $message: ReturnType<typeof useMessage>;
@@ -711,11 +706,7 @@ export const useAnimeStore = defineStore("anime", {
         useDrive: this.activeDrive?.id,
       };
       try {
-        await axios.post("/v2/anime/history/report", content, {
-          baseURL: apiBaseUrl,
-          headers: {
-            Authorization: getToken(),
-          },
+        await LavaAnimeAPI.post("/v2/anime/history/report", content, {
           timeout: 3000,
         });
       } catch (error) {
