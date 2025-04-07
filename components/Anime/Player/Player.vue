@@ -16,6 +16,7 @@ import { useLocalStorage, useThrottleFn, watchDebounced } from "@vueuse/core";
 
 const store = useAnimeStore();
 const message = useMessage();
+const notification = useNotification();
 const refreshPlayer = inject("refreshPlayer");
 const route = useRoute();
 
@@ -187,13 +188,14 @@ onMounted(() => {
         artInstance.muted = true;
         artInstance.play();
 
-        message.create("浏览器限制自动播放静音，关闭此消息恢复", {
+        notification.create({
           type: "info",
-          closable: true,
-          duration: 10000,
+          title: "静音播放",
+          description: "因浏览器限制，本次自动播放为静音，关闭此消息恢复。",
           onClose: () => {
             artInstance.muted = false;
           },
+          duration: 10000,
         });
       }
     }, 200);
