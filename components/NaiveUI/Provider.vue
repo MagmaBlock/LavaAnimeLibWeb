@@ -1,5 +1,5 @@
 <template>
-  <NNotificationProvider>
+  <NNotificationProvider placement="bottom-right">
     <NMessageProvider>
       <NaiveUIInjecter>
         <slot></slot>

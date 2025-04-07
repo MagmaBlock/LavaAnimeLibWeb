@@ -139,7 +139,12 @@ const isMobileOpenDetails = ref(false);
           <AnimePlayerEmpty v-if="!store.showArtPlayer" />
         </div>
         <!-- 本地播放器调用 -->
-        <AnimePlayerActionBar />
+        <AnimeCardBasic>
+          <div class="flex flex-col gap-2">
+            <AnimeSubtitleControl />
+            <AnimePlayerActionBar />
+          </div>
+        </AnimeCardBasic>
         <!-- 番剧卡 -->
         <AnimeMetaCard />
       </NFlex>
@@ -186,7 +191,12 @@ const isMobileOpenDetails = ref(false);
         </NDrawerContent>
       </NDrawer>
       <!-- 本地播放器调用 -->
-      <AnimePlayerActionBar />
+      <AnimeCardBasic>
+        <div class="flex flex-col gap-2">
+          <AnimeSubtitleControl />
+          <AnimePlayerActionBar />
+        </div>
+      </AnimeCardBasic>
       <AnimeDriveSelector />
       <AnimeFileList />
       <AnimeFileErrorDisplay />
