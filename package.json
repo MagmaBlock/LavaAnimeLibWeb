@@ -27,7 +27,7 @@
     "vue-router": "^4.3.0"
   },
   "dependencies": {
-    "@bg-dev/nuxt-naiveui": "^1.12.3",
+    "@bg-dev/nuxt-naiveui": "^1.14.0",
     "@nuxtjs/tailwindcss": "^6.11.4",
     "@pinia/nuxt": "^0.5.1",
     "@vueuse/core": "^10.9.0",
