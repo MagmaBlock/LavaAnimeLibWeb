@@ -193,6 +193,11 @@ export const useAnimeStore = defineStore("anime", {
         activeFileIndex: null as number | null,
         fileList: [] as FileData,
       },
+      // 字幕相关状态
+      subtitleData: {
+        enabled: true, // 字幕开关状态
+        subtitleFileName: null as string | null,
+      },
       artInstance: null as Artplayer | null,
       showArtPlayer: false,
       showAdminTools: false,
@@ -234,6 +239,16 @@ export const useAnimeStore = defineStore("anime", {
         return null;
       const file = state.fileData.fileList[state.fileData.activeFileIndex];
       return file ? { ...file, parseResult: file.parseResult } : null;
+    },
+    /**
+     * 获取活跃的字幕文件
+     */
+    activeSubtitle: (state) => {
+      if (!state.subtitleData.enabled) return null;
+      if (state.subtitleData.subtitleFileName === null) return null;
+      return state.fileData.fileList.find(
+        (file) => file.name === state.subtitleData.subtitleFileName
+      );
     },
     /**
      * 获取选中的节点
@@ -339,6 +354,18 @@ export const useAnimeStore = defineStore("anime", {
       });
       if (!state.ascOrder) result.reverse();
       return result;
+    },
+    /**
+     * 获取当前集数的所有字幕文件
+     */
+    subtitleList(state) {
+      if (state.fileData.fileList === null) return [];
+      return state.fileData.fileList.filter((file) => {
+        if (file?.parseResult?.extensionName?.type == "subtitle") {
+          const currentEpisode = this.activeFile?.parseResult?.episode;
+          if (currentEpisode == file.parseResult?.episode) return true;
+        }
+      });
     },
     /**
      * 提供集数, 返回指定集数的视频列表
@@ -562,10 +589,9 @@ export const useAnimeStore = defineStore("anime", {
     },
     /**
      * 切换当前选择的集数, 会优先选择浏览器支持的视频
-     * @param {String} newEpisode
-     * @returns {Promise<String | undefined>}
+     * @param newEpisode
      */
-    changeEpisode(newEpisode: string) {
+    changeEpisode(newEpisode: string): Promise<string | undefined> {
       return new Promise((resolve, reject) => {
         if (!this.episodeListFind(newEpisode)) return reject("episodeNotFound");
         // 2025年3月23日增加：优先寻找旧资源相同的字幕组
@@ -644,6 +670,7 @@ export const useAnimeStore = defineStore("anime", {
             reject(error);
           }
         });
+        this.autoSubtitle();
       });
     },
     /**
@@ -854,6 +881,79 @@ export const useAnimeStore = defineStore("anime", {
           );
         }
       }
+    },
+    /**
+     * 自动选择最合适的中文字幕
+     * 本方法应该在字幕列表产生后调用
+     * 优先级：sc > tc > chs > cht > chi > zho > 首个字幕
+     * 使用更灵活的正则匹配规则，支持多种常见字幕命名方式
+     */
+    async autoSubtitle() {
+      const subtitles = this.subtitleList;
+      console.log(
+        "可用的字幕列表",
+        subtitles.map((sub) => sub.name)
+      );
+
+      // 定义字幕匹配优先级配置（支持多种常见命名方式）
+      const priorityConfig = [
+        {
+          // 匹配 sc, sc-hs, sc_simp 等
+          pattern: /(?:^|[._-])sc(?:h(?:i|s|_simp)?)?(?:[._-]|$)/i,
+          log: "简体中文",
+        },
+        {
+          // 明确匹配 chs
+          pattern: /(?:^|[._-])chs(?:[._-]|$)/i,
+          log: "简体中文",
+        },
+        {
+          // 匹配 tc, tc-ht, tc_trad 等
+          pattern: /(?:^|[._-])tc(?:h(?:t|_trad)?)?(?:[._-]|$)/i,
+          log: "繁体中文",
+        },
+        {
+          // 明确匹配 cht
+          pattern: /(?:^|[._-])cht(?:[._-]|$)/i,
+          log: "繁体中文",
+        },
+        {
+          // 匹配 chi, chinese, chi_sub
+          pattern: /(?:^|[._-])chi(?:n(?:ese|_sub))?(?:[._-]|$)/i,
+          log: "中文",
+        },
+        {
+          // 匹配 zho
+          pattern: /(?:^|[._-])zho(?:[._-]|$)/i,
+          log: "中文",
+        },
+      ];
+
+      // 按优先级查找第一个匹配的字幕
+      const matchedConfig = priorityConfig.find(({ pattern }) =>
+        subtitles.some((sub) => pattern.test(sub.name))
+      );
+
+      if (matchedConfig) {
+        // 获取第一个匹配的字幕文件（通过some已确保存在）
+        const targetSub = subtitles.find((sub) =>
+          matchedConfig.pattern.test(sub.name)
+        )!;
+        this.subtitleData.subtitleFileName = targetSub.name;
+        console.log(`自动选择${matchedConfig.log}字幕: ${targetSub.name}`);
+        return;
+      }
+
+      // 默认选择第一个字幕（如果有）
+      if (subtitles.length > 0) {
+        this.subtitleData.subtitleFileName = subtitles[0].name;
+        console.log("自动选择首个字幕:", subtitles[0].name);
+        return;
+      }
+
+      // 无可用字幕
+      this.subtitleData.subtitleFileName = null;
+      console.log("未找到匹配的字幕文件");
     },
   },
 });

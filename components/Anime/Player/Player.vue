@@ -48,30 +48,6 @@ const createSubtitles = async (subtitleFile) => {
   });
 };
 
-const toggleSubtitles = async (show) => {
-  if (show) {
-    const subtitles = store.fileData.fileList.filter((file) => {
-      if (file?.parseResult?.extensionName?.type == "subtitle") {
-        if (
-          file?.parseResult?.episode ==
-            store.activeFile?.parseResult?.episode ||
-          file.name.startsWith(
-            store.activeFile.parseResult?.extensionName?.trueName
-          )
-        ) {
-          return true;
-        }
-      }
-    });
-
-    if (subtitles.length) {
-      await createSubtitles(subtitles[0]);
-    }
-  } else {
-    disposeSubtitles();
-  }
-};
-
 const disposeSubtitles = () => {
   if (subtitleInstance) {
     subtitleInstance.dispose();
@@ -82,6 +58,15 @@ const disposeSubtitles = () => {
     }
   }
 };
+
+// 每次字幕变化时，都更新字幕
+watch(
+  () => store.activeSubtitle,
+  (subtitleFile) => {
+    disposeSubtitles();
+    createSubtitles(subtitleFile);
+  }
+);
 
 onMounted(() => {
   const options = {
@@ -112,17 +97,6 @@ onMounted(() => {
           const nextState = !item.switch;
           rememberRate.value = nextState;
           item.tooltip = nextState ? "记住" : "关闭";
-          return nextState;
-        },
-      },
-      {
-        html: "显示软字幕",
-        tooltip: "打开",
-        switch: true,
-        onSwitch: function (item) {
-          const nextState = !item.switch;
-          toggleSubtitles(nextState);
-          item.tooltip = nextState ? "打开" : "关闭";
           return nextState;
         },
       },
@@ -160,36 +134,6 @@ onMounted(() => {
         await artInstance.switchUrl(newFile?.url);
       } catch (error) {
         message.error("播放失败, 正在重试");
-      }
-
-      // 寻找并生效字幕
-      let subtitles = store.fileData.fileList.filter((file) => {
-        if (file?.parseResult?.extensionName?.type == "subtitle") {
-          if (
-            file?.parseResult?.episode ==
-              store.activeFile?.parseResult?.episode ||
-            file.name.startsWith(
-              store.activeFile.parseResult?.extensionName?.trueName
-            )
-          ) {
-            return true;
-          }
-        }
-      });
-      console.log("找到字幕", subtitles);
-
-      // 先清理旧字幕
-      disposeSubtitles();
-
-      if (subtitles.length) {
-        artInstance.subtitle.show = true;
-        // artInstance.subtitle.url = subtitles[0].url;
-        await createSubtitles(subtitles[0]);
-        message.success(
-          "已载入一个软字幕！如果您发现字幕重复可在设置中关闭软字幕"
-        );
-      } else {
-        await toggleSubtitles(false);
       }
 
       if (newFile?.parseResult?.extensionName?.type == "music") {
