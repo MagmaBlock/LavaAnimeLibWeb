@@ -197,6 +197,11 @@ export const useAnimeStore = defineStore("anime", {
       subtitleData: {
         enabled: true, // 字幕开关状态
         subtitleFileName: null as string | null,
+        localSubtitle: null as {
+          name: string;
+          content: string;
+          type: string;
+        } | null, // 本地上传的字幕
       },
       artInstance: null as Artplayer | null,
       showArtPlayer: false,
@@ -245,6 +250,29 @@ export const useAnimeStore = defineStore("anime", {
      */
     activeSubtitle: (state) => {
       if (!state.subtitleData.enabled) return null;
+
+      // 如果有本地字幕，优先使用本地字幕
+      if (state.subtitleData.localSubtitle) {
+        return {
+          name: state.subtitleData.localSubtitle.name,
+          url: URL.createObjectURL(
+            new Blob([state.subtitleData.localSubtitle.content], {
+              type: `text/${state.subtitleData.localSubtitle.type}`,
+            })
+          ),
+          type: "file",
+          parseResult: {
+            extensionName: {
+              type: "subtitle",
+              result: state.subtitleData.localSubtitle.type,
+              raw: state.subtitleData.localSubtitle.type,
+              trueName: state.subtitleData.localSubtitle.type,
+            },
+          },
+        };
+      }
+
+      // 否则使用服务器提供的字幕
       if (state.subtitleData.subtitleFileName === null) return null;
       return state.fileData.fileList.find(
         (file) => file.name === state.subtitleData.subtitleFileName
@@ -954,6 +982,70 @@ export const useAnimeStore = defineStore("anime", {
       // 无可用字幕
       this.subtitleData.subtitleFileName = null;
       console.log("未找到匹配的字幕文件");
+    },
+
+    /**
+     * 上传本地字幕文件
+     * @param file 用户上传的字幕文件
+     */
+    async uploadLocalSubtitle(file: File) {
+      return new Promise<void>((resolve, reject) => {
+        // 检查文件类型
+        const fileExtension = file.name.split(".").pop()?.toLowerCase();
+        if (!["srt", "ass", "ssa", "vtt"].includes(fileExtension || "")) {
+          reject("不支持的字幕格式，请上传.srt、.ass、.ssa或.vtt格式的字幕");
+          return;
+        }
+
+        // 检查文件大小，限制为2MB
+        if (file.size > 2 * 1024 * 1024) {
+          reject("字幕文件过大，请上传小于2MB的文件");
+          return;
+        }
+
+        // 读取文件内容
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const content = e.target?.result as string;
+            if (!content) {
+              reject("读取字幕文件失败");
+              return;
+            }
+
+            // 保存本地字幕信息
+            this.subtitleData.localSubtitle = {
+              name: file.name,
+              content: content,
+              type: fileExtension || "srt",
+            };
+
+            // 启用字幕
+            this.subtitleData.enabled = true;
+
+            // 清除之前选择的服务器字幕
+            this.subtitleData.subtitleFileName = null;
+
+            resolve();
+          } catch (error) {
+            reject(`处理字幕文件失败: ${error}`);
+          }
+        };
+
+        reader.onerror = () => {
+          reject("读取字幕文件失败");
+        };
+
+        // 开始读取文件
+        reader.readAsText(file);
+      });
+    },
+
+    /**
+     * 清除本地上传的字幕
+     */
+    clearLocalSubtitle() {
+      this.subtitleData.localSubtitle = null;
     },
   },
 });

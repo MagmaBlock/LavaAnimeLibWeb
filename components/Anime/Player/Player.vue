@@ -25,7 +25,19 @@ const rememberRate = useLocalStorage("rememberRate", false);
 let subtitleInstance = null;
 
 const createSubtitles = async (subtitleFile) => {
-  const content = await fetch(subtitleFile.url).then((res) => res.text());
+  let content;
+  
+  // 处理本地上传的字幕（已经有内容）和服务器字幕（需要获取内容）
+  if (store.subtitleData.localSubtitle &&
+      subtitleFile.name === store.subtitleData.localSubtitle.name) {
+    // 使用本地字幕内容
+    content = store.subtitleData.localSubtitle.content;
+  } else {
+    // 从服务器获取字幕内容
+    content = await fetch(subtitleFile.url).then((res) => res.text());
+  }
+  
+  // 根据字幕格式转换内容
   const assContent = subtitleFile.name.match(/.srt$/i)
     ? srtToAss(content)
     : content;
@@ -64,8 +76,26 @@ const disposeSubtitles = () => {
 watch(
   () => store.activeSubtitle,
   (subtitleFile) => {
-    disposeSubtitles();
-    createSubtitles(subtitleFile);
+    if (subtitleFile) {
+      disposeSubtitles();
+      createSubtitles(subtitleFile);
+    } else {
+      // 如果没有字幕，清除当前字幕
+      disposeSubtitles();
+    }
+  }
+);
+
+// 监听字幕开关状态
+watch(
+  () => store.subtitleData.enabled,
+  (enabled) => {
+    if (!enabled) {
+      disposeSubtitles();
+    } else if (store.activeSubtitle) {
+      disposeSubtitles();
+      createSubtitles(store.activeSubtitle);
+    }
   }
 );
 
