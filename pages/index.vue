@@ -1,7 +1,10 @@
 <template>
   <ContainerPageMobileFull>
     <!-- 浏览器升级提示 -->
-    <div v-if="notSupport" class="bg-orange-100 dark:bg-orange-950 p-4 text-xs lg:rounded-md lg:mb-4 select-all">
+    <div
+      v-if="notSupport"
+      class="bg-orange-100 dark:bg-orange-950 p-4 text-xs lg:rounded-md lg:mb-4 select-all"
+    >
       当前浏览器内核 {{ ua.getEngine().name }}
       {{ ua.getEngine().version }} 过旧，界面样式和功能可能发生异常。<br />
       我们建议使用 2021 年后的浏览器内核. Chrome / Edge > 84, FireFox > 100,
@@ -14,17 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-
 useHead({ title: "首页" });
-
-const userStore = useUserStore();
-const { userInfo } = storeToRefs(userStore);
-
-// 检查用户是否登录
-if (Object.keys(userInfo.value).length === 0) {
-  await navigateTo("/auth/login");
-}
 
 import uaParser from "ua-parser-js";
 
@@ -37,4 +30,13 @@ if (
 ) {
   notSupport.value = true;
 }
+
+onMounted(() => {
+  (() => {
+    // 尝试获取一次用户信息，本方法的副作用会导致未登录用户被跳转至登录页
+    // 以达到防止未登录用户访问界面的效果
+    const userStore = useUserStore();
+    userStore.getUserInfo();
+  })();
+});
 </script>
