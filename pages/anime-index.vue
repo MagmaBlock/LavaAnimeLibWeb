@@ -1,4 +1,6 @@
 <script>
+import { storeToRefs } from "pinia";
+
 export default {
   data() {
     return {
@@ -76,6 +78,16 @@ export default {
   },
   async mounted() {
     useHead({ title: "番剧索引" });
+
+    const userStore = useUserStore();
+    const { userInfo } = storeToRefs(userStore);
+
+    // 检查用户是否登录
+    if (Object.keys(userInfo.value).length === 0) {
+      await navigateTo("/auth/login");
+      return; // 跳转后停止后续操作
+    }
+
     this.getSessionCache();
     this.getIndex();
     this.queryIndex();
@@ -90,13 +102,10 @@ export default {
       <template #left>
         <div>
           <!-- 快速搜索框 -->
-          <SearchBar
-            v-model:search="searchValue"
-            @search="
-              (value) =>
-                $router.push({ name: 'search-value', params: { value } })
-            "
-          />
+          <SearchBar v-model:search="searchValue" @search="
+            (value) =>
+              $router.push({ name: 'search-value', params: { value } })
+          " />
           <!-- 标题 -->
           <NH3 class="my-4">番剧索引</NH3>
           <NH4 class="hidden lg:inline">按年份</NH4>
@@ -104,22 +113,14 @@ export default {
           <NSpin :show="loading.year" class="my-4">
             <!-- 年份内容 -->
             <NSpace :size="8">
-              <IndexSelectButton
-                v-if="!loading.year"
-                v-for="yearName in tabs.year"
-                :active="selectedTab.year == yearName"
-                @click="onTagClick(yearName, 'year')"
-              >
+              <IndexSelectButton v-if="!loading.year" v-for="yearName in tabs.year"
+                :active="selectedTab.year == yearName" @click="onTagClick(yearName, 'year')">
                 {{ yearName }}
               </IndexSelectButton>
             </NSpace>
             <!-- 年份骨架屏 -->
             <NSpace :size="8">
-              <IndexSelectButton
-                class="animate-pulse text-white/0"
-                v-if="loading.year"
-                v-for="a in 25"
-              >
+              <IndexSelectButton class="animate-pulse text-white/0" v-if="loading.year" v-for="a in 25">
                 2077年
               </IndexSelectButton>
             </NSpace>
@@ -130,22 +131,14 @@ export default {
           <NSpin :show="loading.type" class="my-4">
             <!-- 分类骨架屏 -->
             <NSpace :size="8">
-              <IndexSelectButton
-                class="animate-pulse text-white/0"
-                v-if="loading.type"
-                v-for="a in 9"
-              >
+              <IndexSelectButton class="animate-pulse text-white/0" v-if="loading.type" v-for="a in 9">
                 2077月
               </IndexSelectButton>
             </NSpace>
             <!-- 分类内容 -->
             <NSpace :size="8">
-              <IndexSelectButton
-                v-if="!loading.type"
-                v-for="typeName in tabs.type"
-                :active="selectedTab.type == typeName"
-                @click="onTagClick(typeName, 'type')"
-              >
+              <IndexSelectButton v-if="!loading.type" v-for="typeName in tabs.type"
+                :active="selectedTab.type == typeName" @click="onTagClick(typeName, 'type')">
                 {{ typeName }}
               </IndexSelectButton>
             </NSpace>
