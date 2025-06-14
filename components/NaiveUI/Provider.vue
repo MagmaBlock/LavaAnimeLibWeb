@@ -1,9 +1,7 @@
 <template>
   <NNotificationProvider>
     <NMessageProvider>
-      <NaiveUIInjecter>
-        <slot></slot>
-      </NaiveUIInjecter>
+      <slot></slot>
     </NMessageProvider>
   </NNotificationProvider>
 </template>
