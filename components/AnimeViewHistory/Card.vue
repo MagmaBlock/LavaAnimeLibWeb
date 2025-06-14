@@ -42,7 +42,13 @@
       <!-- 简略视图模式 -->
       <template v-else>
         <NScrollbar x-scrollable class="overflow-x-auto">
-          <div :class="{'flex gap-4': !vertical, 'flex flex-col gap-4': vertical}" :style="vertical ? '' : 'width: max-content'">
+          <div
+            :class="{
+              'flex gap-4': !vertical,
+              'flex flex-col gap-4': vertical,
+            }"
+            :style="vertical ? '' : 'width: max-content'"
+          >
             <AnimeViewHistoryRecord
               v-for="history in flattenHistory(data.history)"
               :key="history.updatedAt.getTime()"
@@ -84,7 +90,7 @@ const { data, refresh, status } = await useAsyncData(
       page: currentPage.value,
       pageSize: pageSize.value,
     }),
-  { lazy: true }
+  { lazy: true },
 );
 
 // 将分组历史记录展平为一维数组

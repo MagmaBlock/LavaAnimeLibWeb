@@ -107,7 +107,7 @@ const collections = useAsyncData(
     }),
   {
     lazy: true,
-  }
+  },
 );
 
 // 获取追番总数
@@ -115,7 +115,7 @@ const collectionsCount = useAsyncData(
   () => $client.common.animeCollection.getUserAnimeCollectionCounts.query(),
   {
     lazy: true,
-  }
+  },
 );
 
 // 滑动

@@ -183,19 +183,19 @@ const handleSubmit = (e: MouseEvent) => {
                   ])
                   .optional(),
               })
-              .parse(formModel.value)
+              .parse(formModel.value),
           );
         message.success(
           isEditMode.value
             ? `更新成功，Anime ID: ${result.id}`
-            : `创建成功，新 Anime 的 ID 是 ${result.id}`
+            : `创建成功，新 Anime 的 ID 是 ${result.id}`,
         );
         router.replace("/admin/anime/manage");
       } catch (error) {
         message.error(
           (isEditMode.value ? "更新" : "创建") +
             "失败：" +
-            (error as Error).message
+            (error as Error).message,
         );
       }
     } else {

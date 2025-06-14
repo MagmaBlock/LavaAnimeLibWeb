@@ -57,7 +57,7 @@ const columns: DataTableColumns<Anime> = [
               size: "small",
               secondary: true,
             },
-            { default: () => "编辑" }
+            { default: () => "编辑" },
           ),
         ],
       });

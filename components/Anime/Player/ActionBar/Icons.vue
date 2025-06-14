@@ -135,7 +135,7 @@ function handleButtonClick(type) {
 const getUrl = () => {
   return {
     ddplayWindows: `ddplay:${encodeURIComponent(
-      store.activeFile?.url + "|filePath=" + store.activeFile?.name
+      store.activeFile?.url + "|filePath=" + store.activeFile?.name,
     )}`,
     ddplayAndroid: `intent:${store.activeFile?.url}#Intent;package=com.xyoye.dandanplay;end`,
     potplayer: `potplayer://${store.activeFile?.url}`,

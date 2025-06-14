@@ -26,7 +26,7 @@ export class UserService {
     email: string,
     name: string,
     password: string,
-    inviteCode: string
+    inviteCode: string,
   ): Promise<User> {
     if (!UserValidator.isEmail(email)) {
       throw createError({
@@ -102,7 +102,10 @@ export class UserService {
    * @param password 明文密码
    * @returns 返回一个 JWT Token
    */
-  async login(account: string, password: string): Promise<{
+  async login(
+    account: string,
+    password: string,
+  ): Promise<{
     token: string;
     user: User;
   }> {

@@ -53,20 +53,20 @@ export const useAnimeViewHistoryStore = defineStore(
                 // 根据进度来源显示不同的提示信息
                 if (playProgress.foundBy === "file") {
                   message.info(
-                    `此视频上次播放到 ${formattedTime}，已自动跳转。`
+                    `此视频上次播放到 ${formattedTime}，已自动跳转。`,
                   );
                 } else if (playProgress.foundBy === "episode") {
                   message.info(
-                    `此集数上次播放到 ${formattedTime}，已自动跳转。`
+                    `此集数上次播放到 ${formattedTime}，已自动跳转。`,
                   );
                 }
               }
               unwatch(); // 在成功挂载 once 之后取消 watch
             });
           },
-          { immediate: true }
+          { immediate: true },
         );
-      }
+      },
     );
 
     // 添加事件处理器
@@ -101,12 +101,12 @@ export const useAnimeViewHistoryStore = defineStore(
         if (player) {
           addEventHandlers();
         }
-      }
+      },
     );
 
     return {
       enableHistoryReport,
       enableResumeHistory,
     };
-  }
+  },
 );

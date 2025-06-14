@@ -16,7 +16,7 @@ for (const storage of storages) {
   const newAnimes = results.filter((r) => r.createAnime);
 
   console.log(
-    `挂削了 ${newAnimes.length} 个新 Anime, 耗时 ${Date.now() - start}`
+    `挂削了 ${newAnimes.length} 个新 Anime, 耗时 ${Date.now() - start}`,
   );
 
   for (const result of results) {

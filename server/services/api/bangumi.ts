@@ -38,7 +38,7 @@ export class BangumiAPI {
 
   getSubjectsCharacters(id: number) {
     return this.api<BangumiAPISubjectCharacters>(
-      `/v0/subjects/${id}/characters`
+      `/v0/subjects/${id}/characters`,
     );
   }
 
@@ -68,7 +68,7 @@ export class BangumiAPI {
     subject_id: number,
     type?: number,
     limit?: number,
-    offset?: number
+    offset?: number,
   ) {
     return this.api<BangumiAPIEpisodes>(`/v0/episodes`, {
       params: { subject_id, type, limit, offset },

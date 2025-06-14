@@ -150,10 +150,10 @@ export const useAnimeVideoPlayerStore = defineStore(
           // 即将下一话
           if (endingTime <= 10) {
             artPlayer.value!.notice.show = `将在 ${Math.round(
-              endingTime
+              endingTime,
             )} 秒后播放下一话`;
           }
-        }, 1000)
+        }, 1000),
       );
     });
 
@@ -171,5 +171,5 @@ export const useAnimeVideoPlayerStore = defineStore(
       createPlayer,
       setVideoUrl,
     };
-  }
+  },
 );

@@ -123,7 +123,7 @@ const store = useAnimeStore();
 
 const getBangumiId = computed(() => {
   const bangumiSite = store.animeInfo?.sites?.find(
-    (site) => site.siteType === "Bangumi"
+    (site) => site.siteType === "Bangumi",
   );
   return bangumiSite ? bangumiSite.siteId : null;
 });

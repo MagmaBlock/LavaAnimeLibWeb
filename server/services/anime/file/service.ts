@@ -64,7 +64,7 @@ export class AnimeFileService {
 
       // 过滤掉不允许 NSFW 的存储器的文件
       animeEpisode.files = animeEpisode.files.filter(
-        (file) => !noNSFWIds.includes(file.storageId)
+        (file) => !noNSFWIds.includes(file.storageId),
       );
     }
 
@@ -79,7 +79,7 @@ export class AnimeFileService {
 
     // 过滤掉全部未关联的组
     return groupedResult.filter((group) =>
-      group.files.some((file) => linkedFileIds.has(file.id))
+      group.files.some((file) => linkedFileIds.has(file.id)),
     );
   }
 
@@ -182,7 +182,7 @@ export class AnimeFileService {
 
     // 查找包含该文件的 SimilarFiles
     const targetGroup = similarFiles.find((group) =>
-      group.files.some((groupFile) => groupFile.id === fileId)
+      group.files.some((groupFile) => groupFile.id === fileId),
     );
 
     return targetGroup || null;
@@ -195,7 +195,7 @@ export class AnimeFileService {
    */
   getUniqueId(storageIndex: StorageIndex) {
     return hash(
-      objectHash([storageIndex.animeId, storageIndex.name, storageIndex.size])
+      objectHash([storageIndex.animeId, storageIndex.name, storageIndex.size]),
     );
   }
 }

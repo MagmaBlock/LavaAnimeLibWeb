@@ -26,7 +26,7 @@
             @input="
               emits(
                 'update:search',
-                ($event.target as InputHTMLAttributes).value
+                ($event.target as InputHTMLAttributes).value,
               )
             "
           />
@@ -88,7 +88,7 @@ watch(
       showPre.value = false;
       preSearchValues.value = [];
     }
-  }
+  },
 );
 
 const inputKeyHandler = (key: KeyboardEvent) => {
@@ -148,7 +148,7 @@ const preSearch = async (value: string) => {
       preSearchValues.value = results.data;
       if (haveFocused.value) showPre.value = true;
       console.log(
-        `Received ${results.data.length} preSearchValues from server.`
+        `Received ${results.data.length} preSearchValues from server.`,
       );
     } else {
       showPre.value = false;

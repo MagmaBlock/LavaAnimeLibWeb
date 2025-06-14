@@ -52,7 +52,7 @@ const storages = await useAsyncData(
   {
     immediate: false,
     lazy: true,
-  }
+  },
 );
 
 const availableStorageIds = computed(() => {

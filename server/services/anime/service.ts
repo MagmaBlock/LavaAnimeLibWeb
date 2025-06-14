@@ -45,11 +45,11 @@ export class AnimeService {
 
     // 寻找更新过程中的错误
     const errors = result.filter(
-      (r) => r.status === "rejected"
+      (r) => r.status === "rejected",
     ) as PromiseRejectedResult[];
     if (errors.length) {
       App.instance.logger.warn(
-        `更新动画关联站点信息时，有 ${errors.length} 个失败.`
+        `更新动画关联站点信息时，有 ${errors.length} 个失败.`,
       );
     }
   }
@@ -76,7 +76,7 @@ export class AnimeService {
     await this.updateAnimesInfo(animeNeedToUpdate.map((anime) => anime.id));
 
     App.instance.logger.info(
-      `更新库内所有番剧的第三方站点资料数据完成. (${before.toLocaleString()} 前)`
+      `更新库内所有番剧的第三方站点资料数据完成. (${before.toLocaleString()} 前)`,
     );
   }
 
@@ -96,7 +96,7 @@ export class AnimeService {
     if (!anime) throw new Error(`动画 ${animeId} 不存在`);
 
     const sitesToUpdate = anime.sites.filter(
-      (site) => !site.updatedAt || site.updatedAt <= before
+      (site) => !site.updatedAt || site.updatedAt <= before,
     );
 
     if (sitesToUpdate.length === 0) return false;

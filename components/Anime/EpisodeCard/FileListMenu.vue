@@ -14,18 +14,25 @@
           v-for="similarFiles in activeEpisodeFiles"
           class="w-full"
           :key="similarFiles.uniqueId"
-          :groups="parseFileName(similarFiles.fileName).group.map((g: any) => g?.parsedName ?? g?.name) ?? []"
+          :groups="
+            parseFileName(similarFiles.fileName).group.map(
+              (g: any) => g?.parsedName ?? g?.name,
+            ) ?? []
+          "
           :title="parseFileName(similarFiles.fileName).title ?? ''"
           :subtitles="
-            parseFileName(similarFiles.fileName).subtitle.language
-              .map((l: any) => l.toString())
-              .concat(parseFileName(similarFiles.fileName).subtitle.subtitleFeatures ?? []) ?? []
+            parseFileName(similarFiles.fileName)
+              .subtitle.language.map((l: any) => l.toString())
+              .concat(
+                parseFileName(similarFiles.fileName).subtitle
+                  .subtitleFeatures ?? [],
+              ) ?? []
           "
           :sources="
             (
               parseFileName(similarFiles.fileName).source.broadcastChannel ?? []
             ).concat(
-              parseFileName(similarFiles.fileName).source.mediaType ?? []
+              parseFileName(similarFiles.fileName).source.mediaType ?? [],
             )
           "
           :quality="
@@ -50,7 +57,7 @@
           v-if="activeFile"
           :groups="
             parseFileName(activeFile.fileName).group.map(
-              (g) => g?.parsedName ?? g?.name
+              (g) => g?.parsedName ?? g?.name,
             )
           "
           :title="parseFileName(activeFile.fileName).title ?? ''"
@@ -58,12 +65,12 @@
             parseFileName(activeFile.fileName)
               .subtitle.language.map((l) => l.toString())
               .concat(
-                parseFileName(activeFile.fileName).subtitle.subtitleFeatures
+                parseFileName(activeFile.fileName).subtitle.subtitleFeatures,
               )
           "
           :sources="
             parseFileName(activeFile.fileName).source.broadcastChannel.concat(
-              parseFileName(activeFile.fileName).source.mediaType
+              parseFileName(activeFile.fileName).source.mediaType,
             )
           "
           :quality="
@@ -113,16 +120,16 @@ const activeFile = computed<SimilarFiles | undefined>(() => {
 
 const activeEpisodeFileCount = computed(() => {
   const activeEpisode = store.mainData?.episodes.find(
-    (ep) => ep.episode.id === store.activeEpisodeId
+    (ep) => ep.episode.id === store.activeEpisodeId,
   );
   return activeEpisode?.similarFilesIds.length ?? 0;
 });
 
 const getSimilarFilesById = (
-  similarFilesId: string
+  similarFilesId: string,
 ): SimilarFiles | undefined => {
   return store.mainData?.similarFiles.find(
-    (sf) => sf.uniqueId === similarFilesId
+    (sf) => sf.uniqueId === similarFilesId,
   );
 };
 

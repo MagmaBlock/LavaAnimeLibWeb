@@ -21,7 +21,7 @@ export class JwtToken implements Token {
       JSON.stringify(<JWTAuthPayload>{
         res: resource,
         exp: moment().add(7, "days").unix(),
-      })
+      }),
     );
 
     let signature = this.signature(base64Header, base64Payload);
@@ -49,7 +49,7 @@ export class JwtToken implements Token {
 
     try {
       let payloadContent: JWTAuthPayload = JSON.parse(
-        Base64Url.decode(base64Payload)
+        Base64Url.decode(base64Payload),
       );
       // 如果此 JWT 过期
       if (moment.unix(payloadContent.exp).isBefore(moment())) {

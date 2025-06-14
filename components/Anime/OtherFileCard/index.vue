@@ -25,7 +25,7 @@
                   class="w-full"
                   :groups="
                     parseFileName(similarFiles.fileName).group.map(
-                      (g) => g.parsedName ?? g.name
+                      (g) => g.parsedName ?? g.name,
                     )
                   "
                   :title="parseFileName(similarFiles.fileName).title"
@@ -34,14 +34,14 @@
                       .subtitle.language.map((l) => l.toString())
                       .concat(
                         parseFileName(similarFiles.fileName).subtitle
-                          .subtitleFeatures
+                          .subtitleFeatures,
                       )
                   "
                   :sources="
                     parseFileName(
-                      similarFiles.fileName
+                      similarFiles.fileName,
                     ).source.broadcastChannel.concat(
-                      parseFileName(similarFiles.fileName).source.mediaType
+                      parseFileName(similarFiles.fileName).source.mediaType,
                     )
                   "
                   :quality="
@@ -69,7 +69,7 @@
               :key="`${type.value}-${similarFiles.uniqueId}`"
               :groups="
                 parseFileName(similarFiles.fileName).group.map(
-                  (g) => g.parsedName ?? g.name
+                  (g) => g.parsedName ?? g.name,
                 )
               "
               :title="parseFileName(similarFiles.fileName).title ?? ''"
@@ -78,14 +78,14 @@
                   .subtitle.language.map((l) => l.toString())
                   .concat(
                     parseFileName(similarFiles.fileName).subtitle
-                      .subtitleFeatures
+                      .subtitleFeatures,
                   )
               "
               :sources="
                 parseFileName(
-                  similarFiles.fileName
+                  similarFiles.fileName,
                 ).source.broadcastChannel.concat(
-                  parseFileName(similarFiles.fileName).source.mediaType
+                  parseFileName(similarFiles.fileName).source.mediaType,
                 )
               "
               :quality="
@@ -143,7 +143,7 @@ const similarFilesNoEpisodeBind = computed(() => {
   return store.mainData?.similarFiles.filter((similarFiles) => {
     // 寻找当前 SimilarFiles 是否在任何一个剧集的 similarFilesIds 中
     return !store.mainData?.episodes.find((episode) =>
-      episode.similarFilesIds.includes(similarFiles.uniqueId)
+      episode.similarFilesIds.includes(similarFiles.uniqueId),
     );
   });
 });
@@ -152,14 +152,14 @@ const similarFilesNoEpisodeBind = computed(() => {
 const getFilesByType = (type: FileType) =>
   similarFilesNoEpisodeBind.value?.filter((similarFiles) => {
     const file = store.mainData?.files.find(
-      (f) => f.id === similarFiles.files[0]?.id
+      (f) => f.id === similarFiles.files[0]?.id,
     );
     return file?.type === type;
   }) ?? [];
 
 // 计算可用的文件类型
 const availableFileTypes = computed(() =>
-  fileTypes.filter((type) => getFilesByType(type.value).length > 0)
+  fileTypes.filter((type) => getFilesByType(type.value).length > 0),
 );
 
 const setActiveSimilarFilesId = (uniqueId: string) => {

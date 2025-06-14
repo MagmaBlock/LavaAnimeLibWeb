@@ -84,7 +84,7 @@ const columns: DataTableColumns<Storage> = [
                 router.push(`/admin/storage/manage/update/${row.id}`);
               },
             },
-            { default: () => "编辑" }
+            { default: () => "编辑" },
           ),
           h(
             NPopconfirm,
@@ -96,7 +96,7 @@ const columns: DataTableColumns<Storage> = [
             {
               trigger: () => h(NButton, {}, { default: () => "删除" }),
               default: () => "确定要删除这个存储器吗？",
-            }
+            },
           ),
         ],
       });

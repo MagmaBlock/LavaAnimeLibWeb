@@ -44,13 +44,13 @@ const {
     $client.common.animeCollection.getUserAnimeCollectionStatus.query({
       animeId: props.animeId,
     }),
-  { immediate: false, lazy: true }
+  { immediate: false, lazy: true },
 );
 
 const isToggling = ref(false);
 
 const toggleFollowStatus = async (
-  status?: "Plan" | "Watching" | "Finished"
+  status?: "Plan" | "Watching" | "Finished",
 ) => {
   isToggling.value = true;
   try {
@@ -58,7 +58,7 @@ const toggleFollowStatus = async (
       {
         animeId: props.animeId,
         status: status,
-      }
+      },
     );
     await fetchFollowInfo();
   } catch (error) {
@@ -105,7 +105,7 @@ const handleSelect = async (key: string) => {
 
 watch(
   () => props.animeId,
-  () => fetchFollowInfo()
+  () => fetchFollowInfo(),
 );
 
 onMounted(() => fetchFollowInfo());

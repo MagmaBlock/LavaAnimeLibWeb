@@ -59,7 +59,7 @@ const router = useRouter();
 const nuxtApp = useNuxtApp();
 
 const { data: userInfo } = await useAsyncData("userInfo", () =>
-  nuxtApp.$client.pages.user.infoCard.query()
+  nuxtApp.$client.pages.user.infoCard.query(),
 );
 
 // 处理登出

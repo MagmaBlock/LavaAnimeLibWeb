@@ -29,7 +29,7 @@ export interface EncryptedPassword {
  * 一个工厂函数，根据传入的加密算法类型，返回对应的加密密码实例。
  */
 export function encryptedPasswordFactory(
-  serialized?: string
+  serialized?: string,
 ): EncryptedPassword {
   if (serialized) {
     const [method] = serialized.split(":");

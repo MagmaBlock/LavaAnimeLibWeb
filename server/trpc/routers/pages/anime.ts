@@ -20,7 +20,7 @@ const COMPLETION_THRESHOLD = 0.95;
 // 判断视频是否已看完的函数
 const isVideoCompleted = (
   currentTime: number | null,
-  totalTime: number | null
+  totalTime: number | null,
 ): boolean => {
   if (!currentTime || !totalTime) return false;
   return currentTime / totalTime >= COMPLETION_THRESHOLD;
@@ -77,7 +77,7 @@ export const animeRouter = router({
         platform: animeInfo.platform,
         releaseDate: animeInfo.date,
         totalEpisodes: animeInfo.episodes.filter(
-          (episode) => episode.type === "Normal"
+          (episode) => episode.type === "Normal",
         ).length,
         tags: animeInfo.tags,
         ratings: animeInfo.ratings,
@@ -138,7 +138,7 @@ export const animeRouter = router({
       async function getEpisodeSimilarFiles(episode: AnimeEpisode) {
         // 获取剧集的 SimilarFiles
         let similarFiles = await animeFileService.getAnimeEpisodeFiles(
-          episode.id
+          episode.id,
         );
 
         // 筛选并排序视频组
@@ -159,7 +159,7 @@ export const animeRouter = router({
           if (latestViewHistory && latestViewHistory.episodeId === episode.id) {
             // 如果用户之前观看过这个剧集，优先推荐最后一次播放的文件
             const lastPlayedFile = videoGroups.find((group) =>
-              group.files.some((file) => file.id === latestViewHistory.fileId)
+              group.files.some((file) => file.id === latestViewHistory.fileId),
             );
             if (lastPlayedFile) {
               recommendedSimilarFilesId = lastPlayedFile.uniqueId;
@@ -187,18 +187,18 @@ export const animeRouter = router({
             episode,
             ...(await getEpisodeSimilarFiles(episode)),
           };
-        })
+        }),
       );
 
       // 找到最近观看的剧集，并判断是否已看完
       let lastWatchedIndex = -1;
       if (latestViewHistory) {
         lastWatchedIndex = episodesWithFileNames.findIndex(
-          (e) => e.episode.id === latestViewHistory.episodeId
+          (e) => e.episode.id === latestViewHistory.episodeId,
         );
         const isCompleted = isVideoCompleted(
           latestViewHistory.currentTime,
-          latestViewHistory.totalTime
+          latestViewHistory.totalTime,
         );
 
         // 如果已看完，推荐下一集（如果存在）
@@ -275,11 +275,11 @@ export const animeRouter = router({
               console.error(`获取文件 ${fileId} 的临时下载链接失败:`, error);
               return { fileId, tempUrl: null };
             }
-          })
+          }),
         );
 
         return result;
-      }
+      },
     ),
 
   // 获取 Storage 信息
@@ -307,7 +307,7 @@ export const animeRouter = router({
         totalTime: z.number().optional(),
         userIP: z.string().optional(),
         watchMethod: z.string().optional(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const {
@@ -363,7 +363,7 @@ export const animeRouter = router({
         animeId: z.number(),
         episodeId: z.number().optional().nullish(),
         fileId: z.number(),
-      })
+      }),
     )
     .query(
       async ({
@@ -401,7 +401,7 @@ export const animeRouter = router({
         if (uniqueHistory && uniqueHistory.currentTime) {
           const completed = isVideoCompleted(
             uniqueHistory.currentTime,
-            uniqueHistory.totalTime
+            uniqueHistory.totalTime,
           );
           return {
             currentTime: uniqueHistory.currentTime,
@@ -430,7 +430,7 @@ export const animeRouter = router({
           if (episodeRecord && episodeRecord.currentTime) {
             const completed = isVideoCompleted(
               episodeRecord.currentTime,
-              episodeRecord.totalTime
+              episodeRecord.totalTime,
             );
             return {
               currentTime: episodeRecord.currentTime,
@@ -442,7 +442,7 @@ export const animeRouter = router({
 
         // 如果都没找到，返回 null
         return null;
-      }
+      },
     ),
 
   // 让服务端判断动画信息是否需要更新。此接口返回信息是否已被更新，如果有，前端需要再次刷新 getAnimeInfo 和 getAnimeMainData
@@ -453,7 +453,7 @@ export const animeRouter = router({
       const animeService = App.instance.services.getService(AnimeService);
       const isUpdated = await animeService.updateAnimeInfoBefore(
         animeId,
-        moment().subtract(3, "days").toDate()
+        moment().subtract(3, "days").toDate(),
       );
       return { isUpdated };
     }),

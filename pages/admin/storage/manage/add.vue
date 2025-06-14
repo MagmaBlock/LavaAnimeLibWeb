@@ -91,7 +91,7 @@ const rules = {
 };
 
 const storageTypeOptions = Object.entries(StorageType).map(
-  ([label, value]) => ({ label, value })
+  ([label, value]) => ({ label, value }),
 );
 const scraperOptions = Object.entries(StorageScraper).map(([label, value]) => ({
   label,
@@ -113,7 +113,7 @@ const handleSubmit = async () => {
             noDownload: z.boolean().default(false),
             bindScraper: z.nativeEnum(StorageScraper).optional().nullable(),
           })
-          .parse(formModel.value)
+          .parse(formModel.value),
       );
     if (result.id) {
       message.success("存储器创建成功");
@@ -122,7 +122,7 @@ const handleSubmit = async () => {
   } catch (error) {
     if (error instanceof z.ZodError) {
       message.error(
-        `输入验证失败: ${error.errors.map((e) => e.message).join(", ")}`
+        `输入验证失败: ${error.errors.map((e) => e.message).join(", ")}`,
       );
     } else {
       message.error(`创建失败: ${(error as Error).message}`);

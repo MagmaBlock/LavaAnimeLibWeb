@@ -47,7 +47,7 @@ export class AnimeEpisodeFileLinker {
       // 日志
       if (result.totalConnectedCount || result.videoEpisodeNotFound.length) {
         App.instance.logger.trace(
-          `[AnimeEpisodeFileLinker] anime-${anime.id} 成功连接: ${result.totalConnectedCount} 个文件, 未能连接: ${result.videoEpisodeNotFound.length} 个.`
+          `[AnimeEpisodeFileLinker] anime-${anime.id} 成功连接: ${result.totalConnectedCount} 个文件, 未能连接: ${result.videoEpisodeNotFound.length} 个.`,
         );
       }
     }
@@ -63,7 +63,7 @@ export class AnimeEpisodeFileLinker {
   async linkFiles(
     files: (StorageIndex & {
       episodes: AnimeEpisode[];
-    })[]
+    })[],
   ): Promise<AnimeEpisodeLinkResult> {
     // 初始化连接结果对象
     let connectResult: AnimeEpisodeLinkResult = {
@@ -93,7 +93,7 @@ export class AnimeEpisodeFileLinker {
         maybeEpisodes = await this.findEpisodes(
           file,
           thisFileEpisodetype,
-          fileNameParsed.episode
+          fileNameParsed.episode,
         );
       }
       // 文件名不含集数
@@ -108,7 +108,7 @@ export class AnimeEpisodeFileLinker {
             maybeEpisodes = await this.findEpisodes(
               file,
               thisFileEpisodetype,
-              1
+              1,
             );
           }
         }
@@ -152,7 +152,7 @@ export class AnimeEpisodeFileLinker {
   private async findEpisodes(
     file: StorageIndex,
     thisFileEpisodetype: EpisodeType,
-    episode: string | number | number[]
+    episode: string | number | number[],
   ): Promise<AnimeEpisode[]> {
     if (file.animeId === null) return [];
     // 当剧集参数为单个数字时，尝试查找对应的单个剧集记录。
@@ -289,7 +289,7 @@ export class AnimeEpisodeFileLinker {
    * @param file
    */
   private async findNoEpisodeEpisodes(
-    file: StorageIndex
+    file: StorageIndex,
   ): Promise<AnimeEpisode[]> {
     if (file.animeId === null) return [];
 

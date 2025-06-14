@@ -9,12 +9,10 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare && pnpm run db:generate",
     "db:generate": "prisma generate",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "format": "prettier --write ."
   },
   "description": "Nuxt Vue3 Single page application for LavaAnimeLib.",
-  "prettier": {
-    "singleQuote": false
-  },
   "devDependencies": {
     "@iconify-json/material-symbols": "^1.2.1",
     "@nuxt/devtools": "^1.5.2",
@@ -26,6 +24,7 @@
     "@types/ua-parser-js": "^0.7.39",
     "gravatar": "^1.8.2",
     "nuxt": "^3.12.4",
+    "prettier": "3.5.3",
     "prisma": "^5.21.1",
     "tsx": "^4.17.0",
     "typescript": "^5.5.4",

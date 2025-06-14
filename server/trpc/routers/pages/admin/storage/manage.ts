@@ -24,16 +24,18 @@ export const adminStorageManagerRouter = router({
 
   // 创建存储器
   createStorage: publicProcedure
-    .input(z.object({
-      id: z.string().min(1),
-      name: z.string(),
-      description: z.string().optional().nullable(),
-      type: z.nativeEnum(StorageType),
-      config: z.string().optional().nullable(),
-      noNSFW: z.boolean().default(false),
-      noDownload: z.boolean().default(false),
-      bindScraper: z.nativeEnum(StorageScraper).optional().nullable(),
-    }))
+    .input(
+      z.object({
+        id: z.string().min(1),
+        name: z.string(),
+        description: z.string().optional().nullable(),
+        type: z.nativeEnum(StorageType),
+        config: z.string().optional().nullable(),
+        noNSFW: z.boolean().default(false),
+        noDownload: z.boolean().default(false),
+        bindScraper: z.nativeEnum(StorageScraper).optional().nullable(),
+      }),
+    )
     .mutation(async ({ input }) => {
       // 检查是否存在相同 id 的存储器
       const existingStorage = await prisma.storage.findUnique({
@@ -51,16 +53,18 @@ export const adminStorageManagerRouter = router({
 
   // 更新存储器
   updateStorage: publicProcedure
-    .input(z.object({
-      id: z.string().min(1),
-      name: z.string().optional(),
-      description: z.string().optional().nullable(),
-      type: z.nativeEnum(StorageType).optional(),
-      config: z.string().optional().nullable(),
-      noNSFW: z.boolean().optional(),
-      noDownload: z.boolean().optional(),
-      bindScraper: z.nativeEnum(StorageScraper).optional().nullable(),
-    }))
+    .input(
+      z.object({
+        id: z.string().min(1),
+        name: z.string().optional(),
+        description: z.string().optional().nullable(),
+        type: z.nativeEnum(StorageType).optional(),
+        config: z.string().optional().nullable(),
+        noNSFW: z.boolean().optional(),
+        noDownload: z.boolean().optional(),
+        bindScraper: z.nativeEnum(StorageScraper).optional().nullable(),
+      }),
+    )
     .mutation(async ({ input }) => {
       const { id, ...updateData } = input;
       return await prisma.storage.update({

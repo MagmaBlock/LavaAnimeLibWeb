@@ -14,7 +14,7 @@ export class AnimeCollectionService {
    */
   async getUserAnimeCollectionStatus(
     userId: number,
-    animeId: number
+    animeId: number,
   ): Promise<AnimeCollection | null> {
     const animeCollection =
       await App.instance.prisma.animeCollection.findUnique({
@@ -38,7 +38,7 @@ export class AnimeCollectionService {
   async toggleUserAnimeCollectionStatus(
     userId: number,
     animeId: number,
-    status?: AnimeCollectionStatus
+    status?: AnimeCollectionStatus,
   ): Promise<void> {
     const anime = await App.instance.prisma.anime.findUnique({
       where: { id: animeId },

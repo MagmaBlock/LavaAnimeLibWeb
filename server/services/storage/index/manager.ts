@@ -177,7 +177,7 @@ export class StorageIndexManager {
     for (const index of storageIndexs) {
       // 在 Alist 中查找此文件
       const thisFileInStorageFiles = storageFiles.find(
-        (file) => file.name === index.name
+        (file) => file.name === index.name,
       );
 
       // 如果此 Index 的文件在 StorageSystem 中不存在，将文件标记为 "removed"
@@ -195,7 +195,7 @@ export class StorageIndexManager {
           },
         });
         App.instance.logger.trace(
-          `${this.storageSystem.storage.id} 的文件 ${index.path}/${index.name} 因消失已标记为 "removed"`
+          `${this.storageSystem.storage.id} 的文件 ${index.path}/${index.name} 因消失已标记为 "removed"`,
         );
       }
     }
@@ -213,7 +213,7 @@ export class StorageIndexManager {
     const scannedCount = scannedRecords.size;
 
     App.instance.logger.info(
-      `${this.storageSystem.storage.name}(${this.storageSystem.storage.id}) - ${rootPath} 中成功扫描到了 ${scannedCount} 个文件(夹).`
+      `${this.storageSystem.storage.name}(${this.storageSystem.storage.id}) - ${rootPath} 中成功扫描到了 ${scannedCount} 个文件(夹).`,
     );
 
     return scannedCount;
@@ -226,10 +226,10 @@ export class StorageIndexManager {
    */
   private async scanRecursively(
     currentPath: string,
-    scannedRecords: Set<number>
+    scannedRecords: Set<number>,
   ) {
     App.instance.logger.trace(
-      `${this.storageSystem.storage.id} 扫描 ${currentPath}`
+      `${this.storageSystem.storage.id} 扫描 ${currentPath}`,
     );
 
     await this.updateIndex(currentPath);
@@ -257,7 +257,7 @@ export class StorageIndexManager {
    */
   private async markIndexsRemoved(
     rootPath: string,
-    scannedRecords: Set<number>
+    scannedRecords: Set<number>,
   ): Promise<number> {
     const result = await App.instance.prisma.storageIndex.updateMany({
       data: { removed: true },

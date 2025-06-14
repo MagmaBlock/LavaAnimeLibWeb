@@ -26,6 +26,6 @@ async function printLog(event: H3Event) {
     user ? chalk.dim(user?.name) : chalk.cyan("未登录"),
     chalk.bgCyan(` ${event.method} ${status} `),
     decodeURIComponent(event.path),
-    chalk.dim(queryCost, "ms")
+    chalk.dim(queryCost, "ms"),
   );
 }

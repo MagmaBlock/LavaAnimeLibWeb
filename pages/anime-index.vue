@@ -19,7 +19,7 @@ const fetchAnimes = await useAsyncData(
     }),
   {
     immediate: false,
-  }
+  },
 );
 
 onMounted(() => fetchAnimes.execute());
@@ -41,7 +41,7 @@ const currentPageAnimes = computed(() => {
   if (fetchAnimes.data.value?.length) {
     return fetchAnimes.data.value.slice(
       (page.value - 1) * pageSize,
-      page.value * pageSize
+      page.value * pageSize,
     );
   }
   return [];

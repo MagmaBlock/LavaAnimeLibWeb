@@ -33,7 +33,7 @@ export class AnimePictureSerivce {
 
   async getAnimePoster(
     animeId: number,
-    smallFirst?: boolean
+    smallFirst?: boolean,
   ): Promise<string | null> {
     const anime = await this.prisma.anime.findUnique({
       where: { id: animeId },
@@ -49,12 +49,12 @@ export class AnimePictureSerivce {
     if (!anime) return null;
 
     const animePicture = smallFirst
-      ? anime.posters.find((poster) => poster.type === "SmallPoster") ??
+      ? (anime.posters.find((poster) => poster.type === "SmallPoster") ??
         anime.posters.find((poster) => poster.type === "Poster") ??
-        null
-      : anime.posters.find((poster) => poster.type === "Poster") ??
+        null)
+      : (anime.posters.find((poster) => poster.type === "Poster") ??
         anime.posters.find((poster) => poster.type === "SmallPoster") ??
-        null;
+        null);
 
     if (!animePicture) return null;
 

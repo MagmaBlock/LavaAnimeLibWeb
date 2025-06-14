@@ -1,7 +1,7 @@
 <template>
   <ContainerPage>
     <template #head>
-      <NavBarTopNav title="更新日志" blur/>
+      <NavBarTopNav title="更新日志" blur />
     </template>
     <div class="text-lg font-medium">熔岩番剧库 最近更新日志</div>
     <div class="opacity-75">LavaAnimeLib 相关项目 GitHub 提交记录</div>
@@ -63,14 +63,14 @@ export default {
     async getGitHubCommits(repos) {
       try {
         let result = await axios.get(
-          `https://api.github.com/repos/MagmaBlock/${repos}/commits`
+          `https://api.github.com/repos/MagmaBlock/${repos}/commits`,
         );
         if (result.status == 200) {
           return result.data;
         }
       } catch (error) {
         $message.error(
-          "从 GitHub API 获取数据失败...\n可能您的网络无法访问 GitHub"
+          "从 GitHub API 获取数据失败...\n可能您的网络无法访问 GitHub",
         );
         return [];
       }

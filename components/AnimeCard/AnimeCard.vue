@@ -21,7 +21,7 @@ const handleMenu = (event: MouseEvent) => {
 };
 
 const posterUrl = computed(
-  () => props.image || "https://bangumi-app-img.5t5.top/assets/noposter.png"
+  () => props.image || "https://bangumi-app-img.5t5.top/assets/noposter.png",
 );
 
 const { isReady, error } = useImage({ src: posterUrl.value });

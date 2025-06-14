@@ -24,7 +24,7 @@ export class AlistStorageSystem implements StorageSystem {
   constructor(storage: Storage) {
     if (storage.type !== "Alist") {
       throw new Error(
-        "AlistStorageSystem 使用的 Storage 对象 type 应该是 Alist"
+        "AlistStorageSystem 使用的 Storage 对象 type 应该是 Alist",
       );
     }
     this.storage = storage;
@@ -61,7 +61,7 @@ export class AlistStorageSystem implements StorageSystem {
         },
         {
           baseURL: this.config.host,
-        }
+        },
       );
 
       if (response.data.code !== 200) {
@@ -77,7 +77,7 @@ export class AlistStorageSystem implements StorageSystem {
 
   private async makeRequest<T>(
     url: string,
-    config: AxiosRequestConfig
+    config: AxiosRequestConfig,
   ): Promise<T> {
     await this.refreshToken();
     try {

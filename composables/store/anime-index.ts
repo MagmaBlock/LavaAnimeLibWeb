@@ -9,7 +9,7 @@ export const useAnimeIndexStore = defineStore("anime-index", () => {
 
   const updateSelected = (
     type: keyof typeof currentSelected.value,
-    value: string | null
+    value: string | null,
   ) => {
     currentSelected.value[type] = value;
   };

@@ -77,7 +77,7 @@ const { $client } = useNuxtApp();
 const fetchData = await useAsyncData(
   "anime-card-menu",
   () => $client.components.animeCard.menu.query({ id }),
-  { immediate: false }
+  { immediate: false },
 );
 
 onMounted(() => {
@@ -85,6 +85,6 @@ onMounted(() => {
 });
 
 const bangumiSite = computed(() =>
-  fetchData.data.value?.sites.find((site) => site.siteType === "Bangumi")
+  fetchData.data.value?.sites.find((site) => site.siteType === "Bangumi"),
 );
 </script>

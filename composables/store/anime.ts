@@ -34,7 +34,7 @@ export const useAnimeStore = defineStore("anime", () => {
       // 自动选择推荐的剧集
       if (mainData.value) {
         const recommendedEpisode = mainData.value.episodes.find(
-          (ep) => ep.recommended
+          (ep) => ep.recommended,
         );
         if (recommendedEpisode) {
           activeEpisodeId.value = recommendedEpisode.episode.id;
@@ -55,7 +55,7 @@ export const useAnimeStore = defineStore("anime", () => {
     error: animeInfoError,
   } = useAsyncData(
     () => $client.pages.anime.getAnimeInfo.query({ animeId: animeId.value! }),
-    { immediate: false, lazy: true } // 不立即执行，懒加载
+    { immediate: false, lazy: true }, // 不立即执行，懒加载
   );
 
   // 获取动画的主要数据
@@ -67,7 +67,7 @@ export const useAnimeStore = defineStore("anime", () => {
   } = useAsyncData(
     () =>
       $client.pages.anime.getAnimeMainData.query({ animeId: animeId.value! }),
-    { immediate: false, lazy: true } // 不立即执行，懒加载
+    { immediate: false, lazy: true }, // 不立即执行，懒加载
   );
 
   // 获取文件临时URL
@@ -81,7 +81,7 @@ export const useAnimeStore = defineStore("anime", () => {
       $client.pages.anime.getFileTempUrls.query({
         fileIds: [activeFileId.value!],
       }),
-    { immediate: false, lazy: true }
+    { immediate: false, lazy: true },
   );
 
   // 计算当前活跃的剧集
@@ -89,7 +89,7 @@ export const useAnimeStore = defineStore("anime", () => {
     if (!mainData.value) return null;
     return (
       mainData.value.episodes.find(
-        (episode) => episode.episode.id === activeEpisodeId.value
+        (episode) => episode.episode.id === activeEpisodeId.value,
       ) || null
     );
   });
@@ -99,7 +99,7 @@ export const useAnimeStore = defineStore("anime", () => {
     if (!mainData.value) return null;
     return (
       mainData.value.similarFiles.find(
-        (sf) => sf.uniqueId === activeSimilarFilesId.value
+        (sf) => sf.uniqueId === activeSimilarFilesId.value,
       ) || null
     );
   });
@@ -151,7 +151,7 @@ export const useAnimeStore = defineStore("anime", () => {
     if (newFileId) {
       await fileTempUrlsExecute();
       const fileTempUrl = fileTempUrls.value?.find(
-        (tempUrl) => tempUrl.fileId === newFileId
+        (tempUrl) => tempUrl.fileId === newFileId,
       );
       if (fileTempUrl && fileTempUrl.tempUrl) {
         playerStore.setVideoUrl(fileTempUrl.tempUrl);
@@ -165,7 +165,7 @@ export const useAnimeStore = defineStore("anime", () => {
   watch(refThrottled(activeStorageId, 1000), (newStorageId) => {
     if (newStorageId && activeSimilarFiles.value) {
       const fileInThisStorage = activeSimilarFiles.value.files.find(
-        (file) => file.storageId === newStorageId
+        (file) => file.storageId === newStorageId,
       );
       if (fileInThisStorage) {
         activeFileId.value = fileInThisStorage.id;
@@ -177,7 +177,7 @@ export const useAnimeStore = defineStore("anime", () => {
   const findNextEpisode = () => {
     if (!mainData.value || !activeEpisodeId.value) return null;
     const currentIndex = mainData.value.episodes.findIndex(
-      (ep) => ep.episode.id === activeEpisodeId.value
+      (ep) => ep.episode.id === activeEpisodeId.value,
     );
     if (
       currentIndex === -1 ||

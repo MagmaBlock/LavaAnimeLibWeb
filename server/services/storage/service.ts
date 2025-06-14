@@ -67,7 +67,7 @@ export class StorageService {
   async applyStorageScraperResult(result: StorageScrapeResult): Promise<void> {
     if (result.createAnime && result.updateAnime) {
       throw new Error(
-        "StorageScrapeResult 中不能同时存在 createAnime 和 updateAnime"
+        "StorageScrapeResult 中不能同时存在 createAnime 和 updateAnime",
       );
     }
 
@@ -76,7 +76,7 @@ export class StorageService {
     if (result.createAnime) {
       if (!result.createAnime.name) {
         throw new Error(
-          "StorageScrapeResult 申请创建 Anime, 缺少必选字段 name."
+          "StorageScrapeResult 申请创建 Anime, 缺少必选字段 name.",
         );
       }
 
@@ -98,7 +98,7 @@ export class StorageService {
 
       App.instance.logger.trace(
         "[applyStorageScraperResult] 创建 Anime",
-        newAnime
+        newAnime,
       );
 
       animeId = newAnime.id;
@@ -107,7 +107,7 @@ export class StorageService {
     if (result.updateAnime) {
       if (!result.updateAnime.animeId) {
         throw new Error(
-          "StorageScrapeResult 申请更新 Anime, 但没有提供 animeId."
+          "StorageScrapeResult 申请更新 Anime, 但没有提供 animeId.",
         );
       }
 
@@ -118,7 +118,7 @@ export class StorageService {
 
       App.instance.logger.trace(
         "[applyStorageScraperResult] 更新 Anime",
-        result.updateAnime
+        result.updateAnime,
       );
 
       animeId = result.updateAnime.animeId;
@@ -127,38 +127,38 @@ export class StorageService {
     if (result.connectSites) {
       if (!animeId && !result.connectSites.animeId) {
         throw new Error(
-          "StorageScrapeResult 申请更新 AnimeSiteLink, 但没有提供 animeId."
+          "StorageScrapeResult 申请更新 AnimeSiteLink, 但没有提供 animeId.",
         );
       }
 
       await this.createSitesToAnime(
         result.connectSites.sites,
-        animeId || result.connectSites.animeId!
+        animeId || result.connectSites.animeId!,
       );
     }
 
     if (result.connectFiles) {
       if (!animeId && !result.connectFiles.animeId) {
         throw new Error(
-          "StorageScrapeResult 申请更新 AnimeFileLink, 但没有提供 animeId."
+          "StorageScrapeResult 申请更新 AnimeFileLink, 但没有提供 animeId.",
         );
       }
 
       await this.connectFilesToAnime(
         result.connectFiles.files,
-        animeId || result.connectFiles.animeId!
+        animeId || result.connectFiles.animeId!,
       );
     }
   }
 
   private async createSitesToAnime(
     sites: Partial<AnimeSiteLink>[],
-    animeId: number
+    animeId: number,
   ) {
     const connectSites = sites.map((s) => {
       if (!s.siteType || !s.siteId) {
         throw new Error(
-          "StorageScrapeResult 申请创建 AnimeSiteLink, 但甚至没有提供 siteType 或 siteId."
+          "StorageScrapeResult 申请创建 AnimeSiteLink, 但甚至没有提供 siteType 或 siteId.",
         );
       }
       return {
@@ -180,7 +180,7 @@ export class StorageService {
 
     App.instance.logger.trace(
       "[applyStorageScraperResult] 更新 AnimeSiteLink",
-      connectSites
+      connectSites,
     );
   }
 
@@ -200,7 +200,7 @@ export class StorageService {
 
     App.instance.logger.trace(
       "[applyStorageScraperResult] 更新 AnimeFileLink",
-      connectFiles
+      connectFiles,
     );
   }
 

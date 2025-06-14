@@ -8,7 +8,7 @@ export const animeCardRouter = router({
     .input(
       z.object({
         id: z.number().int().gt(0),
-      })
+      }),
     )
     .query(async ({ input }) => {
       const { id } = input;
@@ -39,7 +39,7 @@ export const animeCardRouter = router({
       if (!posterUrl && posterOrSmallPoster?.file) {
         try {
           posterUrl = await storageService.getFileTempUrl(
-            posterOrSmallPoster.file
+            posterOrSmallPoster.file,
           );
         } catch {
           posterUrl = null;

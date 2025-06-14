@@ -44,7 +44,7 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
 
   private async updateAnimePoster(
     animeId: number,
-    bangumiSubject: BangumiAPISubject
+    bangumiSubject: BangumiAPISubject,
   ) {
     const images = bangumiSubject.images;
     if (images) {
@@ -92,7 +92,7 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
    */
   private async updateAnimeEpisodes(
     animeId: number,
-    bangumiEpisodes: BangumiAPIEpisodes
+    bangumiEpisodes: BangumiAPIEpisodes,
   ) {
     for (const bangumiEpisode of bangumiEpisodes.data) {
       await App.instance.prisma.animeEpisode.upsert({
@@ -131,12 +131,12 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
       });
     }
     App.instance.logger.trace(
-      `已从 Bangumi 更新 anime ${animeId} 的 ${bangumiEpisodes.data.length} 个剧集数据.`
+      `已从 Bangumi 更新 anime ${animeId} 的 ${bangumiEpisodes.data.length} 个剧集数据.`,
     );
   }
 
   private bangumiEpisodeTypeToDBType(
-    bangumiEpisode: BangumiAPIEpisode
+    bangumiEpisode: BangumiAPIEpisode,
   ): EpisodeType {
     if (bangumiEpisode.type === 0) return "Normal";
     if (bangumiEpisode.type === 1) return "SP";
@@ -165,7 +165,7 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
    */
   private async updateAnime(
     animeId: number,
-    bangumiSubject: BangumiAPISubject
+    bangumiSubject: BangumiAPISubject,
   ) {
     let platform: AnimePlatform = "Other";
     if (bangumiSubject.platform === "TV") platform = "TV";
@@ -193,7 +193,7 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
    */
   private async updateAnimeTags(
     animeId: number,
-    bangumiSubject: BangumiAPISubject
+    bangumiSubject: BangumiAPISubject,
   ) {
     const currentDate = new Date();
 
@@ -249,7 +249,7 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
    */
   private async updateRating(
     animeId: number,
-    bangumiSubject: BangumiAPISubject
+    bangumiSubject: BangumiAPISubject,
   ) {
     await App.instance.prisma.animeRating.upsert({
       where: {

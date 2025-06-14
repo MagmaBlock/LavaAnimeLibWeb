@@ -125,7 +125,7 @@ const getEpisodesByType = (type: AnimeEpisode["type"]) =>
 
 // 计算可用的剧集类型
 const availableEpisodeTypes = computed(() =>
-  episodeTypes.filter((type) => getEpisodesByType(type.value).length > 0)
+  episodeTypes.filter((type) => getEpisodesByType(type.value).length > 0),
 );
 
 // 获取并排序指定类型的剧集
@@ -147,14 +147,14 @@ const getSortedEpisodes = (type: AnimeEpisode["type"]) => {
 const hasAnyEpisodeFiles = computed(
   () =>
     store.mainData?.episodes.some(
-      (episode) => episode.similarFilesIds.length > 0
-    ) ?? false
+      (episode) => episode.similarFilesIds.length > 0,
+    ) ?? false,
 );
 
 // 获取可用的存储器ID列表
 const getAvailableStorageIds = (similarFilesId: string) => {
   const similarFiles = store.mainData?.similarFiles.find(
-    (sf) => sf.uniqueId === similarFilesId
+    (sf) => sf.uniqueId === similarFilesId,
   );
   return similarFiles ? similarFiles.files.map((file) => file.storageId) : [];
 };

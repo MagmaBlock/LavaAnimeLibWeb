@@ -29,7 +29,7 @@ export const appRouter = router({
         fileIndex: adminStorageFileIndexRouter,
         manager: adminStorageManagerRouter,
         scrape: adminStorageScrapeRouter,
-      })
+      }),
     }),
   }),
   components: router({

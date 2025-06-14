@@ -12,16 +12,18 @@ export const animeIndexRouter = router({
 
     const releaseYears = Array.from(
       new Set(
-        indexMap.map((item) => item.releaseYear).filter((year) => year !== null)
-      )
+        indexMap
+          .map((item) => item.releaseYear)
+          .filter((year) => year !== null),
+      ),
     ).sort((a, b) => b - a);
 
     const releaseSeasons = Array.from(
       new Set(
         indexMap
           .map((item) => item.releaseSeason)
-          .filter((season) => season !== null)
-      )
+          .filter((season) => season !== null),
+      ),
     ).sort((a, b) => {
       const numA = parseInt(a.match(/^\d+/)?.[0] || "Infinity", 10);
       const numB = parseInt(b.match(/^\d+/)?.[0] || "Infinity", 10);
@@ -32,8 +34,8 @@ export const animeIndexRouter = router({
       new Set(
         indexMap
           .map((item) => item.platform)
-          .filter((platform) => platform !== null)
-      )
+          .filter((platform) => platform !== null),
+      ),
     ).sort((a, b) => {
       const order: AnimePlatform[] = ["TV", "Movie", "Web", "OVA", "Other"];
       const indexA = order.indexOf(a);
@@ -46,8 +48,8 @@ export const animeIndexRouter = router({
 
     const regions = Array.from(
       new Set(
-        indexMap.map((item) => item.region).filter((region) => region !== null)
-      )
+        indexMap.map((item) => item.region).filter((region) => region !== null),
+      ),
     ).sort();
 
     return {
@@ -68,7 +70,7 @@ export const animeIndexRouter = router({
         sort: z.enum(["view", "follow"]).optional().default("view"),
         take: z.number().optional(),
         skip: z.number().optional(),
-      })
+      }),
     )
     .query(async ({ input }) => {
       const { releaseYear, releaseSeason, platform, region, sort, take, skip } =
@@ -115,7 +117,7 @@ export const animeIndexRouter = router({
             poster: await animePictureService.getAnimePoster(anime.id, true),
             views: anime.userViews.length,
           };
-        })
+        }),
       );
     }),
 });

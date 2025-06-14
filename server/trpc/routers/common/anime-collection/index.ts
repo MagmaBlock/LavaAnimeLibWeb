@@ -13,11 +13,11 @@ export const animeCollectionRouter = router({
       const userId = ctx.user.id;
 
       const animeCollectionService = App.instance.services.getService(
-        AnimeCollectionService
+        AnimeCollectionService,
       );
       return await animeCollectionService.getUserAnimeCollectionStatus(
         userId,
-        animeId
+        animeId,
       );
     }),
 
@@ -27,19 +27,19 @@ export const animeCollectionRouter = router({
       z.object({
         animeId: z.number(),
         status: z.enum(["Plan", "Watching", "Finished"]).optional(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const { animeId, status } = input;
       const userId = ctx.user.id;
 
       const animeCollectionService = App.instance.services.getService(
-        AnimeCollectionService
+        AnimeCollectionService,
       );
       await animeCollectionService.toggleUserAnimeCollectionStatus(
         userId,
         animeId,
-        status
+        status,
       );
     }),
   // 获取用户追番列表
@@ -49,7 +49,7 @@ export const animeCollectionRouter = router({
         status: z.enum(["Plan", "Watching", "Finished"]),
         page: z.number().int().positive().default(1),
         pageSize: z.number().int().positive().default(30),
-      })
+      }),
     )
     .query(async ({ input, ctx }) => {
       const { status, page, pageSize } = input;
@@ -104,12 +104,12 @@ export const animeCollectionRouter = router({
               region: collection.anime.region,
               poster: await animePictureService.getAnimePoster(
                 collection.anime.id,
-                true
+                true,
               ),
               views: collection.anime.userViews.length,
             },
           };
-        })
+        }),
       );
 
       return {

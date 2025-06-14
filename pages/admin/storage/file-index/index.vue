@@ -119,7 +119,7 @@ const storageOptions = computed(() =>
       storage.description ? " - " + storage.description : ""
     }`,
     value: storage.id,
-  }))
+  })),
 );
 
 // 获取文件索引列表
@@ -188,7 +188,7 @@ const indexPaths = async (paths: string[]) => {
         path,
       });
       message.success(
-        `${storageId} 的 ${path} 索引完成，获取到 ${result.scannedCount} 个文件`
+        `${storageId} 的 ${path} 索引完成，获取到 ${result.scannedCount} 个文件`,
       );
     } catch (error) {
       message.error(`索引失败: ${(error as Error).message}`);
@@ -201,7 +201,7 @@ const indexPaths = async (paths: string[]) => {
 // 处理选中变化
 const handleCheckedRowKeysChange = (keys: (string | number)[]) => {
   selectedRows.value = fileList.value.filter(
-    (file) => keys.includes(file.id) && file.isDirectory
+    (file) => keys.includes(file.id) && file.isDirectory,
   );
 };
 
@@ -265,10 +265,10 @@ const columns: DataTableColumns<StorageIndex> = [
                     ? "material-symbols:folder"
                     : "material-symbols:description",
                 }),
-            }
+            },
           ),
           row.name,
-        ]
+        ],
       );
     },
     sorter: "default",

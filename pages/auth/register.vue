@@ -68,7 +68,7 @@ const register = async () => {
   } catch (error) {
     console.error(error);
     message.error(
-      error instanceof TRPCClientError ? error.message : "发生意外错误"
+      error instanceof TRPCClientError ? error.message : "发生意外错误",
     );
   }
 };

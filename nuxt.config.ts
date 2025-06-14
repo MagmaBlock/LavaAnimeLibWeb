@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@pinia-plugin-persistedstate/nuxt",
     "@vueuse/motion/nuxt",
-    "@nuxt/icon"
+    "@nuxt/icon",
   ],
 
   runtimeConfig: {

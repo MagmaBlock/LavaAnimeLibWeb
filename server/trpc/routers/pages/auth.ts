@@ -9,7 +9,7 @@ export const authRouter = router({
       z.object({
         account: z.string(),
         password: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input }) => {
       const { account, password } = input;
@@ -40,7 +40,7 @@ export const authRouter = router({
         name: z.string(),
         password: z.string(),
         inviteCode: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input }) => {
       const { email, name, password, inviteCode } = input;
@@ -50,7 +50,7 @@ export const authRouter = router({
         email,
         name,
         password,
-        inviteCode
+        inviteCode,
       );
 
       const token = userService.signTokenByUserId(user.id);

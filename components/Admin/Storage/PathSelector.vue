@@ -127,7 +127,7 @@ const storageOptions = computed<SelectOption[]>(() =>
       storage.description ? " - " + storage.description : ""
     }`,
     value: storage.id,
-  }))
+  })),
 );
 
 // 计算属性：根据条件过滤文件列表
@@ -201,10 +201,10 @@ const columns: DataTableColumns<StorageIndex> = [
                     ? "material-symbols:folder"
                     : "material-symbols:description",
                 }),
-            }
+            },
           ),
           row.name,
-        ]
+        ],
       );
     },
     sorter: "default",
@@ -236,7 +236,7 @@ const getDirectoryContents = async (path = "/") => {
         {
           storageId: selectedStorage.value,
           path,
-        }
+        },
       );
     currentPath.value = normalizePath(path);
     selectedRows.value = []; // 清空用户的选择
@@ -306,7 +306,7 @@ const updateSelectedPath = () => {
   if (selectedRows.value.length > 0) {
     const row = selectedRows.value[0];
     selectedPath.value = normalizePath(
-      row.isDirectory ? row.path + "/" + row.name : row.path
+      row.isDirectory ? row.path + "/" + row.name : row.path,
     );
   } else {
     selectedPath.value = currentPath.value;
@@ -324,7 +324,7 @@ watch(
   () => {
     selectedRows.value = [];
     updateSelectedPath();
-  }
+  },
 );
 
 // 初始化：获取存储节点列表

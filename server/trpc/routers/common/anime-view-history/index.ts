@@ -40,7 +40,7 @@ export const animeViewHistoryRouter = router({
       z.object({
         page: z.number().int().positive().default(1),
         pageSize: z.number().int().positive().default(100),
-      })
+      }),
     )
     .query(async ({ ctx, input }): Promise<HistoryResponse> => {
       const user = ctx.user;
@@ -88,7 +88,7 @@ export const animeViewHistoryRouter = router({
 
           const posterUrl = await animePictureService.getAnimePoster(
             history.animeId,
-            true
+            true,
           );
 
           return {
@@ -99,10 +99,10 @@ export const animeViewHistoryRouter = router({
               name: history.anime.name ?? history.anime.originalName,
               episode: history.episode
                 ? {
-                  id: history.episode.id,
-                  type: history.episode.type,
-                  episodeDisplay: history.episode.episodeDisplay,
-                }
+                    id: history.episode.id,
+                    type: history.episode.type,
+                    episodeDisplay: history.episode.episodeDisplay,
+                  }
                 : null,
               currentTime: history.currentTime,
               totalTime: history.totalTime,
@@ -113,7 +113,7 @@ export const animeViewHistoryRouter = router({
               userIP: history.userIP,
             } as HistoryItem,
           };
-        })
+        }),
       );
 
       const groupedHistoryObject = groupedHistory.reduce((acc, item) => {

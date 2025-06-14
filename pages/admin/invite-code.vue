@@ -98,7 +98,7 @@ const singleInviteRules: FormRules = {
 };
 
 const singleInviteFormRef = ref<null | { validate: () => Promise<boolean> }>(
-  null
+  null,
 );
 
 // 批量邀请码表单
@@ -118,13 +118,13 @@ const batchInviteRules: FormRules = {
 };
 
 const batchInviteFormRef = ref<null | { validate: () => Promise<boolean> }>(
-  null
+  null,
 );
 
 // 邀请码列表
 const { data: inviteCodes, refresh: refreshInviteCodes } = useAsyncData(
   "inviteCodes",
-  () => $client.pages.admin.inviteCode.getInviteCodes.query({})
+  () => $client.pages.admin.inviteCode.getInviteCodes.query({}),
 );
 
 const columns: DataTableColumns<InviteCode> = [
@@ -173,7 +173,7 @@ const columns: DataTableColumns<InviteCode> = [
           size: "small",
           onClick: () => deleteInviteCode(row.code),
         },
-        { default: () => "删除" }
+        { default: () => "删除" },
       );
     },
   },

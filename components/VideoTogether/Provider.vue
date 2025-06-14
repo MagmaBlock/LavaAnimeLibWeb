@@ -9,7 +9,7 @@ const { scriptTag, load, unload } = useScriptTag(
   () => {
     // do something
   },
-  { manual: true }
+  { manual: true },
 );
 
 const enableVideoTogether = useStorage("enableVideoTogether", false);

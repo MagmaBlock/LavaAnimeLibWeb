@@ -10,7 +10,7 @@ export const userInfoRouter = router({
     .input(
       z.object({
         url: z.string().url(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       if (!ctx.user) {
@@ -86,7 +86,7 @@ export const userInfoRouter = router({
     .input(
       z.object({
         newName: z.string().min(1).max(30),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       if (!ctx.user) {
@@ -121,7 +121,7 @@ export const userInfoRouter = router({
     .input(
       z.object({
         newPassword: z.string().min(7).max(64),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       if (!ctx.user) {

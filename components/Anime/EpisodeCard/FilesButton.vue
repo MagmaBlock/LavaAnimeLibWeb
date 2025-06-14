@@ -74,13 +74,13 @@ const buttonDisplay = computed(
       }
     }
     return { text: "未知错误", icon: "material-symbols:error" };
-  }
+  },
 );
 
 // 获取相似文件组数量
 const similarFilesCount = computed(() => {
   const activeEpisode = store.mainData?.episodes.find(
-    (ep) => ep.episode.id === store.activeEpisodeId
+    (ep) => ep.episode.id === store.activeEpisodeId,
   );
   return activeEpisode?.similarFilesIds.length ?? 0;
 });

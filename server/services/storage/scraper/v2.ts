@@ -68,7 +68,7 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
    * 因此为了避免每份文件都产生一个创建 anime 的请求而生的
    */
   private groupFilesByAnime(
-    files: StorageIndex[]
+    files: StorageIndex[],
   ): Map<string, StorageIndex[]> {
     const groups = new Map<string, StorageIndex[]>();
 
@@ -91,7 +91,7 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
    * @returns
    */
   private async scrapeFileGroup(
-    files: StorageIndex[]
+    files: StorageIndex[],
   ): Promise<StorageScrapeResult> {
     if (files.length === 0) return {};
 
@@ -103,7 +103,7 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
     if (noAnimeFiles.length === 0) return {};
 
     const isSeasonAnime = ["1月冬", "4月春", "7月夏", "10月秋"].includes(
-      parsed.type
+      parsed.type,
     );
 
     const baseAnimeData: Partial<Anime> = {
@@ -120,7 +120,7 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
       return await this.handleWithBgmID(
         parsed.bgmID,
         baseAnimeData,
-        noAnimeFiles
+        noAnimeFiles,
       );
     }
 
@@ -131,7 +131,7 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
   private async handleWithBgmID(
     bgmID: string,
     baseAnimeData: Partial<Anime>,
-    noAnimeFiles: StorageIndex[]
+    noAnimeFiles: StorageIndex[],
   ): Promise<StorageScrapeResult> {
     const maybeAnime = await this.getAnimesSiteLinkedWithCache(bgmID);
 
@@ -165,7 +165,7 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
   private async handleWithoutBgmID(
     firstFile: StorageIndex,
     baseAnimeData: Partial<Anime>,
-    files: StorageIndex[]
+    files: StorageIndex[],
   ): Promise<StorageScrapeResult> {
     // 向父级寻找有绑定 anime 属性的文件
     const maybeAnime = await this.getAnimeBindByParentFolders(firstFile);
@@ -191,7 +191,7 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
   }
 
   private async findAnimeInOtherStorages(
-    file: StorageIndex
+    file: StorageIndex,
   ): Promise<number | null> {
     const otherStorages = await App.instance.prisma.storage.findMany({
       where: {
@@ -224,7 +224,7 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
    * @returns 挂削结果
    */
   async scrapeChildFiles(
-    pathStartsWith: string
+    pathStartsWith: string,
   ): Promise<StorageScrapeResult[]> {
     let files: StorageIndex[] = [
       // 所有的子文件/子文件夹
@@ -337,11 +337,11 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
    * 从文件的父文件夹中寻找绑定的 anime
    */
   private async getAnimeBindByParentFolders(
-    file: StorageIndex
+    file: StorageIndex,
   ): Promise<number | null> {
     const parentFolders = await this.indexManager.getParentFolders(file.path);
     const nearestAnimeFolder = parentFolders.find(
-      (folder) => folder.animeId !== null
+      (folder) => folder.animeId !== null,
     );
     return nearestAnimeFolder ? nearestAnimeFolder.animeId : null;
   }

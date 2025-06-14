@@ -88,7 +88,7 @@ const { currentSelected, updateSelected } = animeIndexStore;
 
 const handleSelected = (
   type: keyof typeof currentSelected,
-  value: string[]
+  value: string[],
 ) => {
   updateSelected(type, value[0] || null);
 };

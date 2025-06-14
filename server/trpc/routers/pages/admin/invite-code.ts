@@ -12,7 +12,7 @@ export const adminInviteCodeRouter = router({
       z.object({
         code: z.string().optional(),
         expiredAt: z.date().optional(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const { code, expiredAt } = input;
@@ -29,7 +29,7 @@ export const adminInviteCodeRouter = router({
       z.object({
         amount: z.number().positive(),
         expiredAt: z.date().optional(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const { amount, expiredAt } = input;
