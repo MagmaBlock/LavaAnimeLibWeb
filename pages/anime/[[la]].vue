@@ -1,9 +1,9 @@
 <template>
   <ContainerPageMobileFull>
     <DevOnly>
-      <AnimeDevTool class="mb-0 sm:mb-4" />
+      <!-- <AnimeDevTool class="mb-0 sm:mb-4" /> -->
     </DevOnly>
-    <div
+    <!-- <div
       class="grid grid-cols-1 lg:grid-cols-3 gap-0 sm:gap-4 items-start"
       v-if="store.animeId"
     >
@@ -37,7 +37,7 @@
       status="404"
       title="动画不存在"
       description="无法找到该动画，请检查动画ID是否正确"
-    />
+    /> -->
   </ContainerPageMobileFull>
 </template>
 
@@ -57,23 +57,23 @@ onMounted(() => {
     .gt(0)
     .safeParse(Number(route.params.la));
   if (maybeAnimeId.success) {
-    store.animeId = maybeAnimeId.data;
+    // store.animeId = maybeAnimeId.data;
   }
 });
 
-watch(
-  () => store.animeInfo?.posterUrl,
-  (newVal) => {
-    if (newVal) {
-      background.setBackground(
-        newVal,
-        "transition duration-500 blur-3xl opacity-50 hidden sm:block"
-      );
-    } else {
-      background.resetBackground();
-    }
-  }
-);
+// watch(
+//   () => store.animeInfo?.posterUrl,
+//   (newVal) => {
+//     if (newVal) {
+//       background.setBackground(
+//         newVal,
+//         "transition duration-500 blur-3xl opacity-50 hidden sm:block"
+//       );
+//     } else {
+//       background.resetBackground();
+//     }
+//   }
+// );
 
 onUnmounted(() => {
   background.resetBackground();
