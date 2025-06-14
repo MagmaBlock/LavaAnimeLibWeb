@@ -13,7 +13,7 @@ export const useAnimeViewHistoryStore = defineStore(
     const animeStore = useAnimeStore();
     const animeVideoPlayerStore = useAnimeVideoPlayerStore();
     const { $client } = useNuxtApp();
-    const message = useMessage();
+    const { message } = useNaiveUiApiStore();
 
     // 格式化时间的辅助函数
     const formatTime = (seconds: number) => {

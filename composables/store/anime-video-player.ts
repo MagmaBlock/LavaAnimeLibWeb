@@ -7,7 +7,7 @@ export const useAnimeVideoPlayerStore = defineStore(
     // states
     const animeStore = useAnimeStore();
     const artPlayer = ref<ArtPlayer | null>(null);
-    const message = useMessage();
+    const { message } = useNaiveUiApiStore();
     const rememberRate = useLocalStorage("rememberRate", false);
 
     // actions
