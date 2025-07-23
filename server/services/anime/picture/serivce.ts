@@ -1,15 +1,14 @@
+import { prisma } from "~/server/src/context/prisma";
 import { App } from "../../app";
 import { StorageService } from "../../storage/service";
 
 export class AnimePictureSerivce {
-  private readonly prisma = App.instance.prisma;
-
   private getStorageService() {
     return App.instance.services.getService(StorageService);
   }
 
   async getPictureTempUrl(id: string): Promise<string | null> {
-    const animePicture = await App.instance.prisma.animePicture.findUnique({
+    const animePicture = await prisma.animePicture.findUnique({
       where: { id },
       include: { file: true },
     });
@@ -35,7 +34,7 @@ export class AnimePictureSerivce {
     animeId: number,
     smallFirst?: boolean,
   ): Promise<string | null> {
-    const anime = await this.prisma.anime.findUnique({
+    const anime = await prisma.anime.findUnique({
       where: { id: animeId },
       include: {
         posters: {

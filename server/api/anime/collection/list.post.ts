@@ -4,6 +4,7 @@ import { App } from "~/server/services/app";
 import { AnimePictureSerivce } from "~/server/services/anime/picture/serivce";
 import { getUserFromEvent } from "~/server/utils/auth"; // 假设 auth.ts 在此路径
 import type { AnimeCollectionStatus } from "@prisma/client"; // 引入枚举类型
+import { prisma } from "~/server/src/context/prisma";
 
 // 从 tRPC 迁移过来的 status 枚举
 const QueryItemEnum = ["Plan", "Watching", "Finished"] as const;
@@ -43,7 +44,7 @@ export default defineEventHandler(async (event) => {
 
     const skip = (page - 1) * pageSize;
 
-    const collections = await App.instance.prisma.animeCollection.findMany({
+    const collections = await prisma.animeCollection.findMany({
       where: {
         userId,
         status: status as AnimeCollectionStatus, // 类型断言
@@ -59,7 +60,7 @@ export default defineEventHandler(async (event) => {
       take: pageSize,
     });
 
-    const totalCount = await App.instance.prisma.animeCollection.count({
+    const totalCount = await prisma.animeCollection.count({
       where: {
         userId,
         status: status as AnimeCollectionStatus, // 类型断言

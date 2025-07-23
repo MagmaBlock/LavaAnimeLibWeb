@@ -1,6 +1,7 @@
 import { AnimeCollectionStatus, type AnimeCollection } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { App } from "../../app";
+import { prisma } from "~/server/src/context/prisma";
 
 /**
  * 管理用户的动画追番
@@ -17,7 +18,7 @@ export class AnimeCollectionService {
     animeId: number,
   ): Promise<AnimeCollection | null> {
     const animeCollection =
-      await App.instance.prisma.animeCollection.findUnique({
+      await prisma.animeCollection.findUnique({
         where: {
           userId_animeId: {
             userId: userId,
@@ -40,7 +41,7 @@ export class AnimeCollectionService {
     animeId: number,
     status?: AnimeCollectionStatus,
   ): Promise<void> {
-    const anime = await App.instance.prisma.anime.findUnique({
+    const anime = await prisma.anime.findUnique({
       where: { id: animeId },
       select: { id: true },
     });
@@ -49,7 +50,7 @@ export class AnimeCollectionService {
     }
 
     const existingCollection =
-      await App.instance.prisma.animeCollection.findUnique({
+      await prisma.animeCollection.findUnique({
         where: {
           userId_animeId: {
             userId: userId,
@@ -61,7 +62,7 @@ export class AnimeCollectionService {
     if (existingCollection) {
       if (status) {
         // 如果已存在收藏记录且提供了新状态，则更新记录
-        await App.instance.prisma.animeCollection.update({
+        await prisma.animeCollection.update({
           where: {
             id: existingCollection.id,
           },
@@ -71,7 +72,7 @@ export class AnimeCollectionService {
         });
       } else {
         // 如果已存在收藏记录但未提供新状态，则删除记录
-        await App.instance.prisma.animeCollection.delete({
+        await prisma.animeCollection.delete({
           where: {
             id: existingCollection.id,
           },
@@ -80,7 +81,7 @@ export class AnimeCollectionService {
     } else {
       // 如果不存在收藏记录，则创建新记录
       const newStatus = status || AnimeCollectionStatus.Watching;
-      await App.instance.prisma.animeCollection.create({
+      await prisma.animeCollection.create({
         data: {
           userId: userId,
           animeId: animeId,

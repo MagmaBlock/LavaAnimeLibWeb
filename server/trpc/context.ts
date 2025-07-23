@@ -2,6 +2,7 @@ import type { inferAsyncReturnType } from "@trpc/server";
 import type { H3Event } from "h3";
 import { App } from "../services/app";
 import { UserService } from "../services/user/service";
+import { prisma } from "../src/context/prisma";
 
 /**
  * Creates context for an incoming request
@@ -23,7 +24,7 @@ export async function createContext(_event: H3Event) {
     const userService = App.instance.services.getService(UserService);
     const payload = userService.readTokenPayload(token);
     if (payload) {
-      user = await App.instance.prisma.user.findFirst({
+      user = await prisma.user.findFirst({
         where: {
           id: payload.id,
         },

@@ -2,8 +2,7 @@ import { z } from "zod";
 import { App } from "~/server/services/app";
 import { StorageService } from "~/server/services/storage/service";
 import { getUserFromEvent } from "~/server/utils/auth";
-
-const prisma = App.instance.prisma;
+import { prisma } from "~/server/src/context/prisma";
 
 const bodySchema = z.object({
   fileIds: z.array(z.number()),

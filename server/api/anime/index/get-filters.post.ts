@@ -1,11 +1,10 @@
 import { defineEventHandler } from "h3";
 import { AnimePlatform, Region } from "@prisma/client";
 import { App } from "~/server/services/app";
+import { prisma } from "~/server/src/context/prisma";
 
 export default defineEventHandler(async (event) => {
   try {
-    const prisma = App.instance.prisma;
-
     const indexMap = await prisma.anime.groupBy({
       by: ["releaseYear", "releaseSeason", "platform", "region"],
       // Prisma groupBy can return null for grouped fields if no records exist for that group or if the field itself is nullable

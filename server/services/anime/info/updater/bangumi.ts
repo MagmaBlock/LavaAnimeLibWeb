@@ -13,6 +13,7 @@ import type {
   BangumiAPISubject,
 } from "~/server/services/api/types/bangumi";
 import type { AnimeInfoUpdater } from "./interface";
+import { prisma } from "~/server/src/context/prisma";
 
 /**
  * 从番组计划获取番剧信息并刷新数据库数据
@@ -48,7 +49,7 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
   ) {
     const images = bangumiSubject.images;
     if (images) {
-      await App.instance.prisma.animePicture.upsert({
+      await prisma.animePicture.upsert({
         where: {
           type_animeId: {
             animeId: animeId,
@@ -65,7 +66,7 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
         },
       });
 
-      await App.instance.prisma.animePicture.upsert({
+      await prisma.animePicture.upsert({
         where: {
           type_animeId: {
             animeId: animeId,
@@ -95,7 +96,7 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
     bangumiEpisodes: BangumiAPIEpisodes,
   ) {
     for (const bangumiEpisode of bangumiEpisodes.data) {
-      await App.instance.prisma.animeEpisode.upsert({
+      await prisma.animeEpisode.upsert({
         where: {
           animeId_type_episodeDisplay: {
             animeId,
@@ -150,7 +151,7 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
    * @param animeId
    */
   private async changeUpdateTime(animeSiteId: number) {
-    await App.instance.prisma.animeSiteLink.update({
+    await prisma.animeSiteLink.update({
       where: {
         id: animeSiteId,
       },
@@ -173,7 +174,7 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
     else if (bangumiSubject.platform === "OVA") platform = "OVA";
     else if (bangumiSubject.platform === "WEB") platform = "Web";
 
-    await App.instance.prisma.anime.update({
+    await prisma.anime.update({
       where: {
         id: animeId,
       },
@@ -207,13 +208,13 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
     }));
 
     // 获取数据库中现有的标签
-    const existingTags = await App.instance.prisma.animeTag.findMany({
+    const existingTags = await prisma.animeTag.findMany({
       where: { animeId, source: AnimeInfoSource.Bangumi },
     });
 
     // 更新或创建标签
     for (const newTag of newTags) {
-      await App.instance.prisma.animeTag.upsert({
+      await prisma.animeTag.upsert({
         where: {
           name_source_animeId: {
             name: newTag.name,
@@ -233,7 +234,7 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
     const newTagNames = new Set(newTags.map((tag) => tag.name));
     for (const existingTag of existingTags) {
       if (!newTagNames.has(existingTag.name)) {
-        await App.instance.prisma.animeTag.delete({
+        await prisma.animeTag.delete({
           where: {
             id: existingTag.id,
           },
@@ -251,7 +252,7 @@ export class BangumiAnimeInfoUpdater implements AnimeInfoUpdater {
     animeId: number,
     bangumiSubject: BangumiAPISubject,
   ) {
-    await App.instance.prisma.animeRating.upsert({
+    await prisma.animeRating.upsert({
       where: {
         animeId_source: {
           animeId: animeId,

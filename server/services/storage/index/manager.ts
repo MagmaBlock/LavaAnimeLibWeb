@@ -5,6 +5,7 @@ import pathTool from "path/posix";
 import { App } from "../../app";
 import { StorageService } from "../service";
 import type { StorageSystem } from "../system/interface";
+import { prisma } from "~/server/src/context/prisma";
 
 export class StorageIndexManager {
   public storage: Storage;
@@ -25,7 +26,7 @@ export class StorageIndexManager {
   async getFileInfo(path: string): Promise<StorageIndex | null> {
     const parsePath = nodePathPosix.parse(path);
 
-    return await App.instance.prisma.storageIndex.findUnique({
+    return await prisma.storageIndex.findUnique({
       where: {
         name_path_storageId: {
           name: parsePath.base,
@@ -51,7 +52,7 @@ export class StorageIndexManager {
   async getDirContents(path: string): Promise<StorageIndex[]> {
     path = nodePathPosix.join(path);
 
-    return await App.instance.prisma.storageIndex.findMany({
+    return await prisma.storageIndex.findMany({
       where: {
         storageId: this.storageSystem.storage.id,
         removed: false,
@@ -66,7 +67,7 @@ export class StorageIndexManager {
   async getDirContentsNoAnimeBind(path: string): Promise<StorageIndex[]> {
     path = nodePathPosix.join(path);
 
-    return await App.instance.prisma.storageIndex.findMany({
+    return await prisma.storageIndex.findMany({
       where: {
         storageId: this.storageSystem.storage.id,
         removed: false,
@@ -83,7 +84,7 @@ export class StorageIndexManager {
   async getChildFiles(path: string): Promise<StorageIndex[]> {
     path = nodePathPosix.join(path);
 
-    return await App.instance.prisma.storageIndex.findMany({
+    return await prisma.storageIndex.findMany({
       where: {
         storageId: this.storageSystem.storage.id,
         removed: false,
@@ -135,7 +136,7 @@ export class StorageIndexManager {
       if (storageFile.name === undefined || storageFile.path === undefined)
         continue;
 
-      await App.instance.prisma.storageIndex.upsert({
+      await prisma.storageIndex.upsert({
         where: {
           name_path_storageId: {
             name: storageFile.name,
@@ -182,7 +183,7 @@ export class StorageIndexManager {
 
       // 如果此 Index 的文件在 StorageSystem 中不存在，将文件标记为 "removed"
       if (thisFileInStorageFiles === undefined) {
-        await App.instance.prisma.storageIndex.update({
+        await prisma.storageIndex.update({
           where: {
             name_path_storageId: {
               storageId: index.storageId,
@@ -259,7 +260,7 @@ export class StorageIndexManager {
     rootPath: string,
     scannedRecords: Set<number>,
   ): Promise<number> {
-    const result = await App.instance.prisma.storageIndex.updateMany({
+    const result = await prisma.storageIndex.updateMany({
       data: { removed: true },
       where: {
         storageId: this.storageSystem.storage.id,

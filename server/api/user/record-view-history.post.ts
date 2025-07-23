@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { App } from "~/server/services/app";
 import { getUserFromEvent } from "~/server/utils/auth";
+import { prisma } from "~/server/src/context/prisma";
 
-const prisma = App.instance.prisma;
 
 const bodySchema = z.object({
   animeId: z.number(),

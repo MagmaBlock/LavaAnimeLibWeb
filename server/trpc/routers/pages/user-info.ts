@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { App } from "~/server/services/app";
 import { StorageService } from "~/server/services/storage/service";
 import { UserService } from "~/server/services/user/service";
+import { prisma } from "~/server/src/context/prisma";
 
 export const userInfoRouter = router({
   avatar: publicProcedure
@@ -21,7 +22,7 @@ export const userInfoRouter = router({
       }
 
       try {
-        const updatedUser = await App.instance.prisma.user.update({
+        const updatedUser = await prisma.user.update({
           where: { id: ctx.user.id },
           data: { avatarUrl: input.url },
         });
@@ -51,7 +52,7 @@ export const userInfoRouter = router({
 
     let avatarUrl = ctx.user.avatarUrl;
     if (!avatarUrl && ctx.user.avatarFileId) {
-      const storageIndex = await App.instance.prisma.storageIndex.findUnique({
+      const storageIndex = await prisma.storageIndex.findUnique({
         where: {
           id: ctx.user.avatarFileId,
         },
@@ -97,7 +98,7 @@ export const userInfoRouter = router({
       }
 
       try {
-        const updatedUser = await App.instance.prisma.user.update({
+        const updatedUser = await prisma.user.update({
           where: { id: ctx.user.id },
           data: { name: input.newName },
         });

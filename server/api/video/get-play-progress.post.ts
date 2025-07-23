@@ -1,8 +1,7 @@
 import { z } from "zod";
 import { App } from "~/server/services/app";
 import { getUserFromEvent } from "~/server/utils/auth";
-
-const prisma = App.instance.prisma;
+import { prisma } from "~/server/src/context/prisma";
 
 // 定义判断视频是否已看完的常量 (与 anime.ts 中一致)
 const COMPLETION_THRESHOLD = 0.95;

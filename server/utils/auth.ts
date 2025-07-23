@@ -4,6 +4,7 @@ import type { H3Event } from "h3";
 import { App } from "../services/app";
 import { UserService } from "../services/user/service";
 import { z } from "zod";
+import { prisma } from "../src/context/prisma";
 
 /**
  * 从 H3Event 中获取认证用户
@@ -23,7 +24,7 @@ export async function getUserFromEvent(event: H3Event): Promise<User | null> {
   const userId = z.number().int().gte(1).safeParse(payload?.id);
   if (!userId.success) return null;
   try {
-    return await App.instance.prisma.user.findFirst({
+    return await prisma.user.findFirst({
       where: {
         id: userId.data,
       },

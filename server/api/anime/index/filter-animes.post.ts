@@ -3,6 +3,7 @@ import { z } from "zod";
 import { AnimePlatform, Region } from "@prisma/client";
 import { App } from "~/server/services/app";
 import { AnimePictureSerivce } from "~/server/services/anime/picture/serivce";
+import { prisma } from "~/server/src/context/prisma";
 
 // 定义请求体的 Zod Schema，与原 tRPC input 保持一致，并优化分页参数
 const bodySchema = z.object({
@@ -41,7 +42,6 @@ export default defineEventHandler(async (event) => {
   } = bodyParseResult.data;
 
   try {
-    const prisma = App.instance.prisma;
     const animePictureService = App.instance.services.getService(AnimePictureSerivce);
 
     const whereClause = {

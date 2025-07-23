@@ -1,9 +1,10 @@
 import { App } from "~/server/services/app";
 import { StorageService } from "~/server/services/storage/service";
+import { prisma } from "~/server/src/context/prisma";
 
 const app = new App();
 
-const anime = await app.prisma.anime.findFirst({
+const anime = await prisma.anime.findFirst({
   where: {
     id: 2200,
   },

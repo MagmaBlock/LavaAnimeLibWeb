@@ -1,8 +1,7 @@
 import { z } from "zod";
 import { App } from "~/server/services/app";
 import { publicProcedure, router } from "~/server/trpc/trpc";
-
-const prisma = App.instance.prisma;
+import { prisma } from "~/server/src/context/prisma";
 
 export const adminAnimeManageRouter = router({
   // 获取 Anime 列表

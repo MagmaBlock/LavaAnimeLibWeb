@@ -4,6 +4,7 @@ import { z } from "zod";
 import { App } from "../../services/app";
 import { StorageService } from "../../services/storage/service";
 import { getUserFromEvent } from "../../utils/auth";
+import { prisma } from "~/server/src/context/prisma";
 
 const bodySchema = z.object({
   id: z.number().int().gt(0),
@@ -33,7 +34,7 @@ export default defineEventHandler(async (event) => {
   const { id } = parsedBody.data;
 
   try {
-    const anime = await App.instance.prisma.anime.findUnique({
+    const anime = await prisma.anime.findUnique({
       where: { id },
       include: {
         sites: true,

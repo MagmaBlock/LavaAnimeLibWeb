@@ -2,6 +2,7 @@ import { z } from "zod";
 import { AnimeCollectionService } from "~/server/services/anime/collection/service";
 import { AnimePictureSerivce } from "~/server/services/anime/picture/serivce";
 import { App } from "~/server/services/app";
+import { prisma } from "~/server/src/context/prisma";
 import { protectedProcedure, router } from "~/server/trpc/trpc";
 
 export const animeCollectionRouter = router({
@@ -60,7 +61,7 @@ export const animeCollectionRouter = router({
 
       const skip = (page - 1) * pageSize;
 
-      const collections = await App.instance.prisma.animeCollection.findMany({
+      const collections = await prisma.animeCollection.findMany({
         where: {
           userId,
           status: status,
@@ -76,7 +77,7 @@ export const animeCollectionRouter = router({
         take: pageSize,
       });
 
-      const totalCount = await App.instance.prisma.animeCollection.count({
+      const totalCount = await prisma.animeCollection.count({
         where: {
           userId,
           status: status,
@@ -121,7 +122,7 @@ export const animeCollectionRouter = router({
   getUserAnimeCollectionCounts: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.user.id;
 
-    const counts = await App.instance.prisma.animeCollection.groupBy({
+    const counts = await prisma.animeCollection.groupBy({
       by: ["status"],
       where: {
         userId,

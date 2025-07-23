@@ -7,8 +7,7 @@ import { getUserFromEvent } from "~/server/utils/auth"; // 导入新的认证函
 import { AnimeFileService } from "~/server/services/anime/file/service";
 import { AnimeEpisodeFileLinker } from "~/server/services/anime/episode/file-linker";
 import { SimilarFiles } from "~/server/services/anime/file/types/similar-files"; // 确保路径正确
-
-const prisma = App.instance.prisma;
+import { prisma } from "~/server/src/context/prisma";
 
 // 定义判断视频是否已看完的常量
 const COMPLETION_THRESHOLD = 0.95;

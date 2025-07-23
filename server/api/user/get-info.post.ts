@@ -3,6 +3,7 @@ import { defineEventHandler, readBody, H3Event } from "h3";
 import { App } from "~/server/services/app";
 import { StorageService } from "~/server/services/storage/service";
 import { getUserFromEvent } from '~/server/utils/auth';
+import { prisma } from "~/server/src/context/prisma";
 
 const bodySchema = z.object({}); // API 规范要求 POST，即使是获取信息，也校验 body
 
@@ -48,7 +49,7 @@ export default defineEventHandler(async (event: H3Event) => {
     let avatarUrl = user.avatarUrl;
     if (typeof user.avatarFileId === 'number' && !avatarUrl) {
       try { // 细粒度的 try-catch 用于头像获取
-        const storageIndex = await App.instance.prisma.storageIndex.findUnique({
+        const storageIndex = await prisma.storageIndex.findUnique({
           where: {
             id: user.avatarFileId,
           },

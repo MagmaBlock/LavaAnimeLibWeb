@@ -2,6 +2,7 @@ import { z } from "zod";
 import { defineEventHandler, readBody } from "h3";
 import { App } from "~/server/services/app";
 import { getUserFromEvent } from '~/server/utils/auth';
+import { prisma } from "~/server/src/context/prisma";
 
 const bodySchema = z.object({
   newName: z.string().min(1).max(30),
@@ -31,7 +32,7 @@ export default defineEventHandler(async (event) => {
   const { newName } = parseResult.data;
 
   try {
-    const updatedUser = await App.instance.prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { id: user.id },
       data: { name: newName },
     });

@@ -3,10 +3,11 @@ import { z } from "zod";
 import { AnimePictureSerivce } from "~/server/services/anime/picture/serivce";
 import { App } from "~/server/services/app";
 import { publicProcedure, router } from "../../trpc";
+import { prisma } from "~/server/src/context/prisma";
 
 export const animeIndexRouter = router({
   filters: publicProcedure.query(async () => {
-    const indexMap = await App.instance.prisma.anime.groupBy({
+    const indexMap = await prisma.anime.groupBy({
       by: ["releaseYear", "releaseSeason", "platform", "region"],
     });
 
@@ -76,7 +77,7 @@ export const animeIndexRouter = router({
       const { releaseYear, releaseSeason, platform, region, sort, take, skip } =
         input;
 
-      const animes = await App.instance.prisma.anime.findMany({
+      const animes = await prisma.anime.findMany({
         where: {
           releaseYear,
           releaseSeason,

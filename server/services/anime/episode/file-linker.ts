@@ -3,15 +3,14 @@ import { parseFileName } from "anime-name-tool";
 import nodePathPosix from "path/posix";
 import { App } from "~/server/services/app";
 import { AnimeEpisodeLinkResult } from "./types";
+import { prisma } from "~/server/src/context/prisma";
 
 export class AnimeEpisodeFileLinker {
-  private readonly prisma = App.instance.prisma;
-
   /**
    * 将所有 Anime 的文件与 AnimeEpisode 关联。
    */
   async linkAllAnimeFiles() {
-    const allAnimeIds = await this.prisma.anime.findMany({
+    const allAnimeIds = await prisma.anime.findMany({
       select: { id: true },
     });
 
@@ -22,7 +21,7 @@ export class AnimeEpisodeFileLinker {
    * 传入 animeId，将自动对其已有文件进行 AnimeEpisode 关联。
    */
   async linkAnimeFiles(animeIds: number[]): Promise<AnimeEpisodeLinkResult[]> {
-    const animes = await this.prisma.anime.findMany({
+    const animes = await prisma.anime.findMany({
       where: {
         id: {
           in: animeIds,
@@ -117,7 +116,7 @@ export class AnimeEpisodeFileLinker {
       // 如果找到了与此文件相匹配的集数
       if (maybeEpisodes.length > 0) {
         // 更新库文件，连接找到的剧集
-        await this.prisma.storageIndex.update({
+        await prisma.storageIndex.update({
           where: {
             id: file.id,
           },
@@ -157,7 +156,7 @@ export class AnimeEpisodeFileLinker {
     if (file.animeId === null) return [];
     // 当剧集参数为单个数字时，尝试查找对应的单个剧集记录。
     if (typeof episode === "number") {
-      const episodeRecord = await this.prisma.animeEpisode.findFirst({
+      const episodeRecord = await prisma.animeEpisode.findFirst({
         where: {
           animeId: file.animeId,
           type: thisFileEpisodetype,
@@ -170,7 +169,7 @@ export class AnimeEpisodeFileLinker {
       if (thisFileEpisodetype === "Normal") {
         // 正片情况下，有时候资料站点的集数延续上季，而资源命名却从 1 开始。
         // 因此如果上面的查找找不到，那就再试试从 1 开始的 episodeIndex 模式。
-        const episodeRecordIndex = await this.prisma.animeEpisode.findFirst({
+        const episodeRecordIndex = await prisma.animeEpisode.findFirst({
           where: {
             animeId: file.animeId,
             type: thisFileEpisodetype,
@@ -182,7 +181,7 @@ export class AnimeEpisodeFileLinker {
         // thisFileEpisodetype 是通过文件名推断出来的，可能不准确。
         // 有些番剧会在正片完结后再有一些接续正片集数的 SP / OVA / OAD 等。(如 https://bgm.tv/subject/1424)
         // 因此如果从 type: "Normal" 里面找不到，就试着去 SP 里找。
-        const episodeRecordSP = await this.prisma.animeEpisode.findFirst({
+        const episodeRecordSP = await prisma.animeEpisode.findFirst({
           where: {
             animeId: file.animeId,
             type: "SP",
@@ -209,7 +208,7 @@ export class AnimeEpisodeFileLinker {
 
           // 分割范围以获取起始和结束剧集。
           const [startA, endA] = A.split(",");
-          const AResult = await this.prisma.animeEpisode.findMany({
+          const AResult = await prisma.animeEpisode.findMany({
             where: {
               animeId: file.animeId,
               type: thisFileEpisodetype,
@@ -222,7 +221,7 @@ export class AnimeEpisodeFileLinker {
           if (AResult.length) return AResult;
 
           const [startB, endB] = B.split(",");
-          const BResult = await this.prisma.animeEpisode.findMany({
+          const BResult = await prisma.animeEpisode.findMany({
             where: {
               animeId: file.animeId,
               type: thisFileEpisodetype,
@@ -239,7 +238,7 @@ export class AnimeEpisodeFileLinker {
         // 9.5|21.5
         else {
           const [A, B] = episode.split("|");
-          const AResult = await this.prisma.animeEpisode.findMany({
+          const AResult = await prisma.animeEpisode.findMany({
             where: {
               animeId: file.animeId,
               type: thisFileEpisodetype,
@@ -248,7 +247,7 @@ export class AnimeEpisodeFileLinker {
           });
           if (AResult.length) return AResult;
 
-          const BResult = await this.prisma.animeEpisode.findMany({
+          const BResult = await prisma.animeEpisode.findMany({
             where: {
               animeId: file.animeId,
               type: thisFileEpisodetype,
@@ -268,7 +267,7 @@ export class AnimeEpisodeFileLinker {
         return [];
       }
 
-      const result = await this.prisma.animeEpisode.findMany({
+      const result = await prisma.animeEpisode.findMany({
         where: {
           animeId: file.animeId,
           type: thisFileEpisodetype,
@@ -293,7 +292,7 @@ export class AnimeEpisodeFileLinker {
   ): Promise<AnimeEpisode[]> {
     if (file.animeId === null) return [];
 
-    const anime = await this.prisma.anime.findFirst({
+    const anime = await prisma.anime.findFirst({
       where: { id: file.animeId },
       include: { episodes: true },
     });

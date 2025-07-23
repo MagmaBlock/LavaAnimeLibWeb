@@ -5,6 +5,7 @@ import { z } from "zod";
 import { AnimePictureSerivce } from "~/server/services/anime/picture/serivce";
 import { App } from "~/server/services/app";
 import { protectedProcedure, router } from "../../../trpc";
+import { prisma } from "~/server/src/context/prisma";
 
 interface HistoryItem {
   id: string;
@@ -50,7 +51,7 @@ export const animeViewHistoryRouter = router({
       const skip = (input.page - 1) * input.pageSize;
 
       const detailedHistory =
-        await App.instance.prisma.animeViewHistory.findMany({
+        await prisma.animeViewHistory.findMany({
           where: {
             userId: user.id,
             removed: false,
@@ -75,7 +76,7 @@ export const animeViewHistoryRouter = router({
           },
         });
 
-      const totalCount = await App.instance.prisma.animeViewHistory.count({
+      const totalCount = await prisma.animeViewHistory.count({
         where: {
           userId: user.id,
           removed: false,
@@ -138,7 +139,7 @@ export const animeViewHistoryRouter = router({
       const { historyId } = input;
 
       const updatedHistory =
-        await App.instance.prisma.animeViewHistory.updateMany({
+        await prisma.animeViewHistory.updateMany({
           where: {
             id: historyId,
             userId: user.id,

@@ -4,8 +4,7 @@ import { App } from "~/server/services/app";
 import { AnimePictureSerivce } from "~/server/services/anime/picture/serivce";
 // import { UserService } from "~/server/services/user/service"; // 不再直接使用
 import { getUserFromEvent } from "~/server/utils/auth"; // 导入新的认证函数
-
-const prisma = App.instance.prisma;
+import { prisma } from "~/server/src/context/prisma";
 
 const bodySchema = z.object({
   animeId: z.number(),

@@ -1,7 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "~/server/src/context/prisma";
 import { AlistStorageSystem } from "../../../services/storage/system/alist";
 
-const prisma = new PrismaClient();
 const storage = await prisma.storage.findFirst({
   where: { id: "3A_Xinxiang" },
 });

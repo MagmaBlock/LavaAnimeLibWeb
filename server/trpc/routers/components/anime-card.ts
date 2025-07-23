@@ -2,6 +2,7 @@ import { z } from "zod";
 import { App } from "~/server/services/app";
 import { StorageService } from "~/server/services/storage/service";
 import { protectedProcedure, router } from "../../trpc";
+import { prisma } from "~/server/src/context/prisma";
 
 export const animeCardRouter = router({
   menu: protectedProcedure
@@ -12,7 +13,7 @@ export const animeCardRouter = router({
     )
     .query(async ({ input }) => {
       const { id } = input;
-      const anime = await App.instance.prisma.anime.findUnique({
+      const anime = await prisma.anime.findUnique({
         where: { id },
         include: {
           sites: true,

@@ -7,6 +7,7 @@ import { Sha256Password } from "./password/sha256";
 import type { Token } from "./token/interface";
 import { JwtToken } from "./token/jwt";
 import { UserValidator } from "./validator/user";
+import { prisma } from "~/server/src/context/prisma";
 
 export class UserService {
   private authentication: Token;
@@ -63,7 +64,7 @@ export class UserService {
     encryptedPassword.encrypt(password);
 
     try {
-      const create = await App.instance.prisma.user.create({
+      const create = await prisma.user.create({
         data: {
           email,
           name,
@@ -109,7 +110,7 @@ export class UserService {
     token: string;
     user: User;
   }> {
-    let user = await App.instance.prisma.user.findFirst({
+    let user = await prisma.user.findFirst({
       where: {
         OR: [{ email: account }, { name: account }],
       },
@@ -150,7 +151,7 @@ export class UserService {
     encryptedPassword.encrypt(newPassword);
 
     try {
-      return await App.instance.prisma.user.update({
+      return await prisma.user.update({
         where: {
           id: userId,
         },

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { App } from "~/server/services/app";
 import { getUserFromEvent } from "~/server/utils/auth";
+import { prisma } from "~/server/src/context/prisma";
 
 const bodySchema = z.object({
   historyId: z.string().uuid(),
@@ -29,7 +30,7 @@ export default defineEventHandler(async (event) => {
   const { historyId } = body.data;
 
   const updatedHistory =
-    await App.instance.prisma.animeViewHistory.updateMany({
+    await prisma.animeViewHistory.updateMany({
       where: {
         id: historyId,
         userId: user.id,

@@ -2,6 +2,7 @@ import { z } from "zod";
 import { defineEventHandler, readBody } from "h3";
 import { App } from "~/server/services/app";
 import { getUserFromEvent } from '~/server/utils/auth';
+import { prisma } from "~/server/src/context/prisma";
 // UserService 和 StorageService 在这个特定的 API 中没有直接使用，但为了保持与原文件结构一致性，暂时保留
 // import { StorageService } from "~/server/services/storage/service";
 // import { UserService } from "~/server/services/user/service";
@@ -34,7 +35,7 @@ export default defineEventHandler(async (event) => {
   const { url } = parseResult.data;
 
   try {
-    const updatedUser = await App.instance.prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { id: user.id },
       data: { avatarUrl: url },
     });

@@ -1,10 +1,6 @@
-import type {
-  AnimeSiteLink,
-  PrismaClient,
-  Storage,
-  StorageIndex,
-} from "@prisma/client";
+import type { AnimeSiteLink, Storage, StorageIndex } from "@prisma/client";
 import type { StorageScrapeResult } from "~/server/services/storage/scraper/types/result";
+import { prisma } from "~/server/src/context/prisma";
 import { App } from "../app";
 import { StorageIndexManager } from "./index/manager";
 import type { StorageScraper } from "./scraper/interface";
@@ -13,15 +9,13 @@ import { AlistStorageSystem } from "./system/alist";
 import type { StorageSystem } from "./system/interface";
 
 export class StorageService {
-  private readonly prisma = App.instance.prisma;
-
   /**
    * 获取 Storage 对象
    * @param storageId Storage 的 id
    * @returns Storage 对象
    */
   async getStorage(storageId: string): Promise<Storage | null> {
-    return await this.prisma.storage.findUnique({
+    return await prisma.storage.findUnique({
       where: { id: storageId },
     });
   }
@@ -30,7 +24,7 @@ export class StorageService {
    * 获取所有 Storage
    */
   async getAllStorage(): Promise<Storage[]> {
-    const storages = await this.prisma.storage.findMany();
+    const storages = await prisma.storage.findMany();
     return storages.filter((s) => s !== null);
   }
 
@@ -80,7 +74,7 @@ export class StorageService {
         );
       }
 
-      const newAnime = await this.prisma.anime.create({
+      const newAnime = await prisma.anime.create({
         data: {
           name: result.createAnime.name,
           originalName: result.createAnime.originalName,
@@ -111,7 +105,7 @@ export class StorageService {
         );
       }
 
-      await this.prisma.anime.update({
+      await prisma.anime.update({
         where: { id: result.updateAnime.animeId },
         data: result.updateAnime.data,
       });
@@ -167,7 +161,7 @@ export class StorageService {
       };
     });
 
-    await this.prisma.anime.update({
+    await prisma.anime.update({
       where: { id: animeId },
       data: {
         sites: {
@@ -189,7 +183,7 @@ export class StorageService {
       return { id: f.id };
     });
 
-    await this.prisma.anime.update({
+    await prisma.anime.update({
       where: { id: animeId },
       data: {
         files: {

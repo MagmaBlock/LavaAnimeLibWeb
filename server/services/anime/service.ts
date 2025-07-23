@@ -2,6 +2,7 @@ import type { AnimeInfoSource } from "@prisma/client";
 import pLimit from "p-limit";
 import { App } from "../app";
 import { BangumiAnimeInfoUpdater } from "./info/updater/bangumi";
+import { prisma } from "~/server/src/context/prisma";
 
 /**
  * 用于创建新番和管理番剧文件列表的工具类
@@ -18,7 +19,7 @@ export class AnimeService {
    * 4. 记录更新过程中的错误
    */
   async updateAnimesInfo(animeIds: number[]): Promise<void> {
-    const animes = await App.instance.prisma.anime.findMany({
+    const animes = await prisma.anime.findMany({
       where: {
         id: {
           in: animeIds,
@@ -62,7 +63,7 @@ export class AnimeService {
    */
   async updateAllAnimeInfoBefore(before: Date): Promise<void> {
     // 查询需要更新的动画列表
-    const animeNeedToUpdate = await App.instance.prisma.anime.findMany({
+    const animeNeedToUpdate = await prisma.anime.findMany({
       where: {
         sites: {
           some: {
@@ -88,7 +89,7 @@ export class AnimeService {
    * @returns 如果动画有信息被更新，返回true；否则返回false
    */
   async updateAnimeInfoBefore(animeId: number, before: Date): Promise<boolean> {
-    const anime = await App.instance.prisma.anime.findUnique({
+    const anime = await prisma.anime.findUnique({
       where: { id: animeId },
       include: { sites: true },
     });
@@ -106,7 +107,7 @@ export class AnimeService {
       if (!updater) continue;
 
       await updater.updateAnimeInfo(site);
-      await App.instance.prisma.animeSiteLink.update({
+      await prisma.animeSiteLink.update({
         where: { id: site.id },
         data: { updatedAt: new Date() },
       });

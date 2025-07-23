@@ -3,6 +3,7 @@ import { App } from "~/server/services/app";
 import { InviteCodeService } from "~/server/services/invite-code/service";
 import { adminProcedure, router } from "~/server/trpc/trpc";
 import { InviteCode } from "@prisma/client";
+import { prisma } from "~/server/src/context/prisma";
 
 const inviteCodeService = App.instance.services.getService(InviteCodeService);
 
@@ -44,7 +45,7 @@ export const adminInviteCodeRouter = router({
   getInviteCodes: adminProcedure
     .input(z.object({}))
     .query(async (): Promise<InviteCode[]> => {
-      return await App.instance.prisma.inviteCode.findMany({
+      return await prisma.inviteCode.findMany({
         orderBy: { createdAt: "desc" },
       });
     }),
@@ -52,7 +53,7 @@ export const adminInviteCodeRouter = router({
   deleteInviteCode: adminProcedure
     .input(z.string())
     .mutation(async ({ input }) => {
-      const inviteCode = await App.instance.prisma.inviteCode.findUnique({
+      const inviteCode = await prisma.inviteCode.findUnique({
         where: { code: input },
       });
 
@@ -64,7 +65,7 @@ export const adminInviteCodeRouter = router({
         throw new Error("该邀请码已被使用，无法删除");
       }
 
-      return await App.instance.prisma.inviteCode.delete({
+      return await prisma.inviteCode.delete({
         where: { code: input },
       });
     }),

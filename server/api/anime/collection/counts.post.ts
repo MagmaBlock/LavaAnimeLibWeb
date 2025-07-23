@@ -1,7 +1,7 @@
-import { defineEventHandler } from "h3";
-import { App } from "~/server/services/app";
-import { getUserFromEvent } from "~/server/utils/auth"; // 假设 auth.ts 在此路径
 import type { AnimeCollectionStatus } from "@prisma/client";
+import { defineEventHandler } from "h3";
+import { getUserFromEvent } from "~/server/utils/auth"; // 假设 auth.ts 在此路径
+import { prisma } from "~/server/src/context/prisma";
 
 export default defineEventHandler(async (event) => {
   const user = await getUserFromEvent(event);
@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
   const userId = user.id;
 
   try {
-    const counts = await App.instance.prisma.animeCollection.groupBy({
+    const counts = await prisma.animeCollection.groupBy({
       by: ["status"],
       where: {
         userId,

@@ -2,13 +2,12 @@ import type { StorageIndex } from "@prisma/client";
 import { App } from "../../app";
 import { hash, objectHash } from "ohash";
 import { SimilarFiles } from "./types/similar-files";
+import { prisma } from "~/server/src/context/prisma";
 
 /**
  * 本类主要管理动画的文件服务，减轻前端在处理动画文件时的压力
  */
 export class AnimeFileService {
-  private readonly prisma = App.instance.prisma;
-
   /**
    * 获取指定 AnimeEpisode 的 SimilarFiles
    *
@@ -24,7 +23,7 @@ export class AnimeFileService {
     // 4. 获取该 Anime 下所有未被删除、非目录、且未关联到任何 AnimeEpisode 的文件
     // （因为 SimilarFiles 中的部分文件可能未被及时关联到集数，这时我们也将这些文件带上）
     // 这样可以在一次查询中获取所有需要的数据，避免多次数据库查询
-    const animeEpisode = await this.prisma.animeEpisode.findFirst({
+    const animeEpisode = await prisma.animeEpisode.findFirst({
       where: {
         id: animeEpisodeId,
       },
@@ -56,7 +55,7 @@ export class AnimeFileService {
 
     // 如果 Anime 是 NSFW，那么需要将不允许 NSFW 的存储器的文件过滤掉
     if (animeEpisode.anime.nsfw) {
-      const noNSFWStorages = await this.prisma.storage.findMany({
+      const noNSFWStorages = await prisma.storage.findMany({
         where: { noNSFW: true },
         select: { id: true },
       });
@@ -91,7 +90,7 @@ export class AnimeFileService {
    * @returns 归类后的文件列表，每个 SimilarFiles 包含来自不同存储器的相同文件
    */
   async getAnimeAttachmentFiles(animeId: number): Promise<SimilarFiles[]> {
-    const unlinkedFiles = await this.prisma.storageIndex.findMany({
+    const unlinkedFiles = await prisma.storageIndex.findMany({
       where: {
         animeId: animeId,
         removed: false,
@@ -112,14 +111,14 @@ export class AnimeFileService {
    * @returns SimilarFiles 归类后的文件列表，每个 SimilarFiles 包含来自不同存储器的相同文件
    */
   async getAnimeFiles(animeId: number): Promise<SimilarFiles[]> {
-    const anime = await this.prisma.anime.findUnique({
+    const anime = await prisma.anime.findUnique({
       where: { id: animeId },
       select: { nsfw: true },
     });
 
     if (!anime) return [];
 
-    const files = await this.prisma.storageIndex.findMany({
+    const files = await prisma.storageIndex.findMany({
       where: {
         animeId: animeId,
         removed: false,
@@ -169,7 +168,7 @@ export class AnimeFileService {
    */
   async getSimilarFiles(fileId: number): Promise<SimilarFiles | null> {
     // 获取文件信息
-    const file = await this.prisma.storageIndex.findUnique({
+    const file = await prisma.storageIndex.findUnique({
       where: { id: fileId },
     });
 

@@ -1,8 +1,8 @@
 import { App } from "~/server/services/app";
 import { AnimeFileService } from "~/server/services/anime/file/service";
+import { prisma } from "~/server/src/context/prisma";
 
 const app = new App();
-const prisma = app.prisma;
 const animeFileService = app.services.getService(AnimeFileService);
 
 async function testAnimeFileService() {

@@ -3,6 +3,7 @@ import type { StorageScrapeResult } from "~/server/services/storage/scraper/type
 import { App } from "../../app";
 import { StorageIndexManager } from "../index/manager";
 import type { StorageScraper } from "./interface";
+import { prisma } from "~/server/src/context/prisma";
 
 /**
  * LavaAnimeLibV2 是番剧库的上一代版本，在本版本中作为一种结构。
@@ -193,14 +194,14 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
   private async findAnimeInOtherStorages(
     file: StorageIndex,
   ): Promise<number | null> {
-    const otherStorages = await App.instance.prisma.storage.findMany({
+    const otherStorages = await prisma.storage.findMany({
       where: {
         id: { not: file.storageId },
       },
     });
 
     for (const storage of otherStorages) {
-      const samePathFile = await App.instance.prisma.storageIndex.findFirst({
+      const samePathFile = await prisma.storageIndex.findFirst({
         where: {
           storageId: storage.id,
           path: file.path,
@@ -321,7 +322,7 @@ export class LavaAnimeLibV2Scraper implements StorageScraper {
       }
     }
 
-    const animes = await App.instance.prisma.anime.findMany({
+    const animes = await prisma.anime.findMany({
       where: {
         sites: {
           some: { siteType: "Bangumi", siteId: bgmID },

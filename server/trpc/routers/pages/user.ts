@@ -1,6 +1,7 @@
 import { App } from "~/server/services/app";
 import { StorageService } from "~/server/services/storage/service";
 import { protectedProcedure, router } from "../../trpc";
+import { prisma } from "~/server/src/context/prisma";
 
 export const userRouter = router({
   infoCard: protectedProcedure.query(async ({ ctx }) => {
@@ -8,7 +9,7 @@ export const userRouter = router({
 
     let avatarUrl = user.avatarUrl;
     if (!avatarUrl && user.avatarFileId) {
-      const storageIndex = await App.instance.prisma.storageIndex.findUnique({
+      const storageIndex = await prisma.storageIndex.findUnique({
         where: {
           id: user.avatarFileId,
         },

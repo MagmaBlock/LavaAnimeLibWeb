@@ -1,8 +1,8 @@
+import { prisma } from "~/server/src/context/prisma";
 import { App } from "../../../services/app";
 import { StorageService } from "../../../services/storage/service";
 
 const app = new App();
-const prisma = app.prisma;
 const storages = await prisma.storage.findMany();
 if (storages.length === 0) {
   throw new Error("未找到存储库");

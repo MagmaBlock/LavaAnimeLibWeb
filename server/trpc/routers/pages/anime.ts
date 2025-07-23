@@ -11,8 +11,7 @@ import { protectedProcedure, router } from "../../trpc";
 import { AnimeService } from "~/server/services/anime/service";
 import moment from "moment";
 import { SimilarFiles } from "~/server/services/anime/file/types/similar-files";
-
-const prisma = App.instance.prisma;
+import { prisma } from "~/server/src/context/prisma";
 
 // 定义判断视频是否已看完的常量
 const COMPLETION_THRESHOLD = 0.95;

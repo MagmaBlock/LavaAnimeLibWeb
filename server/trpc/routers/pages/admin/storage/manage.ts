@@ -3,9 +3,9 @@ import { publicProcedure, router } from "../../../../trpc";
 import { App } from "~/server/services/app";
 import { StorageService } from "~/server/services/storage/service";
 import { StorageType, StorageScraper } from "@prisma/client";
+import { prisma } from "~/server/src/context/prisma";
 
 const storageService = App.instance.services.getService(StorageService);
-const prisma = App.instance.prisma;
 
 export const adminStorageManagerRouter = router({
   // 获取所有存储器

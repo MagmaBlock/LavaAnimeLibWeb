@@ -14,13 +14,11 @@ export class App {
   public static instance: App;
 
   public services: ServiceContainer;
-  public prisma: PrismaClient;
   public logger: Log4jsLogger;
   constructor() {
     App.instance = this;
     this.services = new Container();
 
-    this.prisma = new PrismaClient();
     this.logger = new Log4jsLogger();
 
     const authSecret = process.env.AUTH_SECRET ?? Math.random().toString();

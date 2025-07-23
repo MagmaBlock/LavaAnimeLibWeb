@@ -1,8 +1,7 @@
 import { App } from "~/server/services/app";
 import { getUserFromEvent } from "~/server/utils/auth";
 import type { Storage } from "@prisma/client";
-
-const prisma = App.instance.prisma;
+import { prisma } from "~/server/src/context/prisma";
 
 interface StorageInformation {
   id: string;

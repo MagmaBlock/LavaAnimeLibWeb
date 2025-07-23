@@ -4,6 +4,7 @@ import moment from "moment";
 import { App } from "~/server/services/app";
 import { AnimePictureSerivce } from "~/server/services/anime/picture/serivce";
 import { getUserFromEvent } from "~/server/utils/auth";
+import { prisma } from "~/server/src/context/prisma";
 
 // 从 tRPC 文件迁移的接口定义
 interface HistoryItem {
@@ -61,7 +62,7 @@ export default defineEventHandler(async (event) => {
   const skip = (page - 1) * pageSize;
 
   const detailedHistory =
-    await App.instance.prisma.animeViewHistory.findMany({
+    await prisma.animeViewHistory.findMany({
       where: {
         userId: user.id,
         removed: false,
@@ -86,7 +87,7 @@ export default defineEventHandler(async (event) => {
       },
     });
 
-  const totalCount = await App.instance.prisma.animeViewHistory.count({
+  const totalCount = await prisma.animeViewHistory.count({
     where: {
       userId: user.id,
       removed: false,

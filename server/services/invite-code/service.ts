@@ -1,6 +1,7 @@
 import { Prisma, type InviteCode } from "@prisma/client";
 import { createHash } from "node:crypto";
 import { App } from "../app";
+import { prisma } from "~/server/src/context/prisma";
 
 export class InviteCodeService {
   /**
@@ -14,7 +15,7 @@ export class InviteCodeService {
     expiredAt?: Date;
   }): Promise<InviteCode> {
     try {
-      return await App.instance.prisma.inviteCode.create({
+      return await prisma.inviteCode.create({
         data: {
           code: params.code ?? this.getRandomInviteCode(),
           createdById: params.createdById,
@@ -53,7 +54,7 @@ export class InviteCodeService {
       });
     }
 
-    return await App.instance.prisma.inviteCode.createMany({
+    return await prisma.inviteCode.createMany({
       data: codes,
       skipDuplicates: true,
     });
@@ -67,7 +68,7 @@ export class InviteCodeService {
    */
   async use(code: string, usedById: number): Promise<InviteCode> {
     // 首先检查用户是否存在
-    const user = await App.instance.prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id: usedById },
     });
     if (!user) {
@@ -75,7 +76,7 @@ export class InviteCodeService {
     }
 
     // 然后检查邀请码是否存在且可用
-    const inviteCode = await App.instance.prisma.inviteCode.findFirst({
+    const inviteCode = await prisma.inviteCode.findFirst({
       where: {
         code: code,
         usedBy: null,
@@ -87,7 +88,7 @@ export class InviteCodeService {
     }
 
     // 更新邀请码使用状态
-    return await App.instance.prisma.inviteCode.update({
+    return await prisma.inviteCode.update({
       where: { code: code },
       data: {
         usedById,
@@ -102,7 +103,7 @@ export class InviteCodeService {
    * @returns
    */
   async test(code: string): Promise<boolean> {
-    const find = await App.instance.prisma.inviteCode.findUnique({
+    const find = await prisma.inviteCode.findUnique({
       where: {
         code: code,
         usedBy: null,
