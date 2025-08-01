@@ -38,7 +38,6 @@
                 <img
                   :src="record.anime?.images?.poster"
                   class="object-cover"
-                  v-lazy
                 />
               </div>
             </div>
