@@ -30,13 +30,4 @@ if (
 ) {
   notSupport.value = true;
 }
-
-onMounted(() => {
-  (() => {
-    // 尝试获取一次用户信息，本方法的副作用会导致未登录用户被跳转至登录页
-    // 以达到防止未登录用户访问界面的效果
-    const userStore = useUserStore();
-    userStore.getUserInfo();
-  })();
-});
 </script>

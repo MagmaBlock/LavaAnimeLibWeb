@@ -1,11 +1,9 @@
 <template>
   <ThemeProvider>
     <NaiveUIProvider>
-      <DefaultLayout>
-        <NuxtLayout>
-          <NuxtPage />
-        </NuxtLayout>
-      </DefaultLayout>
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
       <VideoTogetherProvider />
     </NaiveUIProvider>
   </ThemeProvider>
