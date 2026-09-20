@@ -1,3 +1,7 @@
+## Deprecated 已弃用的仓库
+
+LavaAnimeLib 的前端已经通过 Monorepo 和后端一并存放，请移步 https://github.com/MagmaBlock/LavaAnimeLib
+
 # LavaAnimeLibWeb
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FMagmaBlock%2FLavaAnimeLibWeb.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FMagmaBlock%2FLavaAnimeLibWeb?ref=badge_shield)
